@@ -1,0 +1,56 @@
+.document_search{
+    width: 150px;
+    height: 50px;
+}
+
+.main_button{
+    margin-top: 40px;
+    width: 150px;
+    height: 50px;
+}
+
+.ex_to_rt_status{
+    color:blue;
+    font-weight: bold;
+}
+
+.normal_status {
+    color:#676e8a;
+    font-weight: bold;
+}
+
+.cancel_status {
+    color:red;
+    font-weight: bold;
+}
+
+.complete_status {
+    color:green;
+    font-weight: bold;
+}
+
+.exchange_deducted {
+    color:orange;
+    font-weight: bold;
+}
+
+.select2-selection--multiple{
+    overflow: hidden !important;
+    height: auto !important;
+  }
+
+.font_black_color{
+    color: black !important;
+}
+
+.selected{
+    background: #5195cc;
+}
+.change_status {
+    color:#cc3300;
+    font-weight: bold;
+}
+
+#brand.select2-container {
+    border-radius: 10px;
+}

@@ -1,0 +1,47 @@
+<?php
+
+return [
+    'hello'                         => 'မင်္ဂလာပါ',
+    'total_return_document'      => 'Return စာရွက်စုစုပေါင်း',
+    'finish_return_document'     => 'ပြီးဆုံးသွားသော Return စာရွက်များ',
+    'pending_return_document'    => 'မပြီးသေးသော Return စာရွက်များ',
+    'supplier_cancel_document'   => 'Supplier Cancel စာရွက်များ',
+    'reject_return_document'     => 'ငြင်းပယ်ထားသော Return စာရွက်များ',
+    'reject_exchange_document'   => 'ငြင်းပယ်ထားသော Exchange စာရွက်များ',
+    'total_exchange_document'    => 'Exchange စာရွက်စုစုပေါင်း',
+    'finish_exchange_document'   => 'ပြီးဆုံးသွားသော Exchange စာရွက်များ',
+    'pending_exchange_document'  => 'မပြီးသေးသော Exchange စာရွက်များ',
+    'overdue_exchange_document'  => 'သတ်မှတ်ရက်ကျော်နေသော Exchange စာရွက်များ',
+    'total_user'                 => 'အသုံးပြုသူစုစုပေါင်း',
+    'total_supplier'             => 'ပေးသွင်းသူစုစုပေါင်း',
+    'total_branch'               => 'ရုံးခွဲစုစုပေါင်း',
+    'total_role'                 => 'ရာထူးစုစုပေါင်း',
+    'cn_pending_document'        => 'မပြီးသေးသော CN စာရွက်များ',
+    'db_pending_document'        => 'မပြီးသေးသော DB စာရွက်များ',
+    'sourcing_big'               => 'Total Sourcing (Big) Document',
+    'sourcing_small'             => 'Total Sourcing (Small) Document',
+    'sourcing_accessary'         => 'Total Sourcing (Accessary) Document',
+    'log_small_document'         => 'Total Logistics(Small) Document',
+    'log_big_document'           => 'Total Logistics(Big) Document',
+
+    'finish_log_small_doc'=> 'Finished logistics (Small) Document',
+    'finish_log_big_doc'=> 'Finished logistics (Big) Document',
+
+    'finish_sou_small_doc'=> 'Finished Sourcing (Small) Document',
+    'finish_sou_big_doc'=> 'Finished Sourcing (Big) Document',
+
+    'finish_accessary_doc'=> 'Finished Need Accessary Document',
+    'log_small_pending' => 'Logistics Small Pending',
+    'log_big_pending' => 'Logistics Big Pending',
+    'sourcing_small_pending' => 'Sourcing Small Pending',
+    'sourcing_big_pending' => 'Sourcing Big Pending',
+    'sourcing_accessay_pending' => 'Sourcing Accessary Pending',
+    'log_small_reject' => 'Logistics Small Reject',
+    'log_big_reject' => 'Logistics Big Reject',
+    'sourcing_small_reject' => 'Sourcing Small Reject',
+    'sourcing_big_reject' => 'Sourcing Big Reject',
+    'sourcing_accessary_reject' => 'Sourcing Accessary Reject',
+    'log_accessary_reject' => 'Logistics Accessary Reject',
+    'log_accessay_pending' => 'Logistics Accessary Pending',
+];
+?>

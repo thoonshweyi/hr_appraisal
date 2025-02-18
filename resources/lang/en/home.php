@@ -1,0 +1,52 @@
+<?php
+
+return [
+    'hello'                      => 'Hi',
+    'total_return_document'      => 'Total Return Document',
+    'finish_return_document'     => 'Finish Return Document',
+    'pending_return_document'    => 'Pending Return Document',
+    'supplier_cancel_document'    => 'Supplier Cancel Document',
+    'reject_return_document'     => 'Reject Return Document',
+    'reject_exchange_document'   => 'Reject Exchange Document',
+    'total_exchange_document'    => 'Total Exchange Document',
+    'finish_exchange_document'   => 'Finish Exchange Document',
+    'pending_exchange_document'  => 'Pending Exchange Document',
+    'overdue_exchange_document'  => 'Overdue Exchange Document',
+    'nearly_overdue_exchange_document'  => '5 days Before Overdue Exchange Document',
+    'total_user'                 => 'Total User',
+    'total_supplier'             => 'Total Supplier',
+    'total_branch'               => 'Total Branch',
+    'total_role'                 => 'Total Role',
+    'cn_pending_document'        => 'Pending CN Document',
+    'db_pending_document'        => 'Pending DB Document',
+    'sourcing_big'               => 'Total Sourcing (Big) Document',
+    'sourcing_small'             => 'Total Sourcing (Small) Document',
+    'sourcing_accessary'         => 'Total Sourcing (Accessary) Document',
+    'log_small_document'         => 'Total Logistics(Small) Document',
+    'log_big_document'           => 'Total Logistics(Big) Document',
+    'log_need_accessory_document'           => 'Total Logistics(Need accessory) Document',
+
+
+    'finish_log_small_doc'=> 'Finished logistics (Small) Document',
+    'finish_log_big_doc'=> 'Finished logistics (Big) Document',
+    'finish_log_accessory_doc'=> 'Finished logistics (Need Accessory) Document',
+
+    'finish_sou_small_doc'=> 'Finished Sourcing (Small) Document',
+    'finish_sou_big_doc'=> 'Finished Sourcing (Big) Document',
+    'finish_accessary_doc'=> 'Finished Need Accessary Document',
+    'finish_acc_small_doc'=> 'Finished Need Accessary Document',
+    'log_small_pending' => 'Logistics Small Pending',
+    'log_big_pending' => 'Logistics Big Pending',
+    'log_accessory_pending' => 'Logistics Need Accessory Pending',
+    'sourcing_small_pending' => 'Sourcing Small Pending',
+    'sourcing_big_pending' => 'Sourcing Big Pending',
+    'sourcing_accessay_pending' => 'Sourcing Accessary Pending',
+    'log_small_reject' => 'Logistics Small Reject',
+    'log_big_reject' => 'Logistics Big Reject',
+    'log_accessory_reject' => 'Logistics Need Accessory Reject',
+    'sourcing_small_reject' => 'Sourcing Small Reject',
+    'sourcing_big_reject' => 'Sourcing Big Reject',
+    'sourcing_accessary_reject' => 'Sourcing Accessary Reject',
+
+];
+?>
