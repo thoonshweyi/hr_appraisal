@@ -2,7 +2,6 @@
 
 // use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FAQController;
@@ -10,8 +9,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\GradesController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\StatusesController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DeptGroupsController;
+use App\Http\Controllers\RatingScalesController;
 
 
 /*
@@ -51,9 +55,34 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('faqs', FAQController::class);
 
-
-
     Route::get('/download_import_userguide', [HomeController::class, 'getDownload'])->name('getDownload');
 
 
+    // Start Status
+    Route::get("/statuses",[StatusesController::class,"index"])->name("statuses.index");
+    Route::post("/statuses",[StatusesController::class,"store"])->name("statuses.store");
+    Route::put("/statuses/{id}",[StatusesController::class,"update"])->name("statuses.update");
+    Route::delete("/statuses/{id}",[StatusesController::class,"destroy"])->name("statuses.destroy");
+    // End Status
+
+    // Start RatingScale
+    Route::get("/ratingscales",[RatingScalesController::class,"index"])->name("ratingscales.index");
+    Route::post("/ratingscales",[RatingScalesController::class,"store"])->name("ratingscales.store");
+    Route::put("/ratingscales/{id}",[RatingScalesController::class,"update"])->name("ratingscales.update");
+    Route::delete("/ratingscales/{id}",[RatingScalesController::class,"destroy"])->name("ratingscales.destroy");
+    Route::post("/ratingscalesstatus",[RatingScalesController::class,"changestatus"])->name("ratingscales.changestatus");
+    // End RatingScale
+
+    Route::get("/grades",[GradesController::class,"index"])->name("grades.index");
+    Route::post("/grades",[GradesController::class,"store"])->name("grades.store");
+    Route::put("/grades/{id}",[GradesController::class,"update"])->name("grades.update");
+    Route::delete("/grades/{id}",[GradesController::class,"destroy"])->name("grades.destroy");
+    Route::post("/gradesstatus",[GradesController::class,"changestatus"])->name("grades.changestatus");
+
+    Route::get("/deptgroups",[DeptGroupsController::class,"index"])->name("deptgroups.index");
+    Route::post("/deptgroups",[DeptGroupsController::class,"store"])->name("deptgroups.store");
+    Route::put("/deptgroups/{id}",[DeptGroupsController::class,"update"])->name("deptgroups.update");
+    Route::delete("/deptgroups/{id}",[DeptGroupsController::class,"destroy"])->name("deptgroups.destroy");
+    Route::post("/deptgroupsstatus",[DeptGroupsController::class,"changestatus"])->name("deptgroups.changestatus");
+    Route::post("/deptgroups_excel_import",[DeptGroupsController::class,"excel_import"])->name("deptgroups.excel_import");
 });

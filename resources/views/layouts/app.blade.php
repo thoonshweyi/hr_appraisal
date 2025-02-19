@@ -16,6 +16,9 @@
     <link  href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css"/>
 
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+
       <!-- Favicon -->
       <link rel="shortcut icon" href="{{ asset('images/hrlogo-rounded.png') }}" />
 
@@ -31,6 +34,9 @@
       <link rel="stylesheet" href="{{ asset('vendor/@fortawesome/fontawesome-free/css/all.min.css') }}">
       <link rel="stylesheet" href="{{ asset('vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
       <link rel="stylesheet" href="{{ asset('vendor/remixicon/fonts/remixicon.css') }}">
+
+
+
       @include('sweetalert::alert')
     <style>
         .deleted-row {

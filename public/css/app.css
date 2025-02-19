@@ -54,3 +54,57 @@
 #brand.select2-container {
     border-radius: 10px;
 }
+
+
+/* Start custom switch */
+.custom-switch {
+    display: flex;
+    align-items: center; /* Vertically aligns the switch and text */
+}
+
+/* The checkbox input itself, hidden from view */
+.custom-switch-input {
+    display: none; /* Hide the original checkbox */
+}
+
+/* The visual part of the switch */
+.custom-switch-label {
+    position: relative;
+    width: 50px;
+    height: 24px;
+    background-color: #ccc; /* Light gray background */
+    border-radius: 24px; /* Make the background rounded */
+    cursor: pointer;
+    transition: background-color 0.4s ease; /* Smooth transition on toggle */
+}
+
+/* The circle (slider) that moves on the switch */
+.custom-switch-label::before {
+    content: ""; /* Empty content to create the slider */
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white; /* White slider */
+    bottom: 2px;
+    left: 2px;
+    transition: transform 0.4s ease; /* Smooth sliding effect */
+}
+
+/* Change background and slider position when checked */
+.custom-switch-input:checked + .custom-switch-label {
+    background-color: #4caf50; /* Background turns green when toggled on */
+}
+
+.custom-switch-input:checked + .custom-switch-label::before {
+    transform: translateX(26px); /* Move the slider to the right */
+}
+
+/* Optional label text next to the switch */
+.switch-label {
+    margin-left: 10px; /* Space between switch and label */
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+/* End custom switch */

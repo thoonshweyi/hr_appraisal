@@ -10,6 +10,40 @@
                 </a>
             </li>
 
+
+            <li class=" ">
+                <a href="#fixed" class="collapsed" data-toggle="collapse" aria-expanded="false">
+                    <i class="ri-pie-chart-line"></i>
+                    <span class="ml-4">{{__('nav.fixed')}}</span>
+                    <svg class="svg-icon iq-arrow-right arrow-active" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="10 15 15 20 20 15"></polyline><path d="M4 4h7a4 4 0 0 1 4 4v12"></path>
+                    </svg>
+                </a>
+                <ul id="fixed" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                    <li class="{{ (request()->routeIs('ratingscales.index')) ? 'active' : '' }}">
+                        <a href="{{route('ratingscales.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.rating_scale_list')}}</span>
+                        </a>
+                    </li>
+                    <li class="{{ (request()->routeIs('grades.index')) ? 'active' : '' }}">
+                        <a href="{{route('grades.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.grade_list')}}</span>
+                        </a>
+                    </li>
+                    <li class="{{ (request()->routeIs('statuses.index')) ? 'active' : '' }}">
+                        <a href="{{route('statuses.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.status_list')}}</span>
+                        </a>
+                    </li>
+                    <li class="{{ (request()->routeIs('deptgroups.index')) ? 'active' : '' }}">
+                        <a href="{{route('deptgroups.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.deptgroup_list')}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
             @can('edit-faqs')
             <li class=" ">
                 <a href="#faq" class="collapsed" data-toggle="collapse" aria-expanded="false">
@@ -176,6 +210,8 @@
                 </ul>
             </li>
             @endcan
+
+
             <li>
             <a href="{{ asset('/download/Imported Claim System (Operation User Guide).pdf') }}" class="btn btn-large pull-right" target="_blank">
                     <?xml version="1.0" encoding="iso-8859-1"?>

@@ -22,4 +22,11 @@ return [
     'sourcing_small_document' => 'Sourcing (Small) Document Lists',
     'sourcing_big_document'     => 'Sourcing (Big) Document Lists',
     'sourcing_accessary'     => 'Sourcing Need Accessary Lists',
+
+    'fixed'                     => "Fixed Analysis",
+    'status_list'                 => 'Status List',
+    'rating_scale_list'             => 'Rating Scale List',
+    'grade_list'             => 'Grade List',
+    'deptgroup_list'             => 'Dept Group List',
+
 ];

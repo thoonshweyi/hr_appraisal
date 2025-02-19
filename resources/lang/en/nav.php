@@ -35,6 +35,12 @@ return [
     'sourcing_accessary'     => 'Sourcing Need Accessary Lists',
     'logistics_accessary'                 =>'Logistics (Need Accessory) Damage',
 
+    'fixed'                     => "Fixed Analysis",
+    'status_list'             => 'Status List',
+    'rating_scale_list'             => 'Rating Scale List',
+    'grade_list'             => 'Grade List',
+    'deptgroup_list'             => 'Dept Group List',
+
 
 ];
 

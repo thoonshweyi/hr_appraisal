@@ -7452,7 +7452,7 @@ a.text-light-gray:hover, a.text-light-gray:focus {
 
 @media (min-width: 1500px) {
   .iq-top-navbar .iq-navbar-custom .wrapper-menu {
-    display: none; } 
+    display: none; }
   body.sidebar-main .iq-sidebar {
     width: 60px; }
     body.sidebar-main .iq-sidebar .iq-sidebar-menu .iq-menu li a span {
@@ -10685,7 +10685,7 @@ body.tab-horizontal .iq-footer {
     opacity: 1; } }
 
 /*
- * Background color 
+ * Background color
  */
 .bg-blue {
   color: #fff !important;
