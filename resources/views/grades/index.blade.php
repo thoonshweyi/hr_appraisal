@@ -98,6 +98,9 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="d-flex justify-content-center">
+                {{ $grades->appends(request()->all())->links("pagination::bootstrap-4") }}
+            </div>
 
 
         </div>

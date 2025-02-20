@@ -108,3 +108,38 @@
 }
 
 /* End custom switch */
+
+
+
+/* Start Preview Image */
+.gallery{
+    min-width: 200px;
+    height: auto;
+    background-color: #eee;
+    color: #aaa;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-align: center;
+    padding: 10px;
+
+}
+.gallery img,.redemptiontransactionfiles img,.installercardfiles img{
+    width: 100px;
+    height: 100px;
+    border: 2px dashed #aaa;
+    border-radius: 10px;
+    object-fit: cover;
+
+    padding: 5px;
+    margin: 0 5px;
+}
+.removetxt span{
+    display: none;
+}
+
+
+
+/* End Preview Image */

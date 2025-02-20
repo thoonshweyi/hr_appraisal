@@ -40,6 +40,11 @@
                             <i class="las la-minus"></i><span>{{ __('nav.deptgroup_list')}}</span>
                         </a>
                     </li>
+                    <li class="{{ (request()->routeIs('departments.index')) ? 'active' : '' }}">
+                        <a href="{{route('departments.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.department_list')}}</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 

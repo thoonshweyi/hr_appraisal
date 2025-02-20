@@ -15,10 +15,6 @@
     {{-- flatpickr css1 js1 --}}
     <link  href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css"/>
 
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
-
       <!-- Favicon -->
       <link rel="shortcut icon" href="{{ asset('images/hrlogo-rounded.png') }}" />
 
@@ -125,7 +121,13 @@
 
     <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.rowReorder.min.js') }}"></script>
-    {{-- select 2 --}}
+
+    <!-- Dropzone CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
+
+<!-- Dropzone JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
+
 
     <script>
       $(document).ready(function() {

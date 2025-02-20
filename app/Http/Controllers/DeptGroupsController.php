@@ -6,7 +6,10 @@ use App\Models\Status;
 use App\Models\DeptGroup;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Imports\DeptGroupImport;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exceptions\ExcelImportValidationException;
 
 class DeptGroupsController extends Controller
 {
@@ -60,7 +63,7 @@ class DeptGroupsController extends Controller
     {
         $deptgroup = DeptGroup::findOrFail($id);
         $deptgroup->delete();
-        return redirect()->back()->with('success',"Rating Scale deleted successfully");
+        return redirect()->back()->with('success',"Dept Group deleted successfully");
     }
 
     public function changestatus(Request $request){
@@ -72,12 +75,45 @@ class DeptGroupsController extends Controller
    }
 
 
-   public function excel_import(Request $request){
-        // dd($request);
-        // return redirect(route("deptgroups.index"))->with('success',"Dept Group has been successfully imported");
+   public function excel_import(Request $request)
+   {
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx|max:2048',
+        ]);
 
-        return response()->json(['message' => 'File uploaded successfully!']);
+
+          // Multi Images Upload
+        //   if($request->hasFile('file')){
+        //     // dd('hay');
+        //     // foreach($request->file("file") as $image){
+        //     //     Excel::import(new DeptGroupImport, $request->file('file'));
+        //     // }
+        //     Excel::import(new DeptGroupImport, $request->file('file'));
+
+        // }
+
+        \DB::beginTransaction();
+
+        try {
+            $file = $request->file('file');
+            Excel::import(new DeptGroupImport, $file);
+
+            \DB::commit();
+            return redirect(route("deptgroups.index"))->with('success',"Dept Group excel imported successfully");
+
+        }catch (ExcelImportValidationException $e) {
+            // If validation fails, show the error message to the user
+            \DB::rollback();
+            return back()->with('validation_errors', $e->getMessage());
+        } catch (\Exception $e) {
+            \DB::rollback();
+            // Handle the exception and notify the user
+            return redirect()->back()->with('error', "System Error:".$e->getMessage());
+        }
+
+
 
 
    }
+
 }

@@ -7,12 +7,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Department extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $fillable = [
-        'name',
-        'branch_id'
+        "code",
+        "name",
+        "slug",
+        "dept_group_id",
+        "status_id",
+        'user_id'
     ];
-    public function branches(){
-        return $this->belongsTo('App\Models\Branch','branch_id');
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+    public function status(){
+        return $this->belongsTo(Status::class);
+    }
+
+    public function deptgroup(){
+        return $this->belongsTo(DeptGroup::class,'dept_group_id','id');
     }
 }

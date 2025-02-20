@@ -15,30 +15,33 @@
 
                     </div>
                 </div>
-{{--
-                <div class="col-lg-12">
-                    <form class="d-inline" action="{{ route('deptgroups.excel_import') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="row align-items-end">
-                            <div class="col-md-4">
-                                <label class="mb-2 text-gray-600">Choose Excel File:</label>
-                                <input type="file" name="excel" class="form-control">
-                            </div>
 
-                            <button type="submit" class="btn btn-light" class=""><i class="ri-file-download-line"></i> Import</a>
+
+
+            </div>
+
+
+            <div class="col-lg-12">
+                <form class="d-inline" action="{{ route('deptgroups.excel_import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row align-items-end">
+
+                        <div class="col-md-4">
+                            @error("file")
+                            <b class="text-danger">{{ $message }}</b>
+                            @enderror
+                            <label for="file" class="gallery @error('file') is-invalid @enderror mb-0"><span>Choose Excel File</span></label>
+                            <input type="file" name="file" id="file" class="form-control form-control-sm rounded-0" value="" hidden/>
                         </div>
 
-                    </form>
-                </div> --}}
 
-
-                <form action="{{ route('deptgroups.excel_import') }}" class="dropzone" id="excelDropzone" enctype="multipart/form-data">
-                    @csrf
-                    <div class="dz-message">
-                        <span>Drag & Drop your Excel file here or click to upload.</span>
+                        <button type="submit" class="btn btn-light" class=""><i class="ri-file-download-line"></i> Import</a>
                     </div>
+
                 </form>
             </div>
+
+
 
             <div class="col-md-12 mb-2">
                 @if (count($errors) > 0)
@@ -61,6 +64,25 @@
                 <div class="alert alert-success">
                     <p>{{ $message }}</p>
                 </div>
+                @endif
+
+
+                @if($getvalidationerrors = Session::get('validation_errors'))
+                    {{-- <li>{{ Session::get('validation_errors') }}</li> --}}
+                    <div class="alert alert-danger">
+                        <strong>Whoops!</strong> There were some problems with your excel file at row {{ json_decode($getvalidationerrors)->row }}.<br><br>
+                        <ul>
+                            {{-- {{ dd(json_decode($getvalidationerrors)) }} --}}
+                            @foreach ($validationerrors = json_decode($getvalidationerrors) as $idx=>$import_errors)
+                                {{-- {{dd($errors)}} --}}
+                                @if($idx != 'row')
+                                    @foreach($import_errors as $import_error)
+                                        <li>{{ $import_error }}</li>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
            </div>
             {{-- <div class="col-lg-12 d-flex mb-4">
@@ -119,6 +141,9 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="d-flex justify-content-center">
+                {{ $deptgroups->appends(request()->all())->links("pagination::bootstrap-4") }}
+            </div>
 
 
         </div>
@@ -308,21 +333,95 @@
         });
         // End change btn
 
+      {{-- Start Preview Image --}}
 
-        Dropzone.options.excelDropzone = {
-            paramName: "excel", // Name of the file input
-            maxFilesize: 5, // Maximum file size in MB
-            acceptedFiles: ".xls,.xlsx", // Restrict to Excel files
-            dictDefaultMessage: "Drag & Drop your Excel file here or click to upload.",
-            init: function() {
-                this.on("success", function(file, response) {
-                    console.log("File uploaded successfully", response);
-                });
-                this.on("error", function(file, errorMessage) {
-                    console.error("Upload error", errorMessage);
-                });
+      var previewimages = function(input, output) {
+        if (input.files) {
+            var totalfiles = input.files.length;
+
+            if (totalfiles > 0) {
+                $('.gallery').addClass('removetxt');
+            } else {
+                $('.gallery').removeClass('removetxt');
             }
-        };
+
+            $(output).html(""); // Clear previous previews
+
+            let html = ''
+            for (let i = 0; i < totalfiles; i++) {
+                var file = input.files[i];
+                var filereader = new FileReader();
+
+                filereader.onload = function(e) {
+                    let fileType = file.type;
+                    console.log("File Type:", fileType);
+
+                    {{-- if (fileType === 'application/pdf') {
+                        // Show PDF icon
+                        $($.parseHTML('<img>')).attr({
+                            'src': '{{ asset('images/pdf.png') }}',
+                            'title': file.name
+                        }).appendTo(output);
+                    } else if (
+                        fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                        fileType === 'application/vnd.ms-excel'
+                    ) {
+                        // Show Excel icon
+                        $($.parseHTML('<img>')).attr({
+                            'src': '{{ asset('images/excel.png') }}',
+                            'title': file.name
+                        }).appendTo(output);
+                    } else {
+                        // Show normal image preview
+                        $($.parseHTML('<img>')).attr({
+                            'src': e.target.result,
+                            'title': file.name
+                        }).appendTo(output);
+                    } --}}
+
+                    if (
+                        fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                        fileType === 'application/vnd.ms-excel'
+                    ) {
+                        // Show Excel icon
+                        {{-- $($.parseHTML('<img>')).attr({
+                            'src': '{{ asset('images/excel.png') }}',
+                            'title': file.name
+                        }).appendTo(output); --}}
+
+
+                        html = `
+                            <img src="{{ asset('images/excel.png') }}" title=${file.name} />
+                        `;
+                        $(output).append(html);
+                    }else{
+                        Swal.fire({
+                            title: "Invalid File!!",
+                            text: "Only Excel files (.xls, .xlsx) are allowed.",
+                            icon: "question"
+                          });
+
+
+                    html = `
+                          <img src="{{ asset('images/file-invalid.png') }}" title=${file.name} />
+                    `;
+                      $(output).append(html);
+                    }
+
+                };
+
+                filereader.readAsDataURL(file);
+            }
+        }
+    };
+
+    $('#file').change(function() {
+        previewimages(this, '.gallery');
+    });
+
+        {{-- End Preview Image --}}
+
+
     });
 </script>
 @stop

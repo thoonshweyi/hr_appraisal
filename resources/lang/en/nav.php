@@ -40,6 +40,8 @@ return [
     'rating_scale_list'             => 'Rating Scale List',
     'grade_list'             => 'Grade List',
     'deptgroup_list'             => 'Dept Group List',
+    'department_list'             => 'Department List',
+
 
 
 ];

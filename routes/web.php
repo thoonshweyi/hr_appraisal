@@ -15,6 +15,7 @@ use App\Http\Controllers\StatusesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DeptGroupsController;
+use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\RatingScalesController;
 
 
@@ -50,7 +51,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('users', UserController::class);
 
     Route::resource('branches', BranchController::class);
-    Route::resource('departments', DepartmentController::class);
     Route::get('/faqs/faqlist', [FAQController::class, 'faqlist'])->name('faqs.faqlist');
 
     Route::resource('faqs', FAQController::class);
@@ -85,4 +85,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete("/deptgroups/{id}",[DeptGroupsController::class,"destroy"])->name("deptgroups.destroy");
     Route::post("/deptgroupsstatus",[DeptGroupsController::class,"changestatus"])->name("deptgroups.changestatus");
     Route::post("/deptgroups_excel_import",[DeptGroupsController::class,"excel_import"])->name("deptgroups.excel_import");
+
+
+    Route::get("/departments",[DepartmentsController::class,"index"])->name("departments.index");
+    Route::post("/departments",[DepartmentsController::class,"store"])->name("departments.store");
+    Route::put("/departments/{id}",[DepartmentsController::class,"update"])->name("departments.update");
+    Route::delete("/departments/{id}",[DepartmentsController::class,"destroy"])->name("departments.destroy");
+    Route::post("/departmentsstatus",[DepartmentsController::class,"changestatus"])->name("departments.changestatus");
+    Route::post("/departments_excel_import",[DepartmentsController::class,"excel_import"])->name("departments.excel_import");
+
+
 });

@@ -95,6 +95,11 @@
                 </tbody>
             </table>
 
+            <div class="d-flex justify-content-center">
+                {{ $ratingscales->appends(request()->all())->links("pagination::bootstrap-4") }}
+            </div>
+
+
 
         </div>
     </div>
