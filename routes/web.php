@@ -11,12 +11,18 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\GradesController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\StatusesController;
+use App\Http\Controllers\DivisionsController;
+use App\Http\Controllers\PositionsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DeptGroupsController;
 use App\Http\Controllers\DepartmentsController;
+use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
+use App\Http\Controllers\SubDepartmentsController;
+use App\Http\Controllers\AgileDepartmentsController;
 
 
 /*
@@ -93,6 +99,45 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete("/departments/{id}",[DepartmentsController::class,"destroy"])->name("departments.destroy");
     Route::post("/departmentsstatus",[DepartmentsController::class,"changestatus"])->name("departments.changestatus");
     Route::post("/departments_excel_import",[DepartmentsController::class,"excel_import"])->name("departments.excel_import");
+
+
+    Route::get("/divisions",[DivisionsController::class,"index"])->name("divisions.index");
+    Route::post("/divisions",[DivisionsController::class,"store"])->name("divisions.store");
+    Route::put("/divisions/{id}",[DivisionsController::class,"update"])->name("divisions.update");
+    Route::delete("/divisions/{id}",[DivisionsController::class,"destroy"])->name("divisions.destroy");
+    Route::post("/divisionsstatus",[DivisionsController::class,"changestatus"])->name("divisions.changestatus");
+    Route::post("/divisions_excel_import",[DivisionsController::class,"excel_import"])->name("divisions.excel_import");
+
+
+    Route::get("/agiledepartments",[AgileDepartmentsController::class,"index"])->name("agiledepartments.index");
+    Route::post("/agiledepartments",[AgileDepartmentsController::class,"store"])->name("agiledepartments.store");
+    Route::put("/agiledepartments/{id}",[AgileDepartmentsController::class,"update"])->name("agiledepartments.update");
+    Route::delete("/agiledepartments/{id}",[AgileDepartmentsController::class,"destroy"])->name("agiledepartments.destroy");
+    Route::post("/agiledepartmentsstatus",[AgileDepartmentsController::class,"changestatus"])->name("agiledepartments.changestatus");
+    Route::post("/agiledepartments_excel_import",[AgileDepartmentsController::class,"excel_import"])->name("agiledepartments.excel_import");
+
+
+    Route::get("/subdepartments",[SubDepartmentsController::class,"index"])->name("subdepartments.index");
+    Route::post("/subdepartments",[SubDepartmentsController::class,"store"])->name("subdepartments.store");
+    Route::put("/subdepartments/{id}",[SubDepartmentsController::class,"update"])->name("subdepartments.update");
+    Route::delete("/subdepartments/{id}",[SubDepartmentsController::class,"destroy"])->name("subdepartments.destroy");
+    Route::post("/subdepartmentsstatus",[SubDepartmentsController::class,"changestatus"])->name("subdepartments.changestatus");
+    Route::post("/subdepartments_excel_import",[SubDepartmentsController::class,"excel_import"])->name("subdepartments.excel_import");
+
+    Route::get("/sections",[SectionsController::class,"index"])->name("sections.index");
+    Route::post("/sections",[SectionsController::class,"store"])->name("sections.store");
+    Route::put("/sections/{id}",[SectionsController::class,"update"])->name("sections.update");
+    Route::delete("/sections/{id}",[SectionsController::class,"destroy"])->name("sections.destroy");
+    Route::post("/sectionsstatus",[SectionsController::class,"changestatus"])->name("sections.changestatus");
+    Route::post("/sections_excel_import",[SectionsController::class,"excel_import"])->name("sections.excel_import");
+
+
+    Route::get("/positions",[PositionsController::class,"index"])->name("positions.index");
+    Route::post("/positions",[PositionsController::class,"store"])->name("positions.store");
+    Route::put("/positions/{id}",[PositionsController::class,"update"])->name("positions.update");
+    Route::delete("/positions/{id}",[PositionsController::class,"destroy"])->name("positions.destroy");
+    Route::post("/positionsstatus",[PositionsController::class,"changestatus"])->name("positions.changestatus");
+    Route::post("/positions_excel_import",[PositionsController::class,"excel_import"])->name("positions.excel_import");
 
 
 });

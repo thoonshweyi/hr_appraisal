@@ -7,7 +7,7 @@
             <div class="col-lg-12">
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
-                        <h4 class="mb-3">Departments</h4>
+                        <h4 class="mb-3">Divisions</h4>
 
                         <a href="#createmodal" class="btn btn-primary" data-toggle="modal">Create</a>
 
@@ -15,11 +15,14 @@
 
                     </div>
                 </div>
+
+
+
             </div>
 
 
             <div class="col-lg-12">
-                <form class="d-inline" action="{{ route('departments.excel_import') }}" method="POST" enctype="multipart/form-data">
+                <form class="d-inline" action="{{ route('divisions.excel_import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row align-items-end">
 
@@ -37,41 +40,6 @@
 
                 </form>
             </div>
-
-
-
-            <div class="col-lg-12 my-2">
-                <form class="d-inline" action="{{ route('departments.index') }}" method="GET">
-                    @csrf
-                    <div class="row align-items-end">
-
-                        <div class="col-md-2">
-                            <label for="filter_name">Name <span class="text-danger">*</span></label>
-                            <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Department Name" value="{{ request()->filter_name }}"/>
-                        </div>
-
-                        <div class="col-md-2">
-                            <label for="filter_dept_group_id">Dept Group</label>
-                            <select name="filter_dept_group_id" id="filter_dept_group_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Dept Group</option>
-                                @foreach($deptgroups as $deptgroup)
-                                    <option value="{{$deptgroup['id']}}" {{ $deptgroup['id'] == request()->filter_dept_group_id ? 'selected' : '' }}>{{$deptgroup['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</a>
-                        @if(count(request()->query()) > 0)
-                            <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
-                        @endif
-
-                    </div>
-
-                </form>
-            </div>
-
-
-
 
 
 
@@ -137,8 +105,6 @@
                     <tr class="ligth ligth-data">
                         <th>No</th>
                         <th>Name</th>
-                        <th>Code</th>
-                        <th>Dept Group</th>
                         <th>Status</th>
                         <th>By</th>
                         <th>Created At</th>
@@ -147,29 +113,27 @@
                     </tr>
                 </thead>
                 <tbody class="ligth-body">
-                    @foreach($departments as $idx=>$department)
+                    @foreach($divisions as $idx=>$division)
                     <tr>
-                        <td>{{$idx + $departments->firstItem()}}</td>
-                        <td>{{$department["name"]}}</td>
-                        <td>{{$department["code"]}}</td>
-                        <td>{{ $department->deptgroup->name }}</td>
+                        <td>{{$idx + $divisions->firstItem()}}</td>
+                        <td>{{$division["name"]}}</td>
                         <td>
                             <div class="custom-switch p-0">
                                 <!-- The actual checkbox that controls the switch -->
-                                <input type="checkbox" id="customSwitch-{{ $idx + $departments->firstItem() }}" class="custom-switch-input statuschange-btn" {{ $department->status_id === 1 ? "checked" : "" }} data-id="{{ $department->id }}"/>
+                                <input type="checkbox" id="customSwitch-{{ $idx + $divisions->firstItem() }}" class="custom-switch-input statuschange-btn" {{ $division->status_id === 1 ? "checked" : "" }} data-id="{{ $division->id }}"/>
                                 <!-- The label is used to style the switch, and clicking it toggles the checkbox -->
-                                <label class="custom-switch-label" for="customSwitch-{{ $idx + $departments->firstItem() }}"></label>
+                                <label class="custom-switch-label" for="customSwitch-{{ $idx + $divisions->firstItem() }}"></label>
                                 <!-- Optional label text next to the switch -->
                             </div>
                         </td>
-                        <td>{{ $department["user"]["name"] }}</td>
-                        <td>{{ $department->created_at->format('d M Y') }}</td>
-                        <td>{{ $department->updated_at->format('d M Y') }}</td>
+                        <td>{{ $division["user"]["name"] }}</td>
+                        <td>{{ $division->created_at->format('d M Y') }}</td>
+                        <td>{{ $division->updated_at->format('d M Y') }}</td>
                         <td class="text-center">
-                             <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$department->id}}" data-name="{{$department->name}}" data-code="{{$department->code}}" data-dept_group="{{$department->dept_group_id}}" data-status="{{$department->status_id}}"><i class="fas fa-pen"></i></a>
+                             <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$division->id}}" data-name="{{$division->name}}" data-status="{{$division->status_id}}"><i class="fas fa-pen"></i></a>
                              <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
                         </td>
-                        <form id="formdelete-{{ $idx }}" class="" action="{{route('departments.destroy',$department->id)}}" method="POST">
+                        <form id="formdelete-{{ $idx }}" class="" action="{{route('divisions.destroy',$division->id)}}" method="POST">
                              @csrf
                              @method("DELETE")
                         </form>
@@ -178,7 +142,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-center">
-                {{ $departments->appends(request()->all())->links("pagination::bootstrap-4") }}
+                {{ $divisions->appends(request()->all())->links("pagination::bootstrap-4") }}
             </div>
 
 
@@ -201,7 +165,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <form id="{{route('departments.store')}}" action="" method="POST">
+                        <form id="{{route('divisions.store')}}" action="" method="POST">
                             {{ csrf_field() }}
                             <div class="row align-items-end">
                                 <div class="col-md-12">
@@ -209,25 +173,7 @@
                                     @error("name")
                                             <span class="text-danger">{{ $message }}<span>
                                     @enderror
-                                    <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Department Name" value="{{ old('name') }}"/>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <label for="code">Code <span class="text-danger">*</span></label>
-                                    @error("code")
-                                            <span class="text-danger">{{ $message }}<span>
-                                    @enderror
-                                    <input type="text" name="code" id="code" class="form-control form-control-sm rounded-0" placeholder="Enter Department Code" value="{{ old('code') }}"/>
-                                </div>
-
-
-                                <div class="col-md-12">
-                                    <label for="dept_group_id">Dept Group</label>
-                                    <select name="dept_group_id" id="dept_group_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($deptgroups as $deptgroup)
-                                            <option value="{{$deptgroup['id']}}">{{$deptgroup['name']}}</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Dept Group Name" value="{{ old('name') }}"/>
                                 </div>
 
                                 <div class="col-md-12">
@@ -275,24 +221,6 @@
                                 <div class="col-md-12 mb-2">
                                     <label for="edit_name">Name <span class="text-danger">*</span></label>
                                     <input type="text" name="edit_name" id="edit_name" class="form-control form-control-sm rounded-0" placeholder="Enter Status Name" value="{{ old('name') }}"/>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <label for="edit_code">Code <span class="text-danger">*</span></label>
-                                    @error("edit_code")
-                                            <span class="text-danger">{{ $message }}<span>
-                                    @enderror
-                                    <input type="text" name="edit_code" id="edit_code" class="form-control form-control-sm rounded-0" placeholder="Enter Department Code" value="{{ old('edit_code') }}"/>
-                                </div>
-
-
-                                <div class="col-md-12">
-                                    <label for="edit_dept_group_id">Dept Group</label>
-                                    <select name="edit_dept_group_id" id="edit_dept_group_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($deptgroups as $deptgroup)
-                                            <option value="{{$deptgroup['id']}}">{{$deptgroup['name']}}</option>
-                                        @endforeach
-                                    </select>
                                 </div>
 
                                 <div class="col-md-12">
@@ -356,15 +284,13 @@
 
        // Start Edit Form
        $(document).on("click",".editform",function(e){
-            {{-- console.log($(this).attr("data-id"),$(this).attr("data-name")); --}}
-            {{-- console.log($(this).attr("data-status")); --}}
+            {{-- console.log($(this).attr("data-id"),$(this).attr("data-name"));
+            console.log($(this).attr("data-status")) --}}
 
             $("#edit_name").val($(this).attr("data-name"));
-            $("#edit_code").val($(this).attr("data-code"));
-            $("#edit_dept_group_id").val($(this).attr("data-dept_group"));
             $("#edit_status_id").val($(this).attr("data-status"));
             const getid = $(this).attr("data-id");
-            $("#formaction").attr("action",`/departments/${getid}`);
+            $("#formaction").attr("action",`/divisions/${getid}`);
 
             e.preventDefault();
        });
@@ -382,7 +308,7 @@
              {{-- console.log(setstatus); --}}
 
              $.ajax({
-                  url:"/departmentsstatus",
+                  url:"/divisionsstatus",
                   type:"POST",
                   dataType:"json",
                   data:{

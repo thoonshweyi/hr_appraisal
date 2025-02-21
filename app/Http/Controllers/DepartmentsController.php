@@ -15,12 +15,27 @@ use App\Exceptions\ExcelImportValidationException;
 
 class DepartmentsController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
 
-        $departments = Department::orderBy('id','asc')->paginate(10);
+        // $departments = Department::orderBy('id','asc')->paginate(10);
+        $filter_name = $request->filter_name;
+        $filter_dept_group_id = $request->filter_dept_group_id;
+        $results = Department::query();
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
         $deptgroups = DeptGroup::where('status_id',1)->orderBy('id')->get();
         // dd($deptgroups);
+
+
+        if (!empty($filter_name)) {
+            $results = $results->where('name', 'like', '%'.$filter_name.'%');
+        }
+
+        if (!empty($filter_dept_group_id)) {
+            $results = $results->where('dept_group_id', $filter_dept_group_id);
+        }
+
+        $departments = $results->orderBy('id','asc')->paginate(10);
+
         return view("departments.index",compact("departments","statuses","deptgroups"));
     }
 

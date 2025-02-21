@@ -35,14 +35,31 @@
                             <i class="las la-minus"></i><span>{{ __('nav.status_list')}}</span>
                         </a>
                     </li>
-                    <li class="{{ (request()->routeIs('deptgroups.index')) ? 'active' : '' }}">
-                        <a href="{{route('deptgroups.index')}}">
-                            <i class="las la-minus"></i><span>{{ __('nav.deptgroup_list')}}</span>
+                    <li class="{{ (request()->routeIs('divisions.index')) ? 'active' : '' }}">
+                        <a href="{{route('divisions.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.division_list')}}</span>
                         </a>
                     </li>
-                    <li class="{{ (request()->routeIs('departments.index')) ? 'active' : '' }}">
-                        <a href="{{route('departments.index')}}">
+                    <li class="{{ (request()->routeIs('agiledepartments.index')) ? 'active' : '' }}">
+                        <a href="{{route('agiledepartments.index')}}">
                             <i class="las la-minus"></i><span>{{ __('nav.department_list')}}</span>
+                        </a>
+                    </li>
+                    <li class="{{ (request()->routeIs('subdepartments.index')) ? 'active' : '' }}">
+                        <a href="{{route('subdepartments.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.sub_department_list')}}</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ (request()->routeIs('sections.index')) ? 'active' : '' }}">
+                        <a href="{{route('sections.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.section_list')}}</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ (request()->routeIs('positions.index')) ? 'active' : '' }}">
+                        <a href="{{route('positions.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.position_list')}}</span>
                         </a>
                     </li>
                 </ul>

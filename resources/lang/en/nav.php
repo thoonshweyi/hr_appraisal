@@ -41,6 +41,11 @@ return [
     'grade_list'             => 'Grade List',
     'deptgroup_list'             => 'Dept Group List',
     'department_list'             => 'Department List',
+    'division_list'             => 'Division List',
+    'sub_department_list'             => 'Sub Department List',
+    'section_list'             => 'Section List',
+    'position_list'             => 'Position List',
+
 
 
 

@@ -7,7 +7,7 @@
             <div class="col-lg-12">
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
-                        <h4 class="mb-3">Departments</h4>
+                        <h4 class="mb-3">Positions</h4>
 
                         <a href="#createmodal" class="btn btn-primary" data-toggle="modal">Create</a>
 
@@ -19,7 +19,7 @@
 
 
             <div class="col-lg-12">
-                <form class="d-inline" action="{{ route('departments.excel_import') }}" method="POST" enctype="multipart/form-data">
+                <form class="d-inline" action="{{ route('positions.excel_import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row align-items-end">
 
@@ -40,10 +40,10 @@
 
 
 
-            <div class="col-lg-12 my-2">
-                <form class="d-inline" action="{{ route('departments.index') }}" method="GET">
+            <div class="col-lg-12 my-2 ">
+                <form class="d-inline" action="{{ route('positions.index') }}" method="GET">
                     @csrf
-                    <div class="row align-items-end">
+                    <div class="row align-items-end justify-content-end ">
 
                         <div class="col-md-2">
                             <label for="filter_name">Name <span class="text-danger">*</span></label>
@@ -51,14 +51,15 @@
                         </div>
 
                         <div class="col-md-2">
-                            <label for="filter_dept_group_id">Dept Group</label>
-                            <select name="filter_dept_group_id" id="filter_dept_group_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Dept Group</option>
-                                @foreach($deptgroups as $deptgroup)
-                                    <option value="{{$deptgroup['id']}}" {{ $deptgroup['id'] == request()->filter_dept_group_id ? 'selected' : '' }}>{{$deptgroup['name']}}</option>
+                            <label for="filter_division_id">Division</label>
+                            <select name="filter_division_id" id="filter_division_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Division</option>
+                                @foreach($divisions as $division)
+                                    <option value="{{$division['id']}}" {{ $division['id'] == request()->filter_division_id ? 'selected' : '' }}>{{$division['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
+
 
                         <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</a>
                         @if(count(request()->query()) > 0)
@@ -137,8 +138,10 @@
                     <tr class="ligth ligth-data">
                         <th>No</th>
                         <th>Name</th>
-                        <th>Code</th>
-                        <th>Dept Group</th>
+                        <th>Division</th>
+                        <th>Department</th>
+                        <th>Sub Department</th>
+                        <th>Section</th>
                         <th>Status</th>
                         <th>By</th>
                         <th>Created At</th>
@@ -147,29 +150,32 @@
                     </tr>
                 </thead>
                 <tbody class="ligth-body">
-                    @foreach($departments as $idx=>$department)
+                    @foreach($positions as $idx=>$position)
                     <tr>
-                        <td>{{$idx + $departments->firstItem()}}</td>
-                        <td>{{$department["name"]}}</td>
-                        <td>{{$department["code"]}}</td>
-                        <td>{{ $department->deptgroup->name }}</td>
+                        <td>{{$idx + $positions->firstItem()}}</td>
+                        <td>{{$position["name"]}}</td>
+                        <td>{{ $position->division->name }}</td>
+                        <td>{{ $position->department->name}}</td>
+                        <td>{{ $position->subdepartment->name}}</td>
+                        <td>{{ $position->section->name}}</td>
+
                         <td>
                             <div class="custom-switch p-0">
                                 <!-- The actual checkbox that controls the switch -->
-                                <input type="checkbox" id="customSwitch-{{ $idx + $departments->firstItem() }}" class="custom-switch-input statuschange-btn" {{ $department->status_id === 1 ? "checked" : "" }} data-id="{{ $department->id }}"/>
+                                <input type="checkbox" id="customSwitch-{{ $idx + $positions->firstItem() }}" class="custom-switch-input statuschange-btn" {{ $position->status_id === 1 ? "checked" : "" }} data-id="{{ $position->id }}"/>
                                 <!-- The label is used to style the switch, and clicking it toggles the checkbox -->
-                                <label class="custom-switch-label" for="customSwitch-{{ $idx + $departments->firstItem() }}"></label>
+                                <label class="custom-switch-label" for="customSwitch-{{ $idx + $positions->firstItem() }}"></label>
                                 <!-- Optional label text next to the switch -->
                             </div>
                         </td>
-                        <td>{{ $department["user"]["name"] }}</td>
-                        <td>{{ $department->created_at->format('d M Y') }}</td>
-                        <td>{{ $department->updated_at->format('d M Y') }}</td>
+                        <td>{{ $position["user"]["name"] }}</td>
+                        <td>{{ $position->created_at->format('d M Y') }}</td>
+                        <td>{{ $position->updated_at->format('d M Y') }}</td>
                         <td class="text-center">
-                             <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$department->id}}" data-name="{{$department->name}}" data-code="{{$department->code}}" data-dept_group="{{$department->dept_group_id}}" data-status="{{$department->status_id}}"><i class="fas fa-pen"></i></a>
+                             <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$position->id}}" data-name="{{$position->name}}" data-code="{{$position->code}}" data-division="{{$position->division_id}}" data-department="{{$position->department_id}}" data-sub_department="{{$position->sub_department_id}}" data-section="{{$position->section_id}}" data-status="{{$position->status_id}}" ><i class="fas fa-pen"></i></a>
                              <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
                         </td>
-                        <form id="formdelete-{{ $idx }}" class="" action="{{route('departments.destroy',$department->id)}}" method="POST">
+                        <form id="formdelete-{{ $idx }}" class="" action="{{route('positions.destroy',$position->id)}}" method="POST">
                              @csrf
                              @method("DELETE")
                         </form>
@@ -178,7 +184,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-center">
-                {{ $departments->appends(request()->all())->links("pagination::bootstrap-4") }}
+                {{ $positions->appends(request()->all())->links("pagination::bootstrap-4") }}
             </div>
 
 
@@ -191,7 +197,7 @@
 <!-- START MODAL AREA -->
     <!-- start create modal -->
     <div id="createmodal" class="modal fade">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content rounded-0">
                     <div class="modal-header">
                         <h6 class="modal-title">Create Form</h6>
@@ -201,10 +207,10 @@
                     </div>
 
                     <div class="modal-body">
-                        <form id="{{route('departments.store')}}" action="" method="POST">
+                        <form id="{{route('positions.store')}}" action="" method="POST">
                             {{ csrf_field() }}
                             <div class="row align-items-end">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <label for="name">Name <span class="text-danger">*</span></label>
                                     @error("name")
                                             <span class="text-danger">{{ $message }}<span>
@@ -212,25 +218,50 @@
                                     <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Department Name" value="{{ old('name') }}"/>
                                 </div>
 
-                                <div class="col-md-12">
-                                    <label for="code">Code <span class="text-danger">*</span></label>
-                                    @error("code")
-                                            <span class="text-danger">{{ $message }}<span>
-                                    @enderror
-                                    <input type="text" name="code" id="code" class="form-control form-control-sm rounded-0" placeholder="Enter Department Code" value="{{ old('code') }}"/>
-                                </div>
 
-
-                                <div class="col-md-12">
-                                    <label for="dept_group_id">Dept Group</label>
-                                    <select name="dept_group_id" id="dept_group_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($deptgroups as $deptgroup)
-                                            <option value="{{$deptgroup['id']}}">{{$deptgroup['name']}}</option>
+                                <div class="col-md-6">
+                                    <label for="division_id">Division</label>
+                                    <select name="division_id" id="division_id" class="form-control form-control-sm rounded-0">
+                                        <option value="" selected disabled>Choose Division</option>
+                                        @foreach($divisions as $division)
+                                            <option value="{{$division['id']}}">{{$division['name']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
 
-                                <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label for="department_id">Departments</label>
+                                    <select name="department_id" id="department_id" class="form-control form-control-sm rounded-0">
+                                        <option value="" selected disabled>Choose Department</option>
+                                        @foreach($departments as $department)
+                                            <option value="{{$department['id']}}">{{$department['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="sub_department_id">Sub Departments</label>
+                                    <select name="sub_department_id" id="sub_department_id" class="form-control form-control-sm rounded-0">
+                                        <option value="" selected disabled>Choose Sub Department</option>
+                                        @foreach($subdepartments as $subdepartment)
+                                            <option value="{{$subdepartment['id']}}">{{$subdepartment['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <label for="section_id">Sections</label>
+                                    <select name="section_id" id="section_id" class="form-control form-control-sm rounded-0">
+                                        <option value="" selected disabled>Choose Section</option>
+                                        @foreach($sections as $section)
+                                            <option value="{{$section['id']}}">{{$section['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+
+                                <div class="col-md-6">
                                     <label for="status_id">Status</label>
                                     <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
                                         @foreach($statuses as $status)
@@ -258,7 +289,7 @@
 
     <!-- start edit modal -->
     <div id="editmodal" class="modal fade">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title">Edit Form</h6>
@@ -272,30 +303,52 @@
                         {{ csrf_field() }}
                         {{ method_field('PUT') }}
                         <div class="row align-items-end">
-                                <div class="col-md-12 mb-2">
+                                <div class="col-md-6">
                                     <label for="edit_name">Name <span class="text-danger">*</span></label>
                                     <input type="text" name="edit_name" id="edit_name" class="form-control form-control-sm rounded-0" placeholder="Enter Status Name" value="{{ old('name') }}"/>
                                 </div>
 
-                                <div class="col-md-12">
-                                    <label for="edit_code">Code <span class="text-danger">*</span></label>
-                                    @error("edit_code")
-                                            <span class="text-danger">{{ $message }}<span>
-                                    @enderror
-                                    <input type="text" name="edit_code" id="edit_code" class="form-control form-control-sm rounded-0" placeholder="Enter Department Code" value="{{ old('edit_code') }}"/>
-                                </div>
-
-
-                                <div class="col-md-12">
-                                    <label for="edit_dept_group_id">Dept Group</label>
-                                    <select name="edit_dept_group_id" id="edit_dept_group_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($deptgroups as $deptgroup)
-                                            <option value="{{$deptgroup['id']}}">{{$deptgroup['name']}}</option>
+                                <div class="col-md-6">
+                                    <label for="edit_division_id">Division</label>
+                                    <select name="edit_division_id" id="edit_division_id" class="form-control form-control-sm rounded-0">
+                                        @foreach($divisions as $division)
+                                            <option value="{{$division['id']}}">{{$division['name']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
 
-                                <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label for="edit_department_id">Departments</label>
+                                    <select name="edit_department_id" id="edit_department_id" class="form-control form-control-sm rounded-0">
+                                        <option value="" selected disabled>Choose Department</option>
+                                        @foreach($departments as $department)
+                                            <option value="{{$department['id']}}">{{$department['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="edit_sub_department_id">Sub Departments</label>
+                                    <select name="edit_sub_department_id" id="edit_sub_department_id" class="form-control form-control-sm rounded-0">
+                                        <option value="" selected disabled>Choose Sub Department</option>
+                                        @foreach($subdepartments as $subdepartment)
+                                            <option value="{{$subdepartment['id']}}">{{$subdepartment['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="edit_section_id">Sections</label>
+                                    <select name="edit_section_id" id="edit_section_id" class="form-control form-control-sm rounded-0">
+                                        <option value="" selected disabled>Choose Section</option>
+                                        @foreach($sections as $section)
+                                            <option value="{{$section['id']}}">{{$section['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+
+                                <div class="col-md-6">
                                     <label for="edit_status_id">Status</label>
                                     <select name="edit_status_id" id="edit_status_id" class="form-control form-control-sm rounded-0">
                                         @foreach($statuses as $status)
@@ -304,7 +357,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-12">
+                                <div class="col-md-12 mt-2">
                                     <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
                                 </div>
                         </div>
@@ -361,10 +414,15 @@
 
             $("#edit_name").val($(this).attr("data-name"));
             $("#edit_code").val($(this).attr("data-code"));
-            $("#edit_dept_group_id").val($(this).attr("data-dept_group"));
+            $("#edit_division_id").val($(this).attr("data-division"));
+            $("#edit_department_id").val($(this).attr("data-department"));
+            $("#edit_sub_department_id").val($(this).attr("data-sub_department"));
             $("#edit_status_id").val($(this).attr("data-status"));
+            $("#edit_section_id").val($(this).attr("data-section"));
+
+
             const getid = $(this).attr("data-id");
-            $("#formaction").attr("action",`/departments/${getid}`);
+            $("#formaction").attr("action",`/positions/${getid}`);
 
             e.preventDefault();
        });
@@ -382,7 +440,7 @@
              {{-- console.log(setstatus); --}}
 
              $.ajax({
-                  url:"/departmentsstatus",
+                  url:"/positionsstatus",
                   type:"POST",
                   dataType:"json",
                   data:{
