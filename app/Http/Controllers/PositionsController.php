@@ -74,7 +74,7 @@ class PositionsController extends Controller
        $position->status_id = $request["status_id"];
        $position->user_id = $user_id;
        $position->save();
-       return redirect(route("positions.index"))->with('success',"Department created successfully");;
+       return redirect(route("positions.index"))->with('success',"Position created successfully");;
     }
 
     public function update(Request $request, string $id)
@@ -101,14 +101,14 @@ class PositionsController extends Controller
         $position->status_id = $request["edit_status_id"];
         $position->user_id = $user_id;
         $position->save();
-        return redirect(route("positions.index"))->with('success',"Department updated successfully");
+        return redirect(route("positions.index"))->with('success',"Position updated successfully");
     }
 
     public function destroy(string $id)
     {
         $position = Position::findOrFail($id);
         $position->delete();
-        return redirect()->back()->with('success',"Department deleted successfully");
+        return redirect()->back()->with('success',"Position deleted successfully");
     }
 
     public function changestatus(Request $request){
@@ -144,7 +144,7 @@ class PositionsController extends Controller
             Excel::import(new PositionImport, $file);
 
             \DB::commit();
-            return redirect(route("positions.index"))->with('success',"Sub Department excel imported successfully");
+            return redirect(route("positions.index"))->with('success',"Position excel imported successfully");
 
         }catch (ExcelImportValidationException $e) {
             // If validation fails, show the error message to the user

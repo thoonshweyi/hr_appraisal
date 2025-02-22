@@ -62,6 +62,18 @@
                             <i class="las la-minus"></i><span>{{ __('nav.position_list')}}</span>
                         </a>
                     </li>
+
+                    <li class="{{ (request()->routeIs('genders.index')) ? 'active' : '' }}">
+                        <a href="{{route('genders.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.gender_list')}}</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ (request()->routeIs('positionlevels.index')) ? 'active' : '' }}">
+                        <a href="{{route('positionlevels.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.positionlevel_list')}}</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 

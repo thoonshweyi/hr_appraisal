@@ -10,6 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\GradesController;
+use App\Http\Controllers\GendersController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\StatusesController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\DeptGroupsController;
 use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
+use App\Http\Controllers\PositionLevelsController;
 use App\Http\Controllers\SubDepartmentsController;
 use App\Http\Controllers\AgileDepartmentsController;
 
@@ -140,4 +142,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post("/positions_excel_import",[PositionsController::class,"excel_import"])->name("positions.excel_import");
 
 
+    Route::get("/genders",[GendersController::class,"index"])->name("genders.index");
+    Route::post("/genders",[GendersController::class,"store"])->name("genders.store");
+    Route::put("/genders/{id}",[GendersController::class,"update"])->name("genders.update");
+    Route::delete("/genders/{id}",[GendersController::class,"destroy"])->name("genders.destroy");
+    Route::post("/gendersstatus",[GendersController::class,"changestatus"])->name("genders.changestatus");
+    // Route::post("/genders_excel_import",[GendersController::class,"excel_import"])->name("genders.excel_import");
+
+    Route::get("/positionlevels",[PositionLevelsController::class,"index"])->name("positionlevels.index");
+    Route::post("/positionlevels",[PositionLevelsController::class,"store"])->name("positionlevels.store");
+    Route::put("/positionlevels/{id}",[PositionLevelsController::class,"update"])->name("positionlevels.update");
+    Route::delete("/positionlevels/{id}",[PositionLevelsController::class,"destroy"])->name("positionlevels.destroy");
+    Route::post("/positionlevelsstatus",[PositionLevelsController::class,"changestatus"])->name("positionlevels.changestatus");
+    // Route::post("/positionlevels_excel_import",[PositionLevelsController::class,"excel_import"])->name("positionlevels.excel_import");
 });

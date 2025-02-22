@@ -7,7 +7,7 @@
             <div class="col-lg-12">
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-2">
                     <div>
-                        <h4 class="mb-3">Rating Scales</h4>
+                        <h4 class="mb-3">Statuses</h4>
 
                         <a href="#createmodal" class="btn btn-primary" data-toggle="modal">Create</a>
                     </div>

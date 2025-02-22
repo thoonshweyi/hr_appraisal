@@ -35,6 +35,7 @@ class PositionImport implements ToModel,WithHeadingRow, OnEachRow{
         ]);
         // If validation fails, throw an exception with the row number
         if ($validator->fails()) {
+            // dd($row);
             throw new ExcelImportValidationException(
                 $validator->errors()->toArray(),
                 $this->rowNumber
@@ -47,7 +48,7 @@ class PositionImport implements ToModel,WithHeadingRow, OnEachRow{
 
         $this->rowNumber += 1;
 
-        // dd($row);
+
         return new Position([
             'name'      => $row['name'],
             'slug'      => Str::slug($row['name']),
