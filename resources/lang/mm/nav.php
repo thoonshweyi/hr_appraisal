@@ -36,5 +36,9 @@ return [
     'gender_list'             => 'Gender List',
     'positionlevel_list'             => 'Position Level List',
 
+    'addon'                     => "Add On",
+    'employee_list'             => 'Employee List',
+
+
 
 ];

@@ -15,6 +15,10 @@
     {{-- flatpickr css1 js1 --}}
     <link  href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css"/>
 
+    {{-- selectize css 1 js1 --}}
+    <link  href="{{ asset('assets/libs/selectize/selectize.min.css') }}" rel="stylesheet" type="text/css"/>
+
+
       <!-- Favicon -->
       <link rel="shortcut icon" href="{{ asset('images/hrlogo-rounded.png') }}" />
 
@@ -30,6 +34,7 @@
       <link rel="stylesheet" href="{{ asset('vendor/@fortawesome/fontawesome-free/css/all.min.css') }}">
       <link rel="stylesheet" href="{{ asset('vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
       <link rel="stylesheet" href="{{ asset('vendor/remixicon/fonts/remixicon.css') }}">
+
 
 
 
@@ -112,6 +117,8 @@
     {{-- flatpickr css1 js1 --}}
      <script src="{{ asset('assets/libs/flatpickr/flatpickr.js') }}" type="text/javascript"></script>
 
+    {{-- selectize css 1 js1 --}}
+    <script  src="{{ asset('assets/libs/selectize/selectize.min.js') }}" type="text/javascript"></script>
 
     <!-- Chart Custom JavaScript -->
     <script async src="{{ asset('js/chart-custom.js') }}"></script>

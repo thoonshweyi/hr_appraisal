@@ -22,6 +22,8 @@ class Employee extends Model
        "sub_department_id",
        "section_id",
        "position_id",
+       "status_id",
+       "user_id",
        'longevity_year',
        'longevity_month',
        'longevity_day',
@@ -33,7 +35,7 @@ class Employee extends Model
        'position_level_id',
        "nrc",
        "father_name",
-       "job_status",['p'],
+       "job_status",
        "phone",
        "address",
        "dob",
@@ -68,5 +70,9 @@ class Employee extends Model
 
     public function positionlevel(){
         return $this->belongsTo(PositionLevel::class,'position_level_id','id');
+    }
+
+    public function branch(){
+        return $this->belongsTo(Branch::class,'branch_id','branch_id');
     }
 }

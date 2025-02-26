@@ -15,7 +15,7 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('beginning_date');
+            $table->date('beginning_date');
             $table->string("employee_code")->unique();
             $table->unsignedBigInteger("branch_id");
             $table->string("employee_name");
@@ -27,10 +27,12 @@ class CreateEmployeesTable extends Migration
             $table->unsignedBigInteger("sub_department_id");
             $table->unsignedBigInteger("section_id");
             $table->unsignedBigInteger("position_id");
-            $table->integer('longevity_year');
-            $table->integer('longevity_month');
-            $table->integer('longevity_day');
-            $table->string('longevity_total');
+            $table->unsignedBigInteger("status_id");
+            $table->unsignedBigInteger('user_id');
+            $table->integer('longevity_year')->nullable();
+            $table->integer('longevity_month')->nullable();
+            $table->integer('longevity_day')->nullable();
+            $table->string('longevity_total')->nullable();
             $table->string('education_level')->nullable();
             $table->string('institution')->nullable();
             $table->string('faculty')->nullable();
@@ -38,10 +40,10 @@ class CreateEmployeesTable extends Migration
             $table->string('position_level_id')->nullable();
             $table->string("nrc")->unique();
             $table->string("father_name");
-            $table->enum("job_status",['p'])->unique();
-            $table->string("phone")->unique();
-            $table->string("address")->unique();
-            $table->date("dob")->unique();
+            $table->enum("job_status",['p'])->unique()->nullable();
+            $table->string("phone")->unique()->nullable();
+            $table->string("address")->unique()->nullable();
+            $table->date("dob")->unique()->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
         });

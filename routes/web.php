@@ -15,10 +15,12 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\StatusesController;
 use App\Http\Controllers\DivisionsController;
+use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\PositionsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DeptGroupsController;
+use App\Http\Controllers\AssFormCatsController;
 use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
@@ -155,4 +157,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete("/positionlevels/{id}",[PositionLevelsController::class,"destroy"])->name("positionlevels.destroy");
     Route::post("/positionlevelsstatus",[PositionLevelsController::class,"changestatus"])->name("positionlevels.changestatus");
     // Route::post("/positionlevels_excel_import",[PositionLevelsController::class,"excel_import"])->name("positionlevels.excel_import");
+
+
+    Route::get("/employees",[EmployeesController::class,"index"])->name("employees.index");
+    Route::get("/employees/create",[EmployeesController::class,"create"])->name("employees.create");
+    Route::post("/employees",[EmployeesController::class,"store"])->name("employees.store");
+    Route::get("/employees/{id}",[EmployeesController::class,"show"])->name("employees.show");
+    Route::get("/employees/{id}/edit",[EmployeesController::class,"edit"])->name("employees.edit");
+    Route::put("/employees/{id}",[EmployeesController::class,"update"])->name("employees.update");
+    Route::delete("/employees/{id}",[EmployeesController::class,"destroy"])->name("employees.destroy");
+    Route::post("/employees_excel_import",[EmployeesController::class,"excel_import"])->name("employees.excel_import");
+    Route::post("/employeesstatus",[EmployeesController::class,"changestatus"])->name("employees.changestatus");
+
+
+    Route::get("/assformcats",[AssFormCatsController::class,"index"])->name("assformcats.index");
+    Route::post("/assformcats",[AssFormCatsController::class,"store"])->name("assformcats.store");
+    Route::get("/assformcats/{id}/edit",[AssFormCatsController::class,"edit"])->name("assformcats.edit");
+    Route::put("/assformcats/{id}",[AssFormCatsController::class,"update"])->name("assformcats.update");
+    Route::delete("/assformcats/{id}",[AssFormCatsController::class,"destroy"])->name("assformcats.destroy");
+    Route::post("/assformcatsstatus",[AssFormCatsController::class,"changestatus"])->name("assformcats.changestatus");
+    Route::post("/assformcats_excel_import",[AssFormCatsController::class,"excel_import"])->name("assformcats.excel_import");
+
 });
