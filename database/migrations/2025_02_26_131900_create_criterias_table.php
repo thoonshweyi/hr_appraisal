@@ -17,7 +17,7 @@ class CreateCriteriasTable extends Migration
     {
         Schema::create('criterias', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
+            $table->text("name");
             $table->unsignedBigInteger("status_id");
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('ass_form_cat_id');

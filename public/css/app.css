@@ -174,17 +174,35 @@
     width: 40px;
     height: 30px;
     text-align: center;
+    font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 3px;
+    padding: 5px;
+
 }
-.custom-input-lg{
+/* .custom-input-lg{
     width: 100%;
     text-align: left;
     border: none;
     border-bottom:  1px solid #eee;
     padding: 8px;
     border-radius: 0px;
-    box-sizing: border-box; /* Ensures padding does not exceed cell size */
+    box-sizing: border-box;
+} */
+
+.custom-input-lg {
+    width: 100%;
+    /* min-height: 40px; */
+    /* max-height: 100px; */
+    height: 30px;
+    resize: none;
+    overflow-y: hidden;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    border: 1px solid #eee;
+    padding: 5px;
+    border-radius: 4px;
+    text-align: left;
 }
 .custables{
     table-layout: fixed;

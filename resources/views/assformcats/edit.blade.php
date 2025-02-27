@@ -60,40 +60,56 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- <tr>
-                                                <td>1</td>
-                                                <td>Project Scope, User Requirement Analysis, Flow</td>
-                                                <td><input type="text" class="custom-input" value="1"></td>
-                                                <td><input type="text" class="custom-input" value="8"></td>
-                                                <td><input type="text" class="custom-input" value="5"></td>
-                                                <td><input type="text" class="custom-input" value="3"></td>
-                                                <td><input type="text" class="custom-input" value="1"></td>
-                                                <td><input type="text" class="custom-input" value="1"></td>
-                                                <td><input type="checkbox"></td>
+                                            @foreach($criterias as $idx=>$criteria)
+                                            @php
+                                                $idx++
+                                            @endphp
+                                            <tr id="tb_row_{{$idx}}">
+                                                <td>{{ $idx}}</td>
+                                                <td class="cells">
+                                                    <textarea type="text" name="names[]" class="custom-input-lg" value="{{ $criteria->name }}" placeholder="Write Something....">{{ $criteria->name }}</textarea>
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="excellents[]" class="custom-input" value="{{ $criteria->excellent }}">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="goods[]" class="custom-input" value="{{ $criteria->good }}">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="meet_standards[]" class="custom-input" value="{{ $criteria->meet_standard }}">
+                                                </td>
+
+                                                <td>
+                                                    <input type="text" name="below_standards[]" class="custom-input" value="{{ $criteria->below_standard }}">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="weeks[]" class="custom-input" value="{{ $criteria->week }}">
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" name="status_ids[]" class="status_ids" value="1" {{ $criteria->status_id == 1 ? "checked" : ''  }}>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" type="button" title="Remove" class="remove-btns text-danger" data-id='{{ $idx}}'>
+                                                        <i class="fas fa-minus-circle fa-lg"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Project Timeline, Roadmap & Manager Report</td>
-                                                <td><input type="text" class="custom-input" value="2"></td>
-                                                <td><input type="text" class="custom-input" value="7"></td>
-                                                <td><input type="text" class="custom-input" value="6"></td>
-                                                <td><input type="text" class="custom-input" value="4"></td>
-                                                <td><input type="text" class="custom-input" value="2"></td>
-                                                <td><input type="text" class="custom-input" value="1"></td>
-                                                <td><input type="checkbox"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td class="cells"><input type="text" class="custom-input-lg" value="3"></td>
-                                                <td><input type="text" class="custom-input" value="3"></td>
-                                                <td><input type="text" class="custom-input" value="6"></td>
-                                                <td><input type="text" class="custom-input" value="5"></td>
-                                                <td><input type="text" class="custom-input" value="3"></td>
-                                                <td><input type="text" class="custom-input" value="1"></td>
-                                                <td><input type="text" class="custom-input" value="2"></td>
-                                                <td><input type="checkbox"></td>
-                                            </tr> --}}
+                                            @endforeach
+
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2">Total Score</td>
+                                                <td><span id="total_excellent">{{ $total_excellent }}</span></td>
+                                                <td><span id="total_good">{{ $total_good }}</span></td>
+                                                <td><span id="total_meet_standard">{{ $total_meet_standard }}</span></td>
+                                                <td><span id="total_below_standard">{{ $total_below_standard }}</span></td>
+                                                <td><span id="total_week">{{ $total_week }}</span></td>
+
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
 
@@ -112,6 +128,26 @@
 
 
 
+            <div class="col-lg-12">
+                <form class="d-inline" action="{{ route('criterias.excel_import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row align-items-end">
+
+                        <div class="col-md-4">
+                            @error("file")
+                            <b class="text-danger">{{ $message }}</b>
+                            @enderror
+                            <label for="file" class="gallery @error('file') is-invalid @enderror mb-0"><span>Choose Excel File</span></label>
+                            <input type="file" name="file" id="file" class="form-control form-control-sm rounded-0" value="" hidden/>
+                        </div>
+                        <input type="hidden" id="ass_form_cat_id" name="ass_form_cat_id" value="{{ $assformcat->id }}"/>
+
+
+                        <button type="submit" class="btn btn-light" class=""><i class="ri-file-download-line"></i> Import</a>
+                    </div>
+
+                </form>
+            </div>
 
 
 
@@ -551,31 +587,44 @@
 
 
     {{-- Start Add Btn --}}
-        var cri_idx = 1;
-        $('.add_btn').click(function(){
+            var cri_idx = {{ count($criterias) + 1 }};
+            $('.add_btn').click(function() {
+                let html = `
+                    <tr id="tb_row_${cri_idx}">
+                        <td>${cri_idx}</td>
+                        <td class="cells">
+                            <input type="text" name="names[]" class="custom-input-lg" value="" placeholder="Write Something....">
+                        </td>
 
-            let html = `
-                <tr id="tb_row_${cri_idx}">
-                    <td>${cri_idx}</td>
-                    <td class="cells"><input type="text" name="names[]" class="custom-input-lg" value="" placeholder="Write Something...."></td>
+                        <td><input type="text" name="excellents[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="goods[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="meet_standards[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="below_standards[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="weeks[]" class="custom-input" value=""></td>
 
-                    @foreach($ratingscales as $ratingscale)
-                        <td><input type="text" name="{{ Str::snake($ratingscale['name'])."s" }}[]" id="" class="custom-input" value=""></td>
-                    @endforeach
+                        <td>
+                            <input type="checkbox" name="status_ids[]" class="status_ids" value="1" checked>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" type="button" title="Remove" class="remove-btns text-danger" data-id='${cri_idx}'>
+                                <i class="fas fa-minus-circle fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                $("#mytable tbody").append(html);
+                cri_idx++;
+            });
 
-                    <td>
-                        <input type="checkbox" name="status_ids[]" class="status_ids" value="1" checked>
-                    </td>
-                    <td>
-                        <a href="javascript:void(0);" type="button" title="Remove" class="remove-btns text-danger" data-id = '${cri_idx}'>
-                            <i class="fas fa-minus-circle fa-lg"></i>
-                        </a>
-                    </td>
-                </tr>
-            `;
-            $("#mytable tbody").append(html);
-            cri_idx++;
-        });
+            $(document).on('change', '.status_ids', function() {
+                if (!$(this).is(':checked')) {
+                    $(this).after('<input type="hidden" name="status_ids[]" value="2">');
+                } else {
+                    $(this).siblings('input[type="hidden"]').remove();
+                }
+            });
+            $('.status_ids').trigger('change');
+
 
 
     });
@@ -604,5 +653,56 @@
     });
 
     {{-- End Remove Btn --}}
+    $('.custom-input-lg').each(function () {
+        // Adjust height on page load
+        $(this).css('height', 'auto').css('height', this.scrollHeight + 'px');
+    });
+
+    $('.custom-input-lg').on('input', function () {
+        $(this).css('height', 'auto').css('height', this.scrollHeight + 'px');
+    });
+
+
+
+    function updateTotals() {
+        let total_excellent = 0;
+        let total_good = 0;
+        let total_meet_standard = 0;
+        let total_below_standard = 0;
+        let total_week = 0;
+
+        // Loop through each input and sum values
+        $("input[name='excellents[]']").each(function() {
+            total_excellent += parseInt($(this).val()) || 0;
+        });
+
+        $("input[name='goods[]']").each(function() {
+            total_good += parseInt($(this).val()) || 0;
+        });
+
+        $("input[name='meet_standards[]']").each(function() {
+            total_meet_standard += parseInt($(this).val()) || 0;
+        });
+
+        $("input[name='below_standards[]']").each(function() {
+            total_below_standard += parseInt($(this).val()) || 0;
+        });
+
+        $("input[name='weeks[]']").each(function() {
+            total_week += parseInt($(this).val()) || 0;
+        });
+
+        // Update UI with new totals
+        $("#total_excellent").text(total_excellent);
+        $("#total_good").text(total_good);
+        $("#total_meet_standard").text(total_meet_standard);
+        $("#total_below_standard").text(total_below_standard);
+        $("#total_week").text(total_week);
+    }
+
+    // Call updateTotals() when an input changes
+    $(".custom-input").on("input", function() {
+        updateTotals();
+    });
 </script>
 @stop

@@ -14,6 +14,7 @@ use App\Http\Controllers\GendersController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\StatusesController;
+use App\Http\Controllers\CriteriasController;
 use App\Http\Controllers\DivisionsController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\PositionsController;
@@ -177,5 +178,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete("/assformcats/{id}",[AssFormCatsController::class,"destroy"])->name("assformcats.destroy");
     Route::post("/assformcatsstatus",[AssFormCatsController::class,"changestatus"])->name("assformcats.changestatus");
     Route::post("/assformcats_excel_import",[AssFormCatsController::class,"excel_import"])->name("assformcats.excel_import");
+
+
+
+
+    Route::get("/criterias",[CriteriasController::class,"index"])->name("criterias.index");
+    Route::post("/criterias",[CriteriasController::class,"store"])->name("criterias.store");
+    Route::get("/criterias/{id}/edit",[CriteriasController::class,"edit"])->name("criterias.edit");
+    Route::put("/criterias/{id}",[CriteriasController::class,"update"])->name("criterias.update");
+    Route::delete("/criterias/{id}",[CriteriasController::class,"destroy"])->name("criterias.destroy");
+    Route::post("/criteriasstatus",[CriteriasController::class,"changestatus"])->name("criterias.changestatus");
+    Route::post("/criterias_excel_import",[CriteriasController::class,"excel_import"])->name("criterias.excel_import");
 
 });
