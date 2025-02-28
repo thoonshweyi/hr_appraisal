@@ -98,6 +98,12 @@
                         </a>
                     </li>
 
+                    <li class="{{ (request()->routeIs('appraisalcycles.index')) ? 'active' : '' }}">
+                        <a href="{{route('appraisalcycles.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.appraisalcycle_list')}}</span>
+                        </a>
+                    </li>
+
                 </ul>
             </li>
 

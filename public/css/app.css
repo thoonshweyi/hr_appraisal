@@ -234,3 +234,7 @@
 .custables th:nth-child(9){
     width: 5%;
 }
+
+.fixedtxtareas{
+    resize: none;
+}

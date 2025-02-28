@@ -83,7 +83,7 @@
                                                     <input type="text" name="below_standards[]" class="custom-input" value="{{ $criteria->below_standard }}">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="weeks[]" class="custom-input" value="{{ $criteria->week }}">
+                                                    <input type="text" name="weaks[]" class="custom-input" value="{{ $criteria->weak }}">
                                                 </td>
                                                 <td>
                                                     <input type="checkbox" name="status_ids[]" class="status_ids" value="1" {{ $criteria->status_id == 1 ? "checked" : ''  }}>
@@ -104,7 +104,7 @@
                                                 <td><span id="total_good">{{ $total_good }}</span></td>
                                                 <td><span id="total_meet_standard">{{ $total_meet_standard }}</span></td>
                                                 <td><span id="total_below_standard">{{ $total_below_standard }}</span></td>
-                                                <td><span id="total_week">{{ $total_week }}</span></td>
+                                                <td><span id="total_weak">{{ $total_weak }}</span></td>
 
                                                 <td></td>
                                                 <td></td>
@@ -600,7 +600,7 @@
                         <td><input type="text" name="goods[]" class="custom-input" value=""></td>
                         <td><input type="text" name="meet_standards[]" class="custom-input" value=""></td>
                         <td><input type="text" name="below_standards[]" class="custom-input" value=""></td>
-                        <td><input type="text" name="weeks[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="weaks[]" class="custom-input" value=""></td>
 
                         <td>
                             <input type="checkbox" name="status_ids[]" class="status_ids" value="1" checked>
@@ -669,7 +669,7 @@
         let total_good = 0;
         let total_meet_standard = 0;
         let total_below_standard = 0;
-        let total_week = 0;
+        let total_weak = 0;
 
         // Loop through each input and sum values
         $("input[name='excellents[]']").each(function() {
@@ -688,8 +688,8 @@
             total_below_standard += parseInt($(this).val()) || 0;
         });
 
-        $("input[name='weeks[]']").each(function() {
-            total_week += parseInt($(this).val()) || 0;
+        $("input[name='weaks[]']").each(function() {
+            total_weak += parseInt($(this).val()) || 0;
         });
 
         // Update UI with new totals
@@ -697,7 +697,7 @@
         $("#total_good").text(total_good);
         $("#total_meet_standard").text(total_meet_standard);
         $("#total_below_standard").text(total_below_standard);
-        $("#total_week").text(total_week);
+        $("#total_weak").text(total_weak);
     }
 
     // Call updateTotals() when an input changes

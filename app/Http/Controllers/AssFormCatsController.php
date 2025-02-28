@@ -26,7 +26,7 @@ class AssFormCatsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            "name" => "required|max:50|unique:position_levels",
+            "name" => "required|max:255|unique:position_levels",
             "status_id" => "required|in:1,2",
         ]);
 
@@ -53,11 +53,11 @@ class AssFormCatsController extends Controller
         $total_good =  Criteria::where('ass_form_cat_id',$id)->sum('good');
         $total_meet_standard =  Criteria::where('ass_form_cat_id',$id)->sum('meet_standard');
         $total_below_standard =  Criteria::where('ass_form_cat_id',$id)->sum('below_standard');
-        $total_week =  Criteria::where('ass_form_cat_id',$id)->sum('week');
+        $total_weak =  Criteria::where('ass_form_cat_id',$id)->sum('weak');
 
         // dd($total_good);
 
-        return view("assformcats.edit",compact("assformcat","statuses","ratingscales","criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_week"));
+        return view("assformcats.edit",compact("assformcat","statuses","ratingscales","criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
     }
 
 
@@ -119,7 +119,7 @@ class AssFormCatsController extends Controller
         $goods = $request->goods;
         $meet_standards = $request->meet_standards;
         $below_standards = $request->below_standards;
-        $weeks = $request->weeks;
+        $weaks = $request->weaks;
         $status_ids = $request->status_ids;
 
         // dd($excellents);
@@ -138,7 +138,7 @@ class AssFormCatsController extends Controller
                     "good" => $goods[$idx],
                     "meet_standard" => $meet_standards[$idx],
                     "below_standard" => $below_standards[$idx],
-                    "week" => $weeks[$idx],
+                    "weak" => $weaks[$idx],
                 ]);
             }
         }

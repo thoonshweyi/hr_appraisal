@@ -27,6 +27,7 @@ use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
 use App\Http\Controllers\PositionLevelsController;
 use App\Http\Controllers\SubDepartmentsController;
+use App\Http\Controllers\AppraisalCyclesController;
 use App\Http\Controllers\AgileDepartmentsController;
 
 
@@ -189,5 +190,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete("/criterias/{id}",[CriteriasController::class,"destroy"])->name("criterias.destroy");
     Route::post("/criteriasstatus",[CriteriasController::class,"changestatus"])->name("criterias.changestatus");
     Route::post("/criterias_excel_import",[CriteriasController::class,"excel_import"])->name("criterias.excel_import");
+
+
+    Route::get("/appraisalcycles",[AppraisalCyclesController::class,"index"])->name("appraisalcycles.index");
+    Route::get("/appraisalcycles/create",[AppraisalCyclesController::class,"create"])->name("appraisalcycles.create");
+    Route::post("/appraisalcycles",[AppraisalCyclesController::class,"store"])->name("appraisalcycles.store");
+    Route::get("/appraisalcycles/{id}",[AppraisalCyclesController::class,"show"])->name("appraisalcycles.show");
+    Route::get("/appraisalcycles/{id}/edit",[AppraisalCyclesController::class,"edit"])->name("appraisalcycles.edit");
+    Route::put("/appraisalcycles/{id}",[AppraisalCyclesController::class,"update"])->name("appraisalcycles.update");
+    Route::delete("/appraisalcycles/{id}",[AppraisalCyclesController::class,"destroy"])->name("appraisalcycles.destroy");
+    Route::post("/appraisalcyclesstatus",[AppraisalCyclesController::class,"changestatus"])->name("appraisalcycles.changestatus");
 
 });

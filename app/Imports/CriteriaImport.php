@@ -12,7 +12,13 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use App\Exceptions\ExcelImportValidationException;
+use Rabbit;
 
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use Maatwebsite\Excel\Row;
+
+
+require_once app_path('Libraries/Rabbit.php');
 class CriteriaImport implements ToModel,WithHeadingRow, OnEachRow{
     protected $rowNumber = 1;  // Initialize row number
     protected $ass_form_cat_id;
@@ -32,7 +38,7 @@ class CriteriaImport implements ToModel,WithHeadingRow, OnEachRow{
             "good" => 'required',
             "meet_standard" => 'required',
             "below_standard" => 'required',
-            "week" => 'required',
+            "weak" => 'required',
         ]);
 
         // If validation fails, throw an exception with the row number
@@ -41,15 +47,32 @@ class CriteriaImport implements ToModel,WithHeadingRow, OnEachRow{
                 $validator->errors()->toArray(),
                 $this->rowNumber
             );
+
         }
 
-        // Proceed with saving the data if validation passes
+        // dd(Rabbit::isZawgyi($row['name']));
+        // if(Rabbit::isZawgyi($row['name']))
+
+        // if (mb_check_encoding($row['name'], 'UTF-8')) {
+        //     dd("The string is valid UTF-8.");
+        // } else {
+        //     dd("The string is not valid UTF-8.");
+        // }
+
+
+        // Assuming you want to check the font of the 'name' column (A1)
+        // $font = $sheet->getStyle('A2')->getFont();
+        // $fontName = $font->getName(); // Get the font name
+        // dd($row);
+
         $user = Auth::user();
         $user_id = $user["id"];
 
         $this->rowNumber += 1;
+
         return new Criteria([
-            'name'      => $row['name'],
+            // 'name'      =>   Rabbit::zg2uni($row['name']),
+            'name'      =>   $row['name'],
             // "ass_form_cat_id" => AssFormCat::where('name',$row['division'])->first()->id,
             "ass_form_cat_id" => $this->ass_form_cat_id,
             'status_id' => 1, // Default status_id (change as needed)
@@ -59,7 +82,7 @@ class CriteriaImport implements ToModel,WithHeadingRow, OnEachRow{
             "good" => $row['good'],
             "meet_standard" => $row['meet_standard'],
             "below_standard" => $row['below_standard'],
-            "week" => $row['week'],
+            "weak" => $row['weak'],
         ]);
     }
 
