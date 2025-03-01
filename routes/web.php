@@ -23,6 +23,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DeptGroupsController;
 use App\Http\Controllers\AssFormCatsController;
 use App\Http\Controllers\DepartmentsController;
+use App\Http\Controllers\PeerToPeersController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
 use App\Http\Controllers\PositionLevelsController;
@@ -200,5 +201,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put("/appraisalcycles/{id}",[AppraisalCyclesController::class,"update"])->name("appraisalcycles.update");
     Route::delete("/appraisalcycles/{id}",[AppraisalCyclesController::class,"destroy"])->name("appraisalcycles.destroy");
     Route::post("/appraisalcyclesstatus",[AppraisalCyclesController::class,"changestatus"])->name("appraisalcycles.changestatus");
+
+
+
+    Route::get("/peertopeers",[PeerToPeersController::class,"index"])->name("peertopeers.index");
+    Route::get("/peertopeers/create",[PeerToPeersController::class,"create"])->name("peertopeers.create");
+    Route::post("/peertopeers",[PeerToPeersController::class,"store"])->name("peertopeers.store");
+    Route::get("/peertopeers/{id}",[PeerToPeersController::class,"show"])->name("peertopeers.show");
+    Route::get("/peertopeers/{id}/edit",[PeerToPeersController::class,"edit"])->name("peertopeers.edit");
+    Route::put("/peertopeers/{id}",[PeerToPeersController::class,"update"])->name("peertopeers.update");
+    Route::delete("/peertopeers/{id}",[PeerToPeersController::class,"destroy"])->name("peertopeers.destroy");
+    Route::post("peertopeersstatus",[PeerToPeersController::class,"changestatus"])->name("peertopeers.changestatus");
 
 });

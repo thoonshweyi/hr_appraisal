@@ -39,6 +39,7 @@
 
 
       @include('sweetalert::alert')
+      @yield('css')
     <style>
         .deleted-row {
             background-color: #F1F5F8; /* Set the grey color for deleted rows */

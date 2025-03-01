@@ -14,116 +14,234 @@
 
 
 
-            <div class="col-lg-12 my-2 ">
-                <form id="" action="{{route('appraisalcycles.update',$appraisalcycle->id)}}" method="POST">
-                    {{ csrf_field() }}
-                    @method('PUT')
-                    <div class="row align-items-start">
-                        <div class="col-md-3">
-                            <label for="name">Name <span class="text-danger">*</span></label>
-                            @error("name")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ old('name',$appraisalcycle->name) }}"/>
+            <div class="col-lg-12">
+
+            <div class="card border-0 rounded-0 shadow mb-4">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <button type="button" class="tablinks" onclick="gettab(event,'appraisalcycle')">Peroid</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" id="autoclick" class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
+                    </li>
+                </ul>
+                <h4 id="tab-title" class="tab-title"></h4>
+                <div class="tab-content">
+
+                        <div id="appraisalcycle" class="tab-pane">
+                            {{-- <div class="col-lg-12 my-2 "> --}}
+                                <form id="" action="{{route('appraisalcycles.update',$appraisalcycle->id)}}" method="POST">
+                                    {{ csrf_field() }}
+                                    @method('PUT')
+                                    <div class="row align-items-start">
+                                        <div class="col-md-3">
+                                            <label for="name">Name <span class="text-danger">*</span></label>
+                                            @error("name")
+                                                    <span class="text-danger">{{ $message }}<span>
+                                            @enderror
+                                            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ old('name',$appraisalcycle->name) }}"/>
+                                        </div>
+
+
+
+
+                                        <div class="col-md-3">
+                                            <label for="status_id">Status</label>
+                                            <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
+                                                @foreach($statuses as $status)
+                                                    <option value="{{$status['id']}}" {{ $status['id'] == old('status_id',$appraisalcycle->status_id) ? "selected" : "" }}>{{$status['name']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <label for="start_date">Period Start Date <span class="text-danger">*</span></label>
+                                            @error("start_date")
+                                                    <span class="text-danger">{{ $message }}<span>
+                                            @enderror
+                                            <input type="date" name="start_date" id="start_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('start_date',$appraisalcycle->start_date) }}"/>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <label for="end_date">Period End Date <span class="text-danger">*</span></label>
+                                            @error("end_date")
+                                                    <span class="text-danger">{{ $message }}<span>
+                                            @enderror
+                                            <input type="date" name="end_date" id="end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('start_date',$appraisalcycle->end_date) }}"/>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <label for="action_start_date">Action Start Date <span class="text-danger">*</span></label>
+                                            @error("action_start_date")
+                                                    <span class="text-danger">{{ $message }}<span>
+                                            @enderror
+                                            <input type="date" name="action_start_date" id="action_start_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_start_date',$appraisalcycle->action_start_date) }}"/>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <label for="action_end_date">Action End Date <span class="text-danger">*</span></label>
+                                            @error("action_end_date")
+                                                    <span class="text-danger">{{ $message }}<span>
+                                            @enderror
+                                            <input type="date" name="action_end_date" id="action_end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_end_date',$appraisalcycle->action_end_date) }}"/>
+                                        </div>
+
+
+
+                                        <div class="col-md-3">
+                                            <label for="action_start_time">Action Start Time <span class="text-danger">*</span></label>
+                                            @error("action_start_date")
+                                                    <span class="text-danger">{{ $message }}<span>
+                                            @enderror
+                                            <input type="time" name="action_start_time" id="action_start_time" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_start_time',$appraisalcycle->action_start_time) }}"/>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <label for="action_end_time">Action End Time <span class="text-danger">*</span></label>
+                                            @error("action_end_time")
+                                                    <span class="text-danger">{{ $message }}<span>
+                                            @enderror
+                                            <input type="time" name="action_end_time" id="action_end_time" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_end_time',$appraisalcycle->action_end_time) }}"/>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label for="description">Description <span class="text-danger">*</span></label>
+                                            @error("description")
+                                                    <span class="text-danger">{{ $message }}<span>
+                                            @enderror
+                                            <textarea name="description" id="description" class="form-control form-control-sm rounded-0 fixedtxtareas" cols="30" rows="4" placeholder="Write Something....">{{ old('description',$appraisalcycle->description) }}</textarea>
+                                        </div>
+
+
+
+                                        {{--
+                                        <div class="col-md-3">
+                                            <label for="branch_id">Branch</label>
+                                            <select name="branch_id" id="branch_id" class="form-control form-control-sm rounded-0">
+                                                @foreach($branches as $branch)
+                                                    <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == old('branch_id',$appraisalcycle->branch_id) ? "selected" : "" }}>{{$branch['branch_name']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div> --}}
+
+
+
+                                        <div class="col-md-12 mt-2">
+
+                                            <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
+
+                                            <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            {{-- </div> --}}
                         </div>
 
 
+                        <div id="peer_to_peer" class="tab-pane">
+                            <div class="row">
+
+                                <div class="col-lg-3">
+                                    {{-- <h4>All Accessors</h4> --}}
+                                    {{-- <input type="text" id="search-input" class="form-control form-control-sm rounded-0" placeholder="Search...." />
+                                    <div id="treeview">
+
+                                        <ul id="assessors-tree">
+                                            @foreach($users as $user)
+                                                <li><label for="{{ $user->id }}">{{ $user->name }}</label></li>
+                                            @endforeachuser-list
+
+                                        </ul>
+                                    </div> --}}
 
 
-                        <div class="col-md-3">
-                            <label for="status_id">Status</label>
-                            <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
-                                @foreach($statuses as $status)
-                                    <option value="{{$status['id']}}" {{ $status['id'] == old('status_id',$appraisalcycle->status_id) ? "selected" : "" }}>{{$status['name']}}</option>
-                                @endforeach
-                            </select>
+                                    <div class="header">
+                                        <h4 class="title">All Accessors</h4>
+                                        <small class="subtitle">Search by name or employee id</small>
+                                        <input type="text" name="search" id="search" class="search" placeholder="Search...."/>
+                                    </div>
+                                    <ul id="result" class="user-list">
+                                        @foreach($users as $user)
+                                        {{-- <img src="${user.picture.large}" alt="${user.name.first}"/> --}}
+                                        <div class="user-info">
+                                            <li data-user_id = {{ $user->id }}>
+                                                <i class="ri-folder-4-line"></i>
+                                                    <h4>{{ $user->name }} ( {{ $user->employee_id }} )</h4>
+                                                {{-- <p>${user.location.city} , ${user.location.country}</p> --}}
+                                            </li>
+
+                                        </div>
+                                        @endforeach
+
+
+                                        {{-- <li><h3>Loading...</h3></li> --}}
+                                    </ul>
+
+                                    <form action="{{ route('peertopeers.create') }}" method="" class="my-2">
+                                        <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
+                                        <button type="submit" class="btn new_btn">New</button>
+                                    </form>
+                                </div>
+
+                                <div class="col-lg-9">
+                                    <div class="table-responsive rounded mb-3">
+                                        <table class="table mb-0" id="branch_list">
+                                            <thead class="bg-white text-uppercase">
+                                                <tr class="ligth ligth-data">
+                                                    <th>No</th>
+                                                    <th>Assessor Name</th>
+                                                    <th>Assessee Name</th>
+                                                    <th>Assessee Branch</th>
+                                                    <th>Assessee Division</th>
+                                                    <th>Assessee Rank</th>
+                                                    <th>Assessee Position</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="ligth-body">
+                                                {{-- @foreach($genders as $idx=>$gender)
+                                                <tr>
+                                                    <td>{{$idx + $genders->firstItem()}}</td>
+                                                    <td>{{$gender["name"]}}</td>
+                                                    <td>
+                                                        <div class="custom-switch p-0">
+                                                            <input type="checkbox" id="customSwitch-{{ $idx + $genders->firstItem() }}" class="custom-switch-input statuschange-btn" {{ $gender->status_id === 1 ? "checked" : "" }} data-id="{{ $gender->id }}"/>
+                                                            <label class="custom-switch-label" for="customSwitch-{{ $idx + $genders->firstItem() }}"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ $gender["user"]["name"] }}</td>
+                                                    <td>{{ $gender->created_at->format('d M Y') }}</td>
+                                                    <td>{{ $gender->updated_at->format('d M Y') }}</td>
+                                                    <td class="text-center">
+                                                        <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$gender->id}}" data-name="{{$gender->name}}" data-status="{{$gender->status_id}}"><i class="fas fa-pen"></i></a>
+                                                        <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
+                                                    </td>
+                                                    <form id="formdelete-{{ $idx }}" class="" action="{{route('genders.destroy',$gender->id)}}" method="POST">
+                                                        @csrf
+                                                        @method("DELETE")
+                                                    </form>
+                                            </tr>
+                                                @endforeach --}}
+                                            </tbody>
+                                        </table>
+                                        <div class="d-flex justify-content-center">
+                                            {{-- {{ $genders->appends(request()->all())->links("pagination::bootstrap-4") }} --}}
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
 
-                        <div class="col-md-3">
-                            <label for="start_date">Period Start Date <span class="text-danger">*</span></label>
-                            @error("start_date")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="date" name="start_date" id="start_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('start_date',$appraisalcycle->start_date) }}"/>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="end_date">Period End Date <span class="text-danger">*</span></label>
-                            @error("end_date")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="date" name="end_date" id="end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('start_date',$appraisalcycle->end_date) }}"/>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="action_start_date">Action Start Date <span class="text-danger">*</span></label>
-                            @error("action_start_date")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="date" name="action_start_date" id="action_start_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_start_date',$appraisalcycle->action_start_date) }}"/>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="action_end_date">Action End Date <span class="text-danger">*</span></label>
-                            @error("action_end_date")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="date" name="action_end_date" id="action_end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_end_date',$appraisalcycle->action_end_date) }}"/>
-                        </div>
-
-
-
-                        <div class="col-md-3">
-                            <label for="action_start_time">Action Start Time <span class="text-danger">*</span></label>
-                            @error("action_start_date")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="time" name="action_start_time" id="action_start_time" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_start_time',$appraisalcycle->action_start_time) }}"/>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="action_end_time">Action End Time <span class="text-danger">*</span></label>
-                            @error("action_end_time")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="time" name="action_end_time" id="action_end_time" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_end_time',$appraisalcycle->action_end_time) }}"/>
-                        </div>
-
-                        <div class="col-md-12">
-                            <label for="description">Description <span class="text-danger">*</span></label>
-                            @error("description")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <textarea name="description" id="description" class="form-control form-control-sm rounded-0 fixedtxtareas" cols="30" rows="4" placeholder="Write Something....">{{ old('description',$appraisalcycle->description) }}</textarea>
-                        </div>
-
-
-
-{{--
-                        <div class="col-md-3">
-                            <label for="branch_id">Branch</label>
-                            <select name="branch_id" id="branch_id" class="form-control form-control-sm rounded-0">
-                                @foreach($branches as $branch)
-                                    <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == old('branch_id',$appraisalcycle->branch_id) ? "selected" : "" }}>{{$branch['branch_name']}}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-
-
-
-                        <div class="col-md-12 mt-2">
-
-                            <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
-
-                            <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
+            </div>
             </div>
 
 
@@ -195,97 +313,17 @@
 
 
 
-    <!-- start edit modal -->
-    {{-- <div id="editmodal" class="modal fade">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title">Edit Form</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <form id="formaction" action="" method="POST">
-                        {{ csrf_field() }}
-                        {{ method_field('PUT') }}
-                        <div class="row align-items-end">
-                                <div class="col-md-6">
-                                    <label for="edit_name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="edit_name" id="edit_name" class="form-control form-control-sm rounded-0" placeholder="Enter Status Name" value="{{ old('name') }}"/>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_division_id">Division</label>
-                                    <select name="edit_division_id" id="edit_division_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($divisions as $division)
-                                            <option value="{{$division['id']}}">{{$division['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_department_id">Departments</label>
-                                    <select name="edit_department_id" id="edit_department_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Department</option>
-                                        @foreach($departments as $department)
-                                            <option value="{{$department['id']}}">{{$department['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_sub_department_id">Sub Departments</label>
-                                    <select name="edit_sub_department_id" id="edit_sub_department_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Sub Department</option>
-                                        @foreach($subdepartments as $subdepartment)
-                                            <option value="{{$subdepartment['id']}}">{{$subdepartment['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_section_id">Sections</label>
-                                    <select name="edit_section_id" id="edit_section_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Section</option>
-                                        @foreach($sections as $section)
-                                            <option value="{{$section['id']}}">{{$section['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-
-                                <div class="col-md-6">
-                                    <label for="edit_status_id">Status</label>
-                                    <select name="edit_status_id" id="edit_status_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($statuses as $status)
-                                            <option value="{{$status['id']}}">{{$status['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-12 mt-2">
-                                    <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
-                                </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-
-                </div>
-            </div>
-    </div>
-    </div> --}}
-      <!-- end edit modal -->
-
 <!-- End MODAL AREA -->
 @endsection
+
+@section('css')
+<link rel="stylesheet" href="{{ asset('assets/libs/jstreerepo/dist/themes/default/style.min.css')}}"/>
+@endsection
 @section('js')
+    <script src="{{ asset('assets/libs/jstreerepo/dist/jstree.min.js') }}" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
-        $("#division_id").selectize({
+        $("#status_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
@@ -296,93 +334,21 @@
             searchField: ["value", "label"]
         });
 
-        $("#department_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Department',
-            searchField: ["value", "label"]
-        });
-
-        $("#sub_department_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Sub Department',
-            searchField: ["value", "label"]
-        });
-
-        $("#section_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Section',
-            searchField: ["value", "label"]
-        });
-
-
-        $("#status_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
-
-
-        $("#position_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Position',
-            searchField: ["value", "label"]
-        });
-
-        $("#gender_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
-
-        $("#position_level_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
 
 
 
-        $("#beginning_date,#enddate").flatpickr({
+        $("#start_date,#end_date,#action_start_date,#action_end_date").flatpickr({
             dateFormat: "Y-m-d",
             {{-- minDate: "today", --}}
             {{-- maxDate: new Date().fp_incr(30) --}}
        });
 
+       $("#action_start_time,#action_end_time").flatpickr({
+            enableTime: true, // Enable time picker
+            noCalendar: true, // Hide the calendar if only time is needed
+            dateFormat: "H:i", // Format for hours and minutes
+            time_24hr: true // Use 24-hour format
+        });
 
         // Start Delete Item
         $(".delete-btns").click(function(){
@@ -411,28 +377,6 @@
        });
        // End Delete Item
 
-
-
-       // Start Edit Form
-       $(document).on("click",".editform",function(e){
-            {{-- console.log($(this).attr("data-id"),$(this).attr("data-name")); --}}
-            {{-- console.log($(this).attr("data-status")); --}}
-
-            $("#edit_name").val($(this).attr("data-name"));
-            $("#edit_code").val($(this).attr("data-code"));
-            $("#edit_division_id").val($(this).attr("data-division"));
-            $("#edit_department_id").val($(this).attr("data-department"));
-            $("#edit_sub_department_id").val($(this).attr("data-sub_department"));
-            $("#edit_status_id").val($(this).attr("data-status"));
-            $("#edit_section_id").val($(this).attr("data-section"));
-
-
-            const getid = $(this).attr("data-id");
-            $("#formaction").attr("action",`/positions/${getid}`);
-
-            e.preventDefault();
-       });
-       // End Edit Form
 
 
         //Start change-btn
@@ -471,95 +415,247 @@
         });
         // End change btn
 
-      {{-- Start Preview Image --}}
+        {{-- Start Preview Image --}}
 
-      var previewimages = function(input, output) {
-        if (input.files) {
-            var totalfiles = input.files.length;
+        var previewimages = function(input, output) {
+            if (input.files) {
+                var totalfiles = input.files.length;
 
-            if (totalfiles > 0) {
-                $('.gallery').addClass('removetxt');
-            } else {
-                $('.gallery').removeClass('removetxt');
-            }
+                if (totalfiles > 0) {
+                    $('.gallery').addClass('removetxt');
+                } else {
+                    $('.gallery').removeClass('removetxt');
+                }
 
-            $(output).html(""); // Clear previous previews
+                $(output).html(""); // Clear previous previews
 
-            let html = ''
-            for (let i = 0; i < totalfiles; i++) {
-                var file = input.files[i];
-                var filereader = new FileReader();
+                let html = ''
+                for (let i = 0; i < totalfiles; i++) {
+                    var file = input.files[i];
+                    var filereader = new FileReader();
 
-                filereader.onload = function(e) {
-                    let fileType = file.type;
-                    console.log("File Type:", fileType);
+                    filereader.onload = function(e) {
+                        let fileType = file.type;
+                        console.log("File Type:", fileType);
 
-                    {{-- if (fileType === 'application/pdf') {
-                        // Show PDF icon
-                        $($.parseHTML('<img>')).attr({
-                            'src': '{{ asset('images/pdf.png') }}',
-                            'title': file.name
-                        }).appendTo(output);
-                    } else if (
-                        fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                        fileType === 'application/vnd.ms-excel'
-                    ) {
-                        // Show Excel icon
-                        $($.parseHTML('<img>')).attr({
-                            'src': '{{ asset('images/excel.png') }}',
-                            'title': file.name
-                        }).appendTo(output);
-                    } else {
-                        // Show normal image preview
-                        $($.parseHTML('<img>')).attr({
-                            'src': e.target.result,
-                            'title': file.name
-                        }).appendTo(output);
-                    } --}}
+                        {{-- if (fileType === 'application/pdf') {
+                            // Show PDF icon
+                            $($.parseHTML('<img>')).attr({
+                                'src': '{{ asset('images/pdf.png') }}',
+                                'title': file.name
+                            }).appendTo(output);
+                        } else if (
+                            fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                            fileType === 'application/vnd.ms-excel'
+                        ) {
+                            // Show Excel icon
+                            $($.parseHTML('<img>')).attr({
+                                'src': '{{ asset('images/excel.png') }}',
+                                'title': file.name
+                            }).appendTo(output);
+                        } else {
+                            // Show normal image preview
+                            $($.parseHTML('<img>')).attr({
+                                'src': e.target.result,
+                                'title': file.name
+                            }).appendTo(output);
+                        } --}}
 
-                    if (
-                        fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                        fileType === 'application/vnd.ms-excel'
-                    ) {
-                        // Show Excel icon
-                        {{-- $($.parseHTML('<img>')).attr({
-                            'src': '{{ asset('images/excel.png') }}',
-                            'title': file.name
-                        }).appendTo(output); --}}
+                        if (
+                            fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                            fileType === 'application/vnd.ms-excel'
+                        ) {
+                            // Show Excel icon
+                            {{-- $($.parseHTML('<img>')).attr({
+                                'src': '{{ asset('images/excel.png') }}',
+                                'title': file.name
+                            }).appendTo(output); --}}
+
+
+                            html = `
+                                <img src="{{ asset('images/excel.png') }}" title=${file.name} />
+                            `;
+                            $(output).append(html);
+                        }else{
+                            Swal.fire({
+                                title: "Invalid File!!",
+                                text: "Only Excel files (.xls, .xlsx) are allowed.",
+                                icon: "question"
+                            });
 
 
                         html = `
-                            <img src="{{ asset('images/excel.png') }}" title=${file.name} />
+                            <img src="{{ asset('images/file-invalid.png') }}" title=${file.name} />
                         `;
                         $(output).append(html);
-                    }else{
-                        Swal.fire({
-                            title: "Invalid File!!",
-                            text: "Only Excel files (.xls, .xlsx) are allowed.",
-                            icon: "question"
-                          });
+                        }
 
+                    };
 
-                    html = `
-                          <img src="{{ asset('images/file-invalid.png') }}" title=${file.name} />
-                    `;
-                      $(output).append(html);
-                    }
-
-                };
-
-                filereader.readAsDataURL(file);
+                    filereader.readAsDataURL(file);
+                }
             }
+            $('#file').change(function() {
+                previewimages(this, '.gallery');
+            });
+
+            {{-- End Preview Image --}}
+
+        };
+
+
+        {{-- Start Jstree  --}}
+            // Initialize jstree on the #assessors-tree (ul element)
+            $('#treeview').jstree({
+                "core": {
+                    "themes": {
+                        "variant": "large"
+                    }
+                },
+                "plugins": ["wholerow", "search"], // Include the 'search' plugin
+                "search": {
+                    "show_only_matches": true // Show only matched nodes
+                }
+            });
+
+            // Trigger search on keyup event of the search input field
+            $('#search-input').on('keyup', function() {
+                var searchText = $(this).val();
+                console.log(searchText);
+                // Call the search method on the jstree instance
+                $('#treeview').jstree(true).search(searchText);
+            });
+
+        {{-- End Jstree --}}
+
+
+
+    });
+
+    // Start Tag Box
+    var gettablinks = document.getElementsByClassName('tablinks');  //HTMLCollection
+    var gettabpanes = document.getElementsByClassName('tab-pane');
+    // console.log(gettabpanes);
+
+    var tabpanes = Array.from(gettabpanes);
+
+    function gettab(evn,linkid){
+
+        tabpanes.forEach(function(tabpane){
+            tabpane.style.display = 'none';
+        });
+
+        for(var x = 0 ; x < gettablinks.length ; x++){
+            gettablinks[x].className = gettablinks[x].className.replace(' active','');
         }
-    };
 
-    $('#file').change(function() {
-        previewimages(this, '.gallery');
+
+        document.getElementById(linkid).style.display = 'block';
+
+
+        // evn.target.className += ' active';
+        // evn.target.className = evn.target.className.replace('tablinks','tablinks active');
+        // evn.target.classList.add('active');
+
+        // evn.target = evn.currentTarget
+        evn.currentTarget.className += ' active';
+
+
+        document.getElementById('tab-title').textContent = evn.target.textContent;
+
+    }
+
+    document.getElementById('autoclick').click();
+    // End Tag Box
+
+
+
+    {{-- Start User List Filter --}}
+    const filterel = document.getElementById('search');
+    const resultel = document.getElementById('result');
+
+    const totalusers = 50;
+
+    const listitems = document.querySelectorAll('.user-info li');
+
+    async function getdata(){
+
+        // Method 1
+        // fetch(url)
+        // .then(res=>res.json())
+        // .then(data => data.results)
+
+
+
+        // Method 2
+        const res = await fetch(`https://randomuser.me/api/?results=${totalusers}`);
+        // console.log(res);
+
+        // const data = await res.json();
+        // console.log(data);
+        // console.log(data.results);
+        // other api can
+        // console.log(data[results]);
+
+
+        const {results} = await res.json();
+        // console.log(results);
+
+        resultel.innerText = '';
+
+        results.forEach(user => {
+
+            // console.log(user);
+
+            const li = document.createElement('li');
+
+            li.innerHTML = `
+
+            <img src="${user.picture.large}" alt="${user.name.first}"/>
+            <div class="user-info">
+                <h4>${user.name.title}. ${user.name.first} ${user.name.last}</h4>
+                <p>${user.location.city} , ${user.location.country}</p>
+            </div>
+
+
+            `;
+
+            resultel.appendChild(li);
+
+            listitems.push(li);
+
+            // console.log(listitems);
+
+        });
+    }
+    {{-- getdata(); --}}
+
+
+    filterel.addEventListener('input',(e)=>filterdata(e.target.value));
+
+    function filterdata(search){
+        // console.log(search);
+        listitems.forEach(listitem=>{
+            // console.log(listitem);
+            if(listitem.innerText.toLocaleLowerCase().includes(search.toLowerCase())){
+                listitem.classList.remove('hide');
+            }else{
+                listitem.classList.add('hide');
+            }
+        });
+    }
+
+    $(document).on('click',".user-info li",function(){
+        let getuser_id = $(this).data('user_id');
+        {{-- let getassformcat_id =  --}}
+        console.log(getuser_id);
+        $(".user-info li").removeClass('active');
+        $(this).toggleClass('active');
+        $('#assessor_user_id').val(getuser_id);
     });
 
-        {{-- End Preview Image --}}
 
 
-    });
+    {{-- End User List Filter --}}
 </script>
 @stop

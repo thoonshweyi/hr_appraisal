@@ -135,20 +135,13 @@ class AppraisalCyclesController extends Controller
         // dd($appraisalcycle);
 
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
-        $divisions = Division::where('status_id',1)->orderBy('id')->get();
-        $departments = AgileDepartment::where('status_id',1)->orderBy('id')->get();
-        $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
-        $sections = Section::where('status_id',1)->orderBy('id')->get();
-        $positions = Position::where('status_id',1)->orderBy('id')->get();
-        $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
 
-        $genders = Gender::where('status_id',1)->orderBy('id')->get();
-        $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
+        $users = User::where('status',1)->get();
 
         // dd($branches);
 
 
-        return view("appraisalcycles.edit",compact("appraisalcycle","statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels"));
+        return view("appraisalcycles.edit",compact("appraisalcycle","statuses","users"));
     }
 
 
@@ -239,4 +232,6 @@ class AppraisalCyclesController extends Controller
             return redirect()->back()->with('error', "System Error:".$e->getMessage());
         }
    }
+
+
 }

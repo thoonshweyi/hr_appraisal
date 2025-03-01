@@ -5,178 +5,64 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
-                    <div>
-                        <h4 class="mb-3">Employee Edit</h4>
-                    </div>
+                <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-2">
+                        <h4 class="mb-3 peertopeers_titles">An Assessor tag to Assessee(s)</h4>
                 </div>
             </div>
+
+            {{-- <div class="col-lg-12 my-2 ">
+                <h4>Assessor Filter</h4>
+                <form class="d-inline" action="{{ route('positions.index') }}" method="GET">
+                    @csrf
+                    <div class="row align-items-end">
+
+                        <div class="col-md-2">
+                            <label for="filter_name">Name <span class="text-danger">*</span></label>
+                            <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Department Name" value="{{ request()->filter_name }}"/>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="filter_division_id">Division</label>
+                            <select name="filter_division_id" id="filter_division_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Division</option>
+                                @foreach($divisions as $division)
+                                    <option value="{{$division['id']}}" {{ $division['id'] == request()->filter_division_id ? 'selected' : '' }}>{{$division['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
+
+                    </div>
+
+                </form>
+                <hr>
+            </div> --}}
 
 
 
             <div class="col-lg-12 my-2 ">
-                <form id="" action="{{route('employees.update',$employee->id)}}" method="POST">
+                <form id="" action="{{route('employees.store')}}" method="POST">
                     {{ csrf_field() }}
-                    @method('PUT')
                     <div class="row align-items-start">
-                        <div class="col-md-3">
-                            <label for="employee_name">Name <span class="text-danger">*</span></label>
-                            @error("employee_name")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="text" name="employee_name" id="employee_name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ old('employee_name',$employee->employee_name) }}"/>
-                        </div>
 
                         <div class="col-md-3">
-                            <label for="nickname">Nickname</label>
-                            @error("nickname")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="text" name="nickname" id="nickname" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Nickname" value="{{ old('nickname',$employee->nickname) }}"/>
-                        </div>
-
-
-
-                        <div class="col-md-3">
-                            <label for="division_id">Division</label>
-                            <select name="division_id" id="division_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Division</option>
-                                @foreach($divisions as $division)
-                                    <option value="{{$division['id']}}" {{ $division['id'] == old('division_id',$employee->division_id) ? "selected" : "" }}>{{$division['name']}}</option>
+                            <label for="assessor_user_id">An Assessor</label>
+                            <select name="assessor_user_id" id="assessor_user_id" class="form-control form-control-sm rounded-0" value="{{ request()->assessor_user_id }}">
+                                <option value="" selected disabled>Choose Assessor</option>
+                                @foreach($users as $user)
+                                    <option value="{{$user['id']}}" {{ $user['id'] == old('assessor_user_id',request()->assessor_user_id) ? "selected" : "" }}>{{$user['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
 
-                        <div class="col-md-3">
-                            <label for="department_id">Departments</label>
-                            <select name="department_id" id="department_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Department</option>
-                                @foreach($departments as $department)
-                                    <option value="{{$department['id']}}" {{ $department['id'] == old('department_id',$employee->department_id) ? "selected" : "" }}>{{$department['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label for="sub_department_id">Sub Departments</label>
-                            <select name="sub_department_id" id="sub_department_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Sub Department</option>
-                                @foreach($subdepartments as $subdepartment)
-                                    <option value="{{$subdepartment['id']}}"  {{ $subdepartment['id'] == old('sub_department_id',$employee->sub_department_id) ? "selected" : "" }}>{{$subdepartment['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="section_id">Sections</label>
-                            <select name="section_id" id="section_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Section</option>
-                                @foreach($sections as $section)
-                                    <option value="{{$section['id']}}" {{ $section['id'] == old('section_id',$employee->section_id) ? "selected" : "" }}>{{$section['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label for="position_id">Positions</label>
-                            <select name="position_id" id="position_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Position</option>
-                                @foreach($positions as $position)
-                                    <option value="{{$position['id']}}" {{ $position['id'] == old('position_id',$employee->position_id) ? "selected" : "" }}>{{$position['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="status_id">Status</label>
-                            <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
-                                @foreach($statuses as $status)
-                                    <option value="{{$status['id']}}" {{ $status['id'] == old('status_id',$employee->status_id) ? "selected" : "" }}>{{$status['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="beginning_date">Beginning Date <span class="text-danger">*</span></label>
-                            @error("beginning_date")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="date" name="beginning_date" id="beginning_date" class="form-control form-control-sm rounded-0" placeholder="Choose Beginning Date" value="{{ old('beginning_date',$employee->beginning_date) }}"/>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label for="employee_code">Employee Code <span class="text-danger">*</span></label>
-                            @error("employee_name")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="text" name="employee_code" id="employee_code" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Code" value="{{ old('employee_code',$employee->employee_code) }}"/>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label for="branch_id">Branch</label>
-                            <select name="branch_id" id="branch_id" class="form-control form-control-sm rounded-0">
-                                @foreach($branches as $branch)
-                                    <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == old('branch_id',$employee->branch_id) ? "selected" : "" }}>{{$branch['branch_name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label for="age">Age <span class="text-danger">*</span></label>
-                            @error("age")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="text" name="age" id="age" class="form-control form-control-sm rounded-0" placeholder="Enter Age" value="{{ old('age',$employee->age) }}"/>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label for="gender_id">Gender</label>
-                            <select name="gender_id" id="gender_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Gender</option>
-
-                                @foreach($genders as $gender)
-                                    <option value="{{$gender['id']}}" {{ $gender['id'] == old('gender_id',$employee->gender_id) ? "selected" : "" }}>{{$gender['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label for="position_level_id">Position Level</label>
-                            <select name="position_level_id" id="position_level_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Position Level</option>
-
-                                @foreach($positionlevels as $positionlevel)
-                                    <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == old('position_level_id',$employee->position_level_id) ? "selected" : "" }}>{{$positionlevel['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label for="nrc">NRC <span class="text-danger">*</span></label>
-                            @error("nrc")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="text" name="nrc" id="nrc" class="form-control form-control-sm rounded-0" placeholder="Enter NRC" value="{{ old('nrc',$employee->nrc) }}"/>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="father_name">Father Name <span class="text-danger">*</span></label>
-                            @error("father_name")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="text" name="father_name" id="father_name" class="form-control form-control-sm rounded-0" placeholder="Enter Father Name" value="{{ old('father_name',$employee->father_name) }}"/>
-                        </div>
-
+                   
 
                         <div class="col-md-12 mt-2">
 
                             <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
 
-                            <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
+                            <button type="submit" class="btn btn-primary btn-sm rounded-0">Submit</button>
                         </div>
                     </div>
                 </form>

@@ -73,7 +73,7 @@
                             <select name="section_id" id="section_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Section</option>
                                 @foreach($sections as $section)
-                                    <option value="{{$section['id']}}" {{ $section['id'] == old('section_id',$employee->section_id) ? "selected" : "" }}>{{$section['name']}}</option>
+                                    <option value="{{$section['id']}}" {{ $section['id'] == old('section_id',$employee->sub_department_id) ? "selected" : "" }}>{{$section['name']}}</option>
                                 @endforeach
                             </select>
                         </div>

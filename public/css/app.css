@@ -211,7 +211,7 @@
     padding: 0 !important;
 }
 
-.add_btn{
+.add_btn,.new_btn{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -237,4 +237,174 @@
 
 .fixedtxtareas{
     resize: none;
+}
+
+
+
+ /* Start Accordion */
+ .accordion{
+    width: 100%;
+    }
+    .acctitle{
+    font-size: 13px;
+    user-select: none;
+
+    padding: 5px;
+    margin: 0;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    position: relative;
+    }
+    .acctitle::after{
+    content: '\f0e0';
+    font-family: 'Font Awesome 5 Free';
+
+    /* position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%); */
+
+    float: right;
+    }
+    /* .active.acctitle::after{
+    content: '\f068';
+    } */
+    .shown::after{
+    content: '\f2B6';
+    }
+    .acccontent{
+    height: 0;
+    background-color: #f4f4f4;
+    text-align: justify;
+
+    padding: 0 10px;
+
+    overflow: hidden;
+
+    transition: height 0.3s ease-in-out;
+    }
+/* End Accordion */
+
+
+/* Start Tag Box */
+.nav{
+display: flex;
+
+padding: 0;
+margin: 0;
+}
+.nav .nav-item{
+list-style-type: none;
+}
+.nav .tablinks{
+background-color: #0066cc;
+
+border: none;
+border-right: 2px solid orange;
+color: white;
+font-size: 16px;
+padding: 15px 20px;
+cursor: pointer;
+transition: background-color 0.3s ease-in;
+}
+.nav .tablinks:hover{
+background-color: #f3f3f3;
+}
+
+.nav .tablinks.active{
+    background-color: #007bff;
+    color: orange;
+}
+
+.tab-pane{
+
+padding: 5px 15px;
+
+display: none;
+}
+.tab-title{
+    background-color: #007bff;
+    padding: 5px;
+    text-align: center;
+    color: white;
+}
+/* End Tag Box */
+#treeview {
+    max-height: 600px; /* Adjust height as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+    border: 1px solid #ddd; /* Optional: Adds a border for better visibility */
+    padding: 5px; /* Optional: Adds some spacing */
+}
+
+/*  Start User List Filter */
+.header .search{
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 0;
+    border-radius: 50px;
+    color: #fff;
+    /* default 14px */
+    font-size: 15px;
+    padding: 10px 15px;
+}
+.header .search:focus{
+    outline: 0;
+}
+.user-list{
+    list-style: none;
+    background-color: #fff;
+
+    max-height: 500px;
+
+    margin: 0;
+    padding: 0;
+
+    /* adding scrollY */
+    overflow-y: auto;
+}
+.user-list li{
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+    border-bottom: 1px solid #eee;
+}
+.user-list li.active{
+   background-color: #007bff;
+   color: white;
+}
+.user-list img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.user-list .user-info{
+    margin-left: 10px;
+}
+.user-list .user-info h4{
+    font-size: 14px;
+    margin: 0px;
+    margin-left: 10px;
+}
+.user-list .user-info p{
+    font-size: 12px;
+}
+.user-list li:not(:last-of-type){
+        border-bottom: 1px solid #eee;
+}
+
+.user-list li.hide{
+    display: none;
+}
+
+/* End User List Filter */
+
+.peertopeers_titles{
+    background: orange;
+    color: white;
+    flex: 1;
+    padding: 10px;
 }
