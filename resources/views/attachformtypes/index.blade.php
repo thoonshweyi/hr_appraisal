@@ -7,9 +7,9 @@
             <div class="col-lg-12">
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
-                        <h4 class="mb-3">Assessment Form Category</h4>
+                        <h4 class="mb-3">Attach Form Type</h4>
 
-                        <a href="{{ route('assformcats.create') }}" class="btn btn-primary">Create</a>
+                        <a href="#createmodal" class="btn btn-primary" data-toggle="modal">Create</a>
 
 
 
@@ -21,8 +21,8 @@
             </div>
 
 
-            {{-- <div class="col-lg-12">
-                <form class="d-inline" action="{{ route('assformcats.excel_import') }}" method="POST" enctype="multipart/form-data">
+            <div class="col-lg-12">
+                <form class="d-inline" action="{{ route('attachformtypes.excel_import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row align-items-end">
 
@@ -39,7 +39,7 @@
                     </div>
 
                 </form>
-            </div> --}}
+            </div>
 
 
 
@@ -113,27 +113,27 @@
                     </tr>
                 </thead>
                 <tbody class="ligth-body">
-                    @foreach($assformcats as $idx=>$assformcat)
+                    @foreach($attachformtypes as $idx=>$attachformtype)
                     <tr>
-                        <td>{{$idx + $assformcats->firstItem()}}</td>
-                        <td>{{$assformcat["name"]}}</td>
+                        <td>{{$idx + $attachformtypes->firstItem()}}</td>
+                        <td>{{$attachformtype["name"]}}</td>
                         <td>
                             <div class="custom-switch p-0">
                                 <!-- The actual checkbox that controls the switch -->
-                                <input type="checkbox" id="customSwitch-{{ $idx + $assformcats->firstItem() }}" class="custom-switch-input statuschange-btn" {{ $assformcat->status_id === 1 ? "checked" : "" }} data-id="{{ $assformcat->id }}"/>
+                                <input type="checkbox" id="customSwitch-{{ $idx + $attachformtypes->firstItem() }}" class="custom-switch-input statuschange-btn" {{ $attachformtype->status_id === 1 ? "checked" : "" }} data-id="{{ $attachformtype->id }}"/>
                                 <!-- The label is used to style the switch, and clicking it toggles the checkbox -->
-                                <label class="custom-switch-label" for="customSwitch-{{ $idx + $assformcats->firstItem() }}"></label>
+                                <label class="custom-switch-label" for="customSwitch-{{ $idx + $attachformtypes->firstItem() }}"></label>
                                 <!-- Optional label text next to the switch -->
                             </div>
                         </td>
-                        <td>{{ $assformcat["user"]["name"] }}</td>
-                        <td>{{ $assformcat->created_at->format('d M Y') }}</td>
-                        <td>{{ $assformcat->updated_at->format('d M Y') }}</td>
+                        <td>{{ $attachformtype["user"]["name"] }}</td>
+                        <td>{{ $attachformtype->created_at->format('d M Y') }}</td>
+                        <td>{{ $attachformtype->updated_at->format('d M Y') }}</td>
                         <td class="text-center">
-                             <a href="{{ route('assformcats.edit',$assformcat->id) }}" class="text-info mr-2"><i class="fas fa-pen"></i></a>
+                             <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$attachformtype->id}}" data-name="{{$attachformtype->name}}" data-status="{{$attachformtype->status_id}}"><i class="fas fa-pen"></i></a>
                              <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
                         </td>
-                        <form id="formdelete-{{ $idx }}" class="" action="{{route('assformcats.destroy',$assformcat->id)}}" method="POST">
+                        <form id="formdelete-{{ $idx }}" class="" action="{{route('attachformtypes.destroy',$attachformtype->id)}}" method="POST">
                              @csrf
                              @method("DELETE")
                         </form>
@@ -142,7 +142,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-center">
-                {{ $assformcats->appends(request()->all())->links("pagination::bootstrap-4") }}
+                {{ $attachformtypes->appends(request()->all())->links("pagination::bootstrap-4") }}
             </div>
 
 
@@ -165,7 +165,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <form id="{{route('assformcats.store')}}" action="" method="POST">
+                        <form id="{{route('attachformtypes.store')}}" action="" method="POST">
                             {{ csrf_field() }}
                             <div class="row align-items-end">
                                 <div class="col-md-12">
@@ -173,7 +173,7 @@
                                     @error("name")
                                             <span class="text-danger">{{ $message }}<span>
                                     @enderror
-                                    <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Position Level Name" value="{{ old('name') }}"/>
+                                    <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Dept Group Name" value="{{ old('name') }}"/>
                                 </div>
 
                                 <div class="col-md-12">
@@ -220,7 +220,7 @@
                         <div class="row align-items-end">
                                 <div class="col-md-12 mb-2">
                                     <label for="edit_name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="edit_name" id="edit_name" class="form-control form-control-sm rounded-0" placeholder="Enter Position Level" value="{{ old('name') }}"/>
+                                    <input type="text" name="edit_name" id="edit_name" class="form-control form-control-sm rounded-0" placeholder="Enter Status Name" value="{{ old('name') }}"/>
                                 </div>
 
                                 <div class="col-md-12">
@@ -290,7 +290,7 @@
             $("#edit_name").val($(this).attr("data-name"));
             $("#edit_status_id").val($(this).attr("data-status"));
             const getid = $(this).attr("data-id");
-            $("#formaction").attr("action",`/assformcats/${getid}`);
+            $("#formaction").attr("action",`/attachformtypes/${getid}`);
 
             e.preventDefault();
        });
@@ -308,7 +308,7 @@
              {{-- console.log(setstatus); --}}
 
              $.ajax({
-                  url:"/assformcatsstatus",
+                  url:"/attachformtypesstatus",
                   type:"POST",
                   dataType:"json",
                   data:{

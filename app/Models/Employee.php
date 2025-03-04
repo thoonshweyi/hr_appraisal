@@ -35,6 +35,7 @@ class Employee extends Model
        'position_level_id',
        "nrc",
        "father_name",
+       "attach_form_type_id",
        "job_status",
        "phone",
        "address",

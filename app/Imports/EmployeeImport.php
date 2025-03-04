@@ -14,6 +14,7 @@ use App\Models\BranchUser;
 use Illuminate\Support\Str;
 use App\Models\PositionLevel;
 use App\Models\SubDepartment;
+use App\Models\AttachFormType;
 use App\Models\AgileDepartment;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,8 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
         $row['beginning_date'] = is_numeric($row['beginning_date'])
         ? Carbon::instance(Date::excelToDateTimeObject($row['beginning_date']))
         : Carbon::parse($row['beginning_date']); // Handles cases where date is already formatted correctly
+
+        // dd(AttachFormType::where('name',$row['attach_form_type'])->first()->id);
 
         // dd($row);
         // Validate data
@@ -56,6 +59,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
             'position_level'=> "required|exists:position_levels,name",
             "nrc"=> "required",
             "father_name"=> "required",
+            'attach_form_type' => 'required|exists:attach_form_types,name',
         ]);
         // If validation fails, throw an exception with the row number
         if ($validator->fails()) {
@@ -81,6 +85,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
         $userBranch['branch_id'] = Branch::where('branch_name',$row['branch'])->first()->branch_id;
         BranchUser::firstOrCreate($userBranch);
 
+
         return new Employee([
             'employee_name'      => $row['employee_name'],
             'nickname'      => $row['nickname'],
@@ -100,6 +105,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
             "position_level_id" => PositionLevel::where('name',$row['position_level'])->first()->id,
             "nrc" => $row['nrc'],
             "father_name" => $row['father_name'],
+            "attach_form_type_id"=> AttachFormType::where('name',$row['attach_form_type'])->first()->id,
         ]);
 
 

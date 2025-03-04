@@ -42,7 +42,7 @@
 
 
             <div class="col-lg-12 my-2 ">
-                <form id="" action="{{route('employees.store')}}" method="POST">
+                <form id="" action="" method="POST">
                     {{ csrf_field() }}
                     <div class="row align-items-start">
 
@@ -56,7 +56,30 @@
                             </select>
                         </div>
 
-                   
+                        <div class="col-md-3">
+                            <label for="appraisal_cycle_id">Appraisal Cycle</label>
+                            <select name="appraisal_cycle_id" id="appraisal_cycle_id" class="form-control form-control-sm rounded-0" value="{{ request()->appraisal_cycle_id }}">
+                                <option value="" selected disabled>Choose Appraisal Cycle</option>
+                                @foreach($appraisalcycles as $appraisalcycle)
+                                    <option value="{{$appraisalcycle['id']}}" {{ $appraisalcycle['id'] == old('appraisal_cycle_id',request()->appraisal_cycle_id) ? "selected" : "" }}>{{$appraisalcycle['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <label for="filter_attach_form_type_id">Attach Form Type</label>
+                            <select name="filter_attach_form_type_id" id="filter_attach_form_type_id" class="form-control form-control-sm rounded-0" value="{{ request()->appraisal_cycle_id }}">
+                                <option value="" selected disabled>Choose Attach Form Type</option>
+                                @foreach($attachformtypes as $attachformtype)
+                                    <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('filter_attach_form_type_id') ? "selected" : "" }}>{{$attachformtype['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
+
+
 
                         <div class="col-md-12 mt-2">
 

@@ -40,6 +40,7 @@ class CreateEmployeesTable extends Migration
             $table->string('position_level_id')->nullable();
             $table->string("nrc")->unique();
             $table->string("father_name");
+            $table->unsignedBigInteger("attach_form_type_id");
             $table->enum("job_status",['p'])->unique()->nullable();
             $table->string("phone")->unique()->nullable();
             $table->string("address")->unique()->nullable();

@@ -29,6 +29,7 @@ use App\Http\Controllers\RatingScalesController;
 use App\Http\Controllers\PositionLevelsController;
 use App\Http\Controllers\SubDepartmentsController;
 use App\Http\Controllers\AppraisalCyclesController;
+use App\Http\Controllers\AttachFormTypesController;
 use App\Http\Controllers\AgileDepartmentsController;
 
 
@@ -174,6 +175,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     Route::get("/assformcats",[AssFormCatsController::class,"index"])->name("assformcats.index");
+    Route::get("/assformcats/create",[AssFormCatsController::class,"create"])->name("assformcats.create");
     Route::post("/assformcats",[AssFormCatsController::class,"store"])->name("assformcats.store");
     Route::get("/assformcats/{id}/edit",[AssFormCatsController::class,"edit"])->name("assformcats.edit");
     Route::put("/assformcats/{id}",[AssFormCatsController::class,"update"])->name("assformcats.update");
@@ -212,5 +214,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put("/peertopeers/{id}",[PeerToPeersController::class,"update"])->name("peertopeers.update");
     Route::delete("/peertopeers/{id}",[PeerToPeersController::class,"destroy"])->name("peertopeers.destroy");
     Route::post("peertopeersstatus",[PeerToPeersController::class,"changestatus"])->name("peertopeers.changestatus");
+
+
+
+    Route::get("/attachformtypes",[AttachFormTypesController::class,"index"])->name("attachformtypes.index");
+    Route::post("/attachformtypes",[AttachFormTypesController::class,"store"])->name("attachformtypes.store");
+    Route::put("/attachformtypes/{id}",[AttachFormTypesController::class,"update"])->name("attachformtypes.update");
+    Route::delete("/attachformtypes/{id}",[AttachFormTypesController::class,"destroy"])->name("attachformtypes.destroy");
+    Route::post("/attachformtypesstatus",[AttachFormTypesController::class,"changestatus"])->name("attachformtypes.changestatus");
+    Route::post("/attachformtypes_excel_import",[AttachFormTypesController::class,"excel_import"])->name("attachformtypes.excel_import");
 
 });

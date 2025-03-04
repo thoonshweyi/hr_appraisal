@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use App\Models\PositionLevel;
 use App\Models\SubDepartment;
 use App\Imports\SectionImport;
+use App\Models\AppraisalCycle;
+use App\Models\AttachFormType;
 use App\Imports\DivisionImport;
 use App\Imports\EmployeeImport;
 use App\Imports\PositionImport;
@@ -45,7 +47,12 @@ class PeerToPeersController extends Controller
         // dd($branches);
         $users = User::where('status',1)->get();
 
+        $appraisalcycles = AppraisalCycle::where('status_id',1)->orderBy('id')->get();
 
-        return view("peertopeers.create",compact("statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","users"));
+
+        $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
+
+
+        return view("peertopeers.create",compact("statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","users","appraisalcycles",'attachformtypes'));
     }
 }

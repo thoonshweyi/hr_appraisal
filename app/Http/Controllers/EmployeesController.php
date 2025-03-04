@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Models\PositionLevel;
 use App\Models\SubDepartment;
 use App\Imports\SectionImport;
+use App\Models\AttachFormType;
 use App\Imports\DivisionImport;
 use App\Imports\EmployeeImport;
 use App\Imports\PositionImport;
@@ -52,6 +53,8 @@ class EmployeesController extends Controller
         $positions = Position::where('status_id',1)->orderBy('id')->get();
         $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
+        $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
+
 
 
 
@@ -78,7 +81,7 @@ class EmployeesController extends Controller
 
         $employees = $results->orderBy('id','asc')->paginate(10);
 
-        return view("employees.index",compact("employees","statuses","divisions","departments","subdepartments","sections","positions","branches","positionlevels"));
+        return view("employees.index",compact("employees","statuses","divisions","departments","subdepartments","sections","positions","branches","positionlevels","attachformtypes"));
     }
 
     public function create(Request $request){
@@ -92,11 +95,13 @@ class EmployeesController extends Controller
 
         $genders = Gender::where('status_id',1)->orderBy('id')->get();
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
+        $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
+
 
         // dd($branches);
 
 
-        return view("employees.create",compact("statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels"));
+        return view("employees.create",compact("statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","attachformtypes"));
     }
 
     public function store(Request $request)
@@ -117,6 +122,7 @@ class EmployeesController extends Controller
             'position_level_id'=> "required",
             "nrc"=> "required",
             "father_name"=> "required",
+            "attach_form_type_id"=> "required",
         ]);
 
        $user = Auth::user();
@@ -141,6 +147,8 @@ class EmployeesController extends Controller
        $employee->position_level_id = $request["position_level_id"];
        $employee->nrc = $request["nrc"];
        $employee->father_name = $request["father_name"];
+       $employee->attach_form_type_id = $request["attach_form_type_id"];
+
 
        $employee->save();
 
@@ -150,7 +158,7 @@ class EmployeesController extends Controller
             "password"=> Hash::make($request["employee_code"])
         ]);
         $userBranch['user_id'] = $empuser->id;
-        $userBranch['branch_id'] = Branch::where('branch_name',$request["branch_id"])->first()->branch_id;
+        $userBranch['branch_id'] = $request["branch_id"];
         BranchUser::firstOrCreate($userBranch);
 
 
@@ -172,11 +180,12 @@ class EmployeesController extends Controller
 
         $genders = Gender::where('status_id',1)->orderBy('id')->get();
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
+        $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
 
         // dd($branches);
 
 
-        return view("employees.edit",compact("employee","statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels"));
+        return view("employees.edit",compact("employee","statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","attachformtypes"));
     }
 
 
@@ -199,6 +208,7 @@ class EmployeesController extends Controller
             'position_level_id'=> "required",
             "nrc"=> "required",
             "father_name"=> "required",
+            "attach_form_type_id"=> "required",
         ]);
 
         $user = Auth::user();
@@ -223,6 +233,8 @@ class EmployeesController extends Controller
         $employee->position_level_id = $request["position_level_id"];
         $employee->nrc = $request["nrc"];
         $employee->father_name = $request["father_name"];
+        $employee->attach_form_type_id = $request["attach_form_type_id"];
+
 
         $employee->save();
         return redirect(route("employees.index"))->with('success',"Employee updated successfully");

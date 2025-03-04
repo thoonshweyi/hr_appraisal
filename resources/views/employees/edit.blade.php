@@ -171,6 +171,36 @@
                             <input type="text" name="father_name" id="father_name" class="form-control form-control-sm rounded-0" placeholder="Enter Father Name" value="{{ old('father_name',$employee->father_name) }}"/>
                         </div>
 
+                        <hr>
+
+                        {{-- <div class="col-md-3">
+                            <label for="division_id"></label>
+                            <select name="division_id" id="division_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Division</option>
+                                @foreach($divisions as $division)
+                                    <option value="{{$division['id']}}" {{ $division['id'] == old('division_id',$employee->division_id) ? "selected" : "" }}>{{$division['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+
+
+                        <div class="col-md-12">
+                            <hr/>
+
+                            <h6>Form Info:</h6>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="attach_form_type_id">Attach Form Type</label>
+                            <select name="attach_form_type_id" id="attach_form_type_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Attach Form Type</option>
+                                @foreach($attachformtypes as $attachformtype)
+                                    <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id',$employee->attach_form_type_id) ? "selected" : "" }}>{{$attachformtype['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
 
                         <div class="col-md-12 mt-2">
 

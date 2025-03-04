@@ -184,6 +184,7 @@
 
                                     <form action="{{ route('peertopeers.create') }}" method="" class="my-2">
                                         <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
+                                        <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>
                                         <button type="submit" class="btn new_btn">New</button>
                                     </form>
                                 </div>

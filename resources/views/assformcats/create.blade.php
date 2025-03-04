@@ -9,7 +9,7 @@
             <div class="col-lg-12">
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
-                        <h4 class="mb-3">Assessment-form Category Edit</h4>
+                        <h4 class="mb-3">Assessment-form Category Create</h4>
                     </div>
                 </div>
             </div>
@@ -17,16 +17,15 @@
 
 
             <div class="col-lg-12 my-2 ">
-                <form id="" action="{{route('assformcats.update',$assformcat->id)}}" method="POST">
+                <form id="" action="{{route('assformcats.store')}}" method="POST">
                     {{ csrf_field() }}
-                    @method('PUT')
                     <div class="row align-items-start">
                         <div class="col-md-3">
                             <label for="name">Name <span class="text-danger">*</span></label>
                             @error("name")
                                     <span class="text-danger">{{ $message }}<span>
                             @enderror
-                            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Asssessment-form Category Name" value="{{ old('assformcat_name',$assformcat->name) }}"/>
+                            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Asssessment-form Category Name" value="{{ old('name') }}"/>
                         </div>
 
 
@@ -35,7 +34,7 @@
                             <label for="status_id">Status</label>
                             <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
                                 @foreach($statuses as $status)
-                                    <option value="{{$status['id']}}" {{ $status['id'] == old('status_id',$assformcat->status_id) ? "selected" : "" }}>{{$status['name']}}</option>
+                                    <option value="{{$status['id']}}" {{ $status['id'] == old('status_id') ? "selected" : "" }}>{{$status['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -43,11 +42,11 @@
 
                         <div class="col-md-3">
                             <label for="position_level_ids">Position Level</label>
-                            <select name="position_level_ids[]" id="position_level_ids" class="form-control form-control-sm rounded-0" multiple>
+                            <select name="position_level_ids[]" id="position_level_ids" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Position Level</option>
 
                                 @foreach($positionlevels as $positionlevel)
-                                    <option value="{{$positionlevel['id']}}"  {{ in_array($positionlevel->id,$assformcat->positionlevels->pluck('id')->toArray()) ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                    <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == old('position_level_id') ? "selected" : "" }}>{{$positionlevel['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -57,7 +56,7 @@
                             <select name="attach_form_type_id" id="attach_form_type_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Attach Form Type</option>
                                 @foreach($attachformtypes as $attachformtype)
-                                    <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id',$assformcat->attach_form_type_id) ? "selected" : "" }}>{{$attachformtype['name']}}</option>
+                                    <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id') ? "selected" : "" }}>{{$attachformtype['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -65,7 +64,7 @@
 
 
 
-                        <div class="col-lg-12 d-flex justify-content-end">
+                        {{-- <div class="col-lg-12 d-flex justify-content-end">
                             <button type="button" class="btn add_btn"><i class="fas fa-plus"></i></button>
                         </div>
 
@@ -87,41 +86,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($criterias as $idx=>$criteria)
-                                            @php
-                                                $idx++
-                                            @endphp
-                                            <tr id="tb_row_{{$idx}}">
-                                                <td>{{ $idx}}</td>
-                                                <td class="cells">
-                                                    <textarea type="text" name="names[]" class="custom-input-lg" value="{{ $criteria->name }}" placeholder="Write Something....">{{ $criteria->name }}</textarea>
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="excellents[]" class="custom-input" value="{{ $criteria->excellent }}">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="goods[]" class="custom-input" value="{{ $criteria->good }}">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="meet_standards[]" class="custom-input" value="{{ $criteria->meet_standard }}">
-                                                </td>
-
-                                                <td>
-                                                    <input type="text" name="below_standards[]" class="custom-input" value="{{ $criteria->below_standard }}">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="weaks[]" class="custom-input" value="{{ $criteria->weak }}">
-                                                </td>
-                                                <td>
-                                                    <input type="checkbox" name="status_ids[]" class="status_ids" value="1" {{ $criteria->status_id == 1 ? "checked" : ''  }}>
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:void(0);" type="button" title="Remove" class="remove-btns text-danger" data-id='{{ $idx}}'>
-                                                        <i class="fas fa-minus-circle fa-lg"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
 
                                         </tbody>
                                         <tfoot>
@@ -141,20 +105,20 @@
                                 </div>
 
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-12 mt-2">
 
                             <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
 
-                            <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
+                            <button type="submit" class="btn btn-primary btn-sm rounded-0">Submit</button>
                         </div>
                     </div>
                 </form>
             </div>
 
 
-
+{{--
             <div class="col-lg-12">
                 <form class="d-inline" action="{{ route('criterias.excel_import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -174,7 +138,7 @@
                     </div>
 
                 </form>
-            </div>
+            </div> --}}
 
 
             <div class="col-md-12 mb-2">
@@ -388,7 +352,7 @@
         });
 
 
-        $("#position_ids").selectize({
+        $("#position_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
@@ -427,7 +391,7 @@
             dateFormat: "Y-m-d",
             {{-- minDate: "today", --}}
             {{-- maxDate: new Date().fp_incr(30) --}}
-        });
+       });
 
         $("#attach_form_type_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
@@ -439,7 +403,6 @@
             placeholder: 'Choose Status',
             searchField: ["value", "label"]
         });
-
 
 
 
@@ -620,7 +583,7 @@
 
 
     {{-- Start Add Btn --}}
-            var cri_idx = {{ count($criterias) + 1 }};
+            var cri_idx = 1;
             $('.add_btn').click(function() {
                 let html = `
                     <tr id="tb_row_${cri_idx}">

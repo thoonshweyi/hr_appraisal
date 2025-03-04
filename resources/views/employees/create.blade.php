@@ -171,6 +171,23 @@
                         </div>
 
 
+                        <div class="col-md-12">
+                            <hr/>
+
+                            <h6>Form Info:</h6>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="attach_form_type_id">Attach Form Type</label>
+                            <select name="attach_form_type_id" id="attach_form_type_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Attach Form Type</option>
+                                @foreach($attachformtypes as $attachformtype)
+                                    <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id') ? "selected" : "" }}>{{$attachformtype['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
                         <div class="col-md-12 mt-2">
 
                             <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>

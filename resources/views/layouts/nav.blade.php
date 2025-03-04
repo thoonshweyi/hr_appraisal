@@ -74,6 +74,13 @@
                             <i class="las la-minus"></i><span>{{ __('nav.positionlevel_list')}}</span>
                         </a>
                     </li>
+
+
+                    <li class="{{ (request()->routeIs('attachformtypes.index')) ? 'active' : '' }}">
+                        <a href="{{route('attachformtypes.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.attachformtype_list')}}</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 

@@ -39,6 +39,7 @@ return [
     'addon'                     => "Add On",
     'employee_list'             => 'Employee List',
     'appraisalcycle_list'             => 'Appraisal Cycle List',
+    'attachformtype_list'             => 'Attach Form Type List',
 
 
 

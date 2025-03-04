@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AssFormCat extends Model
+class AttachFormType extends Model
 {
     use HasFactory;
-    protected $table = "ass_form_cats";
+    protected $table = "attach_form_types";
     protected $primaryKey = "id";
     protected $fillable = [
         "name",
+        "slug",
         "status_id",
-        "user_id",
-        "attach_form_type_id"
+        "user_id"
     ];
 
     public function user(){
@@ -23,16 +23,5 @@ class AssFormCat extends Model
 
     public function status(){
         return $this->belongsTo(Status::class);
-    }
-
-
-
-    public function positionlevels(){
-        return $this->morphToMany(PositionLevel::class,"rankable");
-    }
-
-
-    public function criterias(){
-        return $this->hasMany(Criteria::class);
     }
 }

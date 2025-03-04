@@ -53,6 +53,7 @@ return [
     'employee_list'             => 'Employee List',
     'assformcat_list'             => 'Assessment-form Category List',
     'appraisalcycle_list'             => 'Appraisal Cycle List',
+    'attachformtype_list'             => 'Attach Form Type List',
 
 ];
 

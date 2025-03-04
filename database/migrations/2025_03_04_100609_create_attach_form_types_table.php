@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAssFormCatsTable extends Migration
+class CreateAttachFormTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateAssFormCatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ass_form_cats', function (Blueprint $table) {
+        Schema::create('attach_form_types', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->string("slug");
             $table->unsignedBigInteger("status_id");
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('attach_form_type_id');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateAssFormCatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ass_form_cats');
+        Schema::dropIfExists('attach_form_types');
     }
 }

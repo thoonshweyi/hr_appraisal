@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Status;
 use App\Models\Criteria;
+use App\Models\Rankable;
 use App\Models\AssFormCat;
 use App\Models\RatingScale;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\PositionLevel;
+use App\Models\AttachFormType;
 use App\Imports\PositionLevelImport;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -23,11 +26,38 @@ class AssFormCatsController extends Controller
         return view("assformcats.index",compact("assformcats","statuses"));
     }
 
+
+
+    public function create(Request $request){
+        $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
+
+        $ratingscales = RatingScale::orderBy('id', 'asc')->get();
+
+        $total_excellent =  0;
+        $total_good =  0;
+        $total_meet_standard = 0;
+        $total_below_standard =  0;
+        $total_weak =  0;
+
+        $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
+        $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
+
+        // dd($total_good);
+
+        return view("assformcats.create",compact("statuses","ratingscales","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","positionlevels","attachformtypes"));
+    }
+
+
     public function store(Request $request)
     {
         $this->validate($request,[
             "name" => "required|max:255|unique:position_levels",
             "status_id" => "required|in:1,2",
+            "position_level_ids" => "required|array",
+            "position_level_ids.*"=>"required|string",
+            "attach_form_type_id" => "required",
+        ],[
+            'position_level_ids.*.required' => 'Please enter position level values.',
         ]);
 
        $user = Auth::user();
@@ -37,8 +67,23 @@ class AssFormCatsController extends Controller
        $assformcat->name = $request["name"];
        $assformcat->status_id = $request["status_id"];
        $assformcat->user_id = $user_id;
+       $assformcat->attach_form_type_id = $request["attach_form_type_id"];
        $assformcat->save();
-       return redirect(route("assformcats.index"))->with('success',"AssFormCat created successfully");;
+
+       $position_level_ids = $request->position_level_ids;
+
+        foreach($position_level_ids  as $key=>$value){
+            $rankable = [
+                "position_level_id"=>$value,
+                "rankable_id"=>$assformcat["id"],
+                // "rankable_type"=>$request["rankable_type"]
+                "rankable_type"=> "App\Models\AssFormCat"
+            ];
+            Rankable::insert($rankable);
+        }
+
+
+       return redirect(route("assformcats.index"))->with('success',"AssFormCat created successfully");
     }
 
 
@@ -55,53 +100,54 @@ class AssFormCatsController extends Controller
         $total_below_standard =  Criteria::where('ass_form_cat_id',$id)->sum('below_standard');
         $total_weak =  Criteria::where('ass_form_cat_id',$id)->sum('weak');
 
-        // dd($total_good);
+        $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
+        $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
 
-        return view("assformcats.edit",compact("assformcat","statuses","ratingscales","criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+        // dd($total_good);
+        // dd($assformcat->positionlevels->pluck('id')->toArray());
+
+
+
+        return view("assformcats.edit",compact("assformcat","statuses","ratingscales","criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","positionlevels","attachformtypes"));
     }
 
 
     public function update(Request $request, string $id)
     {
-        $keys = [];
-        $dynamicvalidations = [];
-        $ratingscales = RatingScale::orderBy('id','asc')->paginate(10);
-        foreach($ratingscales as $ratingscale){
-            $key = $keys[] = Str::snake($ratingscale['name'])."s";
-            $dynamicvalidations[$key] = 'required|array';
-            $dynamicvalidations[$key."*"] = 'required|number';
-        }
-        // dd([
-        //     "name" => ["required","max:50","unique:position_levels,name,".$id],
-        //     "status_id" => ["required","in:1,2"],
-        //     "names" => "required|array",
-        //     "names.*"=>"required|string",
-        //     ...$dynamicvalidations
-        // ]);
-
-
-        $dynamicmsgs = [];
-        $dynkeys = array_keys($dynamicvalidations);
-        // dd($dynkeys);
-        foreach($dynkeys as $idx=>$dynkey){
-            $dynamicmsgs[$dynkey.".required"] = "Please enter criteria ".$dynkey." values";
-        }
-        // dd($ratingscales[0]['name']);
-        // dd($dynamicmsgs);
-        // $this->validate($request,[
-        //     "name" => ["required","max:50","unique:position_levels,name,".$id],
-        //     "status_id" => ["required","in:1,2"],
-        //     "names" => "required|array",
-        //     "names.*"=>"required|string",
-        //     ...$dynamicvalidations
-        // ],[
-        //     'names.*.required' => 'Please enter criteria name values.',
-        //     ...$dynamicmsgs
-        // ]);
-
-        // dd($request);
 
         // \DB::beginTransaction();
+
+
+
+        $this->validate($request,[
+            "name" => ["required","max:50","unique:position_levels,name,".$id],
+            "status_id" => ["required","in:1,2"],
+            "names" => "required|array",
+            "names.*"=>"required|string",
+            "excellents" => "required|array",
+            "excellents.*"=>"required|string",
+            "goods" => "required|array",
+            "goods.*"=>"required|string",
+            "meet_standards" => "required|array",
+            "meet_standards.*"=>"required|string",
+            "below_standards" => "required|array",
+            "below_standards.*"=>"required|string",
+            "weaks" => "required|array",
+            "weaks.*"=>"required|string",
+            "position_level_ids" => "required|array",
+            "position_level_ids.*"=>"required|string",
+            "attach_form_type_id" => "required",
+
+        ],[
+            'names.*.required' => 'Please enter criteria name values.',
+            'excellents.*.required' => 'Please enter excellent values.',
+            'goods.*.required' => 'Please enter good values.',
+            'meet_standards.*.required' => 'Please enter meet standard values.',
+            'below_standards.*.required' => 'Please enter below standard values.',
+            'weaks.*.required' => 'Please enter weak values.',
+            'position_level_ids.*.required' => 'Please enter position level values.',
+        ]);
+
 
 
         $user = Auth::user();
@@ -111,6 +157,7 @@ class AssFormCatsController extends Controller
         $assformcat->name = $request["name"];
         $assformcat->status_id = $request["status_id"];
         $assformcat->user_id = $user_id;
+        $assformcat->attach_form_type_id = $request["attach_form_type_id"];
         $assformcat->save();
 
 
@@ -121,6 +168,9 @@ class AssFormCatsController extends Controller
         $below_standards = $request->below_standards;
         $weaks = $request->weaks;
         $status_ids = $request->status_ids;
+
+        $position_level_ids = $request->position_level_ids;
+
 
         // dd($excellents);
         $criterias = Criteria::where('ass_form_cat_id',$id)->delete();
@@ -145,7 +195,8 @@ class AssFormCatsController extends Controller
 
 
 
-
+        $position_level_ids = $request->position_level_ids;
+        $assformcat->positionlevels()->sync($position_level_ids);
 
         return redirect(route("assformcats.index"))->with('success',"AssFormCat updated successfully");
     }
@@ -154,6 +205,11 @@ class AssFormCatsController extends Controller
     {
         $assformcat = AssFormCat::findOrFail($id);
         $assformcat->delete();
+
+
+        $assformcat->criterias()->delete();
+        $assformcat->positionlevels()->detach();
+
         return redirect()->back()->with('success',"AssFormCat deleted successfully");
     }
 
