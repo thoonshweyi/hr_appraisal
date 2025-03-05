@@ -63,6 +63,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/users/update_profile', [UserController::class, 'update_profile'])->name('user.update_profile');
 
     Route::resource('users', UserController::class);
+    Route::get('/getfilteredassessees', [UserController::class, 'getFilteredAssessees'])->name('users.getfilteredassessees');
+
 
     Route::resource('branches', BranchController::class);
     Route::get('/faqs/faqlist', [FAQController::class, 'faqlist'])->name('faqs.faqlist');

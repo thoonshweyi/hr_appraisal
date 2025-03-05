@@ -10,6 +10,7 @@ use App\Models\Section;
 use App\Models\Division;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Models\AssFormCat;
 use App\Models\BranchUser;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -50,9 +51,10 @@ class PeerToPeersController extends Controller
         $appraisalcycles = AppraisalCycle::where('status_id',1)->orderBy('id')->get();
 
 
+        $assformcats = AssFormCat::where('status_id',1)->orderBy('id')->get();
         $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
 
 
-        return view("peertopeers.create",compact("statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","users","appraisalcycles",'attachformtypes'));
+        return view("peertopeers.create",compact("statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","users","appraisalcycles",'attachformtypes',"assformcats"));
     }
 }

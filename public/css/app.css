@@ -211,7 +211,7 @@
     padding: 0 !important;
 }
 
-.add_btn,.new_btn{
+.add_btn,.new_btn,.apply_btn{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -219,7 +219,7 @@
     background-color: #007bff;
     color: white;
 }
-.add_btn:hover{
+.add_btn:hover,.new_btn:hover,.apply_btn:hover{
     color: white;
 }
 /* End Criteria */
@@ -402,9 +402,29 @@ display: none;
 
 /* End User List Filter */
 
-.peertopeers_titles{
-    background: orange;
-    color: white;
-    flex: 1;
-    padding: 10px;
+.peertopeers_headers{
+    background: #0066cc !important;
+}
+
+
+.wrapped_assformcats .selectize-control .selectize-input {
+    white-space: normal !important; /* Allow text wrapping */
+    overflow: visible !important; /* Ensure overflow is shown */
+    text-overflow: unset !important; /* Prevent text from being shortened */
+    word-break: break-word !important; /* Ensure long words wrap */
+    min-height: 40px !important; /* Adjust height dynamically */
+}
+
+.wrapped_assformcats .selectize-control .selectize-input > div {
+    white-space: normal !important; /* Allow wrapping inside selected items */
+    overflow: visible !important;
+    word-break: break-word !important;
+}
+
+.wrapped_assformcats .selectize-dropdown {
+    width: auto !important; /* Allow dynamic width */
+    min-width: 200px !important; /* Adjust width as needed */
+    max-width: 100% !important;
+    word-break: break-word !important;
+    white-space: normal !important;
 }

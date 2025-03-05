@@ -48,8 +48,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // public function branches(){
+    //     return $this->belongsToMany('App\Models\BranchUser');
+    // }
+
     public function branches(){
-        return $this->belongsToMany('App\Models\BranchUser');
+        return $this->belongsToMany(Branch::class,'App\Models\BranchUser',"user_id","branch_id");
     }
 
     public function user_branches(){
@@ -59,4 +63,21 @@ class User extends Authenticatable
     // {
     //     return $this->belongsToMany('App\Models\Notification');
     // }
+
+    public function employee(){
+        return $this->hasOne(Employee::class,"employee_code","employee_id");
+    }
+
+
+    public function getAssFormCat(){
+        $employee = $this->employee;
+        $attach_form_type_id = $employee->attach_form_type_id;
+
+
+        $assformcat = AssFormCat::where('attach_form_type_id',$attach_form_type_id)->first();
+
+
+        return $assformcat;
+
+    }
 }

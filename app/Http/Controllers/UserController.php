@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Branch;
+use App\Models\Employee;
+use App\Models\AssFormCat;
+use App\Models\BranchUser;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
@@ -11,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\BranchUser;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -113,7 +115,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        
+
         try {
             $this->validate($request, [
                 'name' => 'required',
@@ -266,5 +268,61 @@ class UserController extends Controller
         //         ->intended(route("users.index"))
         //         ->with('error', 'Fail to update User Profile!');
         // }
+    }
+
+
+    public function getFilteredAssessees(Request $request){
+        // dd($request);
+        $filter_ass_form_cat_id = $request->filter_ass_form_cat_id;
+        $filter_branch_id = $request->filter_branch_id;
+        $filter_department_id =  $request->filter_department_id;
+
+
+        $assessor_user_id = $request->assessor_user_id;
+
+        $results = User::query();
+
+
+        if (!empty($filter_ass_form_cat_id)) {
+            $assformcat = AssFormCat::where('id',$filter_ass_form_cat_id)->first();
+            $attach_form_type_id = $assformcat->attach_form_type_id;
+            $position_level_ids = $assformcat->positionlevels->pluck('id');
+            // dd($position_level_ids);
+
+            $employee_codes = Employee::where('attach_form_type_id',$attach_form_type_id)
+                                ->whereIn('position_level_id',$position_level_ids)
+                                ->pluck('employee_code');
+
+            $results = $results->whereIn('employee_id', $employee_codes);
+        }
+
+
+        if (!empty($filter_branch_id)) {
+            $results = $results->whereHas('branches', function($query) use ($filter_branch_id) {
+                $query->where('branch_users.branch_id', $filter_branch_id);
+            });
+        }
+
+        if (!empty($filter_department_id)) {
+
+            $employee_codes = Employee::where('department_id',$filter_department_id)
+                                ->pluck('employee_code');
+            $results = $results->whereIn('employee_id', $employee_codes);
+        }
+
+        $results = $results->where("id","!=",$assessor_user_id);
+
+        $users = $results->orderBy('id','asc')
+        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->get();
+
+
+        // dd($users[0]->getAssFormCat());
+        // dd($users);
+        foreach($users as $user){
+            $user['assformcat'] = $user->getAssFormCat();
+        }
+
+        return response()->json($users);
     }
 }
