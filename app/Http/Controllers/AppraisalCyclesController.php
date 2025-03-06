@@ -8,16 +8,16 @@ use App\Models\Gender;
 use App\Models\Status;
 use App\Models\Section;
 use App\Models\Division;
-use App\Models\AppraisalCycle;
 use App\Models\Position;
 use App\Models\BranchUser;
+use App\Models\PeerToPeer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PositionLevel;
 use App\Models\SubDepartment;
 use App\Imports\SectionImport;
+use App\Models\AppraisalCycle;
 use App\Imports\DivisionImport;
-use App\Imports\AppraisalCycleImport;
 use App\Imports\PositionImport;
 use App\Models\AgileDepartment;
 use App\Imports\DepartmentImport;
@@ -25,6 +25,7 @@ use App\Imports\SubDepartmentImport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\AppraisalCycleImport;
 use App\Imports\AgileDepartmentImport;
 use App\Exceptions\ExcelImportValidationException;
 
@@ -140,8 +141,14 @@ class AppraisalCyclesController extends Controller
 
         // dd($branches);
 
+        $participant_user_ids = PeerToPeer::where('appraisal_cycle_id',$id)->groupBy('assessor_user_id')->pluck("assessor_user_id");
+        // dd($participant_user_ids);
 
-        return view("appraisalcycles.edit",compact("appraisalcycle","statuses","users"));
+        $participantusers = User::whereIn("id",$participant_user_ids)->get();
+        // dd($participantusers);
+
+
+        return view("appraisalcycles.edit",compact("appraisalcycle","statuses","users","participantusers"));
     }
 
 

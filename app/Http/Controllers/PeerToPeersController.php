@@ -12,6 +12,7 @@ use App\Models\Employee;
 use App\Models\Position;
 use App\Models\AssFormCat;
 use App\Models\BranchUser;
+use App\Models\PeerToPeer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PositionLevel;
@@ -57,4 +58,71 @@ class PeerToPeersController extends Controller
 
         return view("peertopeers.create",compact("statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","users","appraisalcycles",'attachformtypes',"assformcats"));
     }
+
+
+    public function store(Request $request)
+    {
+        $this->validate($request,[
+             "assessor_user_id" => "required",
+             "appraisal_cycle_id" => "required",
+             "asssessee_user_ids" => "required|array",
+             "asssessee_user_ids.*"=>"required|string",
+             "ass_form_cat_ids" => "required|array",
+             "ass_form_cat_ids.*"=>"required|string",
+
+        ],[
+            'asssessee_user_ids.*.required' => 'Please enter criteria name values.',
+            'ass_form_cat_ids.*.required' => 'Please enter excellent values.',
+        ]);
+
+
+    //    $user = Auth::user();
+    //    $user_id = $user->id;
+
+    //    $criteria = new Criteria();
+    //    $criteria->name = $request["name"];
+    //    $criteria->slug = Str::slug($request["name"]);
+    //    $criteria->status_id = $request["status_id"];
+    //    $criteria->user_id = $user_id;
+    //    $criteria->save();
+
+        $assessor_user_id = $request->assessor_user_id;
+        $asssessee_user_ids = $request->asssessee_user_ids;
+        $ass_form_cat_ids = $request->ass_form_cat_ids;
+        $appraisal_cycle_id = $request->appraisal_cycle_id;
+
+        foreach($asssessee_user_ids as $idx=>$asssessee_user_id){
+            $peertopeer = PeerToPeer::create([
+                "assessor_user_id" => $assessor_user_id,
+                "assessee_user_id" => $asssessee_user_ids[$idx],
+                "ass_form_cat_id" => $ass_form_cat_ids[$idx],
+                "appraisal_cycle_id" => $appraisal_cycle_id
+            ]);
+        }
+
+
+       return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('success',"Peer To Peer created successfully");;
+    }
+
+
+    public function getAssessorAssessees(Request $request){
+        $assessor_user_id = $request->assessor_user_id;
+        $appraisal_cycle_id = $request->appraisal_cycle_id;
+
+
+        // dd($assessor_user_id,$appraisal_cycle_id);
+
+
+        $peertopeers = PeerToPeer::where('assessor_user_id',$assessor_user_id)
+                        ->where('appraisal_cycle_id',$appraisal_cycle_id)
+                        ->with(["assessoruser.employee"])
+                        ->with(["assesseeuser.employee.branch","assesseeuser.employee.department","assesseeuser.employee.position","assesseeuser.employee.positionlevel"])
+                        ->with(["assformcat"])
+                        ->get();
+        // dd($peertopeers);
+
+        return response()->json($peertopeers);
+
+    }
+
 }

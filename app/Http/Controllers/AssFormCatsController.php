@@ -106,8 +106,6 @@ class AssFormCatsController extends Controller
         // dd($total_good);
         // dd($assformcat->positionlevels->pluck('id')->toArray());
 
-
-
         return view("assformcats.edit",compact("assformcat","statuses","ratingscales","criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","positionlevels","attachformtypes"));
     }
 

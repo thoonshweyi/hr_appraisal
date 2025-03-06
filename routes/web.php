@@ -216,6 +216,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put("/peertopeers/{id}",[PeerToPeersController::class,"update"])->name("peertopeers.update");
     Route::delete("/peertopeers/{id}",[PeerToPeersController::class,"destroy"])->name("peertopeers.destroy");
     Route::post("peertopeersstatus",[PeerToPeersController::class,"changestatus"])->name("peertopeers.changestatus");
+    Route::get('/getAssessorAssessees', [PeerToPeersController::class, 'getAssessorAssessees'])->name('users.getassessorassessees');
 
 
 
@@ -225,5 +226,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete("/attachformtypes/{id}",[AttachFormTypesController::class,"destroy"])->name("attachformtypes.destroy");
     Route::post("/attachformtypesstatus",[AttachFormTypesController::class,"changestatus"])->name("attachformtypes.changestatus");
     Route::post("/attachformtypes_excel_import",[AttachFormTypesController::class,"excel_import"])->name("attachformtypes.excel_import");
+
+
+    Route::get("/appraisalforms",[AppraisalFormsController::class,"index"])->name("appraisalforms.index");
+    Route::get("/appraisalforms/create",[AppraisalFormsController::class,"create"])->name("appraisalforms.create");
+    Route::post("/appraisalforms",[AppraisalFormsController::class,"store"])->name("appraisalforms.store");
+    Route::get("/appraisalforms/{id}",[AppraisalFormsController::class,"show"])->name("appraisalforms.show");
+    Route::get("/appraisalforms/{id}/edit",[AppraisalFormsController::class,"edit"])->name("appraisalforms.edit");
+    Route::put("/appraisalforms/{id}",[AppraisalFormsController::class,"update"])->name("appraisalforms.update");
+    Route::delete("/appraisalforms/{id}",[AppraisalFormsController::class,"destroy"])->name("appraisalforms.destroy");
 
 });

@@ -22,7 +22,10 @@
                         <button type="button" class="tablinks" onclick="gettab(event,'appraisalcycle')">Peroid</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" id="autoclick" class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
+                        <button type="button" class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" id="autoclick" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
@@ -182,7 +185,7 @@
                                         {{-- <li><h3>Loading...</h3></li> --}}
                                     </ul>
 
-                                    <form action="{{ route('peertopeers.create') }}" method="" class="my-2">
+                                    <form id="peer_to_peer_form" action="{{ route('peertopeers.create') }}" method="" class="my-2">
                                         <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
                                         <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>
                                         <button type="submit" class="btn new_btn">New</button>
@@ -191,16 +194,17 @@
 
                                 <div class="col-lg-9">
                                     <div class="table-responsive rounded mb-3">
-                                        <table class="table mb-0" id="branch_list">
+                                        <table id="peertopeer" class="table mb-0" >
                                             <thead class="bg-white text-uppercase">
                                                 <tr class="ligth ligth-data">
                                                     <th>No</th>
                                                     <th>Assessor Name</th>
                                                     <th>Assessee Name</th>
-                                                    <th>Assessee Branch</th>
-                                                    <th>Assessee Division</th>
-                                                    <th>Assessee Rank</th>
-                                                    <th>Assessee Position</th>
+                                                    <th>Department</th>
+                                                    <th>Branch</th>
+                                                    <th>Position Level</th>
+                                                    <th>Position</th>
+                                                    <th>Assessment-form Category</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="ligth-body">
@@ -240,6 +244,48 @@
 
                         </div>
 
+                        <div id="appraisal" class="tab-pane">
+
+                            <div class="row">
+
+                               <div class="col-lg-12">
+                                <h4 class="title">All Participants</h4>
+
+                                <table id="peertopeer" class="table mb-0" >
+                                    <thead class="bg-white text-uppercase">
+                                        <tr class="ligth ligth-data">
+                                            <th>No</th>
+                                            <th>Employee Name</th>
+                                            <th>Employee Code</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="ligth-body">
+                                            @foreach($participantusers as $idx=>$participantuser)
+                                                <tr>
+                                                    <td>{{ ++$idx }}</td>
+                                                    {{-- <td>{{$idx + $participantuser->firstItem()}}</td> --}}
+                                                    <td>{{ $participantuser->employee->employee_name }}</td>
+                                                    <td>{{ $participantuser->employee->employee_code }}</td>
+                                                    <td class="">
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <i class="fas fa-check-circle fa-2x text-success mr-2"></i> Complete </td>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        <a href="" class="text-primary mr-2" title="Send"><i class="fas fa-paper-plane"></i></a>
+                                                    </td>
+
+
+                                                </tr>
+                                            @endforeach
+                                    </tbody>
+                                </table>
+                               </div>
+                            </div>
+                        </div>
 
                 </div>
             </div>
@@ -505,31 +551,6 @@
         };
 
 
-        {{-- Start Jstree  --}}
-            // Initialize jstree on the #assessors-tree (ul element)
-            $('#treeview').jstree({
-                "core": {
-                    "themes": {
-                        "variant": "large"
-                    }
-                },
-                "plugins": ["wholerow", "search"], // Include the 'search' plugin
-                "search": {
-                    "show_only_matches": true // Show only matched nodes
-                }
-            });
-
-            // Trigger search on keyup event of the search input field
-            $('#search-input').on('keyup', function() {
-                var searchText = $(this).val();
-                console.log(searchText);
-                // Call the search method on the jstree instance
-                $('#treeview').jstree(true).search(searchText);
-            });
-
-        {{-- End Jstree --}}
-
-
 
     });
 
@@ -646,6 +667,7 @@
         });
     }
 
+    let tableBody = document.querySelector("#peertopeer tbody");
     $(document).on('click',".user-info li",function(){
         let getuser_id = $(this).data('user_id');
         {{-- let getassformcat_id =  --}}
@@ -653,10 +675,118 @@
         $(".user-info li").removeClass('active');
         $(this).toggleClass('active');
         $('#assessor_user_id').val(getuser_id);
+
+
+        $.ajax({
+            url: `/getAssessorAssessees`,
+            type: "GET",
+            dataType: "json",
+            data: $('#peer_to_peer_form').serialize(),
+            success: function (response) {
+                console.log(response);
+
+                let html = '';
+                const peertopeers = response;
+
+                peertopeers.forEach(function(peertopeer,idx){
+                    html += `
+                    <tr>
+                        <td>
+                            ${++idx}
+                        </td>
+                        <td>${peertopeer.assessoruser.employee.employee_name}</td>
+                        <td>${peertopeer.assesseeuser.employee.employee_name}</td>
+                        <td>${peertopeer.assesseeuser.employee.department.name}</td>
+                        <td>${peertopeer.assesseeuser.employee.branch.branch_name}</td>
+                        <td>${peertopeer.assesseeuser.employee.positionlevel.name}</td>
+                        <td>${peertopeer.assesseeuser.employee.position.name}</td>
+                        <td style="width:150px;">${peertopeer.assformcat.name}</td>
+
+
+                    </tr>`;
+                })
+
+
+                tableBody.innerHTML = html;
+
+
+            },
+            error: function (response) {
+                console.log("Error:", response);
+            }
+        });
     });
-
-
-
     {{-- End User List Filter --}}
+
+
+    {{-- Start Assessor List Filter --}}
+    const afilterel = document.getElementById('asearch');
+    const aresultel = document.getElementById('aresult');
+
+
+    const alistitems = document.querySelectorAll('.assessor-info li');
+    {{-- End Assessor List Filter --}}
+
+    afilterel.addEventListener('input',(e)=>afilterdata(e.target.value));
+
+    function afilterdata(search){
+        // console.log(search);
+        alistitems.forEach(listitem=>{
+            // console.log(listitem);
+            if(listitem.innerText.toLocaleLowerCase().includes(search.toLowerCase())){
+                listitem.classList.remove('hide');
+            }else{
+                listitem.classList.add('hide');
+            }
+        });
+    }
+
+
+    $(document).on('click',".assessor-info li",function(){
+        let getuser_id = $(this).data('user_id');
+        $(".assessor-info li").removeClass('active');
+        $(this).toggleClass('active');
+        $('#aassessor_user_id').val(getuser_id);
+
+
+        $.ajax({
+            url: `/getAssessorAssessees`,
+            type: "GET",
+            dataType: "json",
+            data: $('#peer_to_peer_form').serialize(),
+            success: function (response) {
+                console.log(response);
+
+                let html = '';
+                const peertopeers = response;
+
+                peertopeers.forEach(function(peertopeer,idx){
+                    html += `
+                    <tr>
+                        <td>
+                            ${++idx}
+                        </td>
+                        <td>${peertopeer.assessoruser.employee.employee_name}</td>
+                        <td>${peertopeer.assesseeuser.employee.employee_name}</td>
+                        <td>${peertopeer.assesseeuser.employee.department.name}</td>
+                        <td>${peertopeer.assesseeuser.employee.branch.branch_name}</td>
+                        <td>${peertopeer.assesseeuser.employee.positionlevel.name}</td>
+                        <td>${peertopeer.assesseeuser.employee.position.name}</td>
+                        <td style="width:150px;">${peertopeer.assformcat.name}</td>
+
+
+                    </tr>`;
+                })
+
+
+                tableBody.innerHTML = html;
+
+
+            },
+            error: function (response) {
+                console.log("Error:", response);
+            }
+        });
+    });
 </script>
 @stop

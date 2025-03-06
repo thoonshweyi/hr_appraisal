@@ -47,7 +47,7 @@
 
 
                     <div class="col-lg-12 my-2 ">
-                        <form id="peer_to_peer_form" action="" method="POST">
+                        <form id="peer_to_peer_form" action="{{ route('peertopeers.store') }}" method="POST">
                             {{ csrf_field() }}
                             <div class="row align-items-start">
 
@@ -337,22 +337,24 @@
         }
 
         // Select All Checkbox Handler
-        document.getElementById("selectAll").addEventListener("change", function () {
-            let checkboxes = document.querySelectorAll(".assesseeCheckbox");
-            checkboxes.forEach(cb => {
-                cb.checked = this.checked;
-                let assesseeID = cb.value;
-                if (cb.checked) {
-                    selectedAssessees[assesseeID] = mergedAssessees.find(u => u.id == assesseeID);
-                    cb.next('.ass_form_cat_ids').removeAttr("disabled");
+        $(document).on("change", "#selectAll", function () {
+            let isChecked = $(this).is(":checked");
 
+            $(".assesseeCheckbox").each(function () {
+                $(this).prop("checked", isChecked);
+                let assesseeID = $(this).val();
+                let nextInput = $(this).next(".ass_form_cat_ids");
+
+                if (isChecked) {
+                    selectedAssessees[assesseeID] = mergedAssessees.find(u => u.id == assesseeID);
+                    nextInput.removeAttr("disabled");
                 } else {
                     delete selectedAssessees[assesseeID];
-                    cb.next('.ass_form_cat_ids').attr("disabled", "disabled");
-
+                    nextInput.attr("disabled", "disabled");
                 }
             });
-            {{-- console.log(selectedAssessees); --}}
+
+            // console.log(selectedAssessees);
         });
 
         {{-- End Assessee Filter --}}

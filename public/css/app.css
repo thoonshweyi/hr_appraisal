@@ -353,7 +353,7 @@ display: none;
 .header .search:focus{
     outline: 0;
 }
-.user-list{
+.user-list,.assessor-list{
     list-style: none;
     background-color: #fff;
 
@@ -365,13 +365,13 @@ display: none;
     /* adding scrollY */
     overflow-y: auto;
 }
-.user-list li{
+.user-list li,.assessor-list li{
     display: flex;
     align-items: center;
     padding: 5px 20px;
     border-bottom: 1px solid #eee;
 }
-.user-list li.active{
+.user-list li.active,.assessor-list li.active{
    background-color: #007bff;
    color: white;
 }
@@ -381,22 +381,22 @@ display: none;
     border-radius: 50%;
     object-fit: cover;
 }
-.user-list .user-info{
+.user-list .user-info,.assessor-list .assessor-info{
     margin-left: 10px;
 }
-.user-list .user-info h4{
+.user-list .user-info h4,.assessor-list .assessor-info h4{
     font-size: 14px;
     margin: 0px;
     margin-left: 10px;
 }
-.user-list .user-info p{
+.user-list .user-info p,.assessor-list .assessor-info p{
     font-size: 12px;
 }
-.user-list li:not(:last-of-type){
+.user-list li:not(:last-of-type), .assessor-list li:not(:last-of-type){
         border-bottom: 1px solid #eee;
 }
 
-.user-list li.hide{
+.user-list li.hide, .assessor-list li.hide{
     display: none;
 }
 
