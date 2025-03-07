@@ -26,6 +26,7 @@ use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\PeerToPeersController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
+use App\Http\Controllers\AppraisalFormsController;
 use App\Http\Controllers\PositionLevelsController;
 use App\Http\Controllers\SubDepartmentsController;
 use App\Http\Controllers\AppraisalCyclesController;
@@ -235,5 +236,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/appraisalforms/{id}/edit",[AppraisalFormsController::class,"edit"])->name("appraisalforms.edit");
     Route::put("/appraisalforms/{id}",[AppraisalFormsController::class,"update"])->name("appraisalforms.update");
     Route::delete("/appraisalforms/{id}",[AppraisalFormsController::class,"destroy"])->name("appraisalforms.destroy");
+    Route::get("/fillform",[AppraisalFormsController::class,"fillform"])->name("appraisalforms.fillform");
 
 });

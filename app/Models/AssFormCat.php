@@ -35,4 +35,6 @@ class AssFormCat extends Model
     public function criterias(){
         return $this->hasMany(Criteria::class);
     }
+
+
 }

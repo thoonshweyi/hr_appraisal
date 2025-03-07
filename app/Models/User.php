@@ -72,12 +72,15 @@ class User extends Authenticatable
     public function getAssFormCat(){
         $employee = $this->employee;
         $attach_form_type_id = $employee->attach_form_type_id;
+        $position_level_id = $employee->position_level_id;
 
-
-        $assformcat = AssFormCat::where('attach_form_type_id',$attach_form_type_id)->first();
+        $assformcat = AssFormCat::where('attach_form_type_id',$attach_form_type_id)
+        ->first();
 
 
         return $assformcat;
+
+
 
     }
 }

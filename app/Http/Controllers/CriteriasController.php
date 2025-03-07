@@ -38,7 +38,7 @@ class CriteriasController extends Controller
        $criteria->status_id = $request["status_id"];
        $criteria->user_id = $user_id;
        $criteria->save();
-       return redirect(route("criterias.index"))->with('success',"Criteria created successfully");;
+       return redirect(route("criterias.index"))->with('success',"Criteria created successfully");
     }
 
     public function update(Request $request, string $id)

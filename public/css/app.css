@@ -211,7 +211,7 @@
     padding: 0 !important;
 }
 
-.add_btn,.new_btn,.apply_btn{
+.add_btn,.new_btn,.apply_btn,.fill_btn{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -219,7 +219,7 @@
     background-color: #007bff;
     color: white;
 }
-.add_btn:hover,.new_btn:hover,.apply_btn:hover{
+.add_btn:hover,.new_btn:hover,.apply_btn:hover,.fill_btn:hover{
     color: white;
 }
 /* End Criteria */

@@ -275,7 +275,12 @@
                                                     </td>
 
                                                     <td class="text-center">
-                                                        <a href="" class="text-primary mr-2" title="Send"><i class="fas fa-paper-plane"></i></a>
+                                                        <form id="appraisalform" action="{{ route('appraisalforms.create') }}" method="GET">
+                                                            <input type="hidden" name="assessor_user_id" value="{{ $participantuser->id }}">
+                                                            <input type="hidden" name="appraisal_cycle_id" value="{{ $appraisalcycle->id }}"/>
+
+                                                            <a href="javascript:void(0);" class="text-primary mr-2" title="Send" onclick="$(this).closest('form').submit()"><i class="fas fa-paper-plane"></i></a>
+                                                        </form>
                                                     </td>
 
 
