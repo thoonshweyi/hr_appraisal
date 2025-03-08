@@ -15,6 +15,26 @@ use App\Models\AppraisalFormAssesseeUser;
 class AppraisalFormsController extends Controller
 {
 
+    public function index(Request $request){
+
+
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        if($user->can("view-all-appraisal_form")){
+
+        }else{
+            $appraisalforms = AppraisalForm::where('assessor_user_id',$user_id)
+                                        // ->orderBy("created_at",'desc')
+                                        ->paginate(10);
+        }
+
+        // dd($appraisalforms);
+
+        return view("appraisalforms.index",compact('appraisalforms'));
+    }
+
+
     public function create(Request $request){
 
 
@@ -81,6 +101,25 @@ class AppraisalFormsController extends Controller
 
        return redirect()->back()->with('success',"Appraisal form sended to assessor successfully");
 
+
+    }
+
+    public function show(Request $request,$id){
+
+        $appraisalform = AppraisalForm::find($id);
+        // dd($appraisalform);
+
+        $assessee_ids = $appraisalform->assesseeusers->pluck('id');
+        $assesseeusers = User::whereIn("id",$assessee_ids)
+        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->get();
+        // dd($assessee_ids);
+
+        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
+
+
+
+        return view("appraisalforms.show",compact('appraisalform','assesseeusers',"criterias"));
 
     }
 

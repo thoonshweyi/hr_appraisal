@@ -114,6 +114,14 @@
                 </ul>
             </li>
 
+
+            <li class="{{ (strpos(Route::currentRouteName(), 'appraisalforms.index') === 0) ? 'active' : ''}}">
+                <a href="{{ route('appraisalforms.index') }}" class="svg-icon">
+                    <i class="far fa-folder-open"></i>
+                    <span class="ml-4">  {{__('nav.appraisalform_list')}}</span>
+                </a>
+            </li>
+
             @can('edit-faqs')
             <li class=" ">
                 <a href="#faq" class="collapsed" data-toggle="collapse" aria-expanded="false">

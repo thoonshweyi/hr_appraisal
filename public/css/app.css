@@ -166,7 +166,7 @@
     text-align: center;
     vertical-align: middle;
 }
-.table thead {
+.custables thead ,.table_headers{
     background-color: #007bff;
     color: white;
 }
@@ -226,7 +226,7 @@
 
 .custables th:nth-child(2),
 .custables td:nth-child(2) {
-    width: 40%; /* Wider for Criteria Description */
+    width: 40%;
 }
 
 .custables th:nth-child(1),
@@ -238,6 +238,7 @@
 .fixedtxtareas{
     resize: none;
 }
+
 
 
 
@@ -427,4 +428,37 @@ display: none;
     max-width: 100% !important;
     word-break: break-word !important;
     white-space: normal !important;
+}
+
+
+/* Start Folder Clippy */
+.folders{
+    width: 280px;
+    height: 240px;
+    background: #0066cc;
+    clip-path: polygon(0% 99%, 0% 0%, 41% 0%, 56% 16%, 100% 16%, 100% 100%);
+    border-radius: 10px;
+}
+
+/* End Folder Clippy */
+.folder-container {
+    position: relative;
+    width: 280px;
+    height: 180px;
+    background: #0066cc;
+    border-radius: 10px;
+    color: white;
+    padding: 10px;
+}
+
+.folder-tab {
+    width: 120px;
+    height: 40px;
+    background: #0066cc;
+    border-radius: 10px 10px 0 0;
+
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    z-index: -1;
 }

@@ -75,12 +75,20 @@ class User extends Authenticatable
         $position_level_id = $employee->position_level_id;
 
         $assformcat = AssFormCat::where('attach_form_type_id',$attach_form_type_id)
+        ->whereHas('positionlevels',function($query) use($position_level_id){
+            $query->where('position_levels.id',$position_level_id);
+        })
         ->first();
 
 
+        // if (!empty($filter_branch_id)) {
+        //     $results = $results->whereHas('branches', function($query) use ($filter_branch_id) {
+        //         $query->where('branch_users.branch_id', $filter_branch_id);
+        //     });
+        // }
+
         return $assformcat;
-
-
-
     }
+
+
 }

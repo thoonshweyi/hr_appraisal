@@ -40,6 +40,7 @@ return [
     'employee_list'             => 'Employee List',
     'appraisalcycle_list'             => 'Appraisal Cycle List',
     'attachformtype_list'             => 'Attach Form Type List',
+    'appraisalform_list'             => 'Appraisal Form List',
 
 
 
