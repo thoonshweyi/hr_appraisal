@@ -65,14 +65,11 @@
 
 
                     <div class="col-md-12">
-                        <div class="header-bar">{{ $appraisalform->assformcat->name }}</div>
+                        <div class="header-bar mb-0">{{ $appraisalform->assformcat->name }}</div>
 
                         <div class="table-responsive">
-
-                            <table id="mytable" class="table table-bordered">
-
-                                <thead class="appraisal_headers m-0">
-
+                            <table class="table table-bordered my-0">
+                                <thead class="appraisal_headers">
                                     <tr class="text-white">
                                         <th colspan="2">
                                             <label for="">Assessor Name:</label>
@@ -102,9 +99,12 @@
                                             <span class="ml-4">{{ $appraisalform->assessoruser->employee->department->name }}</span>
                                         </th>
                                     </tr>
-
                                 </thead>
-                                <tbody class="custables">
+                            </table>
+
+                            <table id="mytable" class="table table-bordered custables">
+
+                                <thead class=" m-0">
                                     <tr class="table_headers">
                                         <th>S/No</th>
                                         <th>CRITERIA Description</th>
@@ -117,6 +117,10 @@
                                         <th style="width:auto;">{{ $assesseeuser->employee->employee_name }}</th>
                                         @endforeach
                                     </tr>
+
+                                </thead>
+                                <tbody class="">
+
                                     @foreach ($criterias as $idx=>$criteria)
                                     <tr class="table_rows">
                                         <td>{{ ++$idx }}</td>
@@ -127,7 +131,9 @@
                                         <td >{{$criteria->below_standard}}</td>
                                         <td >{{$criteria->weak}}</td>
                                         @foreach($assesseeusers as $assesseeuser)
-                                            <td></td>
+                                            <td style="width:auto;">
+                                                {{ $appraisalform->getResult($assesseeuser->id,$criteria->id) }}
+                                            </td>
                                         @endforeach
                                     </tr>
                                     @endforeach

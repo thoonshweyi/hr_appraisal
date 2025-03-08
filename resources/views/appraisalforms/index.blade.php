@@ -116,6 +116,7 @@
                         <td> <span class="badge bg-success">Finished</span></td>
                         <td class="text-center">
                             <a href="{{ route('appraisalforms.show',$appraisalform->id) }}" class="text-info mr-2" title="Open"><i class="fas fa-eye"></i></a>
+                            <a href="{{ route('appraisalforms.edit',$appraisalform->id) }}" class="text-primary mr-2" title="Open"><i class="fas fa-edit"></i></a>
                        </td>
 
                    </tr>

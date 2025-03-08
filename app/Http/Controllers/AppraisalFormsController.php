@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use App\Models\Criteria;
 use App\Models\AssFormCat;
+use App\Models\FormResult;
 use App\Models\PeerToPeer;
 use Illuminate\Http\Request;
 use App\Models\AppraisalForm;
@@ -120,6 +122,73 @@ class AppraisalFormsController extends Controller
 
 
         return view("appraisalforms.show",compact('appraisalform','assesseeusers',"criterias"));
+
+    }
+
+
+    public function edit(Request $request,$id){
+
+        $appraisalform = AppraisalForm::find($id);
+        // dd($appraisalform);
+
+        $assessee_ids = $appraisalform->assesseeusers->pluck('id');
+        $assesseeusers = User::whereIn("id",$assessee_ids)
+        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->get();
+        // dd($assessee_ids);
+
+        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
+
+
+
+        return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias"));
+
+    }
+    public function update(Request $request,$id){
+
+
+        $this->validate($request, [
+            "appraisalformresults" => "required|array",
+            "appraisalformresults.*" => "required|array",
+            "appraisalformresults.*.*" => "required", // Ensure all values inside each assessee are filled
+        ], [
+            'appraisalformresults.*.*.required' => 'Please enter a rating value for each assessee.',
+        ]);
+
+        \DB::beginTransaction();
+        try{
+
+            $appraisalformresults = $request->appraisalformresults;
+            foreach($appraisalformresults as $assessee_id=>$appraisalformresult){
+                foreach($appraisalformresult as $criteria_id=>$result){
+
+                    $criteria = Criteria::find($criteria_id);
+                    $max = $criteria->excellent;
+                    $min = $criteria->weak;
+
+                    if($result > $max){
+                        return redirect()->back()->with("error","Value cannot be greater than".$max);
+                    }else if($result < $min){
+                        return redirect()->back()->with("error","Value cannot be less than ".$min);
+                    }
+
+                    $formresult = FormResult::create([
+                        "appraisal_form_id" => $id,
+                        "assessee_user_id" => $assessee_id,
+                        "criteria_id" => $criteria_id,
+                        "result" => $result,
+                    ]);
+                }
+            }
+
+            \DB::commit();
+            return redirect(route("assformcats.index"))->with('success',"Appraisal Form updated successfully");
+        }catch(Exception $err){
+            \DB::rollback();
+
+            return redirect()->back()->with("error","There is an error in submitting Appraisal Form.");
+        }
+
 
     }
 

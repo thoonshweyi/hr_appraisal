@@ -179,6 +179,16 @@
     border-radius: 3px;
     padding: 5px;
 
+    appearance: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 /* .custom-input-lg{
     width: 100%;
@@ -211,6 +221,9 @@
     padding: 0 !important;
 }
 
+.appraisal_headers th{
+    padding: 4px 12px;
+}
 .add_btn,.new_btn,.apply_btn,.fill_btn{
     display: flex;
     justify-content: center;
@@ -431,34 +444,3 @@ display: none;
 }
 
 
-/* Start Folder Clippy */
-.folders{
-    width: 280px;
-    height: 240px;
-    background: #0066cc;
-    clip-path: polygon(0% 99%, 0% 0%, 41% 0%, 56% 16%, 100% 16%, 100% 100%);
-    border-radius: 10px;
-}
-
-/* End Folder Clippy */
-.folder-container {
-    position: relative;
-    width: 280px;
-    height: 180px;
-    background: #0066cc;
-    border-radius: 10px;
-    color: white;
-    padding: 10px;
-}
-
-.folder-tab {
-    width: 120px;
-    height: 40px;
-    background: #0066cc;
-    border-radius: 10px 10px 0 0;
-
-    position: absolute;
-    top: -10px;
-    left: 20px;
-    z-index: -1;
-}
