@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\AssFormCat;
+use App\Models\PeerToPeer;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -90,5 +92,32 @@ class User extends Authenticatable
         return $assformcat;
     }
 
+    public function getAppraisalFormCount($appraisal_cycle_id){
+        $appraisalforms = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
+        ->where('assessor_user_id', $this->id)
+        ->get();
 
+        $appraisalformcount = count($appraisalforms);
+
+        return $appraisalformcount;
+    }
+
+
+    public function getAllFormCount($appraisal_cycle_id){
+        $assformcat_ids = PeerToPeer::where('assessor_user_id',$this->id)
+        ->where('appraisal_cycle_id', $appraisal_cycle_id)
+        ->distinct()
+        ->pluck('ass_form_cat_id');
+
+        // // dd($assformcat_ids);
+        // $assformcats = AssFormCat::whereIn('id',$assformcat_ids)->whereNotIn('id',$filled_assformcat_ids)->get();
+
+        return count($assformcat_ids);
+    }
+
+    public function getSentPercentage($appraisal_cycle_id){
+        $sentpercentage = ($this->getAppraisalFormCount($appraisal_cycle_id) / $this->getAllFormCount($appraisal_cycle_id)) * 100;
+
+        return $sentpercentage;
+    }
 }

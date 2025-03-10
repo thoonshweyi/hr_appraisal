@@ -103,7 +103,7 @@
                         <th>No</th>
                         <th>Assessment-form Category</th>
                         <th>Appraisal Cycle</th>
-                        <th>Status</th>
+                        <th>Assessed</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -113,10 +113,13 @@
                         <td>{{$idx + $appraisalforms->firstItem()}}</td>
                         <td>{{$appraisalform->assformcat["name"]}}</td>
                         <td>{{$appraisalform->appraisalcycle["name"]}}</td>
-                        <td> <span class="badge bg-success">Finished</span></td>
+                        <td> <span class="badge {{ $appraisalform->assessed ? 'bg-success' : 'bg-danger' }}"> {{ $appraisalform->assessed ? "Assessed" : 'Not Yet' }} </span></td>
                         <td class="text-center">
+                            @if($appraisalform->assessed)
                             <a href="{{ route('appraisalforms.show',$appraisalform->id) }}" class="text-info mr-2" title="Open"><i class="fas fa-eye"></i></a>
+                            @else
                             <a href="{{ route('appraisalforms.edit',$appraisalform->id) }}" class="text-primary mr-2" title="Open"><i class="fas fa-edit"></i></a>
+                            @endif
                        </td>
 
                    </tr>

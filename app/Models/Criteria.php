@@ -49,4 +49,17 @@ class Criteria extends Model
     public function status(){
         return $this->belongsTo(Status::class);
     }
+
+    public function getRatingScaleAttribute()
+    {
+        // return [
+        //     $this->excellent,
+        //     $this->good,
+        //     $this->meet_standard,
+        //     $this->below_standard,
+        //     $this->weak,
+        // ];
+
+        return $this->only(['excellent', 'good', 'meet_standard', 'below_standard', 'weak']);
+    }
 }

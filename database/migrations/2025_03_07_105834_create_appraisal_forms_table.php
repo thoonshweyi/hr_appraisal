@@ -19,6 +19,7 @@ class CreateAppraisalFormsTable extends Migration
             $table->unsignedBigInteger('ass_form_cat_id');
             $table->unsignedBigInteger('appraisal_cycle_id');
             $table->unsignedBigInteger('user_id');
+            $table->boolean("assessed")->default(false);
             $table->timestamps();
         });
     }

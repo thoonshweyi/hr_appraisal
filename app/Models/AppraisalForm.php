@@ -15,7 +15,8 @@ class AppraisalForm extends Model
         "assessor_user_id",
         "ass_form_cat_id",
         "appraisal_cycle_id",
-        "user_id"
+        "user_id",
+        "assessed"
     ];
 
     public function assessor(){

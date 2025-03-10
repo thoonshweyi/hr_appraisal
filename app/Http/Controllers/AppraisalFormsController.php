@@ -158,20 +158,25 @@ class AppraisalFormsController extends Controller
         \DB::beginTransaction();
         try{
 
+            $appraisalform = AppraisalForm::find($id);
+            $appraisalform->update([
+                "assessed" => true
+            ]);
+
+
             $appraisalformresults = $request->appraisalformresults;
             foreach($appraisalformresults as $assessee_id=>$appraisalformresult){
                 foreach($appraisalformresult as $criteria_id=>$result){
 
                     $criteria = Criteria::find($criteria_id);
-                    $max = $criteria->excellent;
-                    $min = $criteria->weak;
+                    $alloweds = $criteria->getRatingScaleAttribute();
 
-                    if($result > $max){
-                        return redirect()->back()->with("error","Value cannot be greater than".$max);
-                    }else if($result < $min){
-                        return redirect()->back()->with("error","Value cannot be less than ".$min);
+
+                    if(!in_array($result,$alloweds)){
+                        return redirect()->back()->with("error","Your rating-value doesn't match the given-rating-scale-values!")
+                        ->withInput();
+
                     }
-
                     $formresult = FormResult::create([
                         "appraisal_form_id" => $id,
                         "assessee_user_id" => $assessee_id,

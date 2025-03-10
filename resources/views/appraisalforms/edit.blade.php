@@ -137,8 +137,9 @@
                                         <td >{{$criteria->weak}}</td>
                                         @foreach($assesseeusers as $assesseeuser)
                                             {{-- {{ dd($criteria->pluck('excellent')) }} --}}
+                                            {{-- {{ dd($criteria->getRatingScaleAttribute()) }} --}}
                                             <td style="width:auto;">
-                                                <input type="number" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" class="custom-input" max="{{ $criteria->excellent }}" min="{{ $criteria->weak }}" value="{{ old('appraisalformresults') ? old('appraisalformresults')[$assesseeuser->id][$criteria->id] : '' }}" data-valids=""/>
+                                                <input type="number" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" class="custom-input" max="{{ $criteria->excellent }}" min="{{ $criteria->weak }}" value="{{ old('appraisalformresults') ? old('appraisalformresults')[$assesseeuser->id][$criteria->id] : '' }}" data-valids="{{ implode(',', $criteria->getRatingScaleAttribute()) }}"/>
                                             </td>
                                         @endforeach
                                     </tr>
@@ -184,13 +185,12 @@
 
 
         {{-- Your rating-value doesn't match the given-rating-scale-values! --}}
-        $(".custom-input").on("input", function () {
+        {{-- $(".custom-input").on("input", function () {
             let min = parseInt($(this).attr("min"));
             let max = parseInt($(this).attr("max"));
             let value = parseInt($(this).val());
 
             if (value > max) {
-                {{-- alert("Value cannot be greater than " + max); --}}
 
                 Swal.fire({
                     icon: "warning",
@@ -199,7 +199,6 @@
                 });
                 $(this).val(max);
             } else if (value < min) {
-                {{-- alert("Value cannot be less than " + min); --}}
                 Swal.fire({
                     icon: "warning",
                     title: "Less than minimum value.",
@@ -207,6 +206,25 @@
                 });
                 $(this).val(min);
             }
+        }); --}}
+
+
+        document.querySelectorAll('.custom-input').forEach(function (input) {
+            input.addEventListener('input', function () {
+                const allowed = this.dataset.valids.split(',').map(Number);
+                const value = parseInt(this.value);
+
+                if (this.value !== '' && !allowed.includes(value)) {
+                    {{-- alert('Invalid value! Please enter one of: ' + allowed.join(', ')); --}}
+
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Your rating-value doesn't match the given-rating-scale-values!",
+                        text:"Please enter one of: " + allowed.join(', '),
+                    });
+                    this.value = ''; // Clear invalid input
+                }
+            });
         });
     });
 </script>

@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Employee;
 use App\Models\AssFormCat;
 use App\Models\BranchUser;
+use App\Models\PeerToPeer;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
@@ -279,6 +280,7 @@ class UserController extends Controller
 
 
         $assessor_user_id = $request->assessor_user_id;
+        $appraisal_cycle_id = $request->appraisal_cycle_id;
 
         $results = User::query();
 
@@ -310,12 +312,21 @@ class UserController extends Controller
             $results = $results->whereIn('employee_id', $employee_codes);
         }
 
+        // Preventing Self peer to peer
         $results = $results->where("id","!=",$assessor_user_id);
+
+
+        // Preventing Assigned peer to peer
+        $assessee_user_ids = PeerToPeer::where('assessor_user_id', $assessor_user_id)
+        ->where('appraisal_cycle_id', $appraisal_cycle_id)
+        ->distinct()
+        ->pluck('assessee_user_id');
+        $results = $results->whereNotIn('id',$assessee_user_ids);
+
 
         $users = $results->orderBy('id','asc')
         ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
         ->get();
-
 
         // dd($users[0]->getAssFormCat());
         // dd($users);

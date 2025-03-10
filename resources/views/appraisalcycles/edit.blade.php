@@ -22,10 +22,10 @@
                         <button type="button" class="tablinks" onclick="gettab(event,'appraisalcycle')">Peroid</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
+                        <button type="button" id="autoclick"  class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" id="autoclick" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
+                        <button type="button" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
@@ -205,32 +205,11 @@
                                                     <th>Position Level</th>
                                                     <th>Position</th>
                                                     <th>Assessment-form Category</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="ligth-body">
-                                                {{-- @foreach($genders as $idx=>$gender)
-                                                <tr>
-                                                    <td>{{$idx + $genders->firstItem()}}</td>
-                                                    <td>{{$gender["name"]}}</td>
-                                                    <td>
-                                                        <div class="custom-switch p-0">
-                                                            <input type="checkbox" id="customSwitch-{{ $idx + $genders->firstItem() }}" class="custom-switch-input statuschange-btn" {{ $gender->status_id === 1 ? "checked" : "" }} data-id="{{ $gender->id }}"/>
-                                                            <label class="custom-switch-label" for="customSwitch-{{ $idx + $genders->firstItem() }}"></label>
-                                                        </div>
-                                                    </td>
-                                                    <td>{{ $gender["user"]["name"] }}</td>
-                                                    <td>{{ $gender->created_at->format('d M Y') }}</td>
-                                                    <td>{{ $gender->updated_at->format('d M Y') }}</td>
-                                                    <td class="text-center">
-                                                        <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$gender->id}}" data-name="{{$gender->name}}" data-status="{{$gender->status_id}}"><i class="fas fa-pen"></i></a>
-                                                        <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
-                                                    </td>
-                                                    <form id="formdelete-{{ $idx }}" class="" action="{{route('genders.destroy',$gender->id)}}" method="POST">
-                                                        @csrf
-                                                        @method("DELETE")
-                                                    </form>
-                                            </tr>
-                                                @endforeach --}}
+
                                             </tbody>
                                         </table>
                                         <div class="d-flex justify-content-center">
@@ -257,7 +236,8 @@
                                             <th>No</th>
                                             <th>Employee Name</th>
                                             <th>Employee Code</th>
-                                            <th>Status</th>
+                                            <th>Sent / All Forms</th>
+                                            <th>Progress</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -268,9 +248,15 @@
                                                     {{-- <td>{{$idx + $participantuser->firstItem()}}</td> --}}
                                                     <td>{{ $participantuser->employee->employee_name }}</td>
                                                     <td>{{ $participantuser->employee->employee_code }}</td>
+                                                    <td>{{ $participantuser->getAppraisalFormCount($appraisalcycle->id) }} / {{  $participantuser->getAllFormCount($appraisalcycle->id) }} </td>
                                                     <td class="">
-                                                        <div class="d-flex justify-content-center align-items-center">
+                                                        {{-- <div class="d-flex justify-content-center align-items-center">
                                                             <i class="fas fa-check-circle fa-2x text-success mr-2"></i> Complete </td>
+                                                        </div> --}}
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                        <div id="progresses"  style="background : conic-gradient(steelblue {{$participantuser->getSentPercentage($appraisalcycle->id)}}%,#eee {{$participantuser->getSentPercentage($appraisalcycle->id)}}%)">
+                                                            <span id="progressvalues">{{$participantuser->getSentPercentage($appraisalcycle->id)}}%</span>
+                                                        </div>
                                                         </div>
                                                     </td>
 
@@ -278,7 +264,6 @@
                                                         <form id="appraisalform" action="{{ route('appraisalforms.create') }}" method="GET">
                                                             <input type="hidden" name="assessor_user_id" value="{{ $participantuser->id }}">
                                                             <input type="hidden" name="appraisal_cycle_id" value="{{ $appraisalcycle->id }}"/>
-
                                                             <a href="javascript:void(0);" class="text-primary mr-2" title="Send" onclick="$(this).closest('form').submit()"><i class="fas fa-paper-plane"></i></a>
                                                         </form>
                                                     </td>
@@ -402,32 +387,6 @@
             time_24hr: true // Use 24-hour format
         });
 
-        // Start Delete Item
-        $(".delete-btns").click(function(){
-            // console.log('hay');
-
-            var getidx = $(this).data("idx");
-            {{-- // console.log(getidx); --}}
-
-
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#formdelete-'+getidx).submit();
-
-                }
-            });
-
-
-       });
-       // End Delete Item
 
 
 
@@ -706,7 +665,13 @@
                         <td>${peertopeer.assesseeuser.employee.positionlevel.name}</td>
                         <td>${peertopeer.assesseeuser.employee.position.name}</td>
                         <td style="width:150px;">${peertopeer.assformcat.name}</td>
-
+                        <td class="text-center">
+                            <a href="#" class="text-danger ms-2 delete-btns" data-idx="${idx}"><i class="fas fa-trash-alt"></i></a>
+                            <form id="formdelete-${idx}" class="" action="/peertopeers/${peertopeer.id}" method="POST">
+                                @csrf
+                                @method("DELETE")
+                            </form>
+                        </td>
 
                     </tr>`;
                 })
@@ -720,8 +685,40 @@
                 console.log("Error:", response);
             }
         });
+
+
+
     });
+
+
+    // Start Delete Item
+    $(document).on("click",".delete-btns",function(){
+        console.log('hay');
+
+        var getidx = $(this).data("idx");
+        {{-- // console.log(getidx); --}}
+
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#formdelete-'+getidx).submit();
+
+            }
+        });
+
+
+   });
+   // End Delete Item
     {{-- End User List Filter --}}
+
 
 
     {{-- Start Assessor List Filter --}}
@@ -793,5 +790,8 @@
             }
         });
     });
+
+
+
 </script>
 @stop

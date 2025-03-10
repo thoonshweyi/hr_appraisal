@@ -201,7 +201,8 @@
     $(document).ready(function() {
 
         // Start Delete Item
-        $(".delete-btns").click(function(){
+        $(".delete-btns").click(function(e){
+            e.preventDefault();
             // console.log('hay');
 
             var getidx = $(this).data("idx");
