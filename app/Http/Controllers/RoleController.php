@@ -59,23 +59,17 @@ class RoleController extends Controller
     public function create(Request $request)
     {
         try{
-            $dashboard_permission = Permission::where('group_name','dashboard')->get();
-            $document_permission = Permission::where('group_name','document')->get();
-            $document_remark = Permission::where('group_name','document-remark')->get();
-            $document_attach = Permission::where('group_name','document-attach')->get();
-            $document_export = Permission::where('group_name','document-export')->get();
-            $document_update = Permission::where('group_name','document-update')->get();
 
-            $product_permission = Permission::where('group_name','product')->get();
             $user_permission = Permission::where('group_name','user')->get();
             $role_permission = Permission::where('group_name','role')->get();
             $supplier_permission = Permission::where('group_name','supplier')->get();
             $branch_permission = Permission::where('group_name','branch')->get();
             $faqs_permissions = Permission::where('group_name','faqs')->get();
 
-            $my_document = Permission::where('group_name','my-document')->get();
-            return view('roles.create',compact('dashboard_permission','document_permission','document_remark',
-        'document_attach','document_export','document_update','product_permission','user_permission','role_permission','supplier_permission','branch_permission','my_document','faqs_permissions'));
+
+            $appraisalform_permissions = Permission::where('group_name','appraisalforms')->get();
+
+            return view('roles.create',compact('user_permission','role_permission','supplier_permission','branch_permission','faqs_permissions','appraisalform_permissions'));
         }catch (\Exception $e) {
             Log::debug($e->getMessage());
             return redirect()
@@ -131,12 +125,7 @@ class RoleController extends Controller
         try{
             $role = Role::find($id);
 
-            $dashboard_permission = Permission::where('group_name','dashboard')->get();
-            $document_permission = Permission::where('group_name','document')->get();
-            $document_remark = Permission::where('group_name','document-remark')->get();
-            $document_attach = Permission::where('group_name','document-attach')->get();
-            $document_export = Permission::where('group_name','document-export')->get();
-            $document_update = Permission::where('group_name','document-update')->get();
+
 
             $product_permission = Permission::where('group_name','product')->get();
             $user_permission = Permission::where('group_name','user')->get();
@@ -150,8 +139,11 @@ class RoleController extends Controller
                 ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
                 ->all();
 
-            return view('roles.edit',compact('role','dashboard_permission','document_permission','document_remark',
-            'document_attach','document_export','document_update','product_permission','user_permission','role_permission','supplier_permission','branch_permission','my_document','rolePermissions','faqs_permissions'));
+            $appraisalform_permissions = Permission::where('group_name','appraisalforms')->get();
+            // dd($user_permission);
+
+
+            return view('roles.edit',compact('role','product_permission','user_permission','role_permission','supplier_permission','branch_permission','my_document','rolePermissions','faqs_permissions','appraisalform_permissions'));
         }catch (\Exception $e) {
             Log::debug($e->getMessage());
             return redirect()

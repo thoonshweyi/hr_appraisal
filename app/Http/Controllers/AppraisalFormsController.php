@@ -23,15 +23,27 @@ class AppraisalFormsController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
 
-        if($user->can("view-all-appraisal_form")){
+        $filter_assessor_user_id = $request->filter_assessor_user_id;
+        $filter_appraisal_cycle_id = $request->filter_appraisal_cycle_id;
 
-        }else{
-            $appraisalforms = AppraisalForm::where('assessor_user_id',$user_id)
-                                        // ->orderBy("created_at",'desc')
-                                        ->paginate(10);
+
+        $results = AppraisalForm::query();
+        if (!empty($filter_assessor_user_id)) {
+            $results = $results->where('assessor_user_id', $filter_assessor_user_id);
+        }
+        if (!empty($filter_appraisal_cycle_id)) {
+            $results = $results->where('appraisal_cycle_id', $filter_appraisal_cycle_id);
         }
 
-        // dd($appraisalforms);
+        if($user->can("view-all-appraisal-form")){
+
+        }else{
+            $results = $results->where('assessor_user_id',$user_id);
+        }
+
+        $appraisalforms = $results->orderBy('id','asc')->paginate(10);
+
+
 
         return view("appraisalforms.index",compact('appraisalforms'));
     }

@@ -21,6 +21,7 @@ return [
     'branch_permission'  => 'Branch Permission',
     'show_role' => 'Show Role',
     'role' => 'Role',
-   
+    'appraisalform_permission'  => 'Appraisal Form Permissions',
+
 ];
 ?>

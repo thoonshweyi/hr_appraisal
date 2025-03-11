@@ -290,7 +290,7 @@
             @endcan
 
 
-            <li>
+            {{-- <li>
             <a href="{{ asset('/download/Imported Claim System (Operation User Guide).pdf') }}" class="btn btn-large pull-right" target="_blank">
                     <?xml version="1.0" encoding="iso-8859-1"?>
                     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
@@ -306,7 +306,7 @@
                     </svg>
                     <span class="ml-4">Import Claim User Guide</span>
                 </a>
-            </li>
+            </li> --}}
         </ul>
     </nav>
     <div class="p-3"></div>
