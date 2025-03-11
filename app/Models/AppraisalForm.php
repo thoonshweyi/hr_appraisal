@@ -49,4 +49,11 @@ class AppraisalForm extends Model
         $result = $formresult ? $formresult->result : '';
         return $result;
     }
+
+    public function getTotalResult($assessee_user_id){
+        $totalresult = FormResult::where('appraisal_form_id',$this->id)
+        ->where('assessee_user_id',$assessee_user_id)
+       ->sum("result");
+        return $totalresult;
+    }
 }

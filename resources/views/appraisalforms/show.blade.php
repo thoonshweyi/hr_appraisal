@@ -138,8 +138,33 @@
                                     </tr>
                                     @endforeach
                                 </tbody>
+
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2">Total Score</td>
+                                        <td><span id="total_excellent">{{ $total_excellent }}</span></td>
+                                        <td><span id="total_good">{{ $total_good }}</span></td>
+                                        <td><span id="total_meet_standard">{{ $total_meet_standard }}</span></td>
+                                        <td><span id="total_below_standard">{{ $total_below_standard }}</span></td>
+                                        <td><span id="total_weak">{{ $total_weak }}</span></td>
+
+                                        @foreach($assesseeusers as $assesseeuser)
+                                        <td>
+                                            <span id="total_results_{{ $assesseeuser->id }}">  {{ $appraisalform->getTotalResult($assesseeuser->id) }} </span>
+                                        </td>
+                                        @endforeach
+
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
+                    </div>
+
+
+                    <div class="col-md-12 mt-2">
+
+                        <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
+
                     </div>
                 </div>
            </div>

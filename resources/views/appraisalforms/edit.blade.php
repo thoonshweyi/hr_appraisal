@@ -139,12 +139,35 @@
                                             {{-- {{ dd($criteria->pluck('excellent')) }} --}}
                                             {{-- {{ dd($criteria->getRatingScaleAttribute()) }} --}}
                                             <td style="width:auto;">
-                                                <input type="number" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" class="custom-input" max="{{ $criteria->excellent }}" min="{{ $criteria->weak }}" value="{{ old('appraisalformresults') ? old('appraisalformresults')[$assesseeuser->id][$criteria->id] : '' }}" data-valids="{{ implode(',', $criteria->getRatingScaleAttribute()) }}"/>
+                                                <input type="number" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" class="custom-input" max="{{ $criteria->excellent }}" min="{{ $criteria->weak }}"
+                                                value="{{ old('appraisalformresults') ? old('appraisalformresults')[$assesseeuser->id][$criteria->id] : '' }}" data-valids="{{ implode(',', $criteria->getRatingScaleAttribute()) }}"
+                                                data-assessee="{{ $assesseeuser->id }}"
+                                                />
                                             </td>
                                         @endforeach
                                     </tr>
                                     @endforeach
                                 </tbody>
+
+
+
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2">Total Score</td>
+                                        <td><span id="total_excellent">{{ $total_excellent }}</span></td>
+                                        <td><span id="total_good">{{ $total_good }}</span></td>
+                                        <td><span id="total_meet_standard">{{ $total_meet_standard }}</span></td>
+                                        <td><span id="total_below_standard">{{ $total_below_standard }}</span></td>
+                                        <td><span id="total_weak">{{ $total_weak }}</span></td>
+
+                                        @foreach($assesseeusers as $assesseeuser)
+                                        <td>
+                                            <span id="total_results_{{ $assesseeuser->id }}">  </span>
+                                        </td>
+                                        @endforeach
+
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
 
@@ -224,8 +247,46 @@
                     });
                     this.value = ''; // Clear invalid input
                 }
+                updateTotals();
+
             });
+
+
         });
+
+        function updateTotals() {
+            const totals = {};
+
+            // Reset all totals
+            document.querySelectorAll('[id^="total_results_"]').forEach(span => {
+                span.textContent = '0';
+            });
+
+            // Sum up scores by assessee
+            document.querySelectorAll('.custom-input').forEach(input => {
+                const assesseeId = input.dataset.assessee;
+                const val = parseFloat(input.value);
+
+                if (!totals[assesseeId]) {
+                    totals[assesseeId] = 0;
+                }
+
+                if (!isNaN(val)) {
+                    totals[assesseeId] += val;
+                }
+            });
+
+            // Update the DOM
+            for (const id in totals) {
+                const span = document.getElementById(`total_results_${id}`);
+                if (span) {
+                    span.textContent = totals[id];
+                }
+            }
+
+            console.log(totals);
+        }
+
     });
 </script>
 @stop

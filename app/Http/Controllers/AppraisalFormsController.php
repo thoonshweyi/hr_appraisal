@@ -120,8 +120,14 @@ class AppraisalFormsController extends Controller
         $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
 
 
+        $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
+        $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');
+        $total_meet_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('meet_standard');
+        $total_below_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('below_standard');
+        $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
 
-        return view("appraisalforms.show",compact('appraisalform','assesseeusers',"criterias"));
+
+        return view("appraisalforms.show",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
 
     }
 
@@ -139,9 +145,14 @@ class AppraisalFormsController extends Controller
 
         $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
 
+        $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
+        $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');
+        $total_meet_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('meet_standard');
+        $total_below_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('below_standard');
+        $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
 
 
-        return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias"));
+        return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
 
     }
     public function update(Request $request,$id){
@@ -187,7 +198,7 @@ class AppraisalFormsController extends Controller
             }
 
             \DB::commit();
-            return redirect(route("assformcats.index"))->with('success',"Appraisal Form updated successfully");
+            return redirect(route("appraisalforms.index"))->with('success',"Appraisal Form updated successfully");
         }catch(Exception $err){
             \DB::rollback();
 

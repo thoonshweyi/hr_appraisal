@@ -28,85 +28,11 @@ class HomeController extends Controller
     }
     public function index()
     {
-        // try {
-            $totalUser = User::whereHas('roles', function ($query) {
-                $query->where('name', '!=', 'Admin');
-            })->count();
-            $totalSupplier = Supplier::count();
-            $totalBranch = Branch::count();
+
             $branches = BranchUser::where('user_id', auth()->user()->id)->with('branches')->get();
-            $totalReturnDoc = $this->getTotalReturnDocument();
-            $totalExchangeDoc = $this->getTotalExchangeDocument();
-            $completeReturnDoc = $this->getCompleteReturnDocument();
-            $rejectReturnDoc = $this->getRejectReturnDocument();
-            $rejectExchangeDoc = $this->getRejectExchangeDocument();
-            $completeExchangeDoc = $this->getCompleteExchangeDocument();
-            $overdueExchangeDoc = $this->getOverdueExchangeDocument();
-            $nearlyOverdueExchangeDoc = $this->getNearlyOverdueExchangeDocument();
-            $supplierCancelDoc =  $this->getSupplierCancelDocument();
-            $cnPendingDoc =  $this->getcnPendingDocument();
-            $dbPendingDoc =  $this->getdbPendingDocument();
 
-            ///Import Product///
-            $logisticsSmall = $this->getTotalLogisticsSmall();
-            $logisticsSmallFinished = $this->getTotalLogisticsSmallFinishedDoc();
+            return view('home', compact( 'branches'));
 
-            $logisticsAccessory = $this->getTotalLogisticsAccessory();
-            $logisticsAccessoryFinished = $this->getTotalLogisticsAccessoryFinishedDoc();
-
-            $logisticsBig = $this->getTotalLogisticsBig();
-            $logisticsBigFinished = $this->getTotalLogisticsBigFinishedDoc();
-
-            $sourcingSmall = $this->getTotalSourcingSmall();
-            $sourcingSmallFinished = $this->getTotalSourcingSmallFinishedDoc();
-
-            $sourcingBig = $this->getTotalSourcingBig();
-            $sourcingBigFinished = $this->getTotalSourcingBigFinishedDoc();
-
-            $sourcingAccessary = $this->getTotalSourcingAccessary();
-            $sourcingAccessaryFinished = $this->getTotalAccessaryFinishedDoc();
-
-            $logSmallPending = $this->getTotallogSmallPending();
-            $logBigPending = $this->getTotallogBigPending();
-            $logAccessoryPending = $this->getTotallogAccessoryPending();
-
-            $sourcingSmallPending = $this->getTotalsourcingSmallPending();
-            $sourcingBigPending = $this->getTotalsourcingBigPending();
-            $sourcingAccessaryPending = $this->getTotalsourcingAccessaryPending();
-
-            $logSmallReject = $this->getTotallogSmallReject();
-            $logBigPReject= $this->getTotallogBigReject();
-            $logAccessoryReject= $this->getTotallogAccessoryReject();
-
-            $sourcingSmallReject = $this->getTotalsourcingSmallReject();
-            $sourcingBigReject = $this->getTotalsourcingBigReject();
-            $sourcingAccessaryReject = $this->getTotalsourcingAccessaryReject();
-            // if(count($document_checks) != 0){
-            //     foreach ($document_checks as $document_check) {
-            //         $document = new DocumentController;
-            //         $return_document_doc_no = $document::generate_doc_no(1,date('Y-m-d H:i:s'));
-            //         Document::where('id', $document_check->id)->update([
-            //             'document_no' => $return_document_doc_no,
-            //             'document_type' =>  1,
-            //             'exchange_to_return' =>  date('Y-m-d H:i:s'),
-            //             ]
-            //         );
-            //     }
-            // }
-            $totalRole = Role::count();
-            return view('home', compact('totalUser', 'totalSupplier', 'totalBranch', 'branches', 'totalReturnDoc',
-            'totalExchangeDoc', 'completeReturnDoc', 'completeExchangeDoc', 'overdueExchangeDoc', 'totalRole','rejectReturnDoc','rejectExchangeDoc','supplierCancelDoc',
-            'cnPendingDoc','dbPendingDoc','logisticsSmall','logisticsBig','sourcingSmall','sourcingBig','sourcingAccessary',
-            'logisticsBigFinished','logisticsSmallFinished','sourcingSmallFinished','sourcingBigFinished','sourcingAccessaryFinished',
-            'logSmallPending','logBigPending','sourcingSmallPending','sourcingBigPending','sourcingAccessaryPending',
-            'logSmallReject','logBigPReject','sourcingSmallReject','sourcingBigReject','sourcingAccessaryReject', 'logisticsAccessory', 'logisticsAccessoryFinished', 'logAccessoryPending', 'logAccessoryReject','nearlyOverdueExchangeDoc'
-        ));
-        // // } catch (\Exception $e) {
-        //     // Log::debug($e->getMessage());
-        //     return redirect()
-        //         ->intended(route("home"))
-        //         ->with('error', 'Fail to View Home!');
-        // }
     }
     public function getTotalReturnDocument()
     {
