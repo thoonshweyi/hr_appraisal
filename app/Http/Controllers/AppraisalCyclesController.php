@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AppraisalCycleImport;
 use App\Imports\AgileDepartmentImport;
+use App\Models\AppraisalFormAssesseeUser;
 use App\Exceptions\ExcelImportValidationException;
 
 
@@ -148,7 +149,15 @@ class AppraisalCyclesController extends Controller
         // dd($participantusers);
 
 
-        return view("appraisalcycles.edit",compact("appraisalcycle","statuses","users","participantusers"));
+
+        $assessee_user_ids = AppraisalFormAssesseeUser::whereHas("appraisalform",function($query) use($id){
+            $query->where('appraisal_cycle_id',$id);
+        })
+        ->groupBy('assessee_user_id')->pluck("assessee_user_id");
+        $assesseeusers = User::whereIn("id",$assessee_user_ids)->get();
+
+
+        return view("appraisalcycles.edit",compact("appraisalcycle","statuses","users","participantusers","assesseeusers"));
     }
 
 

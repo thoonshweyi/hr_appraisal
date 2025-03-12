@@ -30,6 +30,7 @@ use App\Http\Controllers\AppraisalFormsController;
 use App\Http\Controllers\PositionLevelsController;
 use App\Http\Controllers\SubDepartmentsController;
 use App\Http\Controllers\AppraisalCyclesController;
+use App\Http\Controllers\AssesseeSummaryController;
 use App\Http\Controllers\AttachFormTypesController;
 use App\Http\Controllers\AgileDepartmentsController;
 
@@ -237,5 +238,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put("/appraisalforms/{id}",[AppraisalFormsController::class,"update"])->name("appraisalforms.update");
     Route::delete("/appraisalforms/{id}",[AppraisalFormsController::class,"destroy"])->name("appraisalforms.destroy");
     Route::get("/fillform",[AppraisalFormsController::class,"fillform"])->name("appraisalforms.fillform");
+
+
+    Route::get("/assesseesummary/{assessee_user_id}/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"review"])->name("assesseesummary.review");
+
 
 });

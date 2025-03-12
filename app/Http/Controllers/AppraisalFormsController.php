@@ -36,7 +36,7 @@ class AppraisalFormsController extends Controller
         }
 
         if($user->can("view-all-appraisal-form")){
-
+            
         }else{
             $results = $results->where('assessor_user_id',$user_id);
         }

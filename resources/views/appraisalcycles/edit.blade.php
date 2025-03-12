@@ -27,6 +27,9 @@
                     <li class="nav-item">
                         <button type="button" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
+                    <li class="nav-item">
+                        <button type="button" class="tablinks" onclick="gettab(event,'assesseesummary')">Assessee Summary</button>
+                    </li>
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
                 <div class="tab-content">
@@ -287,6 +290,40 @@
                             </div>
                         </div>
 
+                        <div id="assesseesummary" class="tab-pane">
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                 <h4 class="title">All Assessees</h4>
+
+                                 <table id="peertopeer" class="table mb-0" >
+                                     <thead class="bg-white text-uppercase">
+                                         <tr class="ligth ligth-data">
+                                             <th>No</th>
+                                             <th>Employee Name</th>
+                                             <th>Employee Code</th>
+                                             <th>Action</th>
+                                         </tr>
+                                     </thead>
+                                     <tbody class="ligth-body">
+                                             @foreach($assesseeusers as $idx=>$assesseeuser)
+                                                 <tr>
+                                                     <td>{{ ++$idx }}</td>
+                                                     {{-- <td>{{$idx + $participantuser->firstItem()}}</td> --}}
+                                                     <td>{{ $assesseeuser->employee->employee_name }}</td>
+                                                     <td>{{ $assesseeuser->employee->employee_code }}</td>
+                                                    <td>
+                                                            <a href="{{ route('assesseesummary.review',["assessee_user_id"=>$assesseeuser->id,"appraisal_cycle_id"=>$appraisalcycle->id]) }}" class="text-primary mr-2" title="Open" onclick=""><i class="far fa-eye"></i></i></a>
+                                                    </td>
+
+
+                                                 </tr>
+                                             @endforeach
+                                     </tbody>
+                                 </table>
+                                </div>
+                             </div>
+                        </div>
                 </div>
             </div>
             </div>
