@@ -519,3 +519,38 @@ display: none;
   .no-border {
     border: none !important;
   }
+
+
+
+
+  .assessorsummarytable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+
+  }
+  .assessorsummarytable thead tr:nth-child(1) {
+    background-color: #1f4e78;
+    color: white;
+  }
+  .assessorsummarytable thead tr:nth-child(2) {
+    background-color: #d9e1f2;
+    color: #000;
+  }
+  .assessorsummarytable th, .assessorsummarytable td {
+    border: 1px solid #ccc;
+    text-align: center;
+    padding: 8px;
+    vertical-align: middle !important;
+
+  }
+  .assessorsummarytable tbody tr:nth-child(even) {
+    background-color: #f4f4f4;
+  }
+  .assessorsummarytable tbody tr:hover {
+    background-color: #e0f7fa;
+  }
+
+  .criteria_headers{
+    width: 50%;
+  }

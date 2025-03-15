@@ -207,6 +207,41 @@
                 </div>
 
                 <div class="modal-body">
+
+                    <label for="" class="mr-2">Assessee: </label><h6 class="text-dark fw-bold d-inline text-lg">{{ $assesseeuser->employee->employee_name }}</h6>
+                    <div class="table-responsive">
+
+
+                        <table class="table table-bordered assessorsummarytable">
+                            <thead>
+                              <tr>
+                                <th rowspan="2" style="width: 5% !important;">No</th>
+                                <th rowspan="2" class="criteria_headers">Criteria</th>
+                                <th colspan="4">Assessors</th>
+                              </tr>
+                              <tr>
+                                @foreach ($assessorusers as $assessoruser)
+                                    <th>{{ $assessoruser->employee->employee_name }} <br><small>{{ $assessoruser->employee->branch->branch_name }}</small></th>
+                                @endforeach
+
+                              </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach($criterias as $idx => $criteria)
+                                    <tr>
+                                        <td>{{ ++$idx }}</td>
+                                        <td>{{ $criteria->name }}</td>
+
+                                        @foreach ($assessorusers as $assessoruser)
+                                            <td>{{ $assesseesummary->getAssessorGivenMark($assessoruser->id,$criteria->id,  Route::current()->parameter('appraisal_cycle_id') ) }}</td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                          </table>
+
+                    </div>
                 </div>
 
                 <div class="modal-footer">

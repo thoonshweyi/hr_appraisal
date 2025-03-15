@@ -8,6 +8,7 @@ use App\Models\Criteria;
 use App\Models\FormResult;
 use Illuminate\Http\Request;
 use App\Models\AppraisalForm;
+use App\Models\AssesseeSummary;
 
 class AssesseeSummaryController extends Controller
 {
@@ -46,8 +47,10 @@ class AssesseeSummaryController extends Controller
 
         // dd($grade);
 
+        $assesseesummary = new AssesseeSummary();
 
-        return view('assesseesummary.review',compact("assesseeuser","criterias",'criteria_totals','ratetotal','assessorusers','assessoruserscount','average','grade'));
+
+        return view('assesseesummary.review',compact("assesseeuser","criterias",'criteria_totals','ratetotal','assessorusers','assessoruserscount','average','grade','assesseesummary'));
     }
 
 
