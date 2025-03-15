@@ -60,7 +60,12 @@
                 @endif
            </div>
 
+           <div class="col-md-12">
+                <button class="btn my-2 ml-auto cus_btn" data-target="#assessorsummarymodal" data-toggle="modal">Assessors Summary</button>
+           </div>
+
            <div class="col-md-12 mb-2">
+
                 <div class="row">
 
 
@@ -114,6 +119,7 @@
                         </div> --}}
 
 
+
                         <div class="table-responsive">
 
                         <table class="table table-bordered my-0 report-table">
@@ -121,7 +127,7 @@
                               <th colspan="4" class="table-header">Employee Performance Appraisal Report</th>
                             </tr>
                             <tr>
-                                <td class="label-cell">Assessor Name:</td>
+                                <td class="label-cell">Assessee Name:</td>
                                 <td class="value-cell">{{ $assesseeuser->employee->employee_name }}</td>
                                 <td class="label-cell">Employee Code:</td>
                                 <td class="value-cell">{{ $assesseeuser->employee->employee_code }}</td>
@@ -129,14 +135,14 @@
                             <tr>
                                 <td class="label-cell">Position:</td>
                                 <td class="value-cell">{{ $assesseeuser->employee->position->name }}</td>
-                                <td class="label-cell">Ass Form Category:</td>
+                                <td class="label-cell">Assessment-Form Category:</td>
                                 <td class="value-cell">{{ $assesseeuser->getAssFormCat()->name }}</td>
                             </tr>
                             <tr>
                                 <td class="label-cell">Department:</td>
                                 <td class="value-cell">{{ $assesseeuser->employee->department->name }}</td>
                                 <td class="label-cell">Grade:</td>
-                                <td class="value-cell"></td>
+                                <td class="value-cell">{{ substr($grade->name, 0, 1) }}</td>
                             </tr>
                             <tr class="criteria-label">
                               <td style="">S/No</td>
@@ -150,21 +156,21 @@
                             <tr>
                               <td >{{ ++$idx }}</td>
                               <td colspan="2">{{ $criteria->name }}</td>
-                              <td>&nbsp;</td>
+                              <td>{{ $criteria_totals[$criteria->id] }}</td>
                             </tr>
                             @endforeach
                             <!-- Totals -->
                             <tr>
                               <td colspan="3" class="">Rate Total</td>
-                              <td colspan="1">&nbsp;</td>
+                              <td colspan="1">{{ $ratetotal }}</td>
                             </tr>
                             <tr>
                               <td colspan="3" class="">Accessor</td>
-                              <td colspan="1">&nbsp;</td>
+                              <td colspan="1">{{ $assessoruserscount }}</td>
                             </tr>
                             <tr>
                               <td colspan="3" class="">Average</td>
-                              <td colspan="1">&nbsp;</td>
+                              <td colspan="1">{{ $average }}</td>
                             </tr>
                         </table>
 
@@ -189,11 +195,27 @@
 
 <!-- START MODAL AREA -->
 
+ <!-- start create modal -->
+ <div id="assessorsummarymodal" class="modal fade">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h6 class="modal-title">An Assessee's Assessor Details</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
+                <div class="modal-body">
+                </div>
 
-    <!-- start edit modal -->
+                <div class="modal-footer">
 
-      <!-- end edit modal -->
+                </div>
+            </div>
+    </div>
+</div>
+<!-- end create modal -->>
 
 <!-- End MODAL AREA -->
 @endsection

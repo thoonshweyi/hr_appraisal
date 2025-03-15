@@ -224,7 +224,7 @@ input[type="number"] {
 .appraisal_headers th{
     padding: 4px 12px;
 }
-.add_btn,.new_btn,.apply_btn,.fill_btn{
+.add_btn,.new_btn,.apply_btn,.fill_btn,.cus_btn{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -232,7 +232,7 @@ input[type="number"] {
     background-color: #007bff;
     color: white;
 }
-.add_btn:hover,.new_btn:hover,.apply_btn:hover,.fill_btn:hover{
+.add_btn:hover,.new_btn:hover,.apply_btn:hover,.fill_btn:hover,.cus_btn:hover{
     color: white;
 }
 /* End Criteria */
@@ -499,7 +499,7 @@ display: none;
     background-color: #1f4e78;
     color: white !important;
     font-weight: bold;
-    width: 20%;
+    width: 10%;
   }
 
   .value-cell {
