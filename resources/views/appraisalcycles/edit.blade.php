@@ -230,62 +230,109 @@
 
                             <div class="row">
 
+                                <div class="col-lg-12 my-2 ">
+                                    <form class="" action="" method="GET">
+                                        @csrf
+                                        <div class="row align-items-end justify-content-end">
+
+                                            <div class="col-md-2">
+                                                <label for="filter_employee_name">Enployee Name <span class="text-danger">*</span></label>
+                                                <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ request()->filter_name }}"/>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label for="filter_employee_code">Enployee Code <span class="text-danger">*</span></label>
+                                                <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label for="filter_branch_id">Branch</label>
+                                                <select name="filter_branch_id" id="filter_branch_id" class="form-control form-control-sm rounded-0">
+                                                    <option value="" selected disabled>Choose Branch</option>
+                                                    @foreach($branches as $branch)
+                                                        <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label for="filter_position_level_id">Position Level</label>
+                                                <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0">
+                                                    <option value="" selected disabled>Choose Position Level</option>
+                                                    @foreach($positionlevels as $positionlevel)
+                                                        <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</a>
+                                            </div>
+                                            @if(count(request()->query()) > 0)
+                                                <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
+                                            @endif
+
+                                        </div>
+
+                                    </form>
+                                </div>
+
+
+
                                <div class="col-lg-12">
-                                <h4 class="title">All Participants</h4>
-
-                                <table id="peertopeer" class="table mb-0" >
-                                    <thead class="bg-white text-uppercase">
-                                        <tr class="ligth ligth-data">
-                                            <th>No</th>
-                                            <th>Employee Name</th>
-                                            <th>Employee Code</th>
-                                            <th>Sent / All Forms</th>
-                                            <th>Progress</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="ligth-body">
-                                            @foreach($participantusers as $idx=>$participantuser)
-                                                <tr>
-                                                    <td>{{ ++$idx }}</td>
-                                                    {{-- <td>{{$idx + $participantuser->firstItem()}}</td> --}}
-                                                    <td>{{ $participantuser->employee->employee_name }}</td>
-                                                    <td>{{ $participantuser->employee->employee_code }}</td>
-                                                    <td>{{ $participantuser->getAppraisalFormCount($appraisalcycle->id) }} / {{  $participantuser->getAllFormCount($appraisalcycle->id) }} </td>
-                                                    <td class="">
-                                                        {{-- <div class="d-flex justify-content-center align-items-center">
-                                                            <i class="fas fa-check-circle fa-2x text-success mr-2"></i> Complete </td>
-                                                        </div> --}}
-                                                        <div class="d-flex justify-content-center align-items-center">
-                                                        <div id="progresses"  style="background : conic-gradient(steelblue {{$participantuser->getSentPercentage($appraisalcycle->id)}}%,#eee {{$participantuser->getSentPercentage($appraisalcycle->id)}}%)">
-                                                            <span id="progressvalues">{{$participantuser->getSentPercentage($appraisalcycle->id)}}%</span>
-                                                        </div>
-                                                        </div>
-                                                    </td>
-
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <form id="appraisalform" action="{{ route('appraisalforms.create') }}" method="GET">
-                                                                <input type="hidden" name="assessor_user_id" value="{{ $participantuser->id }}">
-                                                                <input type="hidden" name="appraisal_cycle_id" value="{{ $appraisalcycle->id }}"/>
-                                                                <a href="javascript:void(0);" class="text-primary mr-2" title="Send" onclick="$(this).closest('form').submit()"><i class="fas fa-paper-plane"></i></a>
-                                                            </form>
-
-
-                                                            <form action="{{ route('appraisalforms.index') }}" method="GET">
-                                                                <input type="hidden" name="filter_assessor_user_id" value="{{ $participantuser->id }}">
-                                                                <input type="hidden" name="filter_appraisal_cycle_id" value="{{ $appraisalcycle->id }}"/>
-                                                                <a href="javascript:void(0);" class="text-primary mr-2" title="Open" onclick="$(this).closest('form').submit()"><i class="far fa-envelope-open"></i></i></a>
-                                                            </form>
-                                                        </div>
-
-                                                    </td>
-
-
+                                    <div class="table-responsive rounded mb-3">
+                                        <table id="participantusertable"  class="table mb-0" >
+                                            <thead class="bg-white text-uppercase">
+                                                <tr class="ligth ligth-data">
+                                                    {{-- <th>No</th> --}}
+                                                    <th>Employee Name</th>
+                                                    <th>Employee Code</th>
+                                                    <th>Branch</th>
+                                                    <th>Sent / All Forms</th>
+                                                    <th>Progress</th>
+                                                    {{-- <th>Action</th> --}}
                                                 </tr>
-                                            @endforeach
-                                    </tbody>
-                                </table>
+                                            </thead>
+                                            <tbody class="ligth-body">
+                                                    {{-- @foreach($participantusers as $idx=>$participantuser)
+                                                        <tr>
+                                                            <td>{{ ++$idx }}</td>
+                                                            <td>{{ $participantuser->employee->employee_name }}</td>
+                                                            <td>{{ $participantuser->employee->employee_code }}</td>
+                                                            <td>{{ $participantuser->employee->branch->name }}</td>
+                                                            <td>{{ $participantuser->getAppraisalFormCount($appraisalcycle->id) }} / {{  $participantuser->getAllFormCount($appraisalcycle->id) }} </td>
+                                                            <td class="">
+                                                                <div class="d-flex justify-content-center align-items-center">
+                                                                <div id="progresses"  style="background : conic-gradient(steelblue {{$participantuser->getSentPercentage($appraisalcycle->id)}}%,#eee {{$participantuser->getSentPercentage($appraisalcycle->id)}}%)">
+                                                                    <span id="progressvalues">{{$participantuser->getSentPercentage($appraisalcycle->id)}}%</span>
+                                                                </div>
+                                                                </div>
+                                                            </td>
+
+                                                            <td class="text-center">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <form id="appraisalform" action="{{ route('appraisalforms.create') }}" method="GET">
+                                                                        <input type="hidden" name="assessor_user_id" value="{{ $participantuser->id }}">
+                                                                        <input type="hidden" name="appraisal_cycle_id" value="{{ $appraisalcycle->id }}"/>
+                                                                        <a href="javascript:void(0);" class="text-primary mr-2" title="Send" onclick="$(this).closest('form').submit()"><i class="fas fa-paper-plane"></i></a>
+                                                                    </form>
+
+
+                                                                    <form action="{{ route('appraisalforms.index') }}" method="GET">
+                                                                        <input type="hidden" name="filter_assessor_user_id" value="{{ $participantuser->id }}">
+                                                                        <input type="hidden" name="filter_appraisal_cycle_id" value="{{ $appraisalcycle->id }}"/>
+                                                                        <a href="javascript:void(0);" class="text-primary mr-2" title="Open" onclick="$(this).closest('form').submit()"><i class="far fa-envelope-open"></i></i></a>
+                                                                    </form>
+                                                                </div>
+
+                                                            </td>
+
+
+                                                        </tr>
+                                                    @endforeach --}}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                </div>
                             </div>
                         </div>
@@ -296,7 +343,7 @@
                                 <div class="col-lg-12">
                                  <h4 class="title">All Assessees</h4>
 
-                                 <table id="peertopeer" class="table mb-0" >
+                                 <table id="" class="table mb-0" >
                                      <thead class="bg-white text-uppercase">
                                          <tr class="ligth ligth-data">
                                              <th>No</th>
@@ -429,7 +476,7 @@
 
        $("#action_start_time,#action_end_time").flatpickr({
             enableTime: true, // Enable time picker
-            noCalendar: true, // Hide the calendar if only time is needed
+            noCalendar: true, // Hide the calendar if only time is neededparticipantusers
             dateFormat: "H:i", // Format for hours and minutes
             time_24hr: true // Use 24-hour format
         });
@@ -562,6 +609,78 @@
         };
 
 
+
+
+
+
+        {{-- Start participantusers  --}}
+        const appraisalCycleId = {{ $appraisalcycle->id }}; // Make sure you have this ID in a hidden input
+
+        $('#participantusertable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "searching": false,
+            "lengthChange": false,
+            "autoWidth": true,
+            "responsive": true,
+            "order": [
+              [1, 'des']
+            ],
+            'ajax': {
+                url: `/${appraisalCycleId}/participantusers/`, // <-- include the ID here
+              'type': 'GET',
+              'data': function(d) {
+                d.filter_employee_name = $('#filter_employee_name').val();
+                d.filter_employee_code = $('#filter_employee_code').val();
+                d.filter_branch_id = $('#filter_branch_id').val();
+                d.filter_position_level_id = $('#filter_position_level_id').val();
+              }
+            },
+            columns: [
+                { data: 'employee.employee_code', name: 'employee.employee_code' },
+                { data: 'employee.employee_name', name: 'employee.employee_name' },
+                { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
+                {{-- { data: 'employee.department.name', name: 'employee.department.name' },
+                { data: 'employee.position.name', name: 'employee.position.name' },
+                { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' } --}}
+
+                {
+                    data: 'form_count',
+                    name: 'form_count',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return data ?? ''; // Render raw value
+                    }
+                },
+                {
+                    data: 'progress',
+                    name: 'progress',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return data ?? '';
+                    }
+                },
+                {{-- {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return data ?? '';
+                    }
+                } --}}
+            ],
+            "columnDefs": [{
+              "searchable": false,
+              "orderable": false,
+              "targets": 0,
+            }],
+        })
+
+
+        {{-- End participantusers --}}
 
     });
 
@@ -776,7 +895,6 @@
     const alistitems = document.querySelectorAll('.assessor-info li');
     {{-- End Assessor List Filter --}}
 
-    afilterel.addEventListener('input',(e)=>afilterdata(e.target.value));
 
     function afilterdata(search){
         // console.log(search);

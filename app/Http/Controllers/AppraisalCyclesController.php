@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AppraisalCycleImport;
 use App\Imports\AgileDepartmentImport;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\AppraisalFormAssesseeUser;
 use App\Exceptions\ExcelImportValidationException;
 
@@ -135,18 +136,19 @@ class AppraisalCyclesController extends Controller
     public function edit(Request $request, string $id){
         $appraisalcycle = AppraisalCycle::find($id);
         // dd($appraisalcycle);
-
+        $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
+        $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
 
         $users = User::where('status',1)->get();
 
         // dd($branches);
 
-        $participant_user_ids = PeerToPeer::where('appraisal_cycle_id',$id)->groupBy('assessor_user_id')->pluck("assessor_user_id");
-        // dd($participant_user_ids);
+        // $participant_user_ids = PeerToPeer::where('appraisal_cycle_id',$id)->groupBy('assessor_user_id')->pluck("assessor_user_id");
+        // // dd($participant_user_ids);
 
-        $participantusers = User::whereIn("id",$participant_user_ids)->get();
-        // dd($participantusers);
+        // $participantusers = User::whereIn("id",$participant_user_ids)->get();
+        // // dd($participantusers);
 
 
 
@@ -157,7 +159,7 @@ class AppraisalCyclesController extends Controller
         $assesseeusers = User::whereIn("id",$assessee_user_ids)->get();
 
 
-        return view("appraisalcycles.edit",compact("appraisalcycle","statuses","users","participantusers","assesseeusers"));
+        return view("appraisalcycles.edit",compact("appraisalcycle","branches","positionlevels","statuses","users","assesseeusers"));
     }
 
 
@@ -249,5 +251,78 @@ class AppraisalCyclesController extends Controller
         }
    }
 
+
+   public function participantusers(Request $request, string $id){
+
+        // dd('hay');
+        $participant_user_ids = PeerToPeer::where('appraisal_cycle_id',$id)->groupBy('assessor_user_id')->pluck("assessor_user_id");
+        // dd($participant_user_ids);
+
+        $participantusers = User::whereIn("id",$participant_user_ids);
+        // dd($participantusers->where('id',39));
+
+
+
+        $filter_employee_name = $request->filter_employee_name;
+        $filter_employee_code = $request->filter_employee_code;
+        $filter_branch_id = $request->filter_branch_id;
+        $filter_position_level_id = $request->filter_position_level_id;
+
+        // $results = PeerToPeer::query();
+        $results = $participantusers;
+
+
+        if (!empty($filter_employee_name)) {
+            $results = $results->whereHas('employee',function($query) use($filter_employee_name){
+                $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
+            });
+        }
+
+        if (!empty($filter_employee_code)) {
+            $results = $results->whereHas('employee',function($query) use($filter_employee_code){
+                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%');
+            });
+        }
+
+        if (!empty($filter_branch_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_branch_id){
+                $query->where('branch_id', $filter_branch_id);
+            });
+        }
+
+
+        if (!empty($filter_position_level_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
+                $query->where('position_level_id', $filter_position_level_id);
+            });
+        }
+
+
+        $participantusers = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->get();
+        // ->paginate(10);
+
+
+
+        return DataTables::of($participantusers)
+                ->addColumn('form_count', function ($user) use ($id) {
+                    return $user->getAppraisalFormCount($id) . ' / ' . $user->getAllFormCount($id);
+                })
+                ->addColumn('progress', function ($participantuser) use ($id) {
+                    return "
+                        <div class='d-flex justify-content-center align-items-center'>
+                            <div id='progresses'  style='background : conic-gradient(steelblue {$participantuser->getSentPercentage($id)}%,#eee {$participantuser->getSentPercentage($id)}%)'>
+                                    <span id='progressvalues'>{$participantuser->getSentPercentage($id)}%</span>
+                            </div>
+                        </div>
+                    ";
+                })
+                ->addColumn('action', function ($row) use ($id) {
+
+                    return '';
+                })
+                ->rawColumns(['form_count', 'progress', 'action']) // <-- Allow raw HTML
+                ->make(true);
+   }
 
 }
