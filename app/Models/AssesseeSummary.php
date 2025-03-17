@@ -10,12 +10,13 @@ class AssesseeSummary extends Model
     use HasFactory;
 
 
-    public function getAssessorGivenMark($assessor_user_id,$criteria_id,$appraisal_cycle_id){
+    public function getAssessorGivenMark($assessor_user_id,$assessee_user_id,$criteria_id,$appraisal_cycle_id){
 
         $formresult = FormResult::whereHas('appraisalform',function($query) use($assessor_user_id,$appraisal_cycle_id){
             $query->where('assessor_user_id',$assessor_user_id)
                 ->where('appraisal_cycle_id',$appraisal_cycle_id);
         })
+        ->where('assessee_user_id',$assessee_user_id)
         ->where('criteria_id',$criteria_id)
         ->first();
 

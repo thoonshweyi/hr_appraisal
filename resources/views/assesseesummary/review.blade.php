@@ -234,7 +234,7 @@
                                         <td>{{ $criteria->name }}</td>
 
                                         @foreach ($assessorusers as $assessoruser)
-                                            <td>{{ $assesseesummary->getAssessorGivenMark($assessoruser->id,$criteria->id,  Route::current()->parameter('appraisal_cycle_id') ) }}</td>
+                                            <td>{{ $assesseesummary->getAssessorGivenMark($assessoruser->id,$assesseeuser->id,$criteria->id,  Route::current()->parameter('appraisal_cycle_id') ) }}</td>
                                         @endforeach
                                     </tr>
                                 @endforeach
