@@ -33,7 +33,7 @@
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
                 <div class="col-lg-12 tab-filter">
-                    <form id="participantuserform" class="" action="" method="GET">
+                    <form id="searchnfilterform" class="" action="" method="GET">
                         @csrf
                         <div class="row align-items-end justify-content-start">
                             <div class="col-md-3">
@@ -79,15 +79,8 @@
                             </div>
 
                             <div class="col-auto">
-                                <button type="submit" class="btn my-2 ml-auto cus_btn searchbtns" data-target="#assessorsummarymodal" data-toggle="modal">Search</button>
+                                <button type="button" class="btn my-2 ml-auto cus_btn searchbtns">Search</button>
                            </div>
-
-                            {{-- <div class="col-auto">
-                                <button type="button" class="btn btn-success parsearchbtns " class=""><i class="ri-search-line"></i> Search</a>
-                            </div> --}}
-                            {{-- @if(count(request()->query()) > 0)
-                                <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
-                            @endif --}}
 
                         </div>
 
@@ -215,36 +208,22 @@
                             <div class="row">
 
                                 <div class="col-lg-3">
-                                    {{-- <h4>All Accessors</h4> --}}
-                                    {{-- <input type="text" id="search-input" class="form-control form-control-sm rounded-0" placeholder="Search...." />
-                                    <div id="treeview">
-
-                                        <ul id="assessors-tree">
-                                            @foreach($users as $user)
-                                                <li><label for="{{ $user->id }}">{{ $user->name }}</label></li>
-                                            @endforeachuser-list
-
-                                        </ul>
-                                    </div> --}}
-
 
                                     <div class="header">
-                                        <h4 class="title">All Accessors</h4>
+                                        <h4 class="title">All Employees</h4>
                                         <small class="subtitle">Search by name or employee id</small>
                                         <input type="text" name="search" id="search" class="search" placeholder="Search...."/>
                                     </div>
                                     <ul id="result" class="user-list">
-                                        @foreach($users as $user)
-                                        {{-- <img src="${user.picture.large}" alt="${user.name.first}"/> --}}
+                                        {{-- @foreach($users as $user)
                                         <div class="user-info">
                                             <li data-user_id = {{ $user->id }}>
                                                 <i class="ri-folder-4-line"></i>
                                                     <h4>{{ $user->name }} ( {{ $user->employee_id }} )</h4>
-                                                {{-- <p>${user.location.city} , ${user.location.country}</p> --}}
                                             </li>
 
                                         </div>
-                                        @endforeach
+                                        @endforeach --}}
 
 
                                         {{-- <li><h3>Loading...</h3></li> --}}
@@ -289,64 +268,7 @@
                         </div>
 
                         <div id="appraisal" class="tab-pane">
-
                             <div class="row">
-
-                                    {{-- <div class="col-lg-12 tab-filter">
-                                        <form id="participantuserform" class="" action="" method="GET">
-                                            @csrf
-                                            <div class="row align-items-end justify-content-start">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Name" value="{{ request()->filter_name }}"/>
-                                                        <i class="fas fa-user"></i>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
-                                                        <i class="fas fa-id-card"></i>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <select name="filter_branch_id" id="filter_branch_id" class="custom-select custom-select-sm rounded-0 filter_input">
-                                                            <option value="" selected disabled>Choose Branch</option>
-                                                            @foreach($branches as $branch)
-                                                                <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <i class="fas fa-building"></i>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <select name="filter_position_level_id" id="filter_position_level_id" class="custom-select custom-select-sm rounded-0 filter_input">
-                                                            <option value="" selected disabled>Choose Position Level</option>
-                                                            @foreach($positionlevels as $positionlevel)
-                                                                <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <i class="fas fa-briefcase"></i>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-auto">
-                                                    <button type="submit" class="btn my-2 ml-auto cus_btn parsearchbtns" data-target="#assessorsummarymodal" data-toggle="modal">Search</button>
-                                               </div>
-
-
-                                            </div>
-
-                                        </form>
-                                    </div>
- --}}
-
-
-
                                <div class="col-lg-12">
                                     <div class="table-responsive rounded mb-3">
                                         <table id="participantusertable"  class="table mb-0 w-100" >
@@ -362,42 +284,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="ligth-body">
-                                                    {{-- @foreach($participantusers as $idx=>$participantuser)
-                                                        <tr>
-                                                            <td>{{ ++$idx }}</td>
-                                                            <td>{{ $participantuser->employee->employee_name }}</td>
-                                                            <td>{{ $participantuser->employee->employee_code }}</td>
-                                                            <td>{{ $participantuser->employee->branch->name }}</td>
-                                                            <td>{{ $participantuser->getAppraisalFormCount($appraisalcycle->id) }} / {{  $participantuser->getAllFormCount($appraisalcycle->id) }} </td>
-                                                            <td class="">
-                                                                <div class="d-flex justify-content-center align-items-center">
-                                                                <div id="progresses"  style="background : conic-gradient(steelblue {{$participantuser->getSentPercentage($appraisalcycle->id)}}%,#eee {{$participantuser->getSentPercentage($appraisalcycle->id)}}%)">
-                                                                    <span id="progressvalues">{{$participantuser->getSentPercentage($appraisalcycle->id)}}%</span>
-                                                                </div>
-                                                                </div>
-                                                            </td>
 
-                                                            <td class="text-center">
-                                                                <div class="d-flex justify-content-center">
-                                                                    <form id="appraisalform" action="{{ route('appraisalforms.create') }}" method="GET">
-                                                                        <input type="hidden" name="assessor_user_id" value="{{ $participantuser->id }}">
-                                                                        <input type="hidden" name="appraisal_cycle_id" value="{{ $appraisalcycle->id }}"/>
-                                                                        <a href="javascript:void(0);" class="text-primary mr-2" title="Send" onclick="$(this).closest('form').submit()"><i class="fas fa-paper-plane"></i></a>
-                                                                    </form>
-
-
-                                                                    <form action="{{ route('appraisalforms.index') }}" method="GET">
-                                                                        <input type="hidden" name="filter_assessor_user_id" value="{{ $participantuser->id }}">
-                                                                        <input type="hidden" name="filter_appraisal_cycle_id" value="{{ $appraisalcycle->id }}"/>
-                                                                        <a href="javascript:void(0);" class="text-primary mr-2" title="Open" onclick="$(this).closest('form').submit()"><i class="far fa-envelope-open"></i></i></a>
-                                                                    </form>
-                                                                </div>
-
-                                                            </td>
-
-
-                                                        </tr>
-                                                    @endforeach --}}
                                             </tbody>
                                         </table>
                                     </div>
@@ -407,87 +294,25 @@
 
                         <div id="assesseesummary" class="tab-pane">
                             <div class="row">
-                                {{-- <div class="col-lg-12 tab-filter">
-                                    <form id="assesseeuserform" class="" action="" method="GET">
-                                        @csrf
-                                        <div class="row align-items-end justify-content-start">
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Name" value="{{ request()->filter_name }}"/>
-                                                    <i class="fas fa-user"></i>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
-                                                    <i class="fas fa-id-card"></i>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <select name="filter_branch_id" id="filter_branch_id" class="custom-select custom-select-sm rounded-0 filter_input">
-                                                        <option value="" selected disabled>Choose Branch</option>
-                                                        @foreach($branches as $branch)
-                                                            <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <i class="fas fa-building"></i>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <select name="filter_position_level_id" id="filter_position_level_id" class="custom-select custom-select-sm rounded-0 filter_input">
-                                                        <option value="" selected disabled>Choose Position Level</option>
-                                                        @foreach($positionlevels as $positionlevel)
-                                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <i class="fas fa-briefcase"></i>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <button type="submit" class="btn my-2 ml-auto cus_btn parsearchbtns" data-target="#assessorsummarymodal" data-toggle="modal">Search</button>
-                                           </div>
-
-                                        </div>
-
-                                    </form>
-                                </div> --}}
-
-
                                 <div class="col-lg-12">
-                                 <h4 class="title">All Assessees</h4>
+                                    <h4 class="title">All Assessees</h4>
+                                    <div class="table-responsive rounded mb-3">
+                                        <table id="assesseeusertable" class="table mb-0 w-100">
+                                            <thead class="bg-white text-uppercase">
+                                                <tr class="ligth ligth-data">
+                                                    <th>No</th>
+                                                    <th>Employee Name</th>
+                                                    <th>Employee Code</th>
+                                                    <th>Branch</th>
+                                                    <th>Position Level</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="ligth-body">
 
-                                 <table id="assesseeusertable" class="table mb-0 w-100">
-                                     <thead class="bg-white text-uppercase">
-                                         <tr class="ligth ligth-data">
-                                             <th>No</th>
-                                             <th>Employee Name</th>
-                                             <th>Employee Code</th>
-                                             <th>Branch</th>
-                                             <th>Position Level</th>
-                                             <th>Action</th>
-                                         </tr>
-                                     </thead>
-                                     <tbody class="ligth-body">
-                                             {{-- @foreach($assesseeusers as $idx=>$assesseeuser)
-                                                 <tr>
-                                                     <td>{{ ++$idx }}</td>
-                                                     <td>{{ $assesseeuser->employee->employee_name }}</td>
-                                                     <td>{{ $assesseeuser->employee->employee_code }}</td>
-                                                    <td>
-                                                            <a href="{{ route('assesseesummary.review',["assessee_user_id"=>$assesseeuser->id,"appraisal_cycle_id"=>$appraisalcycle->id]) }}" class="text-primary mr-2" title="Open" onclick=""><i class="far fa-eye"></i></i></a>
-                                                    </td>
-
-
-                                                 </tr>
-                                             @endforeach --}}
-                                     </tbody>
-                                 </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                              </div>
                         </div>
@@ -625,7 +450,7 @@
         }); --}}
 
 
-        $("#afilter_position_level_id").selectize({
+        {{-- $("#afilter_position_level_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
@@ -646,132 +471,7 @@
             placeholder: 'Choose Status',
             searchField: ["value", "label"]
         });
-
-
-        //Start change-btn
-        $(document).on("change",".statuschange-btn",function(){
-
-             var getid = $(this).data("id");
-             // console.log(getid);
-             {{-- console.log(getid); --}}
-
-             var setstatus = $(this).prop("checked") === true ? 1 : 2;
-             {{-- console.log(setstatus); --}}
-
-             $.ajax({
-                  url:"/positionsstatus",
-                  type:"POST",
-                  dataType:"json",
-                  data:{
-                        "id":getid,
-                        "status_id":setstatus,
-                        "_token": '{{ csrf_token()}}'
-                    },
-                  success:function(response){
-                       console.log(response); // {success: 'Status Change Successfully'}
-                       console.log(response.success); // Status Change Successfully
-
-                       Swal.fire({
-                            title: "Updated!",
-                            text: "Status Updated Successfully",
-                            icon: "success"
-                       });
-                  },
-                  error:function(response){
-                    console.log(response);
-                  }
-             });
-        });
-        // End change btn
-
-        {{-- Start Preview Image --}}
-
-        var previewimages = function(input, output) {
-            if (input.files) {
-                var totalfiles = input.files.length;
-
-                if (totalfiles > 0) {
-                    $('.gallery').addClass('removetxt');
-                } else {
-                    $('.gallery').removeClass('removetxt');
-                }
-
-                $(output).html(""); // Clear previous previews
-
-                let html = ''
-                for (let i = 0; i < totalfiles; i++) {
-                    var file = input.files[i];
-                    var filereader = new FileReader();
-
-                    filereader.onload = function(e) {
-                        let fileType = file.type;
-                        console.log("File Type:", fileType);
-
-                        {{-- if (fileType === 'application/pdf') {
-                            // Show PDF icon
-                            $($.parseHTML('<img>')).attr({
-                                'src': '{{ asset('images/pdf.png') }}',
-                                'title': file.name
-                            }).appendTo(output);
-                        } else if (
-                            fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                            fileType === 'application/vnd.ms-excel'
-                        ) {
-                            // Show Excel icon
-                            $($.parseHTML('<img>')).attr({
-                                'src': '{{ asset('images/excel.png') }}',
-                                'title': file.name
-                            }).appendTo(output);
-                        } else {
-                            // Show normal image preview
-                            $($.parseHTML('<img>')).attr({
-                                'src': e.target.result,
-                                'title': file.name
-                            }).appendTo(output);
-                        } --}}
-
-                        if (
-                            fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                            fileType === 'application/vnd.ms-excel'
-                        ) {
-                            // Show Excel icon
-                            {{-- $($.parseHTML('<img>')).attr({
-                                'src': '{{ asset('images/excel.png') }}',
-                                'title': file.name
-                            }).appendTo(output); --}}
-
-
-                            html = `
-                                <img src="{{ asset('images/excel.png') }}" title=${file.name} />
-                            `;
-                            $(output).append(html);
-                        }else{
-                            Swal.fire({
-                                title: "Invalid File!!",
-                                text: "Only Excel files (.xls, .xlsx) are allowed.",
-                                icon: "question"
-                            });
-
-
-                        html = `
-                            <img src="{{ asset('images/file-invalid.png') }}" title=${file.name} />
-                        `;
-                        $(output).append(html);
-                        }
-
-                    };
-
-                    filereader.readAsDataURL(file);
-                }
-            }
-            $('#file').change(function() {
-                previewimages(this, '.gallery');
-            });
-
-            {{-- End Preview Image --}}
-
-        };
-
+ --}}
 
 
 
@@ -787,7 +487,7 @@
             "lengthChange": false,
             "pageLength": 10,
             "autoWidth": true,
-            "responsive": true,
+            "responsive": false,
             "order": [
               [1, 'des']
             ],
@@ -852,14 +552,6 @@
               "targets": 0,
             }],
         })
-        $('.parsearchbtns').on('click', function(e) {
-            $('#participantusertable').DataTable().draw(true);
-        })
-        $('#participantuserform').on('submit',function(e){
-            e.preventDefault();
-            $('#participantusertable').DataTable().draw(true);
-        })
-
 
         $('#assesseeusertable').DataTable({
             "processing": true,
@@ -875,12 +567,12 @@
             'ajax': {
                 url: `/${appraisalCycleId}/assesseeusers/`, // <-- include the ID here
                 'type': 'GET',
-                data: function(d) {
-                    let formData = $('#assesseeuserform').serializeArray();
-                    formData.forEach(function(item) {
-                        d[item.name] = item.value;
-                    });
-                }
+                'data': function(d) {
+                    d.filter_employee_name = $('#filter_employee_name').val();
+                    d.filter_employee_code = $('#filter_employee_code').val();
+                    d.filter_branch_id = $('#filter_branch_id').val();
+                    d.filter_position_level_id = $('#filter_position_level_id').val();
+                  }
             },
             columns: [
                 {
@@ -914,16 +606,49 @@
               "targets": 0,
             }],
         })
-        $('.assesseeusersearchbtns').on('click', function(e) {
+        $('.searchbtns').on('click', function(e) {
+            $('#participantusertable').DataTable().draw(true);
             $('#assesseeusertable').DataTable().draw(true);
-        })
-        $('#assesseeuserform').on('submit',function(e){
-            e.preventDefault();
-            $('#assesseeusertable').DataTable().draw(true);
-        })
+            getAssessorUsers();
 
+        })
         {{-- End participantusers --}}
 
+        function getAssessorUsers(){
+            $.ajax({
+                url: `/${appraisalCycleId}/assessorusers/`,
+                type: "GET",
+                dataType: "json",
+                data: $('#searchnfilterform').serialize(),
+                success: function (response) {
+                    console.log(response);
+
+                    let html = '';
+                    const assessorusers = response.users;
+
+                    assessorusers.forEach(function(assessoruser,idx){
+                        html += `
+                        <div class="user-info">
+                            <li data-user_id = ${assessoruser.id}>
+                                <i class="ri-folder-4-line"></i>
+                                    <h4>${assessoruser.name} ( ${assessoruser.employee_id} )</h4>
+                            </li>
+
+                        </div>
+                        `;
+                    })
+
+
+                    $('#result').html(html);
+
+
+                },
+                error: function (response) {
+                    console.log("Error:", response);
+                }
+            });
+        }
+        getAssessorUsers();
     });
 
     // Start Tag Box
@@ -970,7 +695,6 @@
 
     const totalusers = 50;
 
-    const listitems = document.querySelectorAll('.user-info li');
 
     async function getdata(){
 
@@ -1029,6 +753,7 @@
 
     function filterdata(search){
         // console.log(search);
+    const listitems = document.querySelectorAll('.user-info li');
         listitems.forEach(listitem=>{
             // console.log(listitem);
             if(listitem.innerText.toLocaleLowerCase().includes(search.toLowerCase())){
@@ -1126,29 +851,6 @@
    });
    // End Delete Item
     {{-- End User List Filter --}}
-
-
-
-    {{-- Start Assessor List Filter --}}
-    const afilterel = document.getElementById('asearch');
-    const aresultel = document.getElementById('aresult');
-
-
-    const alistitems = document.querySelectorAll('.assessor-info li');
-    {{-- End Assessor List Filter --}}
-
-
-    function afilterdata(search){
-        // console.log(search);
-        alistitems.forEach(listitem=>{
-            // console.log(listitem);
-            if(listitem.innerText.toLocaleLowerCase().includes(search.toLowerCase())){
-                listitem.classList.remove('hide');
-            }else{
-                listitem.classList.add('hide');
-            }
-        });
-    }
 
 
     $(document).on('click',".assessor-info li",function(){
