@@ -152,14 +152,14 @@ class AppraisalCyclesController extends Controller
 
 
 
-        $assessee_user_ids = AppraisalFormAssesseeUser::whereHas("appraisalform",function($query) use($id){
-            $query->where('appraisal_cycle_id',$id);
-        })
-        ->groupBy('assessee_user_id')->pluck("assessee_user_id");
-        $assesseeusers = User::whereIn("id",$assessee_user_ids)->get();
+        // $assessee_user_ids = AppraisalFormAssesseeUser::whereHas("appraisalform",function($query) use($id){
+        //     $query->where('appraisal_cycle_id',$id);
+        // })
+        // ->groupBy('assessee_user_id')->pluck("assessee_user_id");
+        // $assesseeusers = User::whereIn("id",$assessee_user_ids)->get();
 
 
-        return view("appraisalcycles.edit",compact("appraisalcycle","branches","positionlevels","statuses","users","assesseeusers"));
+        return view("appraisalcycles.edit",compact("appraisalcycle","branches","positionlevels","statuses","users"));
     }
 
 
@@ -317,12 +317,94 @@ class AppraisalCyclesController extends Controller
                         </div>
                     ";
                 })
-                ->addColumn('action', function ($row) use ($id) {
+                ->addColumn('action', function ($participantuser) use ($id) {
+                    return "
+                        <div class='d-flex justify-content-center'>
+                            <form id='appraisalform' action='".route('appraisalforms.create')."' method='GET'>
+                                <input type='hidden' name='assessor_user_id' value='$participantuser->id'>
+                                <input type='hidden' name='appraisal_cycle_id' value='$id'/>
+                               <button type='submit' class='btn btn-link p-0 m-0' title='Send'>
+                                    <i class='fas fa-paper-plane text-primary mr-2'></i>
+                                </button>
+                            </form>
 
-                    return '';
+                            <form action='".route('appraisalforms.index')."' method='GET'>
+                                <input type='hidden' name='filter_assessor_user_id' value='$participantuser->id'>
+                                <input type='hidden' name='filter_appraisal_cycle_id' value='$id'/>
+                                    <button type='submit' class='btn btn-link p-0 m-0' title='Open'>
+                                        <i class='far fa-envelope-open text-primary'></i>
+                                    </button>
+                            </form>
+                        </div>
+                    ";
                 })
                 ->rawColumns(['form_count', 'progress', 'action']) // <-- Allow raw HTML
                 ->make(true);
    }
 
+
+   public function assesseeusers(Request $request, string $id){
+
+
+        $assessee_user_ids = AppraisalFormAssesseeUser::whereHas("appraisalform",function($query) use($id){
+            $query->where('appraisal_cycle_id',$id);
+        })
+        ->groupBy('assessee_user_id')->pluck("assessee_user_id");
+        $assesseeusers = User::whereIn("id",$assessee_user_ids);
+
+
+
+        $filter_employee_name = $request->filter_employee_name;
+        $filter_employee_code = $request->filter_employee_code;
+        $filter_branch_id = $request->filter_branch_id;
+        $filter_position_level_id = $request->filter_position_level_id;
+
+        // $results = PeerToPeer::query();
+        $results = $assesseeusers;
+
+
+        if (!empty($filter_employee_name)) {
+            $results = $results->whereHas('employee',function($query) use($filter_employee_name){
+                $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
+            });
+        }
+
+        if (!empty($filter_employee_code)) {
+            $results = $results->whereHas('employee',function($query) use($filter_employee_code){
+                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%');
+            });
+        }
+
+        if (!empty($filter_branch_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_branch_id){
+                $query->where('branch_id', $filter_branch_id);
+            });
+        }
+
+
+        if (!empty($filter_position_level_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
+                $query->where('position_level_id', $filter_position_level_id);
+            });
+        }
+
+        $assesseeusers = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->get();
+        // ->paginate(10);
+
+
+
+        return DataTables::of($assesseeusers)
+                ->addColumn('action', function ($assesseeuser) use ($id) {
+                    return "
+                        <a href='". route('assesseesummary.review',['assessee_user_id'=>$assesseeuser->id,'appraisal_cycle_id'=>$id])."'class='text-primary mr-2' title='Open' onclick=''><i class='far fa-eye'></i></i></a>
+                    ";
+                })
+                ->rawColumns(['action']) // <-- Allow raw HTML
+                ->make(true);
+
+   }
 }
+
+
+

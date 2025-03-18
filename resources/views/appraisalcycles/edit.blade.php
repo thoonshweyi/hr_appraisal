@@ -4,17 +4,17 @@
 <div class="content-page">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-12">
+            {{-- <div class="col-lg-12">
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
                         <h4 class="mb-3">Appraisal Cycle Edit</h4>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
 
-            <div class="col-lg-12">
+            <div class="col-lg-12 pt-0">
 
             <div class="card border-0 rounded-0 shadow mb-4">
                 <ul class="nav">
@@ -22,16 +22,78 @@
                         <button type="button" class="tablinks" onclick="gettab(event,'appraisalcycle')">Peroid</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" id="autoclick"  class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
+                        <button type="button"  class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
+                        <button type="button" id="autoclick"   class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="tablinks" onclick="gettab(event,'assesseesummary')">Assessee Summary</button>
+                        <button type="button"  class="tablinks" onclick="gettab(event,'assesseesummary')">Assessee Summary</button>
                     </li>
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
+                <div class="col-lg-12 tab-filter">
+                    <form id="participantuserform" class="" action="" method="GET">
+                        @csrf
+                        <div class="row align-items-end justify-content-start">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{-- <label for="filter_employee_name">Enployee Name <span class="text-danger">*</span></label> --}}
+                                    <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Name" value="{{ request()->filter_name }}"/>
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    {{-- <label for="filter_employee_code">Enployee Code <span class="text-danger">*</span></label> --}}
+                                    <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    {{-- <label for="filter_branch_id">Branch</label> --}}
+                                    <select name="filter_branch_id" id="filter_branch_id" class="custom-select custom-select-sm rounded-0 filter_input">
+                                        <option value="" selected disabled>Choose Branch</option>
+                                        @foreach($branches as $branch)
+                                            <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
+                                        @endforeach
+                                    </select>
+                                    <i class="fas fa-building"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    {{-- <label for="filter_position_level_id">Position Level</label> --}}
+                                    <select name="filter_position_level_id" id="filter_position_level_id" class="custom-select custom-select-sm rounded-0 filter_input">
+                                        <option value="" selected disabled>Choose Position Level</option>
+                                        @foreach($positionlevels as $positionlevel)
+                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-auto">
+                                <button type="submit" class="btn my-2 ml-auto cus_btn searchbtns" data-target="#assessorsummarymodal" data-toggle="modal">Search</button>
+                           </div>
+
+                            {{-- <div class="col-auto">
+                                <button type="button" class="btn btn-success parsearchbtns " class=""><i class="ri-search-line"></i> Search</a>
+                            </div> --}}
+                            {{-- @if(count(request()->query()) > 0)
+                                <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
+                            @endif --}}
+
+                        </div>
+
+                    </form>
+                </div>
+
                 <div class="tab-content">
 
                         <div id="appraisalcycle" class="tab-pane">
@@ -230,67 +292,73 @@
 
                             <div class="row">
 
-                                <div class="col-lg-12 my-2 ">
-                                    <form class="" action="" method="GET">
-                                        @csrf
-                                        <div class="row align-items-end justify-content-end">
+                                    {{-- <div class="col-lg-12 tab-filter">
+                                        <form id="participantuserform" class="" action="" method="GET">
+                                            @csrf
+                                            <div class="row align-items-end justify-content-start">
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Name" value="{{ request()->filter_name }}"/>
+                                                        <i class="fas fa-user"></i>
+                                                    </div>
+                                                </div>
 
-                                            <div class="col-md-2">
-                                                <label for="filter_employee_name">Enployee Name <span class="text-danger">*</span></label>
-                                                <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ request()->filter_name }}"/>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
+                                                        <i class="fas fa-id-card"></i>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <select name="filter_branch_id" id="filter_branch_id" class="custom-select custom-select-sm rounded-0 filter_input">
+                                                            <option value="" selected disabled>Choose Branch</option>
+                                                            @foreach($branches as $branch)
+                                                                <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <i class="fas fa-building"></i>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <select name="filter_position_level_id" id="filter_position_level_id" class="custom-select custom-select-sm rounded-0 filter_input">
+                                                            <option value="" selected disabled>Choose Position Level</option>
+                                                            @foreach($positionlevels as $positionlevel)
+                                                                <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <i class="fas fa-briefcase"></i>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-auto">
+                                                    <button type="submit" class="btn my-2 ml-auto cus_btn parsearchbtns" data-target="#assessorsummarymodal" data-toggle="modal">Search</button>
+                                               </div>
+
+
                                             </div>
 
-                                            <div class="col-md-2">
-                                                <label for="filter_employee_code">Enployee Code <span class="text-danger">*</span></label>
-                                                <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <label for="filter_branch_id">Branch</label>
-                                                <select name="filter_branch_id" id="filter_branch_id" class="form-control form-control-sm rounded-0">
-                                                    <option value="" selected disabled>Choose Branch</option>
-                                                    @foreach($branches as $branch)
-                                                        <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <label for="filter_position_level_id">Position Level</label>
-                                                <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0">
-                                                    <option value="" selected disabled>Choose Position Level</option>
-                                                    @foreach($positionlevels as $positionlevel)
-                                                        <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</a>
-                                            </div>
-                                            @if(count(request()->query()) > 0)
-                                                <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
-                                            @endif
-
-                                        </div>
-
-                                    </form>
-                                </div>
+                                        </form>
+                                    </div>
+ --}}
 
 
 
                                <div class="col-lg-12">
                                     <div class="table-responsive rounded mb-3">
-                                        <table id="participantusertable"  class="table mb-0" >
+                                        <table id="participantusertable"  class="table mb-0 w-100" >
                                             <thead class="bg-white text-uppercase">
                                                 <tr class="ligth ligth-data">
-                                                    {{-- <th>No</th> --}}
+                                                    <th>No</th>
                                                     <th>Employee Name</th>
                                                     <th>Employee Code</th>
                                                     <th>Branch</th>
                                                     <th>Sent / All Forms</th>
                                                     <th>Progress</th>
-                                                    {{-- <th>Action</th> --}}
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="ligth-body">
@@ -339,24 +407,76 @@
 
                         <div id="assesseesummary" class="tab-pane">
                             <div class="row">
+                                {{-- <div class="col-lg-12 tab-filter">
+                                    <form id="assesseeuserform" class="" action="" method="GET">
+                                        @csrf
+                                        <div class="row align-items-end justify-content-start">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Name" value="{{ request()->filter_name }}"/>
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
+                                                    <i class="fas fa-id-card"></i>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <select name="filter_branch_id" id="filter_branch_id" class="custom-select custom-select-sm rounded-0 filter_input">
+                                                        <option value="" selected disabled>Choose Branch</option>
+                                                        @foreach($branches as $branch)
+                                                            <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <i class="fas fa-building"></i>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <select name="filter_position_level_id" id="filter_position_level_id" class="custom-select custom-select-sm rounded-0 filter_input">
+                                                        <option value="" selected disabled>Choose Position Level</option>
+                                                        @foreach($positionlevels as $positionlevel)
+                                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <i class="fas fa-briefcase"></i>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <button type="submit" class="btn my-2 ml-auto cus_btn parsearchbtns" data-target="#assessorsummarymodal" data-toggle="modal">Search</button>
+                                           </div>
+
+                                        </div>
+
+                                    </form>
+                                </div> --}}
+
 
                                 <div class="col-lg-12">
                                  <h4 class="title">All Assessees</h4>
 
-                                 <table id="" class="table mb-0" >
+                                 <table id="assesseeusertable" class="table mb-0 w-100">
                                      <thead class="bg-white text-uppercase">
                                          <tr class="ligth ligth-data">
                                              <th>No</th>
                                              <th>Employee Name</th>
                                              <th>Employee Code</th>
+                                             <th>Branch</th>
+                                             <th>Position Level</th>
                                              <th>Action</th>
                                          </tr>
                                      </thead>
                                      <tbody class="ligth-body">
-                                             @foreach($assesseeusers as $idx=>$assesseeuser)
+                                             {{-- @foreach($assesseeusers as $idx=>$assesseeuser)
                                                  <tr>
                                                      <td>{{ ++$idx }}</td>
-                                                     {{-- <td>{{$idx + $participantuser->firstItem()}}</td> --}}
                                                      <td>{{ $assesseeuser->employee->employee_name }}</td>
                                                      <td>{{ $assesseeuser->employee->employee_code }}</td>
                                                     <td>
@@ -365,7 +485,7 @@
 
 
                                                  </tr>
-                                             @endforeach
+                                             @endforeach --}}
                                      </tbody>
                                  </table>
                                 </div>
@@ -482,6 +602,50 @@
         });
 
 
+        {{-- $("#filter_position_level_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Status',
+            searchField: ["value", "label"]
+        });
+
+        $("#filter_branch_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Status',
+            searchField: ["value", "label"]
+        }); --}}
+
+
+        $("#afilter_position_level_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Status',
+            searchField: ["value", "label"]
+        });
+
+        $("#afilter_branch_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Status',
+            searchField: ["value", "label"]
+        });
 
 
         //Start change-btn
@@ -621,6 +785,7 @@
             "serverSide": true,
             "searching": false,
             "lengthChange": false,
+            "pageLength": 10,
             "autoWidth": true,
             "responsive": true,
             "order": [
@@ -637,8 +802,17 @@
               }
             },
             columns: [
-                { data: 'employee.employee_code', name: 'employee.employee_code' },
+                {
+                    data: null,
+                    name: 'no',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
                 { data: 'employee.employee_name', name: 'employee.employee_name' },
+                { data: 'employee.employee_code', name: 'employee.employee_code' },
                 { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
                 {{-- { data: 'employee.department.name', name: 'employee.department.name' },
                 { data: 'employee.position.name', name: 'employee.position.name' },
@@ -662,7 +836,7 @@
                         return data ?? '';
                     }
                 },
-                {{-- {
+                {
                     data: 'action',
                     name: 'action',
                     orderable: false,
@@ -670,7 +844,7 @@
                     render: function (data, type, row) {
                         return data ?? '';
                     }
-                } --}}
+                }
             ],
             "columnDefs": [{
               "searchable": false,
@@ -678,7 +852,75 @@
               "targets": 0,
             }],
         })
+        $('.parsearchbtns').on('click', function(e) {
+            $('#participantusertable').DataTable().draw(true);
+        })
+        $('#participantuserform').on('submit',function(e){
+            e.preventDefault();
+            $('#participantusertable').DataTable().draw(true);
+        })
 
+
+        $('#assesseeusertable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "searching": false,
+            "lengthChange": false,
+            "pageLength": 10,
+            "autoWidth": true,
+            "responsive": true,
+            "order": [
+              [1, 'asc']
+            ],
+            'ajax': {
+                url: `/${appraisalCycleId}/assesseeusers/`, // <-- include the ID here
+                'type': 'GET',
+                data: function(d) {
+                    let formData = $('#assesseeuserform').serializeArray();
+                    formData.forEach(function(item) {
+                        d[item.name] = item.value;
+                    });
+                }
+            },
+            columns: [
+                {
+                    data: null,
+                    name: 'no',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: 'employee.employee_name', name: 'employee.employee_name' },
+                { data: 'employee.employee_code', name: 'employee.employee_code' },
+                { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
+                { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' },
+                {{-- { data: 'employee.department.name', name: 'employee.department.name' },
+                { data: 'employee.position.name', name: 'employee.position.name' }, --}}
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return data ?? '';
+                    }
+                }
+            ],
+            "columnDefs": [{
+              "searchable": false,
+              "orderable": false,
+              "targets": 0,
+            }],
+        })
+        $('.assesseeusersearchbtns').on('click', function(e) {
+            $('#assesseeusertable').DataTable().draw(true);
+        })
+        $('#assesseeuserform').on('submit',function(e){
+            e.preventDefault();
+            $('#assesseeusertable').DataTable().draw(true);
+        })
 
         {{-- End participantusers --}}
 

@@ -231,6 +231,7 @@ input[type="number"] {
 
     background-color: #007bff;
     color: white;
+    margin-bottom: 0 !important;
 }
 .add_btn:hover,.new_btn:hover,.apply_btn:hover,.fill_btn:hover,.cus_btn:hover{
     color: white;
@@ -335,7 +336,7 @@ background-color: #f3f3f3;
 
 .tab-pane{
 
-padding: 5px 15px;
+padding: 0px 15px;
 
 display: none;
 }
@@ -344,7 +345,34 @@ display: none;
     padding: 5px;
     text-align: center;
     color: white;
+    margin-bottom: 0;
+    border-top-right-radius: 10px;
 }
+.tab-filter{
+    background: #d9e1f2;
+    /* border-radius: 0 0 10px 10px; */
+    padding: 10px;
+}
+
+.filter_input{
+    height: 44px;
+    /* padding: 10px !important; */
+    border-radius: 5px !important;
+    padding-left: 50px;
+}
+.tab-filter .form-group{
+    position: relative;
+    margin: 0;
+}
+.tab-filter i{
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    font-size: 18px;
+
+    transform: translateY(-50%);
+}
+
 /* End Tag Box */
 #treeview {
     max-height: 600px; /* Adjust height as needed */
@@ -443,7 +471,9 @@ display: none;
     white-space: normal !important;
 }
 
-
+.selectize-control{
+height: auto !important;
+}
 /* Start Progress */
 #progresses{
     width: 50px;
@@ -554,3 +584,6 @@ display: none;
   .criteria_headers{
     width: 50%;
   }
+
+
+
