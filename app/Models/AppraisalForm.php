@@ -40,6 +40,10 @@ class AppraisalForm extends Model
         return $this->belongsToMany(User::class,"appraisal_form_assessee_users","appraisal_form_id","assessee_user_id");
     }
 
+    public function formresults(){
+        return $this->hasMany(FormResult::class,'appraisal_form_id','id');
+    }
+
 
     public function getResult($assessee_user_id,$criteria_id){
         $formresult = FormResult::where('appraisal_form_id',$this->id)
@@ -56,4 +60,6 @@ class AppraisalForm extends Model
        ->sum("result");
         return $totalresult;
     }
+
+
 }

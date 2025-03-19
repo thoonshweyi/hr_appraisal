@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PositionLevel;
 use App\Models\AttachFormType;
+use Illuminate\Support\Facades\Log;
 use App\Imports\PositionLevelImport;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -220,44 +221,4 @@ class AssFormCatsController extends Controller
    }
 
 
-   public function excel_import(Request $request)
-   {
-        $request->validate([
-            'file' => 'required|mimes:xls,xlsx|max:2048',
-        ]);
-
-
-          // Multi Images Upload
-        //   if($request->hasFile('file')){
-        //     // dd('hay');
-        //     // foreach($request->file("file") as $image){
-        //     //     Excel::import(new AssFormCatImport, $request->file('file'));
-        //     // }
-        //     Excel::import(new AssFormCatImport, $request->file('file'));
-
-        // }
-
-        \DB::beginTransaction();
-
-        try {
-            $file = $request->file('file');
-            Excel::import(new AssFormCatImport, $file);
-
-            \DB::commit();
-            return redirect(route("assformcats.index"))->with('success',"AssFormCat excel imported successfully");
-
-        }catch (ExcelImportValidationException $e) {
-            // If validation fails, show the error message to the user
-            \DB::rollback();
-            return back()->with('validation_errors', $e->getMessage());
-        } catch (\Exception $e) {
-            \DB::rollback();
-            // Handle the exception and notify the user
-            return redirect()->back()->with('error', "System Error:".$e->getMessage());
-        }
-
-
-
-
-   }
 }

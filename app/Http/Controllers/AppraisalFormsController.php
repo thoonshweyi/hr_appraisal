@@ -36,7 +36,7 @@ class AppraisalFormsController extends Controller
         }
 
         if($user->can("view-all-appraisal-form")){
-            
+
         }else{
             $results = $results->where('assessor_user_id',$user_id);
         }
@@ -169,6 +169,7 @@ class AppraisalFormsController extends Controller
     }
     public function update(Request $request,$id){
 
+        // dd('submitted');
 
         $this->validate($request, [
             "appraisalformresults" => "required|array",
@@ -216,8 +217,56 @@ class AppraisalFormsController extends Controller
 
             return redirect()->back()->with("error","There is an error in submitting Appraisal Form.");
         }
+    }
+
+    public function savedraft(Request $request,$id){
+
+        // dd($request->appraisalformresults);
+
+        \DB::beginTransaction();
+        try{
+
+            $appraisalform = AppraisalForm::find($id);
 
 
+            $appraisalformresults = $request->appraisalformresults;
+
+            $appraisalformresults = array_filter(
+                array_map('array_filter', $appraisalformresults)
+            );
+
+
+
+            // dd($appraisalform->formresults);
+            $appraisalform->formresults()->delete();
+            foreach($appraisalformresults as $assessee_id=>$appraisalformresult){
+                foreach($appraisalformresult as $criteria_id=>$result){
+
+                    $criteria = Criteria::find($criteria_id);
+                    $alloweds = $criteria->getRatingScaleAttribute();
+
+
+                    if(!in_array($result,$alloweds)){
+                        return redirect()->back()->with("error","Your rating-value doesn't match the given-rating-scale-values!")
+                        ->withInput();
+
+                    }
+                    $formresult = FormResult::create([
+                        "appraisal_form_id" => $id,
+                        "assessee_user_id" => $assessee_id,
+                        "criteria_id" => $criteria_id,
+                        "result" => $result,
+                    ]);
+                }
+            }
+
+            \DB::commit();
+            return redirect(route("appraisalforms.index"))->with('success',"Appraisal Form Saved successfully");
+        }catch(Exception $err){
+            \DB::rollback();
+
+            return redirect()->back()->with("error","There is an error in submitting Appraisal Form.");
+        }
     }
 
     public function fillform(Request $request){

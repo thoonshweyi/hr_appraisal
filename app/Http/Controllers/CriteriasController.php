@@ -94,23 +94,23 @@ class CriteriasController extends Controller
         // }
         $ass_form_cat_id = $request->ass_form_cat_id;
 
-        // \DB::beginTransaction();
-        // try {
+        \DB::beginTransaction();
+        try {
             $file = $request->file('file');
             Excel::import(new CriteriaImport($ass_form_cat_id), $file);
 
             \DB::commit();
             return redirect()->back()->with('success',"Criteria excel imported successfully");
 
-        // }catch (ExcelImportValidationException $e) {
-        //     // If validation fails, show the error message to the user
-        //     \DB::rollback();
-        //     return back()->with('validation_errors', $e->getMessage());
-        // } catch (\Exception $e) {
-        //     \DB::rollback();
-        //     // Handle the exception and notify the user
-        //     return redirect()->back()->with('error', "System Error:".$e->getMessage());
-        // }
+        }catch (ExcelImportValidationException $e) {
+            // If validation fails, show the error message to the user
+            \DB::rollback();
+            return back()->with('validation_errors', $e->getMessage());
+        } catch (\Exception $e) {
+            \DB::rollback();
+            // Handle the exception and notify the user
+            return redirect()->back()->with('error', "System Error:".$e->getMessage());
+        }
 
 
 

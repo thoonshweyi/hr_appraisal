@@ -124,17 +124,15 @@
     <!-- Chart Custom JavaScript -->
     <script async src="{{ asset('js/chart-custom.js') }}"></script>
 
+
+    {{-- Start Chartjs js1 --}}
+    <script src="{{ asset('assets/libs/chartjs/chart.js') }}"></script>
+
     <!-- app JavaScript -->
     <script src="{{ asset('js/app.js') }}"></script>
 
     <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.rowReorder.min.js') }}"></script>
-
-    <!-- Dropzone CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
-
-<!-- Dropzone JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
 
 
     <script>

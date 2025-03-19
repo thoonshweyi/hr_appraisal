@@ -236,6 +236,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/appraisalforms/{id}",[AppraisalFormsController::class,"show"])->name("appraisalforms.show");
     Route::get("/appraisalforms/{id}/edit",[AppraisalFormsController::class,"edit"])->name("appraisalforms.edit");
     Route::put("/appraisalforms/{id}",[AppraisalFormsController::class,"update"])->name("appraisalforms.update");
+    Route::put("/appraisalformssavedraft/{id}",[AppraisalFormsController::class,"savedraft"])->name("appraisalforms.savedraft");
     Route::delete("/appraisalforms/{id}",[AppraisalFormsController::class,"destroy"])->name("appraisalforms.destroy");
     Route::get("/fillform",[AppraisalFormsController::class,"fillform"])->name("appraisalforms.fillform");
 

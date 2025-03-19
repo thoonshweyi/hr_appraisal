@@ -22,10 +22,10 @@
                         <button type="button" class="tablinks" onclick="gettab(event,'appraisalcycle')">Peroid</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button"  class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
+                        <button type="button" id="autoclick" class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" id="autoclick"   class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
+                        <button type="button"  class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
                     <li class="nav-item">
                         <button type="button"  class="tablinks" onclick="gettab(event,'assesseesummary')">Assessee Summary</button>
@@ -237,31 +237,63 @@
                                 </div>
 
                                 <div class="col-lg-9">
-                                    <div class="table-responsive rounded mb-3">
-                                        <table id="peertopeer" class="table mb-0" >
-                                            <thead class="bg-white text-uppercase">
-                                                <tr class="ligth ligth-data">
-                                                    <th>No</th>
-                                                    <th>Assessor Name</th>
-                                                    <th>Assessee Name</th>
-                                                    <th>Department</th>
-                                                    <th>Branch</th>
-                                                    <th>Position Level</th>
-                                                    <th>Position</th>
-                                                    <th>Assessment-form Category</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="ligth-body">
+                                    <div class="row">
 
-                                            </tbody>
-                                        </table>
-                                        <div class="d-flex justify-content-center">
-                                            {{-- {{ $genders->appends(request()->all())->links("pagination::bootstrap-4") }} --}}
+                                        {{-- <div class="col-auto mt-2">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="ri-more-line"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                  <a class="dropdown-item" href="#">Action</a>
+                                                  <a class="dropdown-item" href="#">Another action</a>
+                                                  <a class="dropdown-item" href="#">Something else here</a>
+                                                  <div class="dropdown-divider"></div>
+                                                  <a class="dropdown-item" href="#">Separated link</a>
+                                                </div>
+                                            </div>
+                                        </div> --}}
+                                        <div class="col-md-12 col-sm-12 mb-2 ">
+                                            <div class="table-responsive rounded mb-3 position-relative">
+                                                <table id="peertopeer" class="table mb-0 " style="min-height: 400px !important">
+                                                    <thead class="bg-white text-uppercase">
+                                                        <tr class="ligth ligth-data">
+                                                            <th>No</th>
+                                                            <th>Assessor Name</th>
+                                                            <th>Assessee Name</th>
+                                                            <th>Department</th>
+                                                            <th>Branch</th>
+                                                            <th>Position Level</th>
+                                                            <th>Position</th>
+                                                            <th>Assessment-form Category</th>
+                                                            <th>
+                                                                Action
+                                                                <div class="dropdown position-absolute table-dropdowns">
+                                                                    <a  class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="More">
+                                                                        <i class="ri-more-2-line"></i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu">
+                                                                      {{-- <a href="#ptopmodal" id="assessmentviewbtn" class="dropdown-item"  data-toggle="modal">360° Assessment View</a> --}}
+                                                                      <a href="javascript:void(0);" id="assessmentviewbtn" class="dropdown-item">360° Assessment View</a>
+                                                                    </div>
+                                                                </div>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="ligth-body">
+
+                                                    </tbody>
+                                                </table>
+                                                <div class="d-flex justify-content-center">
+                                                    {{-- {{ $genders->appends(request()->all())->links("pagination::bootstrap-4") }} --}}
+                                                </div>
+
+
+                                            </div>
                                         </div>
 
-
                                     </div>
+
                                 </div>
                             </div>
 
@@ -386,6 +418,31 @@
 </div>
 
 <!-- START MODAL AREA -->
+    <!-- start create modal -->
+    <div id="ptopmodal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h6 class="modal-title">Assessment Network</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-center">
+                            <canvas id="leadcharts"></canvas>
+                            </div>
+                        <div>
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!-- end create modal -->
 
 
 
@@ -425,55 +482,6 @@
             dateFormat: "H:i", // Format for hours and minutes
             time_24hr: true // Use 24-hour format
         });
-
-
-        {{-- $("#filter_position_level_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
-
-        $("#filter_branch_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        }); --}}
-
-
-        {{-- $("#afilter_position_level_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
-
-        $("#afilter_branch_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
- --}}
-
-
 
 
 
@@ -649,6 +657,48 @@
             });
         }
         getAssessorUsers();
+
+        {{-- Start Assessment Network --}}
+        let assessmentNetworkChart = null;
+        $('#assessmentviewbtn').click(function(){
+
+            let assessor_user_id = $('.user-info li.active').data('user_id');
+
+            $.ajax({
+                url: `/api/assessmentnetwork/${assessor_user_id}/{{ $appraisalcycle->id }}/`,
+                method: 'GET',
+                success:function(data){
+                     console.log(data)
+                     const ctx = document.getElementById('leadcharts');
+                     ctx.height = 250;
+
+                    if (assessmentNetworkChart) {
+                        assessmentNetworkChart.destroy();
+                    }
+
+                    assessmentNetworkChart = new Chart(ctx, {
+                          type: 'doughnut',
+
+                          data: {
+                               labels: Object.keys(data.assessmentnetworksrcs),
+                               datasets: [{
+                                    data:  Object.values(data.assessmentnetworksrcs),
+                                    backgroundColor: ["orange","#007bff"],
+                                    borderWidth:1
+                               }]
+                          },
+                          options: {
+                               responsive:false
+                          }
+                     });
+
+                }
+           })
+
+
+           $('#ptopmodal').modal();
+        });
+        {{-- End Assessment Network --}}
     });
 
     // Start Tag Box

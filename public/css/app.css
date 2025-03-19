@@ -372,7 +372,10 @@ display: none;
 
     transform: translateY(-50%);
 }
-
+.table-dropdowns{
+    top: 5px;
+    right: 5px;
+}
 /* End Tag Box */
 #treeview {
     max-height: 600px; /* Adjust height as needed */
