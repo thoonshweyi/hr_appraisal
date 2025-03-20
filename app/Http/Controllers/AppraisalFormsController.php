@@ -13,6 +13,7 @@ use App\Models\AppraisalForm;
 use App\Models\AppraisalCycle;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AppraisalFormAssesseeUser;
+use PDF;
 
 class AppraisalFormsController extends Controller
 {
@@ -189,6 +190,7 @@ class AppraisalFormsController extends Controller
 
 
             $appraisalformresults = $request->appraisalformresults;
+            $appraisalform->formresults()->delete();
             foreach($appraisalformresults as $assessee_id=>$appraisalformresult){
                 foreach($appraisalformresult as $criteria_id=>$result){
 
@@ -294,4 +296,53 @@ class AppraisalFormsController extends Controller
 
         return response()->json(["assesseeusers"=>$assesseeusers,"criterias"=>$criterias]);
     }
+
+    public function printpdf($id)
+    {
+        $appraisalform = AppraisalForm::findOrFail($id);
+        $assesseeusers = $appraisalform->assesseeusers;
+        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
+
+        $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
+        $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');
+        $total_meet_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('meet_standard');
+        $total_below_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('below_standard');
+        $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
+
+        $stylesheet = file_get_contents(public_path('css/backend.css'));
+
+        $pdf = PDF::loadView('appraisalforms.print', [
+            'appraisalform' => $appraisalform,
+            'assesseeusers' => $assesseeusers,
+            'criterias' => $criterias,
+            'total_excellent' => $total_excellent,
+            'total_good' => $total_good,
+            'total_meet_standard' => $total_meet_standard,
+            'total_below_standard' => $total_below_standard,
+            'total_weak' => $total_weak,
+            'style' => $stylesheet
+        ]);
+
+        return $pdf->stream('appraisal_form.pdf');
+        // return $pdf->download('appraisal_form.pdf'); // to force download
+    }
+
+
+    public function showprintframe($id)
+    {
+
+        $appraisalform = AppraisalForm::findOrFail($id);
+        $assesseeusers = $appraisalform->assesseeusers;
+        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
+
+        $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
+        $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');
+        $total_meet_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('meet_standard');
+        $total_below_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('below_standard');
+        $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
+
+
+        return view('appraisalforms.print', compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+    }
+
 }

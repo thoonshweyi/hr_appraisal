@@ -239,9 +239,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put("/appraisalformssavedraft/{id}",[AppraisalFormsController::class,"savedraft"])->name("appraisalforms.savedraft");
     Route::delete("/appraisalforms/{id}",[AppraisalFormsController::class,"destroy"])->name("appraisalforms.destroy");
     Route::get("/fillform",[AppraisalFormsController::class,"fillform"])->name("appraisalforms.fillform");
+    Route::get("/appraisalformsprintpdf/{id}",[AppraisalFormsController::class,"printpdf"])->name("appraisalforms.printpdf");
+    Route::get("/appraisalformsshowprintframe/{id}",[AppraisalFormsController::class,"showprintframe"])->name("appraisalforms.showprintframe");
+
 
 
     Route::get("/assesseesummary/{assessee_user_id}/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"review"])->name("assesseesummary.review");
+    Route::get("/assesseesummarysexport/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"export"])->name("assesseesummary.export");
 
 
     Route::get("/{appraisal_cycle_id}/participantusers",[AppraisalCyclesController::class,"participantusers"])->name("participantusers.index");

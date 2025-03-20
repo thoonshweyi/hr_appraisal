@@ -33,7 +33,7 @@
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
                 <div class="col-lg-12 tab-filter">
-                    <form id="searchnfilterform" class="" action="" method="GET">
+                    <form id="searchnfilterform" class="" action="{{ route('assesseesummary.export',$appraisalcycle->id) }}" method="GET">
                         @csrf
                         <div class="row align-items-end justify-content-start">
                             <div class="col-md-3">
@@ -328,6 +328,8 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <h4 class="title">All Assessees</h4>
+                                    <button type="button" id="export-btn" class="btn cus_btn">Export</button>
+
                                     <div class="table-responsive rounded mb-3">
                                         <table id="assesseeusertable" class="table mb-0 w-100">
                                             <thead class="bg-white text-uppercase">
@@ -699,6 +701,13 @@
            $('#ptopmodal').modal();
         });
         {{-- End Assessment Network --}}
+
+
+        {{-- Start Export Btn --}}
+        $('#export-btn').click(function(){
+            $('#searchnfilterform').submit();
+        });
+        {{-- End Export Btn --}}
     });
 
     // Start Tag Box
