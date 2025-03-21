@@ -120,4 +120,49 @@ class User extends Authenticatable
 
         return $sentpercentage;
     }
+
+
+
+    public function getCriteriaTotalArrs($appraisal_cycle_id){
+        $ass_form_cat_id = $this->getAssFormCat()->id;
+        $criterias = Criteria::where("ass_form_cat_id",$ass_form_cat_id)->get();
+
+        foreach($criterias as $criteria){
+            $criteria_totals[$criteria->id] = $this->getCriteriaTotal($this->id,$criteria->id,$appraisal_cycle_id);
+        }
+
+        return $criteria_totals;
+
+    }
+    public function getCriteriaTotal($assessee_user_id,$criteria_id,$appraisal_cycle_id){
+
+        $criteriatotal = FormResult::where('assessee_user_id',$assessee_user_id)
+                            ->where('criteria_id',$criteria_id)
+                            ->whereHas('appraisalform',function($query) use($appraisal_cycle_id){
+                                $query->where('appraisal_cycle_id',$appraisal_cycle_id);
+                            })->sum('result');
+        return $criteriatotal;
+    }
+    public function getRateTotal($criteria_totals){
+        return $ratetotal = array_sum($criteria_totals);
+    }
+    public function getAssessors($appraisal_cycle_id){
+        $assessor_user_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
+        ->whereHas('assesseeusers',function($query) {
+            $query->where('assessee_user_id',$this->id);
+        })->pluck('assessor_user_id');
+        $assessorusers = User::whereIn("id",$assessor_user_ids)->get();
+        return $assessorusers;
+    }
+    public function getAssessorUsersCount($assessorusers){
+        return $assessoruserscount = count($assessorusers);
+    }
+    public function getAverage($ratetotal,$assessoruserscount){
+        return $average = floor($ratetotal / $assessoruserscount);
+    }
+    public function getGrade($average){
+        return $grade = Grade::where('from_rate', '<=', $average)
+        ->where('to_rate', '>=', $average)
+        ->first();
+    }
 }

@@ -119,7 +119,7 @@ class AssesseeSummaryController extends Controller
         ->get();
 
 
-        $response = Excel::download(new AssesseeSummaryExport($assesseeusers), "AssesseeSummaryReport".Carbon::now()->format('Y-m-d').".xlsx");
+        $response = Excel::download(new AssesseeSummaryExport($assesseeusers,$appraisal_cycle_id), "AssesseeSummaryReport".Carbon::now()->format('Y-m-d').".xlsx");
 
         return $response;
     }

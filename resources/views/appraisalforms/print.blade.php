@@ -174,7 +174,7 @@
                 @for($i = 0; $i < 5; $i++)
                     <td>
                         @if(isset($chunk[$i]))
-                            {{ $appraisalform->getTotalResult($chunk[$i]->id) }}
+                            {{ $appraisalform->getTotalResult($chunk[$i]->id) != 0 ? $appraisalform->getTotalResult($chunk[$i]->id) : '' }}
                         @else
                             &nbsp;
                         @endif

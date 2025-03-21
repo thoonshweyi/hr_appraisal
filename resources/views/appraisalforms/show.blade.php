@@ -59,11 +59,7 @@
 
            <div class="col-md-12 mb-2">
                 <div class="row">
-                    <div class="col-auto mb-2">
-                        {{-- <a href="{{ route('appraisalforms.printpdf',$appraisalform->id) }}" class="btn  cus_btn">Print</a> --}}
-                        <a href="javascript:void(0);" class="btn cus_btn">Print</a>
 
-                    </div>
 
                     <div id="printableArea">
                     <div class="col-md-12">
@@ -191,17 +187,12 @@
 
 <!-- End MODAL AREA -->
 
-<iframe id="reprint_frame" name="reprint_frame" src="{{ url('appraisalformsshowprintframe/'.$appraisalform->id) }}" style="position: absolute;width:0;height:0;border:0;"  class="hidden"></iframe>
 
 @endsection
 @section('js')
 <script>
     $(document).ready(function() {
-        document.querySelector('.cus_btn').addEventListener('click', function () {
-            var pdfFrame1 = window.frames["reprint_frame"];
-                            pdfFrame1.focus();
-                            pdfFrame1.print();
-        });
+
 
     });
 

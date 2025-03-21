@@ -327,8 +327,7 @@
                         <div id="assesseesummary" class="tab-pane">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <h4 class="title">All Assessees</h4>
-                                    <button type="button" id="export-btn" class="btn cus_btn">Export</button>
+                                    {{-- <h4 class="title">All Assessees</h4> --}}
 
                                     <div class="table-responsive rounded mb-3">
                                         <table id="assesseeusertable" class="table mb-0 w-100">
@@ -347,6 +346,8 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <button type="button" id="export-btn" class="btn cus_btn">Export</button>
+
                                 </div>
                              </div>
                         </div>

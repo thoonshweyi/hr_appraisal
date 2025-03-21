@@ -297,8 +297,6 @@
                 html += `
                 <tr>
                     <td>
-
-
                         <input type="checkbox" name="asssessee_user_ids[]" class="assesseeCheckbox"
                             value="${assesseeID}" ${isChecked} data-id="${assesseeID}">
                         <input type="hidden" name="ass_form_cat_ids[]" class="ass_form_cat_ids"
