@@ -206,9 +206,17 @@
                     </button>
                 </div>
 
+
+
                 <div class="modal-body">
 
                     <label for="" class="mr-2">Assessee: </label><h6 class="text-dark fw-bold d-inline text-lg">{{ $assesseeuser->employee->employee_name }}</h6>
+                    <div>
+                        <label for="" class="mr-2">Assment-Form Category: </label>
+                    </div>
+
+
+
                     <div class="table-responsive">
 
 
@@ -235,6 +243,7 @@
 
                                         @foreach ($assessorusers as $assessoruser)
                                             <td>{{ $assesseesummary->getAssessorGivenMark($assessoruser->id,$assesseeuser->id,$criteria->id,  Route::current()->parameter('appraisal_cycle_id') ) }}</td>
+                                            {{-- {{ dd($assesseesummary->getAssesseeAssFormCats($assesseeuser->id, Route::current()->parameter('appraisal_cycle_id'))) }} --}}
                                         @endforeach
                                     </tr>
                                 @endforeach

@@ -284,7 +284,7 @@ class UserController extends Controller
 
         $results = User::query();
 
-
+        // dd(!empty($filter_ass_form_cat_id));
         if (!empty($filter_ass_form_cat_id)) {
             $assformcat = AssFormCat::where('id',$filter_ass_form_cat_id)->first();
             $attach_form_type_id = $assformcat->attach_form_type_id;
@@ -330,10 +330,17 @@ class UserController extends Controller
 
         // dd($users[0]->getAssFormCat());
         // dd($users);
+        $dulusers = [];
         foreach($users as $user){
-            $user['assformcat'] = $user->getAssFormCat();
+            $assformcats = $user->getAssFormCats();
+            foreach($assformcats as $assformcat){
+                $userCopy = clone $user; // Clone user to avoid reference issues
+                $userCopy['assformcat'] = $assformcat;
+                $dulusers[] = $userCopy;
+            }
+
         }
 
-        return response()->json($users);
+        return response()->json($dulusers);
     }
 }

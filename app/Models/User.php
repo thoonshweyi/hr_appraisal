@@ -92,6 +92,20 @@ class User extends Authenticatable
         return $assformcat;
     }
 
+    public function getAssFormCats(){
+        $employee = $this->employee;
+        $attach_form_type_id = $employee->attach_form_type_id;
+        $position_level_id = $employee->position_level_id;
+
+        $assformcat = AssFormCat::where('attach_form_type_id',$attach_form_type_id)
+        ->whereHas('positionlevels',function($query) use($position_level_id){
+            $query->where('position_levels.id',$position_level_id);
+        })
+        ->get();
+
+        return $assformcat;
+    }
+
     public function getAppraisalFormCount($appraisal_cycle_id){
         $appraisalforms = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
         ->where('assessor_user_id', $this->id)

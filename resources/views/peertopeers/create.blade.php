@@ -252,7 +252,7 @@
 
         {{-- Start Assessee Filter --}}
         let selectedAssessees = {}; // Store selected users persistently
-        let mergedAssessees = []; // Declare globally to avoid reference errors
+        let curAssessees = []; // Declare globally to avoid reference errors
 
         let tableBody = document.querySelector("#assesseestable tbody");
 
@@ -264,7 +264,7 @@
                 dataType: "json",
                 data: $('#peer_to_peer_form').serialize(),
                 success: function (response) {
-                    console.log(response);
+                    {{-- console.log(response); --}}
                     renderTable(response);
                 },
                 error: function (response) {
@@ -277,21 +277,22 @@
             let html = '';
 
             // Update global variable
-            mergedAssessees = [...assesseeusers];
+            curAssessees = [...assesseeusers];
 
             // Re-add previously selected users
             Object.keys(selectedAssessees).forEach(selectedID => {
-                let alreadyInList = assesseeusers.some(user => user.id == selectedID);
+                let alreadyInList = assesseeusers.some(user => user.id + '-' + user.assformcat.id == selectedID);
                 if (!alreadyInList) {
-                    mergedAssessees.push(selectedAssessees[selectedID]);
+                    curAssessees.push(selectedAssessees[selectedID]);
                 }
             });
 
 
-            mergedAssessees.forEach(function (assesseeuser) {
+            curAssessees.forEach(function (assesseeuser) {
                 let assesseeID = assesseeuser.id;
-                let isChecked = selectedAssessees[assesseeID] ? "checked" : "";
-                let isDisabled = selectedAssessees[assesseeID] ? "" : "disabled";
+                let formcatID = assesseeuser.assformcat.id;
+                let isChecked = selectedAssessees[assesseeID+ '-' +formcatID] ? "checked" : "";
+                let isDisabled = selectedAssessees[assesseeID+ '-' +formcatID] ? "" : "disabled";
 
 
                 html += `
@@ -300,7 +301,7 @@
                         <input type="checkbox" name="asssessee_user_ids[]" class="assesseeCheckbox"
                             value="${assesseeID}" ${isChecked} data-id="${assesseeID}">
                         <input type="hidden" name="ass_form_cat_ids[]" class="ass_form_cat_ids"
-                        value="${assesseeuser.assformcat.id}" ${isDisabled} data-id="${assesseeID}">
+                        value="${assesseeuser.assformcat ? assesseeuser.assformcat.id : ''}" ${isDisabled} data-id="${assesseeID}">
                     </td>
                     <td>${assesseeuser.employee.employee_code}</td>
                     <td>${assesseeuser.employee.employee_name}</td>
@@ -308,11 +309,11 @@
                     <td>${assesseeuser.employee.branch.branch_name}</td>
                     <td>${assesseeuser.employee.positionlevel.name}</td>
                     <td>${assesseeuser.employee.position.name}</td>
-                    <td>${assesseeuser.assformcat.name}</td>
+                    <td>${assesseeuser.assformcat ? assesseeuser.assformcat.name : ''}</td>
                 </tr>`;
             });
 
-            console.log(mergedAssessees);
+            {{-- console.log(curAssessees); --}}
 
 
 
@@ -321,16 +322,18 @@
             // Rebind checkbox change event
             $(".assesseeCheckbox").change(function () {
                 let assesseeID = $(this).data("id");
+                let nextInput = $(this).next(".ass_form_cat_ids");
+                let formcatID = $(this).next(".ass_form_cat_ids").val();
 
                 if ($(this).is(":checked")) {
-                    selectedAssessees[assesseeID] = mergedAssessees.find(u => u.id == assesseeID);
+                    selectedAssessees[assesseeID + '-' + formcatID ] = curAssessees.find(u => u.id == assesseeID && u.assformcat.id == formcatID);
                     $(this).next('.ass_form_cat_ids').removeAttr("disabled");
                     {{-- console.log($(this).next('.ass_form_cat_ids')); --}}
                 } else {
-                    delete selectedAssessees[assesseeID];
+                    delete selectedAssessees[assesseeID + '-' + formcatID];
                     $(this).next('.ass_form_cat_ids').attr("disabled", "disabled");
                 }
-                {{-- console.log(selectedAssessees); --}}
+                console.log(selectedAssessees);
             });
         }
 
@@ -343,16 +346,17 @@
                 let assesseeID = $(this).val();
                 let nextInput = $(this).next(".ass_form_cat_ids");
 
+                let formcatID = $(this).next(".ass_form_cat_ids").val();
                 if (isChecked) {
-                    selectedAssessees[assesseeID] = mergedAssessees.find(u => u.id == assesseeID);
+                    selectedAssessees[assesseeID+ '-' +formcatID] = curAssessees.find(u => u.id == assesseeID);
                     nextInput.removeAttr("disabled");
                 } else {
-                    delete selectedAssessees[assesseeID];
+                    delete selectedAssessees[assesseeID+ '-' +formcatID];
                     nextInput.attr("disabled", "disabled");
                 }
             });
 
-            // console.log(selectedAssessees);
+            console.log(selectedAssessees);
         });
 
         {{-- End Assessee Filter --}}
