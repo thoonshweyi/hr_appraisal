@@ -164,11 +164,14 @@
 }
 .table th, .table td {
     text-align: center;
-    vertical-align: middle;
+    vertical-align: middle !important;
 }
 .custables thead ,.table_headers{
     background-color: #007bff;
     color: white;
+}
+.custables td, .custables th{
+    text-wrap: wrap !important;
 }
 .custom-input,.custom-input-lg{
     width: 40px;
@@ -190,6 +193,7 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
+
 /* .custom-input-lg{
     width: 100%;
     text-align: left;
@@ -236,6 +240,14 @@ input[type="number"] {
 .add_btn:hover,.new_btn:hover,.apply_btn:hover,.fill_btn:hover,.cus_btn:hover{
     color: white;
 }
+
+
+thead.sticky-header th {
+    position: sticky !important;
+    z-index: 2 !important;
+}
+
+
 /* End Criteria */
 
 .custables th:nth-child(2),
@@ -253,8 +265,11 @@ input[type="number"] {
     resize: none;
 }
 
-
-
+thead th {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 2 !important;
+}
 
  /* Start Accordion */
  .accordion{
@@ -590,3 +605,105 @@ height: auto !important;
 
 
 
+.assesseeformcattag{
+    display: inline-block;
+    background-color: #d9e1f2 !important;
+    color: black !important;
+    cursor: pointer;
+}
+.assesseeformcattag.active{
+    background-color: #1f4e78 !important;
+    color: white !important;
+}
+
+
+
+/* Start Assessment Form */
+.assessmentformtable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.assessmentformtable th, .assessmentformtable td {
+    border: 1px solid #000;
+    padding: 6px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.assessmentformtable th {
+    /* background-color: #f2f2f2; */
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.assessmentformtable .header-bar {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.assessmentformtable .total-row {
+    font-weight: bold;
+    background-color: #f9f9f9;
+}
+.vertical-header {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    padding: 5px 2px;
+    font-size: 10px;
+    text-align: center;
+    width: 5%;
+    vertical-align: middle;
+}
+.header-row td{
+    padding-left: 20px;
+    text-align: left;
+}
+
+/* End Assessment Form */
+
+/* Start Tooltip */
+.critooltips{
+    width: 350px;
+    height: 200px;
+    background: #555;
+    border-radius: 5px;
+    color: white;
+    padding: 5px;
+
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%,-100%);
+}
+.critriicons {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid #555;
+    transform: rotate(180deg) translateX(10px);
+
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    z-index: 4;
+  }
+  .criteria-circles{
+    width: 40px;
+    height: 40px;
+    border: 1px solid #999;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+/* End Tooltip */

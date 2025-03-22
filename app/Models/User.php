@@ -179,4 +179,5 @@ class User extends Authenticatable
         ->where('to_rate', '>=', $average)
         ->first();
     }
+   
 }

@@ -23,8 +23,8 @@ class AssesseeSummaryController extends Controller
         $assesseeuser = User::where('id',$assessee_user_id)->first();
         // dd($assesseeuser);
 
-        $ass_form_cat_id = $assesseeuser ? $assesseeuser->getAssFormCat()->id : '';
-        $criterias = Criteria::where("ass_form_cat_id",$ass_form_cat_id)->get();
+        $ass_form_cat_ids = $assesseeuser ? $assesseeuser->getAssFormCats()->pluck('id'): '';
+        $criterias = Criteria::whereIn("ass_form_cat_id",$ass_form_cat_ids)->get();
 
         foreach($criterias as $criteria){
             $criteria_totals[$criteria->id] = $this->getCriteriaTotal($assessee_user_id,$criteria->id,$appraisal_cycle_id);

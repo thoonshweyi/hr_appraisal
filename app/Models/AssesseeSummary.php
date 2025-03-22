@@ -33,5 +33,7 @@ class AssesseeSummary extends Model
         })->pluck('ass_form_cat_id');
         $assformcats = AssFormCat::whereIn("id",$ass_form_cat_ids)->get();
         // dd($assformcats);
+
+        return $assformcats;
     }
 }

@@ -213,13 +213,18 @@
                     <label for="" class="mr-2">Assessee: </label><h6 class="text-dark fw-bold d-inline text-lg">{{ $assesseeuser->employee->employee_name }}</h6>
                     <div>
                         <label for="" class="mr-2">Assment-Form Category: </label>
+                          {{-- {{ dd($assesseesummary->getAssesseeAssFormCats($assesseeuser->id, Route::current()->parameter('appraisal_cycle_id'))) }} --}}
+                          @php
+                          $asseseeformcats = $assesseesummary->getAssesseeAssFormCats($assesseeuser->id, Route::current()->parameter('appraisal_cycle_id'));
+                         @endphp
+
+                         @foreach($asseseeformcats as $asseseeformcat)
+                            <span class="badge user-select-none me-1 assesseeformcattag" style='background:skyblue;color:white;' data-formid = '{{ $asseseeformcat->id }}' >{{ $asseseeformcat->name }}</span>
+                         @endforeach
                     </div>
 
 
-
-                    <div class="table-responsive">
-
-
+                    <div class="table-responsive" id="assessortable-{{ $asseseeformcat->id }}">
                         <table class="table table-bordered assessorsummarytable">
                             <thead>
                               <tr>
@@ -237,20 +242,19 @@
                             <tbody>
 
                                 @foreach($criterias as $idx => $criteria)
-                                    <tr>
+                                    <tr class="criterias formcriteria-{{ $criteria->assformcat->id }}">
                                         <td>{{ ++$idx }}</td>
                                         <td>{{ $criteria->name }}</td>
 
                                         @foreach ($assessorusers as $assessoruser)
                                             <td>{{ $assesseesummary->getAssessorGivenMark($assessoruser->id,$assesseeuser->id,$criteria->id,  Route::current()->parameter('appraisal_cycle_id') ) }}</td>
-                                            {{-- {{ dd($assesseesummary->getAssesseeAssFormCats($assesseeuser->id, Route::current()->parameter('appraisal_cycle_id'))) }} --}}
                                         @endforeach
                                     </tr>
                                 @endforeach
                             </tbody>
-                          </table>
-
+                        </table>
                     </div>
+
                 </div>
 
                 <div class="modal-footer">
@@ -347,6 +351,19 @@
 
             console.log(totals);
         }
+
+
+        {{-- Start Form Tag --}}
+        $('.assesseeformcattag').click(function(){
+            $('.assesseeformcattag').removeClass('active');
+            $(this).addClass('active')
+            let formid = $(this).data('formid');
+            console.log(formid);
+
+            $('.criterias').addClass('d-none');
+            $('.formcriteria-'+formid).removeClass('d-none');
+        });
+        {{-- End Form Tag --}}
 
     });
 </script>

@@ -16,7 +16,6 @@
             </div>
 
 
-
             <div class="col-md-12 mb-2">
                 @if (count($errors) > 0)
                 <div class="alert alert-danger">
@@ -67,124 +66,137 @@
                         <a href="javascript:void(0);" class="btn cus_btn">Print</a>
 
                     </div>
-
                     <div class="col-md-12">
-                        <div class="header-bar mb-0">{{ $appraisalform->assformcat->name }}</div>
+                    <form id="appraisalformf" action="" method="POST">
+                        @csrf
+                        @method('PUT')
 
-                        <form id="appraisalformf" action="" method="POST">
-                            @csrf
-                            @method('PUT')
+                        @php
+                        $assesseeChunks = $assesseeusers->chunk(5);
+                        @endphp
+                        <div id="global-tooltip" class="critooltips d-none"></div>
+                        @foreach($assesseeChunks as $chunkIndex => $chunk)
                             <div class="table-responsive">
-                                <table class="table table-bordered my-0">
-                                    <thead class="appraisal_headers">
-                                        <tr class="text-white">
-                                            <th colspan="2">
-                                                <label for="">Assessor Name:</label>
-                                                <span class="ml-4">{{ $appraisalform->assessoruser->employee->employee_name }}</span>
-                                            </th>
+                                <table class="assessmentformtable">
+                                    <tr class="header-row">
+                                        <td colspan="11">
+                                            <h4>PRO1 Global Company Co.,Ltd</h4>
+                                            <strong>Assessment Form:</strong> {{ $appraisalform->assformcat->name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            <div class="assessor-infos"><strong>Assessor Name:</strong> {{ $appraisalform->assessoruser->employee->employee_name }}</div>
+                                            <div class="assessor-infos"> <strong>Employee Code:</strong> {{ $appraisalform->assessoruser->employee->employee_code }}</div>
+                                            <div class="assessor-infos"><strong>Department:</strong> {{ $appraisalform->assessoruser->employee->department->name }}</div>
+                                            <div class="assessor-infos"><strong>Position:</strong> {{ $appraisalform->assessoruser->employee->position->name }}</div>
+                                        </td>
+                                        <td colspan="10">Assessees:</td>
+                                    </tr>
 
-                                            <th class="text-center" colspan="7">
-                                                <label for="">Employee Code: </label>
-                                                <span class="ml-4">{{ $appraisalform->assessoruser->employee->employee_code }}</span>
-                                            </th>
-                                        </tr>
-
-
-                                        <tr class="text-white">
-                                            <th colspan="2">
-                                                    <label for="">Position: </label>
-                                                    <span class="ml-4">{{ $appraisalform->assessoruser->employee->position->name }}</span>
-                                            </th>
-                                            <th class="text-center" colspan="7" rowspan="2">
-                                                <label for="">Assessee: </label>
-                                            </th>
-                                        </tr>
-
-                                        <tr>
-                                            <th colspan="2">
-                                                <label for="">Department: </label>
-                                                <span class="ml-4">{{ $appraisalform->assessoruser->employee->department->name }}</span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                </table>
-
-                                <table id="mytable" class="table table-bordered custables">
-
-                                    <thead class=" m-0">
-
-
-                                        <tr class="table_headers">
-                                            <th>S/No</th>
-                                            <th>CRITERIA Description</th>
-                                            <th>Excellent</th>
-                                            <th>Good</th>
-                                            <th>Meet Standard</th>
-                                            <th>Below Standard</th>
-                                            <th>Weak</th>
-                                            @foreach($assesseeusers as $assesseeuser)
-                                            <th style="width:auto;">{{ $assesseeuser->employee->employee_name }}</th>
-                                            @endforeach
-                                        </tr>
-
-                                    </thead>
-                                    <tbody class="">
-
-                                        @foreach ($criterias as $idx=>$criteria)
-                                        <tr class="table_rows">
-                                            <td>{{ ++$idx }}</td>
-                                            <td>{{ $criteria->name }}</td>
-                                            <td >{{$criteria->excellent}}</td>
-                                            <td >{{$criteria->good}}</td>
-                                            <td >{{$criteria->meet_standard}}</td>
-                                            <td >{{$criteria->below_standard}}</td>
-                                            <td >{{$criteria->weak}}</td>
-                                            @foreach($assesseeusers as $assesseeuser)
-                                                {{-- {{ dd($criteria->pluck('excellent')) }} --}}
-                                                {{-- {{ dd($criteria->getRatingScaleAttribute()) }} --}}
-                                                <td style="width:auto;">
-                                                    <input type="number" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" class="custom-input" max="{{ $criteria->excellent }}" min="{{ $criteria->weak }}"
-                                                    value="{{ old('appraisalformresults') ? old('appraisalformresults')[$assesseeuser->id][$criteria->id] :  $appraisalform->getResult($assesseeuser->id,$criteria->id) }}" data-valids="{{ implode(',', $criteria->getRatingScaleAttribute()) }}"
-                                                    data-assessee="{{ $assesseeuser->id }}"
-                                                    />
-                                                </td>
-                                            @endforeach
-                                        </tr>
+                                    <!-- Header Row -->
+                                    <tr>
+                                        <th style="width: 50% !important;">Criteria Description</th>
+                                        @foreach(['Excellent', 'Good', 'Meet', 'Below', 'Weak'] as $rating)
+                                            <th class="vertical-header">{{ $rating }}</th>
                                         @endforeach
-                                    </tbody>
+                                        @php $chunkArray = $chunk->values(); @endphp
+                                        @for($i = 0; $i < 5; $i++)
+                                            <th class="vertical-header">
+                                                @if(isset($chunkArray[$i]))
+                                                    {{ $chunkArray[$i]->employee->employee_name }}
+                                                @else
+                                                    &nbsp;
+                                                @endif
+                                            </th>
+                                        @endfor
+                                    </tr>
 
-
-
-                                    <tfoot>
+                                    <!-- Criteria Rows -->
+                                    @foreach ($criterias as $idx=>$criteria)
                                         <tr>
-                                            <td colspan="2">Total Score</td>
-                                            <td><span id="total_excellent">{{ $total_excellent }}</span></td>
-                                            <td><span id="total_good">{{ $total_good }}</span></td>
-                                            <td><span id="total_meet_standard">{{ $total_meet_standard }}</span></td>
-                                            <td><span id="total_below_standard">{{ $total_below_standard }}</span></td>
-                                            <td><span id="total_weak">{{ $total_weak }}</span></td>
+                                            <td class="text-left">{{ $criteria->name }}</td>
+                                            <td style="vertical-align: middle">{{ $criteria->excellent }}</td>
+                                            <td>{{ $criteria->good }}</td>
+                                            <td>{{ $criteria->meet_standard }}</td>
+                                            <td>{{ $criteria->below_standard }}</td>
+                                            <td>{{ $criteria->weak }}</td>
 
-                                            @foreach($assesseeusers as $assesseeuser)
-                                            <td>
-                                                <span id="total_results_{{ $assesseeuser->id }}"> {{ $appraisalform->getTotalResult($assesseeuser->id) ?? '' }} </span>
-                                            </td>
-                                            @endforeach
+                                            @for($i = 0; $i < 5; $i++)
+                                                <td class="position-relative">
+                                                    @if(isset($chunkArray[$i]))
+                                                        <div class="position-relative">
 
+
+                                                            <input type="number" name="appraisalformresults[{{$chunkArray[$i]->id}}][{{ $criteria->id }}]" class="custom-input" max="{{ $criteria->excellent }}" min="{{ $criteria->weak }}"
+                                                            value="{{ old('appraisalformresults') ? old('appraisalformresults')[$chunkArray[$i]->id][$criteria->id] :  $appraisalform->getResult($chunkArray[$i]->id,$criteria->id) }}"  data-valids="{{ implode(',', $criteria->getRatingScaleAttribute()) }}"
+                                                            data-assessee="{{ $chunkArray[$i]->id }}" data-assessee-name="{{ $chunkArray[$i]->employee->employee_name }}" data-criteria-name="{{ $criteria->name }}"
+                                                            />
+                                                            {{-- @if($i == 0 && $idx == 0) --}}
+                                                            <div class="d-none critooltips">
+                                                                <h6> {{ $chunkArray[$i]->employee->employee_name }}</h6>
+                                                                <span class="text-left">{{ $criteria->name }}</span>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <span class="criteria-circles">{{ $criteria->excellent }}</span>
+                                                                    <span class="criteria-circles">{{ $criteria->good }}</span>
+                                                                    <span class="criteria-circles">{{ $criteria->meet_standard }}</span>
+                                                                    <span class="criteria-circles">{{ $criteria->below_standard }}</span>
+                                                                    <span class="criteria-circles">{{ $criteria->weak }}</span>
+                                                                </div>
+                                                                <div class="critriicons"></div>
+                                                            </div>
+
+                                                        </div>
+                                                            {{-- @endif --}}
+                                                    @else
+                                                        &nbsp;
+                                                    @endif
+
+                                                </td>
+
+                                            @endfor
                                         </tr>
-                                    </tfoot>
+                                    @endforeach
+
+                                    <!-- Total Row -->
+                                    <tr class="total-row">
+                                        <td>Total Score</td>
+                                        <td>{{ $total_excellent }}</td>
+                                        <td>{{ $total_good }}</td>
+                                        <td>{{ $total_meet_standard }}</td>
+                                        <td>{{ $total_below_standard }}</td>
+                                        <td>{{ $total_weak }}</td>
+
+                                        @for($i = 0; $i < 5; $i++)
+                                            <td class="position-relative">
+                                                @if(isset($chunkArray[$i]))
+                                                    <span id="total_results_{{ $chunkArray[$i]->id }}"> {{ $appraisalform->getTotalResult($chunkArray[$i]->id) != 0 ? $appraisalform->getTotalResult($chunkArray[$i]->id) : '' }} </span>
+                                                @else
+                                                    &nbsp;
+                                                @endif
+
+
+                                            </td>
+                                        @endfor
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="6">Notes:</td>
+                                        <td colspan="5">Voter's Signature:</td>
+                                    </tr>
                                 </table>
                             </div>
+                        @endforeach
+
+                        <div class="col-md-12 mt-2">
+
+                            <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
+                            <input type="button" name="savedraft" class="btn btn-warning btn-sm rounded-0 savedraftbtns" value="Save Draft" />
 
 
-                            <div class="col-md-12 mt-2">
-
-                                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
-                                <input type="button" name="savedraft" class="btn btn-warning btn-sm rounded-0 savedraftbtns" value="Save Draft" />
-
-
-                                <button type="button" class="btn btn-success btn-sm rounded-0 submitbtns">Submit</button>
-                            </div>
-                        </form>
+                            <button type="button" class="btn btn-success btn-sm rounded-0 submitbtns">Submit</button>
+                        </div>
+                    </form>
                     </div>
                 </div>
            </div>
@@ -260,7 +272,6 @@
 
             });
 
-
         });
 
         function updateTotals() {
@@ -296,6 +307,47 @@
             console.log(totals);
         }
 
+
+
+        {{-- Start Tooltip --}}
+        {{-- $('.custom-input').focus(function(){
+
+
+            $(".critooltips").addClass('d-none');
+            $(this).next(".critooltips").removeClass('d-none');
+        }); --}}
+
+        {{-- Start Global tooltip --}}
+        $('.custom-input').focus(function () {
+            let $input = $(this);
+            let tooltip = $input.next('.critooltips').clone(); // clone the actual tooltip content
+
+            // Set content and remove previous
+            $('#global-tooltip').html(tooltip.html()).removeClass('d-none');
+
+            // Get input offset
+            let offset = $input.offset();
+            console.log(offset.top);
+            let inputHeight = $input.outerHeight();
+
+            // Position tooltip above the input
+            $('#global-tooltip').css({
+                position:absolute;
+                top: offset.top - 210 + 'px', // adjust based on your tooltip height
+                left: offset.left + ($input.outerWidth() / 2) + 'px',
+                transform: 'translateX(-50%)',
+                position: 'absolute',
+                zIndex: 9999
+            });
+        });
+
+        $('.custom-input').blur(function () {
+            $('#global-tooltip').addClass('d-none');
+        });
+
+        {{-- End Global tooltip --}}
+
+        {{-- End Tooltip --}}
 
         {{-- Start Save Draft --}}
         {{-- $('#appraisalform').submit(function(e){
