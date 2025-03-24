@@ -183,9 +183,13 @@ class AppraisalFormsController extends Controller
         \DB::beginTransaction();
         try{
 
+            $user = Auth::user();
+            $user_id = $user->id;
+
             $appraisalform = AppraisalForm::find($id);
             $appraisalform->update([
-                "assessed" => true
+                "assessed" => true,
+                "modify_user_id" => $user_id
             ]);
 
 
@@ -227,9 +231,14 @@ class AppraisalFormsController extends Controller
 
         \DB::beginTransaction();
         try{
+            $user = Auth::user();
+            $user_id = $user->id;
+
 
             $appraisalform = AppraisalForm::find($id);
-
+            $appraisalform->update([
+                "modify_user_id" => $user_id
+            ]);
 
             $appraisalformresults = $request->appraisalformresults;
 
@@ -267,7 +276,7 @@ class AppraisalFormsController extends Controller
         }catch(Exception $err){
             \DB::rollback();
 
-            return redirect()->back()->with("error","There is an error in submitting Appraisal Form.");
+            return redirect()->back()->with("error","There is an error in submitting Appraisal Form.".$err);
         }
     }
 

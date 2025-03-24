@@ -671,7 +671,7 @@ height: auto !important;
 /* Start Tooltip */
 .critooltips{
     width: 350px;
-    height: 200px;
+    min-height: 200px;
     background: #555;
     border-radius: 5px;
     color: white;
@@ -682,6 +682,14 @@ height: auto !important;
     left: 50%;
     z-index: 1;
     transform: translate(-50%,-100%);
+}
+.critooltips h6{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.critooltips h6 button{
+    color: white;
 }
 .critriicons {
     width: 0;
@@ -704,6 +712,15 @@ height: auto !important;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    cursor: pointer;
+  }
+  .criteria-circles:hover{
+    border: 1px solid #007bff;
   }
 
+  .critooltips.invisible {
+    visibility: hidden;
+    opacity: 0;
+}
 /* End Tooltip */

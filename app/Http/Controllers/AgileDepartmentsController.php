@@ -17,6 +17,15 @@ use App\Exceptions\ExcelImportValidationException;
 
 class AgileDepartmentsController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:view-fixed-analysis', ['only' => ['index']]);
+        $this->middleware('permission:create-fixed-analysis', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-fixed-analysis', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete-fixed-analysis', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request){
 
         // $agiledepartments = AgileDepartment::orderBy('id','asc')->paginate(10);

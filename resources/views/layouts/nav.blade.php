@@ -11,6 +11,8 @@
             </li>
 
 
+            @can('view-fixed-analysis')
+
             <li class=" ">
                 <a href="#fixed" class="collapsed" data-toggle="collapse" aria-expanded="false">
                     <i class="ri-pie-chart-line"></i>
@@ -83,6 +85,9 @@
                     </li>
                 </ul>
             </li>
+            @endcan
+
+            @can('view-add-on')
 
             <li class=" ">
                 <a href="#addon" class="collapsed" data-toggle="collapse" aria-expanded="false">
@@ -113,6 +118,7 @@
 
                 </ul>
             </li>
+            @endcan
 
 
             <li class="{{ (strpos(Route::currentRouteName(), 'appraisalforms.index') === 0) ? 'active' : ''}}">

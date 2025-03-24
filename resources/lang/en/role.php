@@ -22,6 +22,8 @@ return [
     'show_role' => 'Show Role',
     'role' => 'Role',
     'appraisalform_permission'  => 'Appraisal Form Permissions',
+    'fixed_analysis_permissions'  => 'Fixed Analysis Permissions',
+    'addon_permissions'  => 'Add On Permissions',
 
 ];
 ?>

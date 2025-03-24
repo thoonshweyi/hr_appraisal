@@ -74,9 +74,8 @@
                         @php
                         $assesseeChunks = $assesseeusers->chunk(5);
                         @endphp
-                        <div id="global-tooltip" class="critooltips d-none"></div>
                         @foreach($assesseeChunks as $chunkIndex => $chunk)
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="">
                                 <table class="assessmentformtable">
                                     <tr class="header-row">
                                         <td colspan="11">
@@ -134,14 +133,18 @@
                                                             />
                                                             {{-- @if($i == 0 && $idx == 0) --}}
                                                             <div class="d-none critooltips">
-                                                                <h6> {{ $chunkArray[$i]->employee->employee_name }}</h6>
+                                                                <h6> <span>{{ $chunkArray[$i]->employee->employee_name }}</span>
+                                                                    <button type="button" class="close tooltipcloses" aria-label="Close">
+                                                                        <span >&times;</span>
+                                                                    </button>
+                                                                </h6>
                                                                 <span class="text-left">{{ $criteria->name }}</span>
                                                                 <div class="d-flex justify-content-between">
-                                                                    <span class="criteria-circles">{{ $criteria->excellent }}</span>
-                                                                    <span class="criteria-circles">{{ $criteria->good }}</span>
-                                                                    <span class="criteria-circles">{{ $criteria->meet_standard }}</span>
-                                                                    <span class="criteria-circles">{{ $criteria->below_standard }}</span>
-                                                                    <span class="criteria-circles">{{ $criteria->weak }}</span>
+                                                                    <span class="criteria-circles" data-value="{{ $criteria->excellent }}">{{ $criteria->excellent }}</span>
+                                                                    <span class="criteria-circles" data-value="{{ $criteria->good }}">{{ $criteria->good }}</span>
+                                                                    <span class="criteria-circles" data-value="{{ $criteria->meet_standard }}">{{ $criteria->meet_standard }}</span>
+                                                                    <span class="criteria-circles" data-value="{{ $criteria->below_standard }}">{{ $criteria->below_standard }}</span>
+                                                                    <span class="criteria-circles" data-value="{{ $criteria->weak }}">{{ $criteria->weak }}</span>
                                                                 </div>
                                                                 <div class="critriicons"></div>
                                                             </div>
@@ -310,15 +313,55 @@
 
 
         {{-- Start Tooltip --}}
-        {{-- $('.custom-input').focus(function(){
+        // This prevents the tooltip from hiding if the click is on the input or inside the tooltip.
+
+        // Focus event to show the tooltip when the input is focused
+        $('.custom-input').focus(function () {
+            $(".critooltips").addClass('d-none'); // Hide all tooltips first
+            $(this).next(".critooltips").removeClass('d-none'); // Show the specific tooltip for the input
+
+            const $tableWrapper = $(this).closest('.table-responsive');
+            const scrollWidth = $tableWrapper[0].scrollWidth;
+
+            $tableWrapper.animate({
+                scrollLeft: scrollWidth
+            }, 100); // Scroll to the right for a quick scroll
+
+            const input = $(this);
+
+            // Remove old handlers to avoid duplicates and update input value on criteria circle click
+            input.next(".critooltips").find('.criteria-circles').off('mousedown').on('mousedown', function (e) {
+                e.preventDefault(); // Prevent input blur
+                const value = $(this).data('value');
+                input.val(value);
+            });
+        });
 
 
-            $(".critooltips").addClass('d-none');
-            $(this).next(".critooltips").removeClass('d-none');
+        $('.custom-input').blur(function () {
+            {{-- setTimeout(() => {
+                $('.critooltips').addClass('d-none');
+            }, 1000); --}}
+        });
+
+        $('.tooltipcloses').click(function(){
+            $(this).closest('.critooltips').addClass('d-none');
+        });
+
+{{-- 
+        document.addEventListener('click', function (e) {
+
+            if(e.target.className != 'custom-input'){
+                console.log(e.target);
+                $(".critooltips").addClass('d-none'); // Hide all tooltips first
+
+            }
         }); --}}
 
+
+
         {{-- Start Global tooltip --}}
-        $('.custom-input').focus(function () {
+        {{-- $('.custom-input').focus(function () {
             let $input = $(this);
             let tooltip = $input.next('.critooltips').clone(); // clone the actual tooltip content
 
@@ -332,7 +375,7 @@
 
             // Position tooltip above the input
             $('#global-tooltip').css({
-                position:absolute;
+                position:absolute,
                 top: offset.top - 210 + 'px', // adjust based on your tooltip height
                 left: offset.left + ($input.outerWidth() / 2) + 'px',
                 transform: 'translateX(-50%)',
@@ -344,6 +387,11 @@
         $('.custom-input').blur(function () {
             $('#global-tooltip').addClass('d-none');
         });
+
+
+        tippy('.custom-input', {
+            content: 'My tooltip!',
+        }); --}}
 
         {{-- End Global tooltip --}}
 

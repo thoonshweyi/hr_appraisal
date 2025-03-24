@@ -188,8 +188,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post("/assformcats_excel_import",[AssFormCatsController::class,"excel_import"])->name("assformcats.excel_import");
 
 
-
-
     Route::get("/criterias",[CriteriasController::class,"index"])->name("criterias.index");
     Route::post("/criterias",[CriteriasController::class,"store"])->name("criterias.store");
     Route::get("/criterias/{id}/edit",[CriteriasController::class,"edit"])->name("criterias.edit");

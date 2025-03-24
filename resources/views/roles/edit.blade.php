@@ -152,6 +152,45 @@
                                     </div>
                                 </div>
 
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <div class="form-group">
+                                    <strong>{{__('role.fixed_analysis_permissions')}}:</strong>
+                                        <br />
+                                        <table class="table">
+                                            @foreach($fixed_analysis_permissions->chunk(4) as $permissions)
+                                                <tr>
+                                                    @foreach( $permissions as $permission )
+                                                        <td>
+                                                            <input type="checkbox" name="permission[]" class="checkbox-input" value="{{$permission->id}}" @if($role->permissions->contains($permission)) checked @endif>
+                                                            <strong>{{$permission->name}}</strong>
+                                                        </td>
+                                                    @endforeach
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <div class="form-group">
+                                    <strong>{{__('role.addon_permissions')}}:</strong>
+                                        <br />
+                                        <table class="table">
+                                            @foreach($addon_permissions->chunk(4) as $permissions)
+                                                <tr>
+                                                    @foreach( $permissions as $permission )
+                                                        <td>
+                                                            <input type="checkbox" name="permission[]" class="checkbox-input" value="{{$permission->id}}" @if($role->permissions->contains($permission)) checked @endif>
+                                                            <strong>{{$permission->name}}</strong>
+                                                        </td>
+                                                    @endforeach
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 text-left">
                                 <button type="submit" class="btn btn-primary mr-2">{{__('button.update')}}</button>

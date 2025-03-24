@@ -134,7 +134,8 @@
     <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.rowReorder.min.js') }}"></script>
 
-
+    {{-- <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script> --}}
     <script>
       $(document).ready(function() {
         function sendRequest(){

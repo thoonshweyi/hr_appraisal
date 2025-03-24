@@ -23,5 +23,9 @@ return [
     'role' => 'ရာထူး',
     'faqs_permission' => 'အမေးအဖြေနှင့်ဆိုင်သော လုပ်ပိုင်ခွင့်များ',
     'appraisalform_permission'  => 'Appraisal Form Permissions',
+    'fixed_analysis_permissions'  => 'Fixed Analysis Permissions',
+    'addon_permissions'  => 'Add On Permissions',
+
+
 ];
 ?>
