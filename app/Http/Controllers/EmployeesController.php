@@ -32,11 +32,21 @@ use App\Exceptions\ExcelImportValidationException;
 
 class EmployeesController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:view-add-on', ['only' => ['index']]);
+        $this->middleware('permission:create-add-on', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete-add-on', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request){
 
 
         // $employees = Employee::orderBy('id','asc')->paginate(10);
-        $filter_name = $request->filter_employee_name;
+        $filter_employee_name = $request->filter_employee_name;
         $filter_employee_code = $request->filter_employee_code;
         $filter_branch_id = $request->filter_branch_id;
         $filter_position_level_id = $request->filter_position_level_id;
@@ -66,7 +76,7 @@ class EmployeesController extends Controller
         }
 
         if (!empty($filter_employee_code)) {
-            $results = $results->where('employee_code', $filter_employee_code);
+            $results = $results->where('employee_code', 'like' , '%'.$filter_employee_code.'%');
         }
 
         if (!empty($filter_branch_id)) {

@@ -250,4 +250,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/{appraisal_cycle_id}/assesseeusers",[AppraisalCyclesController::class,"assesseeusers"])->name("assesseeusers.index");
     Route::get("/{appraisal_cycle_id}/assessorusers",[AppraisalCyclesController::class,"assessorusers"])->name("assessorusers.index");
 
+    
 });

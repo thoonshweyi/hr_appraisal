@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use Exception;
 use App\Models\User;
+use App\Models\Branch;
 use App\Models\Criteria;
 use App\Models\AssFormCat;
 use App\Models\FormResult;
@@ -13,27 +15,58 @@ use App\Models\AppraisalForm;
 use App\Models\AppraisalCycle;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AppraisalFormAssesseeUser;
-use PDF;
 
 class AppraisalFormsController extends Controller
 {
+    function __construct()
+    {
+        // $this->middleware('auth');
+        // $this->middleware('permission:view-add-on', ['only' => ['index']]);
+        $this->middleware('permission:create-add-on', ['only' => ['create', 'store']]);
+        // $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete-add-on', ['only' => ['destroy']]);
+    }
 
     public function index(Request $request){
 
+        $results = AppraisalForm::query();
 
         $user = Auth::user();
         $user_id = $user->id;
 
+        $appraisalcycles = AppraisalCycle::where('status_id',1)->orderBy('id')->get();
+        $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
+
+
         $filter_assessor_user_id = $request->filter_assessor_user_id;
+        $filter_employee_name = $request->filter_employee_name;
         $filter_appraisal_cycle_id = $request->filter_appraisal_cycle_id;
+        $filter_branch_id = $request->filter_branch_id;
 
 
-        $results = AppraisalForm::query();
         if (!empty($filter_assessor_user_id)) {
             $results = $results->where('assessor_user_id', $filter_assessor_user_id);
         }
+
+        if (!empty($filter_employee_name)) {
+            $results = $results->whereHas('assessoruser',function($query) use($filter_employee_name){
+                $query->whereHas('employee',function($query) use($filter_employee_name){
+                    $query->where('employee_name','like', '%'.$filter_employee_name.'%');
+                });
+            });
+        }
+
+
         if (!empty($filter_appraisal_cycle_id)) {
             $results = $results->where('appraisal_cycle_id', $filter_appraisal_cycle_id);
+        }
+
+        if (!empty($filter_branch_id)) {
+            $results = $results->whereHas('assessoruser',function($query) use($filter_branch_id){
+                $query->whereHas('employee',function($query) use($filter_branch_id){
+                    $query->where('branch_id', $filter_branch_id);
+                });
+            });
         }
 
         if($user->can("view-all-appraisal-form")){
@@ -46,7 +79,7 @@ class AppraisalFormsController extends Controller
 
 
 
-        return view("appraisalforms.index",compact('appraisalforms'));
+        return view("appraisalforms.index",compact('appraisalforms','branches','appraisalcycles'));
     }
 
 
@@ -123,6 +156,7 @@ class AppraisalFormsController extends Controller
 
         $appraisalform = AppraisalForm::find($id);
         // dd($appraisalform);
+            $this->authorize('view', $appraisalform);
 
         $assessee_ids = $appraisalform->assesseeusers->pluck('id');
         $assesseeusers = User::whereIn("id",$assessee_ids)
@@ -149,6 +183,7 @@ class AppraisalFormsController extends Controller
 
         $appraisalform = AppraisalForm::find($id);
         // dd($appraisalform);
+            $this->authorize('edit', $appraisalform);
 
         $assessee_ids = $appraisalform->assesseeusers->pluck('id');
         $assesseeusers = User::whereIn("id",$assessee_ids)
@@ -187,6 +222,7 @@ class AppraisalFormsController extends Controller
             $user_id = $user->id;
 
             $appraisalform = AppraisalForm::find($id);
+                $this->authorize('edit', $appraisalform);
             $appraisalform->update([
                 "assessed" => true,
                 "modify_user_id" => $user_id
@@ -236,6 +272,7 @@ class AppraisalFormsController extends Controller
 
 
             $appraisalform = AppraisalForm::find($id);
+                $this->authorize('edit', $appraisalform);
             $appraisalform->update([
                 "modify_user_id" => $user_id
             ]);

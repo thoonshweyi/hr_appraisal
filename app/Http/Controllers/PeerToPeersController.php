@@ -37,6 +37,14 @@ use App\Exceptions\ExcelImportValidationException;
 
 class PeerToPeersController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:view-add-on', ['only' => ['index']]);
+        $this->middleware('permission:create-add-on', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete-add-on', ['only' => ['destroy']]);
+    }
     public function create(Request $request){
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
         $divisions = Division::where('status_id',1)->orderBy('id')->get();

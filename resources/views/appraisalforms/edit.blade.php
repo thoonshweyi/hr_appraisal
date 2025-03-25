@@ -61,11 +61,14 @@
 
            <div class="col-md-12 mb-2">
                 <div class="row">
+
+                    @can('print-appraisal-form')
                     <div class="col-auto mb-2">
                         {{-- <a href="{{ route('appraisalforms.printpdf',$appraisalform->id) }}" class="btn  cus_btn">Print</a> --}}
                         <a href="javascript:void(0);" class="btn cus_btn">Print</a>
 
                     </div>
+                    @endcan
                     <div class="col-md-12">
                     <form id="appraisalformf" action="" method="POST">
                         @csrf
@@ -348,7 +351,7 @@
             $(this).closest('.critooltips').addClass('d-none');
         });
 
-{{-- 
+{{--
         document.addEventListener('click', function (e) {
 
             if(e.target.className != 'custom-input'){

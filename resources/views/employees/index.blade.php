@@ -43,11 +43,11 @@
             <div class="col-lg-12 my-2 ">
                 <form class="d-inline" action="{{ route('employees.index') }}" method="GET">
                     @csrf
-                    <div class="row align-items-end justify-content-end ">
+                    <div class="row align-items-end justify-content-start ">
 
                         <div class="col-md-2">
                             <label for="filter_employee_name">Enployee Name <span class="text-danger">*</span></label>
-                            <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ request()->filter_name }}"/>
+                            <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ request()->filter_employee_name }}"/>
                         </div>
 
                         <div class="col-md-2">

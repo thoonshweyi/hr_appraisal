@@ -16,29 +16,60 @@
             </div>
 
 
-            {{-- <div class="col-lg-12">
-                <form class="d-inline" action="{{ route('assformcats.excel_import') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row align-items-end">
+            <div class="col-lg-12 ">
+                <div class="tab-filter">
+                    <form id="searchnfilterform" class="" action="{{ route('appraisalforms.index') }}" method="GET">
+                        @csrf
+                        <div class="row align-items-end justify-content-start">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{-- <label for="filter_employee_name">Enployee Name <span class="text-danger">*</span></label> --}}
+                                    <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Name" value="{{ request()->filter_employee_name }}"/>
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
 
-                        <div class="col-md-4">
-                            @error("file")
-                            <b class="text-danger">{{ $message }}</b>
-                            @enderror
-                            <label for="file" class="gallery @error('file') is-invalid @enderror mb-0"><span>Choose Excel File</span></label>
-                            <input type="file" name="file" id="file" class="form-control form-control-sm rounded-0" value="" hidden/>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    {{-- <label for="filter_branch_id">Branch</label> --}}
+                                    <select name="filter_branch_id" id="filter_branch_id" class="custom-select custom-select-sm rounded-0 filter_input">
+                                        <option value="" selected disabled>Choose Branch</option>
+                                        @foreach($branches as $branch)
+                                            <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
+                                        @endforeach
+                                    </select>
+                                    <i class="fas fa-building"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    {{-- <label for="filter_branch_id">Branch</label> --}}
+                                    <select name="filter_appraisal_cycle_id" id="filter_appraisal_cycle_id" class="custom-select custom-select-sm rounded-0 filter_input">
+                                        <option value="" selected disabled>Choose Appraisal Cycle</option>
+                                        @foreach($appraisalcycles as $appraisalcycle)
+                                            <option value="{{$appraisalcycle['id']}}" {{ $appraisalcycle['id'] == request()->filter_appraisal_cycle_id ? 'selected' : '' }}>{{$appraisalcycle['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                    <i class="fas fa-building"></i>
+                                </div>
+                            </div>
+
+
+                            <div class="col-auto">
+                                <button type="submit" class="btn my-2 ml-auto cus_btn searchbtns">Search</button>
+                           </div>
+
                         </div>
 
+                    </form>
+                </div>
 
-                        <button type="submit" class="btn btn-light" class=""><i class="ri-file-download-line"></i> Import</a>
-                    </div>
-
-                </form>
-            </div> --}}
+            </div>
 
 
-
-            <div class="col-md-12 mb-2">
+            <div class="col-md-12">
                 @if (count($errors) > 0)
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -102,6 +133,7 @@
                     <tr class="ligth ligth-data">
                         <th>No</th>
                         <th>Assessment-form Category</th>
+                        <th>Assessor</th>
                         <th>Appraisal Cycle</th>
                         <th>Assessed</th>
                         <th>Action</th>
@@ -112,6 +144,7 @@
                     <tr>
                         <td>{{$idx + $appraisalforms->firstItem()}}</td>
                         <td>{{$appraisalform->assformcat["name"]}}</td>
+                        <td>{{ $appraisalform->assessoruser->employee->employee_name }}</td>
                         <td>{{$appraisalform->appraisalcycle["name"]}}</td>
                         <td> <span class="badge {{ $appraisalform->assessed ? 'bg-success' : 'bg-danger' }}"> {{ $appraisalform->assessed ? "Assessed" : 'Not Yet' }} </span></td>
                         <td class="text-center">

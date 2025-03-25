@@ -14,6 +14,15 @@ use App\Exceptions\ExcelImportValidationException;
 
 class CriteriasController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:view-add-on', ['only' => ['index']]);
+        $this->middleware('permission:create-add-on', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete-add-on', ['only' => ['destroy']]);
+    }
     public function index(){
 
         $criterias = Criteria::orderBy('id','asc')->paginate(10);

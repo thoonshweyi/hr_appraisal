@@ -21,25 +21,46 @@
             </div>
 
 
-            {{-- <div class="col-lg-12">
-                <form class="d-inline" action="{{ route('assformcats.excel_import') }}" method="POST" enctype="multipart/form-data">
+            <div class="col-lg-12 my-2 ">
+                <form class="d-inline" action="{{ route('assformcats.index') }}" method="GET">
                     @csrf
-                    <div class="row align-items-end">
+                    <div class="row align-items-end justify-content-start ">
 
-                        <div class="col-md-4">
-                            @error("file")
-                            <b class="text-danger">{{ $message }}</b>
-                            @enderror
-                            <label for="file" class="gallery @error('file') is-invalid @enderror mb-0"><span>Choose Excel File</span></label>
-                            <input type="file" name="file" id="file" class="form-control form-control-sm rounded-0" value="" hidden/>
+                        <div class="col-md-2">
+                            <label for="filter_name">Assment-form Category Name <span class="text-danger">*</span></label>
+                            <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Assment-form Category Name" value="{{ request()->filter_name }}"/>
                         </div>
 
 
-                        <button type="submit" class="btn btn-light" class=""><i class="ri-file-download-line"></i> Import</a>
+                        <div class="col-md-2">
+                            <label for="filter_position_level_id">Position Level</label>
+                            <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Position Level</option>
+                                @foreach($positionlevels as $positionlevel)
+                                    <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="filter_attachformtype_id">Attach Form Type</label>
+                            <select name="filter_attachformtype_id" id="filter_attachformtype_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Attach Form Type</option>
+                                @foreach($attachformtypes as $attachformtype)
+                                    <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == request()->filter_attachformtype_id ? 'selected' : '' }}>{{$attachformtype['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</a>
+                        @if(count(request()->query()) > 0)
+                            <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
+                        @endif
+
                     </div>
 
                 </form>
-            </div> --}}
+            </div>
 
 
 

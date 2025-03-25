@@ -19,12 +19,45 @@ use App\Exceptions\ExcelImportValidationException;
 
 class AssFormCatsController extends Controller
 {
-    public function index(){
 
-        $assformcats = AssFormCat::orderBy('id','asc')->paginate(10);
+    function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:view-add-on', ['only' => ['index']]);
+        $this->middleware('permission:create-add-on', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete-add-on', ['only' => ['destroy']]);
+    }
+    public function index(Request $request){
+
+        $results = AssFormCat::query();
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
+        $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
+        $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
+
+        $filter_name = $request->filter_name;
+        $filter_position_level_id = $request->filter_position_level_id;
+        $filter_attachformtype_id = $request->filter_attachformtype_id;
+
+
+        if (!empty($filter_name)) {
+            $results = $results->where('name', 'like', '%'.$filter_name.'%');
+        }
+
+        if (!empty($filter_position_level_id)) {
+            $results = $results->whereHas('positionlevels',function($query) use($filter_position_level_id){
+                $query->where('position_levels.id',$filter_position_level_id);
+            });
+        }
+
+        if (!empty($filter_attachformtype_id)) {
+            $results = $results->where('attach_form_type_id', $filter_attachformtype_id);
+        }
+
+        $assformcats = $results->orderBy('id','asc')->paginate(10);
+
         // dd($statuses);
-        return view("assformcats.index",compact("assformcats","statuses"));
+        return view("assformcats.index",compact("assformcats","statuses","positionlevels","attachformtypes"));
     }
 
 
