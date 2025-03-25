@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use PDF;
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Branch;
 use App\Models\Criteria;
@@ -72,7 +73,13 @@ class AppraisalFormsController extends Controller
         if($user->can("view-all-appraisal-form")){
 
         }else{
-            $results = $results->where('assessor_user_id',$user_id);
+            $results = $results
+            ->where('assessor_user_id',$user_id)
+            ->whereHas('appraisalcycle',function($query){
+                $now = Carbon::now();
+                $query->where('action_start_date',"<=",$now)
+                ->where('action_end_date','>=',$now);
+            });
         }
 
         $appraisalforms = $results->orderBy('id','asc')->paginate(10);

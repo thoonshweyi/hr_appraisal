@@ -5,7 +5,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            font-size: 10px;
+            font-size: 12px;
             margin: 0px 8px;
         }
 
@@ -80,7 +80,7 @@
             padding: 5px 2px;
             font-size: 10px;
             text-align: center;
-            width: 5%;
+            max-width: 4% !important;
             vertical-align: middle;
         }
         .header-row td{
@@ -95,6 +95,13 @@
             /* height: 3508px; */
             margin-top: 8px;
         }
+
+        .company-title{
+            font-size: 14px;
+        }
+        .form-title{
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -108,23 +115,23 @@
         <table>
             <tr class="header-row">
                 <td colspan="11">
-                    <h4>PRO1 Global Company Co.,Ltd</h4>
-                    <strong>Assessment Form:</strong> {{ $appraisalform->assformcat->name }}
+                    <h4 class="company-title">PRO1 Global Company Co.,Ltd</h4>
+                    <strong class="form-title">Assessment Form:</strong> {{ $appraisalform->assformcat->name }}
                 </td>
             </tr>
             <tr>
                 <td class="text-left">
                     <div class="assessor-infos"><strong>Assessor Name:</strong> {{ $appraisalform->assessoruser->employee->employee_name }}</div>
-                    <div class="assessor-infos"> <strong>Employee Code:</strong> {{ $appraisalform->assessoruser->employee->employee_code }}</div>
-                    <div class="assessor-infos"><strong>Department:</strong> {{ $appraisalform->assessoruser->employee->department->name }}</div>
+                    {{-- <div class="assessor-infos"> <strong>Employee Code:</strong> {{ $appraisalform->assessoruser->employee->employee_code }}</div> --}}
                     <div class="assessor-infos"><strong>Position:</strong> {{ $appraisalform->assessoruser->employee->position->name }}</div>
+                    <div class="assessor-infos"><strong>Department:</strong> {{ $appraisalform->assessoruser->employee->department->name }}</div>
                 </td>
                 <td colspan="10">Assessees:</td>
             </tr>
 
             <!-- Header Row -->
             <tr>
-                <th style="width: 50%">Criteria Description</th>
+                <th style="width: 60%">Criteria Description</th>
                 @foreach(['Excellent', 'Good', 'Meet', 'Below', 'Weak'] as $rating)
                     <th class="vertical-header">{{ $rating }}</th>
                 @endforeach

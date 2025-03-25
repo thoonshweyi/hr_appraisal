@@ -62,7 +62,7 @@
                                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                                 </svg>
                                 @if (number_convert(count(Auth::user()->unreadNotifications) > 0))
-                                <span class="bg-secondary badge-card p-2" id="notification_count">{{number_convert(count(Auth::user()->unreadNotifications))}}</span>
+                                {{-- <span class="bg-secondary badge-card p-2" id="notification_count">{{number_convert(count(Auth::user()->unreadNotifications))}}</span> --}}
                                 @endif
                             </a>
                             <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -71,45 +71,11 @@
                                         <div class="cust-title p-3">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <h5 class="mb-0">Notifications</h5>
-                                                <a class="badge badge-secondary badge-card" href="#">{{number_convert(count(Auth::user()->unreadNotifications))}}</a>
+                                                <a class="badge badge-secondary badge-card" href="#">{{-- number_convert(count(Auth::user()->unreadNotifications)) --}}</a>
                                             </div>
                                         </div>
                                         <div class="px-3 pt-0 pb-0 sub-card">
-                                            @forelse (Auth::user()->unreadNotifications as $notification)
-                                            @if($notification->data['type'] == 1 || $notification->data['type'] == 2)
-                                            <a href="{{ route('home.see_document',[$notification->data['document_id'],$notification->data['type'],$notification->id])}}" class="iq-sub-card">
-                                                <div class="media align-items-center cust-card py-3 border-bottom">
-                                                    <div class="media-body ml-4">
-                                                        <div class="d-flex align-items-center justify-content-between">
-                                                            <h6 class="mb-0">{{$notification->data['message']}}</h6>
-                                                            <small class="text-dark"><b>{{$notification->created_at->diffForHumans()}}</b></small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            @else
-                                            <a href="{{route('home.make_as_read',[$notification->id,$notification->data['document_id']])}}" class="iq-sub-card">
-                                                <div class="media align-items-center cust-card py-3 border-bottom">
-                                                    <div class="media-body ml-4">
-                                                        <div class="d-flex align-items-center justify-content-between">
-                                                            <h6 class="mb-0">{{$notification->data['message']}}</h6>
-                                                            <small class="text-dark"><b>{{$notification->created_at->diffForHumans()}}</b></small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            @endif
-                                            @empty
-                                            <a href="#" class="iq-sub-card">
-                                                <div class="media align-items-center cust-card py-3 border-bottom">
-                                                    <div class="media-body ml-3">
-                                                        <div class="d-flex align-items-center justify-content-between">
-                                                            <h6 class="mb-0">There is no Notification</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            @endforelse
+
                                         </div>
                                     </div>
                                 </div>
