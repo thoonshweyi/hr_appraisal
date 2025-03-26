@@ -12,7 +12,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 5;
         }
 
         th, td {
@@ -37,6 +37,12 @@
             margin-bottom: 15px;
             text-align: center;
         }
+        .assessor-infos strong{
+            width: 50%;
+        }
+        .delimiter{
+            width: 20px;
+        }
 
         .total-row {
             font-weight: bold;
@@ -44,7 +50,7 @@
         }
 
         .notice-section {
-            margin-top: 25px;
+            margin-top: 2px;
         }
 
         .flex-row {
@@ -71,7 +77,7 @@
             font-weight: bold;
             text-decoration: underline;
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .vertical-header {
@@ -80,16 +86,23 @@
             padding: 5px 2px;
             font-size: 10px;
             text-align: center;
-            max-width: 4% !important;
+            width: 4% !important;
+            min-width: 4% !important;;
+            max-width: 4% !important;;
+
             vertical-align: middle;
         }
         .header-row td{
-            padding-left: 20px;
+            padding: 5px 40px;
             text-align: left;
         }
-        .assessor-infos{
+        .assessor-infos {
+            display: flex;
+            align-items: center;
             padding: 6px;
+            font-weight: bold;
         }
+
 
         .printableArea{
             /* height: 3508px; */
@@ -98,9 +111,28 @@
 
         .company-title{
             font-size: 14px;
+            margin: 0px;
+            margin-bottom: 5px;
         }
         .form-title{
             font-size: 13px;
+        }
+
+        .criteria-header{
+            width: 60%;
+            min-width: 60% !important;
+            max-width: 60% !important;;
+            vertical-align:middle;
+            font-size:22px;
+            letter-spacing: 8px;
+        }
+        .print-date{
+            float:right;
+        }
+        .employees,.ratings{
+            display: inline-block;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -115,34 +147,52 @@
         <table>
             <tr class="header-row">
                 <td colspan="11">
+                    <span style="" class="print-date">Print Date: {{ Carbon\Carbon::now()->format('d-M-Y') }}</span>
                     <h4 class="company-title">PRO1 Global Company Co.,Ltd</h4>
-                    <strong class="form-title">Assessment Form:</strong> {{ $appraisalform->assformcat->name }}
+                    <strong class="form-title">Assessment Form: {{ $appraisalform->assformcat->name }}</strong>
                 </td>
             </tr>
             <tr>
-                <td class="text-left">
-                    <div class="assessor-infos"><strong>Assessor Name:</strong> {{ $appraisalform->assessoruser->employee->employee_name }}</div>
-                    {{-- <div class="assessor-infos"> <strong>Employee Code:</strong> {{ $appraisalform->assessoruser->employee->employee_code }}</div> --}}
-                    <div class="assessor-infos"><strong>Position:</strong> {{ $appraisalform->assessoruser->employee->position->name }}</div>
-                    <div class="assessor-infos"><strong>Department:</strong> {{ $appraisalform->assessoruser->employee->department->name }}</div>
+                <td class="text-left" rowspan="2">
+                    <div class="assessor-infos">
+                        <strong>Assessor (အကဲဖြတ်အမှတ်ပေးမည့်သူ)</strong>
+                        <span class="delimiter">-</span>
+                        <span class="value">{{ $appraisalform->assessoruser->employee->employee_name }}</span>
+                    </div>
+                    <div class="assessor-infos">
+                        <strong>Position (ရာထူး)</strong>
+                        <span class="delimiter">-</span>
+                        <span class="value">{{ $appraisalform->assessoruser->employee->position->name }}</span>
+                    </div>
+                    <div class="assessor-infos">
+                        <strong>Department (ဌာန)</strong>
+                        <span class="delimiter">-</span>
+                        <span class="value">{{ $appraisalform->assessoruser->employee->department->name }}</span>
+                    </div>
                 </td>
-                <td colspan="10">Assessees:</td>
+                <th colspan="10" class="text-left">Assessees Location : ____</th>
+            </tr>
+
+            <tr>
+                <th colspan="10" class="text-left">Assessees (အမှတ်ပေးခံရမည့်သူ) </th>
             </tr>
 
             <!-- Header Row -->
             <tr>
-                <th style="width: 60%">Criteria Description</th>
+                <th class="criteria-header" style="">CRITERIA</th>
                 @foreach(['Excellent', 'Good', 'Meet', 'Below', 'Weak'] as $rating)
-                    <th class="vertical-header">{{ $rating }}</th>
+                    <th class="vertical-header"> <span class="ratings">{{ $rating }} </span></th>
                 @endforeach
                 @php $chunkArray = $chunk->values(); @endphp
                 @for($i = 0; $i < 5; $i++)
                     <th class="vertical-header">
+                        <span class="employees">
                         @if(isset($chunkArray[$i]))
                             {{ $chunkArray[$i]->employee->employee_name }}
                         @else
                             &nbsp;
                         @endif
+                        </span>
                     </th>
                 @endfor
             </tr>

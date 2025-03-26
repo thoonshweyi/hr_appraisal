@@ -196,7 +196,9 @@
 
                                             <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
 
+                                            @if($appraisalcycle->isBeforeActionStart())
                                             <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
+                                            @endif
                                         </div>
                                     </div>
                                 </form>
@@ -232,7 +234,9 @@
                                     <form id="peer_to_peer_form" action="{{ route('peertopeers.create') }}" method="" class="my-2">
                                         <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
                                         <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>
+                                        @if($appraisalcycle->isBeforeActionStart())
                                         <button type="submit" class="btn new_btn">New</button>
+                                        @endif
                                     </form>
                                 </div>
 
@@ -859,11 +863,13 @@
                         <td>${peertopeer.assesseeuser.employee.position.name}</td>
                         <td style="width:150px;">${peertopeer.assformcat.name}</td>
                         <td class="text-center">
+                            @if($appraisalcycle->isBeforeActionStart())
                             <a href="#" class="text-danger ms-2 delete-btns" data-idx="${idx}"><i class="fas fa-trash-alt"></i></a>
                             <form id="formdelete-${idx}" class="" action="/peertopeers/${peertopeer.id}" method="POST">
                                 @csrf
                                 @method("DELETE")
                             </form>
+                            @endif
                         </td>
 
                     </tr>`;

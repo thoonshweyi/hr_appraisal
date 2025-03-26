@@ -192,6 +192,11 @@ class AppraisalCyclesController extends Controller
         $user_id = $user["id"];
 
         $appraisalcycle = AppraisalCycle::findOrFail($id);
+
+        if(!$appraisalcycle->isBeforeActionStart()){
+            return redirect(route("appraisalcycles.index"))->with('error',"AppraisalCycle can only be edited before action start.");
+        }
+
         $appraisalcycle->name = $request["name"];
         $appraisalcycle->description = $request["description"];
         $appraisalcycle->start_date = $request["start_date"];
@@ -202,8 +207,6 @@ class AppraisalCyclesController extends Controller
         $appraisalcycle->action_end_time = $request["action_end_time"];
         $appraisalcycle->status_id = $request["status_id"];
         $appraisalcycle->user_id = $user_id;
-
-
         $appraisalcycle->save();
         return redirect(route("appraisalcycles.index"))->with('success',"AppraisalCycle updated successfully");
     }

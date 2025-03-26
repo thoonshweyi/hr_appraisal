@@ -46,6 +46,8 @@ class PeerToPeersController extends Controller
         $this->middleware('permission:delete-add-on', ['only' => ['destroy']]);
     }
     public function create(Request $request){
+
+
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
         $divisions = Division::where('status_id',1)->orderBy('id')->get();
         $departments = AgileDepartment::where('status_id',1)->orderBy('id')->get();
@@ -98,6 +100,11 @@ class PeerToPeersController extends Controller
             $ass_form_cat_ids = $request->ass_form_cat_ids;
             $appraisal_cycle_id = $request->appraisal_cycle_id;
 
+            // Checking Attach Avaibility
+            $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
+            if(!$appraisalcycle->isBeforeActionStart()){
+                return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('error',"Peer to Peer can only be attached before action start.");
+            }
 
             foreach($asssessee_user_ids as $idx=>$asssessee_user_id){
                 $peertopeer = PeerToPeer::create([

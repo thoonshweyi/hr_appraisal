@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AppraisalCycle extends Model
 {
@@ -26,5 +27,20 @@ class AppraisalCycle extends Model
     }
     public function status(){
         return $this->belongsTo(Status::class);
+    }
+
+
+    public function isActioned()
+    {
+        $now = Carbon::today(); // Get today's date without time
+
+        return $now->isBetween($this->action_start_date, $this->action_end_date);
+    }
+
+    public function isBeforeActionStart()
+    {
+        $now = Carbon::today(); // Get today's date without time
+
+        return $now->lessThan($this->action_start_date);
     }
 }

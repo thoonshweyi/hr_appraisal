@@ -191,6 +191,7 @@ class AppraisalFormsController extends Controller
         $appraisalform = AppraisalForm::find($id);
         // dd($appraisalform);
             $this->authorize('edit', $appraisalform);
+            
 
         $assessee_ids = $appraisalform->assesseeusers->pluck('id');
         $assesseeusers = User::whereIn("id",$assessee_ids)

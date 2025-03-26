@@ -226,7 +226,7 @@
 
 <!-- End MODAL AREA -->
 
-<iframe id="reprint_frame" name="reprint_frame" src="{{ url('appraisalformsshowprintframe/'.$appraisalform->id) }}" style="position: absolute;width:0;height:0;border:0;"  class="hidden"></iframe>
+<iframe id="reprint_frame" name="reprint_frame" src="{{ url('appraisalformsshowprintframe/'.$appraisalform->id) }}" style="position: absolute;width:auto;height:auto;border:0;display: none;"  class=""></iframe>
 
 @endsection
 @section('js')
@@ -436,7 +436,7 @@
         {{-- Start Print Area --}}
         document.querySelector('.cus_btn').addEventListener('click', function () {
             var pdfFrame1 = window.frames["reprint_frame"];
-                            pdfFrame1.focus();
+                            {{-- pdfFrame1.focus(); --}}
                             pdfFrame1.print();
         });
         {{-- End Print Arera --}}
