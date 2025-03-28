@@ -49,6 +49,7 @@
             background-color: #f9f9f9;
         }
 
+        /*  */
         .notice-section {
             margin-top: 2px;
         }
@@ -79,7 +80,7 @@
             display: block;
             margin-bottom: 5px;
         }
-
+        /*  */
         .vertical-header {
             writing-mode: vertical-rl;
             transform: rotate(180deg);

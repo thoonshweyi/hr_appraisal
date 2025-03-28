@@ -126,7 +126,7 @@ class AssFormCatsController extends Controller
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
 
         $ratingscales = RatingScale::orderBy('id', 'asc')->get();
-        $criterias = Criteria::where('ass_form_cat_id',$id)->get();
+        $criterias = Criteria::where('ass_form_cat_id',$id)->orderBy('id')->get();
 
         $total_excellent =  Criteria::where('ass_form_cat_id',$id)->sum('excellent');
         $total_good =  Criteria::where('ass_form_cat_id',$id)->sum('good');

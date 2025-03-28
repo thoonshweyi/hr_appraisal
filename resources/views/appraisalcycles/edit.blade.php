@@ -259,7 +259,7 @@
                                         </div> --}}
                                         <div class="col-md-12 col-sm-12 mb-2 ">
                                             <div class="table-responsive rounded mb-3 position-relative">
-                                                <table id="peertopeer" class="table mb-0 " style="min-height: 400px !important">
+                                                <table id="peertopeer" class="table mb-0 " style="min-height: 100px !important">
                                                     <thead class="bg-white text-uppercase">
                                                         <tr class="ligth ligth-data">
                                                             <th>No</th>

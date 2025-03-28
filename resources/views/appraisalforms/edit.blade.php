@@ -78,38 +78,57 @@
                         $assesseeChunks = $assesseeusers->chunk(5);
                         @endphp
                         @foreach($assesseeChunks as $chunkIndex => $chunk)
+                        <div class="printableArea" style="{{ $chunkIndex > 0 ? 'page-break-before: always;' : '' }}">
+
                             <div class="table-responsive" style="">
                                 <table class="assessmentformtable">
                                     <tr class="header-row">
                                         <td colspan="11">
-                                            <h4>PRO1 Global Company Co.,Ltd</h4>
-                                            <strong>Assessment Form:</strong> {{ $appraisalform->assformcat->name }}
+                                            {{-- <span style="" class="print-date">Print Date: {{ Carbon\Carbon::now()->format('d-M-Y') }}</span> --}}
+                                            <h4 class="company-title">PRO1 Global Company Co.,Ltd</h4>
+                                            <strong class="form-title">Assessment Form: {{ $appraisalform->assformcat->name }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-left">
-                                            <div class="assessor-infos"><strong>Assessor Name:</strong> {{ $appraisalform->assessoruser->employee->employee_name }}</div>
-                                            <div class="assessor-infos"> <strong>Employee Code:</strong> {{ $appraisalform->assessoruser->employee->employee_code }}</div>
-                                            <div class="assessor-infos"><strong>Department:</strong> {{ $appraisalform->assessoruser->employee->department->name }}</div>
-                                            <div class="assessor-infos"><strong>Position:</strong> {{ $appraisalform->assessoruser->employee->position->name }}</div>
+                                        <td class="text-left" rowspan="2">
+                                            <div class="assessor-infos">
+                                                <strong>Assessor (အကဲဖြတ်အမှတ်ပေးမည့်သူ)</strong>
+                                                <span class="delimiter">-</span>
+                                                <span class="value">{{ $appraisalform->assessoruser->employee->employee_name }}</span>
+                                            </div>
+                                            <div class="assessor-infos">
+                                                <strong>Position (ရာထူး)</strong>
+                                                <span class="delimiter">-</span>
+                                                <span class="value">{{ $appraisalform->assessoruser->employee->position->name }}</span>
+                                            </div>
+                                            <div class="assessor-infos">
+                                                <strong>Department (ဌာန)</strong>
+                                                <span class="delimiter">-</span>
+                                                <span class="value">{{ $appraisalform->assessoruser->employee->department->name }}</span>
+                                            </div>
                                         </td>
-                                        <td colspan="10">Assessees:</td>
+                                        <th colspan="10" class="text-left">Assessees Location : ____</th>
                                     </tr>
 
-                                    <!-- Header Row -->
                                     <tr>
-                                        <th style="width: 50% !important;">Criteria Description</th>
+                                        <th colspan="10" class="text-left">Assessees (အမှတ်ပေးခံရမည့်သူ) </th>
+                                    </tr>
+                                     <!-- Header Row -->
+                                    <tr>
+                                        <th class="criteria-header" style="">CRITERIA</th>
                                         @foreach(['Excellent', 'Good', 'Meet', 'Below', 'Weak'] as $rating)
-                                            <th class="vertical-header">{{ $rating }}</th>
+                                            <th class="vertical-header"> <span class="ratings">{{ $rating }} </span></th>
                                         @endforeach
                                         @php $chunkArray = $chunk->values(); @endphp
                                         @for($i = 0; $i < 5; $i++)
                                             <th class="vertical-header">
+                                                <span class="employees">
                                                 @if(isset($chunkArray[$i]))
                                                     {{ $chunkArray[$i]->employee->employee_name }}
                                                 @else
                                                     &nbsp;
                                                 @endif
+                                                </span>
                                             </th>
                                         @endfor
                                     </tr>
@@ -192,6 +211,7 @@
                                     </tr>
                                 </table>
                             </div>
+                        </div>
                         @endforeach
 
                         <div class="col-md-12 mt-2">

@@ -76,9 +76,9 @@ class AppraisalFormsController extends Controller
             $results = $results
             ->where('assessor_user_id',$user_id)
             ->whereHas('appraisalcycle',function($query){
-                $now = Carbon::now();
-                $query->where('action_start_date',"<=",$now)
-                ->where('action_end_date','>=',$now);
+                $todayStr = Carbon::now()->toDateString(); // Get only 'YYYY-MM-DD'
+                $query->whereDate('action_start_date', "<=", $todayStr)
+                      ->whereDate('action_end_date', ">=", $todayStr);
             });
         }
 
@@ -191,7 +191,7 @@ class AppraisalFormsController extends Controller
         $appraisalform = AppraisalForm::find($id);
         // dd($appraisalform);
             $this->authorize('edit', $appraisalform);
-            
+
 
         $assessee_ids = $appraisalform->assesseeusers->pluck('id');
         $assesseeusers = User::whereIn("id",$assessee_ids)

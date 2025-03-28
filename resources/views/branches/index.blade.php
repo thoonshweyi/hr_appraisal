@@ -84,8 +84,8 @@
                     }
                 },
                 {
-                    data: 'branch_address1',
-                    name: 'branch_address1',
+                    data: 'branch_address',
+                    name: 'branch_address',
                     orderable: true,
                     render: function(data, type, row) {
                         return `<div style="text-align:left">${data}</div>`;

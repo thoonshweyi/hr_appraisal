@@ -1,0 +1,48 @@
+.loader-container{
+     position:relative;
+}
+.loader{
+     display: flex;
+
+     position: absolute;
+     left: 50%;
+     bottom: 10px;
+
+     transform: translate(-50%);
+
+
+     opacity: 0;
+
+     z-index: 1;
+}
+.loader.show{
+     opacity: 1;
+}
+.loader-item{
+     width: 7px;
+     height: 7px;
+     background-color: rgba( 0, 0, 0, 0.3);
+     border-radius: 50%;
+
+     margin: 5px;
+
+     animation:  myani 0.5s ease-in-out infinite;
+}
+.loader-item:nth-of-type(2){
+     animation-delay: 0.1s;
+}
+.loader-item:nth-of-type(3){
+     animation-delay: 0.2s;
+}
+
+@keyframes myani {
+     0%{
+          transform: translateY(0);
+     }
+     50%{
+          transform: translateY(-5px);
+     }
+     100%{
+          transform: translateY(0);
+     }
+}

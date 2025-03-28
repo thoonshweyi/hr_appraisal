@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OtpsController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
@@ -250,5 +251,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/{appraisal_cycle_id}/assesseeusers",[AppraisalCyclesController::class,"assesseeusers"])->name("assesseeusers.index");
     Route::get("/{appraisal_cycle_id}/assessorusers",[AppraisalCyclesController::class,"assessorusers"])->name("assessorusers.index");
 
-    
+
+    Route::get("/generateotps/{type}",[OtpsController::class,"generate"])->name("otps.generateotps");
+
+    Route::post("/verifyotps",[OtpsController::class,"verify"]);
+    Route::get("/otps/create",[OtpsController::class,"create"])->name("otps.create");
+
 });

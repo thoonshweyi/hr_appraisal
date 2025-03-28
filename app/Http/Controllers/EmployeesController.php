@@ -273,16 +273,6 @@ class EmployeesController extends Controller
         ]);
 
 
-          // Multi Images Upload
-        //   if($request->hasFile('file')){
-        //     // dd('hay');
-        //     // foreach($request->file("file") as $image){
-        //     //     Excel::import(new EmployeeImport, $request->file('file'));
-        //     // }
-        //     Excel::import(new EmployeeImport, $request->file('file'));
-
-        // }
-
         \DB::beginTransaction();
 
         try {
