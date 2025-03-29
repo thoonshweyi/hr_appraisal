@@ -233,7 +233,8 @@ class AppraisalFormsController extends Controller
                 $this->authorize('edit', $appraisalform);
             $appraisalform->update([
                 "assessed" => true,
-                "modify_user_id" => $user_id
+                "modify_user_id" => $user_id,
+                "status_id" => 19
             ]);
 
 
@@ -281,16 +282,16 @@ class AppraisalFormsController extends Controller
 
             $appraisalform = AppraisalForm::find($id);
                 $this->authorize('edit', $appraisalform);
-            $appraisalform->update([
-                "modify_user_id" => $user_id
-            ]);
+
 
             $appraisalformresults = $request->appraisalformresults;
-
             $appraisalformresults = array_filter(
                 array_map('array_filter', $appraisalformresults)
             );
-
+            $appraisalform->update([
+                "modify_user_id" => $user_id,
+                "status_id" => empty($appraisalformresults) ? 21 : 20 ,
+            ]);
 
 
             // dd($appraisalform->formresults);

@@ -17,7 +17,8 @@ class AppraisalForm extends Model
         "appraisal_cycle_id",
         "user_id",
         "assessed",
-        "modify_user_id"
+        "modify_user_id",
+        'status_id',
     ];
 
     public function assessor(){
@@ -37,6 +38,9 @@ class AppraisalForm extends Model
         return $this->belongsTo(AppraisalCycle::class,"appraisal_cycle_id");
     }
 
+    public function status(){
+        return $this->belongsTo(Status::class);
+    }
     public function assesseeusers(){
         return $this->belongsToMany(User::class,"appraisal_form_assessee_users","appraisal_form_id","assessee_user_id");
     }

@@ -27,8 +27,8 @@ class OtpService{
      public function verifyotp($userid,$otp,$type){
           $checkotp = Otp::where("user_id",$userid)
                          ->where("otp",$otp)
-                         ->where("expires_at",">",\Carbon\Carbon::now())
                          ->where("type",$type)
+                         ->where("expires_at",">",\Carbon\Carbon::now())
                          ->first();
 
           if($checkotp){

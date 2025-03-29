@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Services\OtpService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 class OtpsController extends Controller
 {
     public function __construct(OtpService $otpservice){
@@ -25,7 +27,7 @@ class OtpsController extends Controller
         //     'Content-Type'=> 'application/json',
         //     'Authorization'=> "Bearer $token"
         // ];
-        // $phoneNo = $installercard->phone;
+        // $phoneNo = $user->phone;
         // $body = [
         //     "to"=> "+95$phoneNo",
         //     "message"=> "Your register OTP code is $getotp for PRO 1 Installer Benefit Program."
@@ -37,5 +39,19 @@ class OtpsController extends Controller
             "otp"=>$getotp,
             // 'opt_response'=>$response
         ]);
+    }
+
+    public function verify(Request $request,$type){
+        $userid = Auth::id();
+        // dd($type);
+        $otp = $request->input("otp_number");
+        $isvalidotp = $this->otpservice->verifyotp($userid,$otp,$type);
+
+        if($isvalidotp){
+            $request->session()->put('otp_verified', true);
+            return response()->json(["message"=>"OTP is valid",'valid'=>"true"]);
+        }else{
+            return response()->json(["message"=>"OTP is Invalid"],400);
+        }
     }
 }

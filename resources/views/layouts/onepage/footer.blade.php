@@ -7,8 +7,7 @@
         <script src="{{ asset('assets/libs/bootstrap-5.3.3/bootstrap.bundle.min.js') }}" type="text/javascript"></script>
 
         <!-- jquery js1 -->
-        <!-- <script src="https://code.jquery.com/jquery-3.6.3.min.js" type="text/javascript"></script> -->
-        {{-- <script src="{{asset('./assets/libs/jquery-3.6.0/jquery-3.6.0.min.js')}}" type="text/javascript"></script> --}}
+        <script src="{{asset('./assets/libs/jquery-3.6.0/jquery-3.6.0.min.js')}}" type="text/javascript"></script>
 
         <!-- toastr css1 js1 -->
         {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" type="text/javascript"></script> --}}

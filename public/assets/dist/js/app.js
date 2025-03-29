@@ -12,10 +12,10 @@ $(document).ready(function(){
 
 
 // Start Site Setting
-const getsitesettings = document.getElementById("sitesettings");
-getsitesettings.addEventListener("click",function(){
-	document.body.classList.toggle("show-nav");
-});
+// const getsitesettings = document.getElementById("sitesettings");
+// getsitesettings.addEventListener("click",function(){
+// 	document.body.classList.toggle("show-nav");
+// });
 // End Site Setting
 
 // Start Top Sidebar
@@ -150,7 +150,7 @@ function drawChart() {
 
 // Get Min number
 // var arrnums = [5,10,15,3,7,8,20,6];
-	
+
 // function getminnumber(numbers){
 // 	let minnumber = numbers[0];
 // 	for(var x=0; x<numbers.length; x++){
@@ -205,12 +205,12 @@ function drawChart() {
 // 		// // return [maxnumber,curidx,numbers] // 20 5 [5,10,15,3,7,8,5,6]
 // 		// numbers[0] = maxnumber; //20
 // 		// return [maxnumber,curidx,numbers]; // 20 5 [20,10,15,3,7,8,5,6]
-	
+
 // 		numbers[curidx] = numbers[y];
 // 		numbers[y] = maxnumber;
 // 	}
 // 	return numbers;
-	
+
 
 // }
 
@@ -239,7 +239,7 @@ let saledatas = [
 		color : "bg-warning"
 	}
 ];
-			
+
 var arrnumstwo = [5,10,15,3,7,8,20,6];
 
 function sortmaxtominnum(numbers){
@@ -248,7 +248,7 @@ function sortmaxtominnum(numbers){
 		let maxnumber = numbers[y];
 		let curidx;
 
-	
+
 		for(let x=y; x<numbers.length; x++){
 			// Get Max  Number
 			if(numbers[x] > maxnumber){
@@ -262,7 +262,7 @@ function sortmaxtominnum(numbers){
 		numbers[y] = maxnumber;
 	}
 	return numbers;
-	
+
 
 }
 // console.log(sortmaxtominnum(arrnumstwo));
@@ -284,7 +284,7 @@ function showsaledatas(sortdatas){
 		</div>;
 		`;
 	}
-	
+
 
 	// getsalectn.innerHTML = progress;
 }
