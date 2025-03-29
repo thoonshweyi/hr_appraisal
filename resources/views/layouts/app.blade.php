@@ -22,6 +22,9 @@
       <!-- Favicon -->
       <link rel="shortcut icon" href="{{ asset('images/hrlogo-rounded.png') }}" />
 
+
+      {{--  --}}
+
       <link rel="stylesheet" href="{{ asset('css/backend-plugin.min.css') }}">
       <link rel="stylesheet" href="{{ asset('css/backend.css?v=1.0.0') }}">
       <link rel="stylesheet" href="{{ asset('css/select2.css')}}"/>
@@ -34,7 +37,6 @@
       <link rel="stylesheet" href="{{ asset('vendor/@fortawesome/fontawesome-free/css/all.min.css') }}">
       <link rel="stylesheet" href="{{ asset('vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
       <link rel="stylesheet" href="{{ asset('vendor/remixicon/fonts/remixicon.css') }}">
-
 
 
 
@@ -128,6 +130,8 @@
     {{-- Start Chartjs js1 --}}
     <script src="{{ asset('assets/libs/chartjs/chart.js') }}"></script>
 
+
+
     <!-- app JavaScript -->
     <script src="{{ asset('js/app.js') }}"></script>
 
@@ -160,6 +164,8 @@
 
 
     </script>
+
+
     @yield('js')
   </body>
 
