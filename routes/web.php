@@ -25,6 +25,7 @@ use App\Http\Controllers\DeptGroupsController;
 use App\Http\Controllers\AssFormCatsController;
 use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\PeerToPeersController;
+use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
 use App\Http\Controllers\AppraisalFormsController;
@@ -34,6 +35,7 @@ use App\Http\Controllers\AppraisalCyclesController;
 use App\Http\Controllers\AssesseeSummaryController;
 use App\Http\Controllers\AttachFormTypesController;
 use App\Http\Controllers\AgileDepartmentsController;
+use App\Http\Controllers\PushNotificationController;
 
 
 /*
@@ -254,10 +256,27 @@ Route::group(['middleware' => ['auth','otp']], function () {
 
 
 
+
 });
 Route::group(['middleware' => ['auth']], function () {
     Route::get("/generateotps/{type}",[OtpsController::class,"generate"])->name("otps.generateotps");
 
     Route::post("/verifyotps/{type}",[OtpsController::class,"verify"]);
     Route::get("/otps/create",[OtpsController::class,"create"])->name("otps.create");
+});
+
+Route::get("/send-notification",[PushNotificationController::class,"sendNotification"])->name("sendNotification");
+
+Route::post('/api/pusher-auth', function (Request $request) {
+    $beamsClient = new PushNotifications([
+        "instanceId" => config('services.beams.instance_id'),
+        "secretKey" => config('services.beams.secret_key'),
+    ]);
+
+    // $userId = $request->user_id;
+    $userId = '1';
+
+    $beamsToken = $beamsClient->generateToken($userId);
+
+    return response()->json(['token' => $beamsToken]);
 });

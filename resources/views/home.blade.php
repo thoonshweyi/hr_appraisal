@@ -43,64 +43,52 @@
     });
 </script> --}}
 
+<script src="https://cdn.jsdelivr.net/npm/@pusher/push-notifications-web@1.1.0/dist/push-notifications-cdn.js"></script>
+<script>
+    navigator.serviceWorker.register('/service-worker.js')
+    .then((registration) => {
+        console.log("Service Worker registered with scope:", registration.scope);
+    })
+    .catch(console.error);
 
-    {{-- Start Firebase js2 --}}
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-        {{-- import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js"; --}}
-        import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
+    {{-- const beamsClient = new PusherPushNotifications.Client({
+        instanceId: "3c970f94-fe4f-491d-99ec-f82430cae1cb",
+    });
 
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyBpHbI8rMw6pWjWalY5yF2jjOc2dOYwQ3Q",
-          authDomain: "hr-appraisal.firebaseapp.com",
-          projectId: "hr-appraisal",
-          storageBucket: "hr-appraisal.firebasestorage.app",
-          messagingSenderId: "254575584163",
-          appId: "1:254575584163:web:66f30fcd9199f938eb7016",
-          measurementId: "G-X1625951R8"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        {{-- const analytics = getAnalytics(app); --}}
-        console.log(app);
-        const messaging = getMessaging(app);
+    beamsClient.start()
+        .then(() => beamsClient.addDeviceInterest("general")) // Subscribe to "general"
+        .then(() => console.log("Successfully subscribed to push notifications!"))
+        .catch(console.error); --}}
 
 
-        async function requestPermission() {
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission === "granted") {
-                    console.log("Notification permission granted.");
-                    getFCMToken();
-                } else {
-                    console.log("Notification permission denied.");
+
+        const beamsClient = new PusherPushNotifications.Client({
+            instanceId: "3c970f94-fe4f-491d-99ec-f82430cae1cb", // Replace with your Instance ID
+        });
+
+        beamsClient.start()
+        .then(() => {
+            // Get user ID dynamically from backend session or authentication system
+            let userId = "1"; // Replace this dynamically
+
+            return beamsClient.setUserId(userId, {
+                fetchToken: () => {
+                    return fetch("/api/pusher-auth", {
+                        method: "POST",
+                        body: JSON.stringify({ user_id: userId }),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        }
+                    })
+                    .then(response => response.json())
+                    .then((data)=>{
+                        console.log(data.token)
+                        return data.token}); // Corrected token extraction
                 }
-            } catch (error) {
-                console.error("Error requesting notification permission:", error);
-            }
-        }
-        async function getFCMToken() {
-            try {
-                const vapidKey = "BNVN308vit0ouOpfUT-L7C6VQS0gRqOjPvUKIk99eYa1n4ce6dX9g0YEki3cB2vXEffZNOVK_HbHm2PD_p1zy8o"; // Replace with your actual VAPID key from Firebase
-                const token = await getToken(messaging, { vapidKey });
-                if (token) {
-                    console.log("FCM Token:", token);
-                    // Send this token to your server for later use
-                } else {
-                    console.log("No registration token available. Request permission first.");
-                }
-            } catch (error) {
-                console.error("Error getting FCM token:", error);
-            }
-        }
-        requestPermission();
-        
-    </script>
+            });
+        })
+        .catch(console.error);
+</script>
 
 @endsection
