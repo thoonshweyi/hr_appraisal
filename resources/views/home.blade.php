@@ -69,7 +69,7 @@
         beamsClient.start()
         .then(() => {
             // Get user ID dynamically from backend session or authentication system
-            let userId = "1"; // Replace this dynamically
+            let userId = "{{ Auth::id() }}"; // Replace this dynamically
 
             return beamsClient.setUserId(userId, {
                 fetchToken: () => {

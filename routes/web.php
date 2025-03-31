@@ -36,7 +36,7 @@ use App\Http\Controllers\AssesseeSummaryController;
 use App\Http\Controllers\AttachFormTypesController;
 use App\Http\Controllers\AgileDepartmentsController;
 use App\Http\Controllers\PushNotificationController;
-
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -273,8 +273,9 @@ Route::post('/api/pusher-auth', function (Request $request) {
         "secretKey" => config('services.beams.secret_key'),
     ]);
 
-    // $userId = $request->user_id;
-    $userId = '1';
+    $userId = $request->user_id;
+    // dd($userId);
+    // $userId = '1';
 
     $beamsToken = $beamsClient->generateToken($userId);
 
