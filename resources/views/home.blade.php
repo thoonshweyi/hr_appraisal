@@ -100,6 +100,7 @@
             }
         }
         requestPermission();
+        
     </script>
 
 @endsection
