@@ -254,9 +254,10 @@ class UserController extends Controller
             $request->validate([
                 'cpass' => ['required', new MatchOldPassword],
                 'npass' => ['required'],
-                'vpass' => ['same:npass'],
+                'vpass' => ['required','same:npass'],
             ],
             [
+                'cpass.required' => 'Current Password is required!',
                 'npass.required' => 'New Password is required!',
                 'vpass.required' => 'Verfiy Password is required!',
                 'vpass.same' => 'Verfiy Password is not same with New Password!'

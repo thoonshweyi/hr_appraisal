@@ -208,6 +208,7 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::put("/appraisalcycles/{id}",[AppraisalCyclesController::class,"update"])->name("appraisalcycles.update");
     Route::delete("/appraisalcycles/{id}",[AppraisalCyclesController::class,"destroy"])->name("appraisalcycles.destroy");
     Route::post("/appraisalcyclesstatus",[AppraisalCyclesController::class,"changestatus"])->name("appraisalcycles.changestatus");
+    Route::get("/appraisalcycles/{id}/countdown",[AppraisalCyclesController::class,"countdown"])->name("appraisalcycles.countdown");
 
 
 
@@ -280,4 +281,22 @@ Route::post('/api/pusher-auth', function (Request $request) {
     $beamsToken = $beamsClient->generateToken($userId);
 
     return response()->json(['token' => $beamsToken]);
+});
+Route::get('/pusher-unsubscribe', function (Request $request) {
+    // $userId = auth()->id(); // Get logged-in user ID
+        $userId = '1';
+    // Initialize Pusher Beams Client
+    $beamsClient = new PushNotifications([
+        "instanceId" => config('services.beams.instance_id'),
+        "secretKey" => config('services.beams.secret_key'),
+    ]);
+
+    // Remove user from Pusher Beams
+    $beamsClient->deleteUser($userId);
+
+    // Logout the user
+    // auth()->logout();
+    // Session::flush();
+
+    return response()->json(['message' => 'Logged out successfully']);
 });

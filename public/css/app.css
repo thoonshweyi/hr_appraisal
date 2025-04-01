@@ -770,3 +770,8 @@ height: auto !important;
     opacity: 0;
 }
 /* End Tooltip */
+
+
+.profile-cover{
+  margin-bottom: 4px solid #999;
+}

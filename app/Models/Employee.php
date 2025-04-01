@@ -48,6 +48,9 @@ class Employee extends Model
     public function status(){
         return $this->belongsTo(Status::class);
     }
+    public function gender(){
+        return $this->belongsTo(Gender::class);
+    }
 
     public function division(){
         return $this->belongsTo(Division::class,'division_id','id');

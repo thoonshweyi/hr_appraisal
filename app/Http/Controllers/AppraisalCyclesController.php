@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Branch;
 use App\Models\Gender;
@@ -469,7 +470,16 @@ class AppraisalCyclesController extends Controller
    }
 
 
+   public function countdown(Request $request,string $id){
+        $appraisalcycle = AppraisalCycle::find($id);
+        $startdate = Carbon::parse($appraisalcycle->action_start_date)->startOfDay()->format('M d Y 00:00:00');
+        // dd($startdate);
 
+        if(!$appraisalcycle->isBeforeActionStart()){
+            return redirect(route("appraisalforms.index"))->with('error',"AppraisalCycle can only be counted before action start.");
+        }
+        return view("appraisalcycles.countdown",compact('appraisalcycle','startdate'));
+    }
 }
 
 

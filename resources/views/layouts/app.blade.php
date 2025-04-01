@@ -162,6 +162,22 @@
         sendRequest();
       });
 
+      document.getElementById('logoutButton').addEventListener('click', async (event) => {
+        {{-- console.log('hay'); --}}
+
+        event.preventDefault();
+        {{-- const beamsClient = new PusherPushNotifications.Client({
+            instanceId: "3c970f94-fe4f-491d-99ec-f82430cae1cb"
+        });
+
+        await beamsClient.stop(); // Stops push notifications
+        await beamsClient.clearAllState(); // Clears the device subscription
+
+
+        console.log("User unsubscribed from notifications"); --}}
+
+        document.getElementById('logout-form').submit();
+    });
 
     </script>
 

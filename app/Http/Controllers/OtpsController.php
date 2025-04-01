@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class OtpsController extends Controller
 {
@@ -17,6 +18,7 @@ class OtpsController extends Controller
     }
 
     public function generate(Request $request,$type){
+        $user = Auth::user();
         $userid = Auth::id();
         $getotp = $this->otpservice->generateotp($userid,$type);
 
@@ -27,7 +29,8 @@ class OtpsController extends Controller
         //     'Content-Type'=> 'application/json',
         //     'Authorization'=> "Bearer $token"
         // ];
-        // $phoneNo = $user->phone;
+        // $phoneNo = $user->employee ? $user->employee->phone : $user->phone_no;
+        // // dd($phoneNo);
         // $body = [
         //     "to"=> "+95$phoneNo",
         //     "message"=> "Your register OTP code is $getotp for PRO 1 Installer Benefit Program."

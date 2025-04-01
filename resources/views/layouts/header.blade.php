@@ -98,10 +98,13 @@
                                             <p class="mb-0">{{Auth::user()->roles->pluck('name')->first()}}</p>
                                             <div class="d-flex align-items-center justify-content-center mt-3">
                                                 <a href="{{ route('user.profile') }}" class="btn border mr-2">Profile</a>
-                                                <a class="btn border" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">Sign Out
-                                                </a>
+                                                {{-- <a class="btn border" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();
 
+                                                     ">Sign Out
+                                                </a> --}}
+                                                <a id="logoutButton" class="btn border" href="javascript:void(0);" >Sign Out
+                                                </a>
 
                                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                                     @csrf

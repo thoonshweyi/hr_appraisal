@@ -297,3 +297,6 @@ showsaledatas();
 	const getfullyear = new Date().getFullYear();
 	getyear.textContent = getfullyear;
 // End Footer
+
+
+
