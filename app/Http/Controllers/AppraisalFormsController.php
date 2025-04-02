@@ -12,6 +12,7 @@ use App\Models\AssFormCat;
 use App\Models\FormResult;
 use App\Models\PeerToPeer;
 use Illuminate\Http\Request;
+use App\Helpers\PusherHelper;
 use App\Models\AppraisalForm;
 use App\Models\AppraisalCycle;
 use Illuminate\Support\Facades\Auth;
@@ -115,6 +116,8 @@ class AppraisalFormsController extends Controller
 
 
 
+
+
         return view("appraisalforms.create",compact('assessoruser','appraisalcycle','assformcats'));
     }
 
@@ -132,30 +135,56 @@ class AppraisalFormsController extends Controller
             'assessee_user_ids.*.required' => 'Please Assessee User Values.',
         ]);
 
-        $assessor_user_id = $request->assessor_user_id;
-        $ass_form_cat_id = $request->ass_form_cat_id;
-        $appraisal_cycle_id = $request->appraisal_cycle_id;
-        $assessee_user_ids = $request->assessee_user_ids;
+        \DB::beginTransaction();
+        try {
+
+            $assessor_user_id = $request->assessor_user_id;
+            $ass_form_cat_id = $request->ass_form_cat_id;
+            $appraisal_cycle_id = $request->appraisal_cycle_id;
+            $assessee_user_ids = $request->assessee_user_ids;
 
 
-        $user = Auth::user();
-        $user_id = $user->id;
-        $appraisalform = AppraisalForm::create([
-            "assessor_user_id"=> $assessor_user_id,
-            "ass_form_cat_id"=> $ass_form_cat_id,
-            "appraisal_cycle_id"=> $appraisal_cycle_id,
-            "user_id"=> $user_id
-        ]);
-
-        foreach($assessee_user_ids as $assessee_user_id){
-            AppraisalFormAssesseeUser::create([
-                "appraisal_form_id" => $appraisalform->id,
-                "assessee_user_id" => $assessee_user_id
+            $user = Auth::user();
+            $user_id = $user->id;
+            $appraisalform = AppraisalForm::create([
+                "assessor_user_id"=> $assessor_user_id,
+                "ass_form_cat_id"=> $ass_form_cat_id,
+                "appraisal_cycle_id"=> $appraisal_cycle_id,
+                "user_id"=> $user_id
             ]);
+
+            foreach($assessee_user_ids as $assessee_user_id){
+                AppraisalFormAssesseeUser::create([
+                    "appraisal_form_id" => $appraisalform->id,
+                    "assessee_user_id" => $assessee_user_id
+                ]);
+            }
+
+
+            // dd($assessor_user_id);
+            $assessor = User::find($assessor_user_id);
+            // {$assessor->employee->employee_name}
+            $assformcat = AssFormCat::where('id',$ass_form_cat_id)->first();
+            $title = "Action Required: Appraisal Form Received";
+            $title = "ရာထူးတိုးဖောင်တစ်ခု လက်ခံရရှိခြင်း";
+
+            // dd($title);
+            // $message = "You have received a new appraisal form for assessment. Kindly review and submit your feedback within the given timeframe.";
+            $message = "သင်အကဲဖြတ်ပေးရန် ရာထူးတိုးဖောင်တစ်ခုရရှိပါသည်။ သတ်မှတ်အချိန်ကာလအတွင်း အကဲဖြတ်၍ဖောင်ကိုပြန်လည်၍ပေးပို့ပေးရန်ဖြစ်ပါသည်။";
+            $response = PusherHelper::sendPushNotification(
+                $assessor_user_id,
+                $title,
+                $message
+            );
+
+            \DB::commit();
+
+            return redirect()->back()->with('success',"Appraisal form sended to assessor successfully");
+        } catch (\Exception $e) {
+            \DB::rollback();
+            // Handle the exception and notify the user
+            return redirect()->back()->with('error', "System Error:".$e->getMessage());
         }
-
-       return redirect()->back()->with('success',"Appraisal form sended to assessor successfully");
-
 
     }
 

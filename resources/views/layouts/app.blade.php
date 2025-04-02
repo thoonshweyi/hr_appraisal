@@ -18,6 +18,8 @@
     {{-- selectize css 1 js1 --}}
     <link  href="{{ asset('assets/libs/selectize/selectize.min.css') }}" rel="stylesheet" type="text/css"/>
 
+    <!-- toastr css1 js1 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
       <!-- Favicon -->
       <link rel="shortcut icon" href="{{ asset('images/hrlogo-rounded.png') }}" />
@@ -122,6 +124,36 @@
 
     {{-- selectize css 1 js1 --}}
     <script  src="{{ asset('assets/libs/selectize/selectize.min.js') }}" type="text/javascript"></script>
+
+
+    <!-- toastr css1 js1 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" type="text/javascript"></script>
+    <script>
+            toastr.options = {
+                "progressBar":true,
+                "closeButton":true
+            };
+    </script>
+
+        @if(Session::has("success"))
+            <script>toastr.success('{{ session()->get("success") }}', 'Successful')</script>
+        @endif
+
+        @if(session()->has("info"))
+            <script>toastr.info('{{ session()->get("info") }}', 'Information')</script>
+        @endif
+
+        @if(session()->has("error"))
+            <script>toastr.error('{{ session()->get("error") }}', 'Inconceivable')</script>
+        @endif
+
+        @if($errors)
+            @foreach($errors->all() as $error)
+                <script>toastr.error('{{$error}}', 'Warning!',{timeOut:3000})</script>
+            @endforeach
+        @endif
+
+
 
     <!-- Chart Custom JavaScript -->
     <script async src="{{ asset('js/chart-custom.js') }}"></script>

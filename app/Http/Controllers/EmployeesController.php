@@ -292,4 +292,40 @@ class EmployeesController extends Controller
             return redirect()->back()->with('error', "System Error:".$e->getMessage());
         }
    }
+
+
+   public function updateprofilepicture(Request $request,$id){
+    $request->validate([
+        'image'=>"required|image|mimes:jpeg,png,jpg,gif|max:10485760"
+    ]);
+    $employee = Employee::findOrFail($id);
+
+
+    $user = Auth::user();
+    $user_id = $user['id'];
+    if($request->hasFile('image')){
+        // Single Image Update
+        $file = $request->file("image");
+        $fname = $file->getClientOriginalName();
+        $imagenewname = uniqid($user_id)."-".$employee['id'].$fname;
+        $file->move(public_path("assets/img/employees/"),$imagenewname);
+        $filepath = "assets/img/employees/".$imagenewname;
+
+
+        // Remove Old Image
+        if($employee->image){
+            $oldfilepath = public_path($employee->image);
+            if(file_exists($oldfilepath)){
+                unlink($oldfilepath);
+            }
+        }
+        $employee->image = $filepath;
+        $employee->save();
+    }
+
+    // Recalculate profile Score
+
+    return redirect()->back()->with('success','Upload Successfully');
+}
+
 }

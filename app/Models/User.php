@@ -132,7 +132,7 @@ class User extends Authenticatable
     public function getSentPercentage($appraisal_cycle_id){
         $sentpercentage = ($this->getAppraisalFormCount($appraisal_cycle_id) / $this->getAllFormCount($appraisal_cycle_id)) * 100;
 
-        return $sentpercentage;
+        return round($sentpercentage);
     }
 
 
@@ -179,5 +179,5 @@ class User extends Authenticatable
         ->where('to_rate', '>=', $average)
         ->first();
     }
-   
+
 }

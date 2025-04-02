@@ -7,35 +7,37 @@
 
             <div class="col-md-4 col-lg-3 mb-2">
                 <h6>Info</h6>
-                <div class="card border-0 rounded-0 shadow">
-                    <div class="profile-cover">
-                        <img src="{{ asset('images/PRO-1-Global-Logo.png') }}" class="img-fluid center w-100" alt="profile-image">
-                    </div>
+                <div class="card border-0 rounded-0 shadow position-relative">
+                    <button type="button" id="uploadbtn" class="btn btn-primary btn-sm text-sm rounded-0">Upload</button>
+                        <div class="profile-cover">
+                            <img src="{{ asset('images/PRO-1-Global-Logo.png') }}" class="img-fluid center w-100" alt="profile-image">
+                        </div>
 
-                        <div class="card-body" style="margin-top: -40px">
+                        <div class="card-body position-relative">
 
-                               <div class="d-flex flex-column align-items-center mb-3">
+                               <div class="d-flex flex-column align-items-center profileimages">
 
-                                <form action="" method="POST" enctype="multipart/form-data">
-                                     @csrf
-                                     @method('PUT')
-                                     <div class="form-group col-md-12 text-center">
-                                          <label for="image" class="gallery">
-                                               @if($user->employee['image'])
-                                                    <img src="{{ asset($user->employee['image']) }}" alt="{{ $user->name }}" class="img-thumbnail" width="100" height="100"/>
-                                               @else
-                                                    <span>Choose Images</span>
-                                               @endif
-                                          </label>
-                                          <input type="file" name="image" id="image" class="form-control form-control-sm rounded-0" hidden/>
-                                          <button type="submit" id="uploadbtn" class="btn btn-primary btn-sm text-sm rounded-0">Upload</button>
-                                     </div>
+                                    <form id="empimageform" action="{{ route('employees.updateprofilepicture',$user->employee['id']) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="form-group col-md-12 text-center">
+                                            <label for="image" class="profilegallery">
+                                                @if($user->employee['image'])
+                                                        <img src="{{ asset($user->employee['image']) }}" alt="{{ $user->name }}" class="img-thumbnail" width="100" height="100"/>
+                                                @else
+                                                        <img src="{{ asset('images/user/default.jpg') }}" alt="{{ $user->name }}" class="img-thumbnail" width="100" height="100"/>
+                                                @endif
+                                            </label>
+                                            <input type="file" name="image" id="image" class="form-control form-control-sm rounded-0" hidden/>
+                                        </div>
 
-                                </form>
+                                    </form>
+                               </div>
 
-
-                                    <h6 class="my-1">{{ $user->name }}</h6>
-                                    <h6 class="my-1">({{ $user->employee->position->name }})</h6>
+                               <div>
+                                    <a href="javascript:void(0);" id="notiunsubbtn" class="float-right "><i class="far fa-bell-slash"></i></a>
+                                    <h4 class="my-1">{{ $user->name }}</h4>
+                                    <h3 class="my-1">({{ $user->employee->position->name }})</h3>
                                </div>
 
                                <div class="mb-5">
@@ -204,6 +206,8 @@
 </div>
 
 @endsection
+
+<script src="https://cdn.jsdelivr.net/npm/@pusher/push-notifications-web@1.1.0/dist/push-notifications-cdn.js"></script>
 @section('js')
     <script>
         $(document).ready(function () {
@@ -263,9 +267,9 @@
              var totalfiles = input.files.length;
              // console.log(totalfiles);
              if(totalfiles > 0){
-                  $('.gallery').addClass('removetxt');
+                  $('.profilegallery').addClass('removetxt');
              }else{
-                  $('.gallery').removeClass('removetxt');
+                  $('.profilegallery').removeClass('removetxt');
              }
              for(var i = 0 ; i < totalfiles ; i++){
                   var filereader = new FileReader();
@@ -285,8 +289,38 @@
    }
 
    $('#image').change(function(){
-        previewimages(this,'.gallery');
+        previewimages(this,'.profilegallery');
    });
    // End Single Image Preview
+
+
+    {{-- Start Upload Btn --}}
+   $('#uploadbtn').click(function(){
+        $('#empimageform').submit();
+   })
+   {{-- End  Upload Btn --}}
+
+
+   navigator.serviceWorker.register('/service-worker.js')
+   .then((registration) => {
+       console.log("Service Worker registered with scope:", registration.scope);
+   })
+   .catch(console.error);
+   document.getElementById('notiunsubbtn').addEventListener('click', async (event) => {
+    {{-- console.log('hay'); --}}
+
+    event.preventDefault();
+    const beamsClient = new PusherPushNotifications.Client({
+        instanceId: "3c970f94-fe4f-491d-99ec-f82430cae1cb"
+    });
+
+    await beamsClient.stop(); // Stops push notifications
+    await beamsClient.clearAllState(); // Clears the device subscription
+
+
+    console.log("User unsubscribed from notifications");
+    toastr.success('User unsubscribed from notifications', 'Successful')
+
+});
     </script>
 @stop

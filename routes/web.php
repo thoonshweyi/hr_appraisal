@@ -67,6 +67,7 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::get('/users/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('/users/update_profile', [UserController::class, 'update_profile'])->name('user.update_profile');
 
+
     Route::resource('users', UserController::class);
     Route::get('/getfilteredassessees', [UserController::class, 'getFilteredAssessees'])->name('users.getfilteredassessees');
 
@@ -179,6 +180,7 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::delete("/employees/{id}",[EmployeesController::class,"destroy"])->name("employees.destroy");
     Route::post("/employees_excel_import",[EmployeesController::class,"excel_import"])->name("employees.excel_import");
     Route::post("/employeesstatus",[EmployeesController::class,"changestatus"])->name("employees.changestatus");
+    Route::put("/employees/{id}/profilepicture",[EmployeesController::class,"updateprofilepicture"])->name("employees.updateprofilepicture");
 
 
     Route::get("/assformcats",[AssFormCatsController::class,"index"])->name("assformcats.index");

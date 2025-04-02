@@ -21,7 +21,16 @@
                         <li class="nav-item">
                             <a href="{{ route('user.profile') }}" class="nav-link" style="line-height: 22px">
                                 <div class="d-flex justify-content-center align-items-center">
-                                    <img src="{{ asset('images/user/' . Auth::user()->roles->pluck('name')->first() .'.png') }}" alt="profile-img" class="rounded profile-img img-fluid avatar-70 me-3">
+                                    @if(Auth::user()->employee)
+                                        @if(Auth::user()->employee->image)
+                                            <img src=" {{ asset(Auth::user()->employee['image']) }}" alt="profile-img" class="rounded profile-img img-fluid avatar-70 me-3">
+
+                                        @else
+                                            <img src="{{ asset('images/user/default.jpg')}}" alt="profile-img" class="rounded profile-img img-fluid avatar-70 me-3">
+                                        @endif
+                                    @else
+                                        <img src="{{ asset('images/user/' . Auth::user()->roles->pluck('name')->first() .'.png') }}" alt="profile-img" class="rounded profile-img img-fluid avatar-70 me-3">
+                                    @endif
                                     <div class="ms-3">
                                         <span class="d-inline-block mb-2">{{Auth::user()->name}}</span>
                                         <p class="p-0 m-0">{{Auth::user()->roles->pluck('name')->first()}}</p>
@@ -91,7 +100,16 @@
                                     <div class="card-body p-0 text-center">
                                         <div class="media-body profile-detail text-center">
                                             <img src="{{ asset('images/PRO-1-Global-Logo.png') }}" alt="profile-bg" class="rounded-top img-fluid mb-4">
-                                            <img src="{{ asset('images/user/' . Auth::user()->roles->pluck('name')->first() .'.png') }}" alt="profile-img" class="rounded profile-img img-fluid avatar-70">
+
+                                            @if(Auth::user()->employee)
+                                                @if(Auth::user()->employee->image)
+                                                    <img src="{{ asset(Auth::user()->employee['image']) }}" alt="profile-img" class="rounded profile-img img-fluid avatar-70">
+                                                @else
+                                                    <img src="{{ asset('images/user/default.jpg') }}" alt="profile-img" class="rounded profile-img img-fluid avatar-70">
+                                                @endif
+                                            @else
+                                                <img src="{{ asset('images/user/' . Auth::user()->roles->pluck('name')->first() .'.png') }}" alt="profile-img" class="rounded profile-img img-fluid avatar-70">
+                                            @endif
                                         </div>
                                         <div class="p-3">
                                             <h5 class="mb-1">{{Auth::user()->name}}</h5>

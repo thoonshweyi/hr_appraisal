@@ -66,7 +66,7 @@
             instanceId: "3c970f94-fe4f-491d-99ec-f82430cae1cb", // Replace with your Instance ID
         });
 
-        beamsClient.start()
+        {{-- beamsClient.start()
         .then(() => {
             // Get user ID dynamically from backend session or authentication system
             let userId = "{{ Auth::id() }}"; // Replace this dynamically
@@ -88,7 +88,39 @@
                 }
             });
         })
+        .catch(console.error); --}}
+
+
+        beamsClient.clearAllState()
+        .then(() => {
+            console.log("Beams client reset.");
+            return beamsClient.start();
+        })
+        .then(() => {
+            let userId = "{{ Auth::id() }}"; // Replace this dynamically
+
+            return beamsClient.setUserId(userId, {
+                fetchToken: () => {
+                    return fetch("/api/pusher-auth", {
+                        method: "POST",
+                        body: JSON.stringify({ user_id: userId }),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        }
+                    })
+                    .then(response => response.json())
+                    .then((data) => {
+                        console.log("New Token:", data.token);
+                        return data.token;
+                    });
+                }
+            });
+        })
         .catch(console.error);
+
+
+
 </script>
 
 @endsection

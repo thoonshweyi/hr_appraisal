@@ -125,6 +125,7 @@
     text-align: center;
     padding: 10px;
 
+    cursor: pointer;
 }
 .gallery img,.redemptiontransactionfiles img,.installercardfiles img{
     width: 100px;
@@ -141,7 +142,22 @@
 }
 
 
+.profilegallery{
+    display: block;
+    cursor: pointer;
 
+}
+.profilegallery img{
+    width: 100px;
+    height: 100px;
+    border: 2px solid #5195cc;
+    border-radius: 50%;
+    object-fit: cover;
+
+    padding: 5px;
+    margin: 0 5px;
+
+}
 /* End Preview Image */
 
 
@@ -771,7 +787,18 @@ height: auto !important;
 }
 /* End Tooltip */
 
-
+/* Start Profile */
 .profile-cover{
-  margin-bottom: 4px solid #999;
+    padding: 20px;
+    background: #5195cc;
+    border-bottom: 1px solid #999;
 }
+#uploadbtn{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.profileimages{
+    margin-top: -60px;
+}
+/* End Profile */

@@ -20,7 +20,7 @@ class PusherHelper
                         "notification" => [
                             "title" => $title,
                             "body" => $message,
-                            "deep_link" => "https://pro1myanmar.com.mm:3005/", 
+                            "deep_link" => "https://pro1myanmar.com.mm:3005/",
                         ],
                     ],
                 ]
