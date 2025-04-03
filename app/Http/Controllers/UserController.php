@@ -303,8 +303,8 @@ class UserController extends Controller
 
 
         if (!empty($filter_branch_id)) {
-            $results = $results->whereHas('branches', function($query) use ($filter_branch_id) {
-                $query->where('branch_users.branch_id', $filter_branch_id);
+            $results = $results->whereHas('employee',function($query) use ($filter_branch_id){
+                $query->where('branch_id',$filter_branch_id);
             });
         }
 

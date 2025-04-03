@@ -5,7 +5,7 @@ use Pusher\PushNotifications\PushNotifications;
 
 class PusherHelper
 {
-    public static function sendPushNotification($userId, $title, $message)
+    public static function sendPushNotification($userId, $title, $message,$appraisal_form_id)
     {
         $beamsClient = new PushNotifications([
             "instanceId" => config('services.beams.instance_id'),
@@ -20,7 +20,7 @@ class PusherHelper
                         "notification" => [
                             "title" => $title,
                             "body" => $message,
-                            "deep_link" => "https://pro1myanmar.com.mm:3005/",
+                            "deep_link" => route('appraisalforms.show',$appraisal_form_id),
                         ],
                     ],
                 ]

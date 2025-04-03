@@ -101,7 +101,7 @@
                                     <button class="btn rounded-0 flex-fill mr-2 fill_btn" >
                                         <i class="fas fa-list-ol"></i> Fill
                                     </button>
-                                    <button class="btn btn-danger rounded-0 flex-fill">
+                                    <button type="button" class="btn btn-danger rounded-0 flex-fill remove_btn">
                                         <i class="fas fa-times"></i> Remove All
                                     </button>
                                 </div>
@@ -119,7 +119,7 @@
 
                                     <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
 
-                                    <button type="submit" class="btn btn-success btn-sm rounded-0">Send Form</button>
+                                    <button type="button" class="btn btn-success btn-sm rounded-0 send_btn">Send Form</button>
                                 </div>
                             </div>
                         </form>
@@ -191,92 +191,129 @@
         {{-- Start Fill Btn --}}
         $('.fill_btn').click(function (e) {
             e.preventDefault();
-            $.ajax({
-                url: `/fillform`,
-                type: "GET",
-                dataType: "json",
-                data: $('#appraisal_form').serialize(),
-                success: function (response) {
-                    console.log(response);
 
-                    let ths = "";
-                    const assesseeusers = response.assesseeusers;
-                    assesseeusers.forEach(function(assesseeuser){
-                        ths += `
-                            <th style="width:auto;">${assesseeuser.employee.employee_name}</th>
-                            <input type="hidden" name="assessee_user_ids[]" value="${assesseeuser.id}"/>
-                        `;
+            Swal.fire({
+                title: "Are you sure you want to fill Assessment Form",
+                text: "",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, fill it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
 
+                    $.ajax({
+                        url: `/fillform`,
+                        type: "GET",
+                        dataType: "json",
+                        data: $('#appraisal_form').serialize(),
+                        success: function (response) {
+                            console.log(response);
+
+                            let ths = "";
+                            const assesseeusers = response.assesseeusers;
+                            assesseeusers.forEach(function(assesseeuser){
+                                ths += `
+                                    <th style="width:auto;">${assesseeuser.employee.employee_name}</th>
+                                    <input type="hidden" name="assessee_user_ids[]" value="${assesseeuser.id}"/>
+                                `;
+
+                            });
+
+
+                            let trs = "";
+                            const criterias = response.criterias;
+                            criterias.forEach(function(criteria,idx){
+                                var tds = "";
+                                const assesseeusers = response.assesseeusers;
+                                assesseeusers.forEach(function(assesseeuser){
+                                    tds += `<td></td>`;
+                                });
+
+
+                                trs += `
+                                    <tr>
+                                        <td>${++idx}</td>
+                                        <td class="text-left">${criteria.name}</td>
+                                        <td >${criteria.excellent}</td>
+                                        <td >${criteria.good}</td>
+                                        <td >${criteria.meet_standard}</td>
+                                        <td >${criteria.below_standard}</td>
+                                        <td >${criteria.weak}</td>
+
+                                        ${tds}
+                                    </tr>
+                                `;
+                            });
+
+
+                            table = `
+
+                            <div class="table-responsive">
+
+                                <table id="mytable" class="table table-bordered custables">
+                                    <thead>
+                                        <tr>
+                                            <th>S/No</th>
+                                            <th>CRITERIA Description</th>
+                                            <th>Excellent</th>
+                                            <th>Good</th>
+                                            <th>Meet Standard</th>
+                                            <th>Below Standard</th>
+                                            <th>Weak</th>
+                                            ${ths}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${trs}
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            `
+                            $("#table_containers").removeClass('d-none');
+                            $("#table_containers").append(table);
+
+                            $('.fill_btn').attr('disabled','disabled')
+
+                        },
+                        error: function (response) {
+                            console.log("Error:", response);
+                        }
                     });
-
-
-                    let trs = "";
-                    const criterias = response.criterias;
-                    criterias.forEach(function(criteria,idx){
-                        var tds = "";
-                        const assesseeusers = response.assesseeusers;
-                        assesseeusers.forEach(function(assesseeuser){
-                            tds += `<td></td>`;
-                        });
-
-
-                        trs += `
-                            <tr>
-                                <td>${++idx}</td>
-                                <td class="text-left">${criteria.name}</td>
-                                <td >${criteria.excellent}</td>
-                                <td >${criteria.good}</td>
-                                <td >${criteria.meet_standard}</td>
-                                <td >${criteria.below_standard}</td>
-                                <td >${criteria.weak}</td>
-
-                                ${tds}
-                            </tr>
-                        `;
-                    });
-
-
-                    table = `
-
-                    <div class="table-responsive">
-
-                        <table id="mytable" class="table table-bordered custables">
-                            <thead>
-                                <tr>
-                                    <th>S/No</th>
-                                    <th>CRITERIA Description</th>
-                                    <th>Excellent</th>
-                                    <th>Good</th>
-                                    <th>Meet Standard</th>
-                                    <th>Below Standard</th>
-                                    <th>Weak</th>
-                                    ${ths}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${trs}
-
-                            </tbody>
-                        </table>
-                    </div>
-
-                    `
-                    $("#table_containers").removeClass('d-none');
-                    $("#table_containers").append(table);
-
-                    $('.fill_btn').attr('disabled','disabled')
-
-                },
-                error: function (response) {
-                    console.log("Error:", response);
                 }
             });
+
 
 
         });
         {{-- End Fill Btn --}}
 
 
+        {{-- Start Remove Btn --}}
+        $('.remove_btn').click(function(e){
+            Swal.fire({
+                title: "Are you sure you want to remove Assessment Form",
+                text: "",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, remove it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $("#table_containers").addClass('d-none');
+                    $("#table_containers").html('');
+
+                    $('.fill_btn').removeAttr('disabled')
+
+                }
+            });
+        });
+        {{-- End Remove Btn --}}
 
         {{--  --}}
 
@@ -284,5 +321,27 @@
             $('.fill_btn').removeAttr('disabled')
 
         });
+
+
+        {{-- Start Send Btn--}}
+
+        $('.send_btn').click(function(e){
+            e.preventDefault();
+            Swal.fire({
+                title: "Are you sure you want to send Assessment Form",
+                text: "",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, send it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('#appraisal_form').submit();
+                }
+            });
+        });
+        {{-- End Send Btn --}}
 </script>
 @stop

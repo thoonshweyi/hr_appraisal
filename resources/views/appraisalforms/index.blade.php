@@ -15,7 +15,7 @@
 
             </div>
 
-
+            @can('view-all-appraisal-form')
             <div class="col-lg-12 ">
                 <div class="tab-filter">
                     <form id="searchnfilterform" class="" action="{{ route('appraisalforms.index') }}" method="GET">
@@ -67,6 +67,7 @@
                 </div>
 
             </div>
+            @endcan
 
 
             <div class="col-md-12">

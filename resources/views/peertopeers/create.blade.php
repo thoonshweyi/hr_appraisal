@@ -122,7 +122,7 @@
                                     <button class="btn rounded-0 flex-fill mr-2 apply_btn" >
                                         <i class="fas fa-filter "></i> Apply
                                     </button>
-                                    <button class="btn btn-danger rounded-0 flex-fill">
+                                    <button type="button" class="btn btn-danger rounded-0 flex-fill clear_btn">
                                         <i class="fas fa-times"></i> Clear
                                     </button>
                                 </div>
@@ -363,7 +363,18 @@
 
 
 
-
+        {{-- Start Clear Btn --}}
+        $('.clear_btn').click(function(e){
+            selectedAssessees = {};
+            curAssessees = [];
+            tableBody.innerHTML = '';
+            Swal.fire({
+                icon: "success",
+                title: "Selected assessees cleared successfully",
+                text: "Now, can collect new group of assessees.",
+            });
+        });
+        {{-- End Clear Btn --}}
 
     });
 </script>

@@ -60,9 +60,10 @@ class PeerToPeersController extends Controller
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
 
         // dd($branches);
-        $users = User::where('status',1)->get();
+        // $users = User::where('status',1)->get();
+        $users = User::where('id',$request->assessor_user_id)->get();
 
-        $appraisalcycles = AppraisalCycle::where('status_id',1)->orderBy('id')->get();
+        $appraisalcycles = AppraisalCycle::where('id',$request->appraisal_cycle_id)->where('status_id',1)->orderBy('id')->get();
 
 
         $assformcats = AssFormCat::where('status_id',1)->orderBy('id')->get();
