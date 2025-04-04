@@ -111,6 +111,12 @@
                     })
                     .then(response => response.json())
                     .then((data) => {
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "{{ Auth::user()->name }} can now receive notification on this device.",
+                            text: "Notification will appear when you receive appraisal forms.",
+                        });
                         console.log("New Token:", data.token);
                         return data.token;
                     });
