@@ -31,5 +31,6 @@ return [
     'sourcing_approve' => 'Sourcing Approve',
     'acknowledge_document' => 'Acknowledge Document',
     'logistic_approve' => 'Logistics Approve',
+    'savedraft'                     => 'ယာယီသိမ်းပါ',
 ];
 ?>

@@ -49,7 +49,7 @@
                                         <img src="{{asset('images/small/flag-02.png')}}" alt="img-flag" class="img-fluid image-flag mr-2">Myanmar
                                     @break
                                     @default
-                                        <img src="{{asset('images/small/flag-01.png')}}" alt="img-flag" class="img-fluid image-flag mr-2">English
+                                        <img src="{{asset('images/small/flag-02.png')}}" alt="img-flag" class="img-fluid image-flag mr-2">Myanmar
                                 @endswitch
                             </a>
                             <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton2">

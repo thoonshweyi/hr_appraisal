@@ -107,8 +107,13 @@
                                 </div>
 
                                 <div class="col-lg-12 mt-4">
-                                    <div id="table_containers" class="container-box d-none">
+                                    <div id="myloading-container" class=" d-none">
+                                        <div class="text-center">
+                                            <img src="{{ asset('images/spinner.gif') }}" id="myloading" class="myloading" alt="loading"/>
+                                        </div>
+                                    </div>
 
+                                    <div id="table_containers" class="container-box d-none">
 
                                     </div>
                                 </div>
@@ -208,6 +213,9 @@
                         type: "GET",
                         dataType: "json",
                         data: $('#appraisal_form').serialize(),
+                        beforeSend : function(){
+                            $("#myloading-container").removeClass('d-none');
+                        },
                         success: function (response) {
                             console.log(response);
 
@@ -278,6 +286,9 @@
 
                             $('.fill_btn').attr('disabled','disabled')
 
+                        },
+                        complete: function(){
+                            $("#myloading-container").addClass('d-none');
                         },
                         error: function (response) {
                             console.log("Error:", response);

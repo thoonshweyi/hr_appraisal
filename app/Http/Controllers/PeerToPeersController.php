@@ -88,8 +88,8 @@ class PeerToPeersController extends Controller
              "ass_form_cat_ids.*"=>"required|string",
 
         ],[
-            'asssessee_user_ids.*.required' => 'Please enter criteria name values.',
-            'ass_form_cat_ids.*.required' => 'Please enter excellent values.',
+            'asssessee_user_ids.required' => 'Please select assessee users.',
+            'ass_form_cat_ids.required' => "Assessee users has no Assessment Form Category",
         ]);
 
 

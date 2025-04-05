@@ -128,6 +128,11 @@
                                 </div>
 
                                 <div class="col-lg-12 my-2">
+                                    <div id="myloading-container" class=" d-none">
+                                        <div class="text-center">
+                                            <img src="{{ asset('images/spinner.gif') }}" id="myloading" class="myloading" alt="loading"/>
+                                        </div>
+                                    </div>
                                     <!-- Table -->
                                    <div class="table-responsive mt-3">
                                        <table id="assesseestable" class="table table-bordered">
@@ -156,7 +161,7 @@
 
                                     <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
 
-                                    <button type="submit" class="btn btn-success btn-sm rounded-0">Save Selection</button>
+                                    <button type="button" class="btn btn-success btn-sm rounded-0 save-btns">Save Selection</button>
                                 </div>
                             </div>
                         </form>
@@ -263,9 +268,15 @@
                 type: "GET",
                 dataType: "json",
                 data: $('#peer_to_peer_form').serialize(),
+                beforeSend : function(){
+                    $("#myloading-container").removeClass('d-none');
+                },
                 success: function (response) {
                     {{-- console.log(response); --}}
                     renderTable(response);
+                },
+                complete: function(){
+                    $("#myloading-container").addClass('d-none');
                 },
                 error: function (response) {
                     console.log("Error:", response);
@@ -376,6 +387,25 @@
         });
         {{-- End Clear Btn --}}
 
+
+        {{-- Start Save Btn --}}
+        $('.save-btns').click(function(e){
+            Swal.fire({
+                title: "Are you sure you want to save Peer To Peer",
+                text: "",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, save it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('#peer_to_peer_form').submit();
+                }
+            });
+        });
+        {{-- End Save Btn --}}
     });
 </script>
 

@@ -2,6 +2,7 @@
 
 // use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FAQController;
@@ -36,7 +37,7 @@ use App\Http\Controllers\AssesseeSummaryController;
 use App\Http\Controllers\AttachFormTypesController;
 use App\Http\Controllers\AgileDepartmentsController;
 use App\Http\Controllers\PushNotificationController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\FirebaseNotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -268,37 +269,54 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/otps/create",[OtpsController::class,"create"])->name("otps.create");
 });
 
-Route::get("/send-notification",[PushNotificationController::class,"sendNotification"])->name("sendNotification");
+// Route::get("/send-notification",[PushNotificationController::class,"sendNotification"])->name("sendNotification");
 
-Route::post('/api/pusher-auth', function (Request $request) {
-    $beamsClient = new PushNotifications([
-        "instanceId" => config('services.beams.instance_id'),
-        "secretKey" => config('services.beams.secret_key'),
-    ]);
+// Route::post('/api/pusher-auth', function (Request $request) {
+//     $beamsClient = new PushNotifications([
+//         "instanceId" => config('services.beams.instance_id'),
+//         "secretKey" => config('services.beams.secret_key'),
+//     ]);
 
-    $userId = $request->user_id;
-    // dd($userId);
-    // $userId = '1';
+//     $userId = $request->user_id;
+//     // dd($userId);
+//     // $userId = '1';
 
-    $beamsToken = $beamsClient->generateToken($userId);
+//     $beamsToken = $beamsClient->generateToken($userId);
 
-    return response()->json(['token' => $beamsToken]);
-});
-Route::get('/pusher-unsubscribe', function (Request $request) {
-    // $userId = auth()->id(); // Get logged-in user ID
-        $userId = '1';
-    // Initialize Pusher Beams Client
-    $beamsClient = new PushNotifications([
-        "instanceId" => config('services.beams.instance_id'),
-        "secretKey" => config('services.beams.secret_key'),
-    ]);
+//     return response()->json(['token' => $beamsToken]);
+// });
+// Route::get('/pusher-unsubscribe', function (Request $request) {
+//     // $userId = auth()->id(); // Get logged-in user ID
+//         $userId = '1';
+//     // Initialize Pusher Beams Client
+//     $beamsClient = new PushNotifications([
+//         "instanceId" => config('services.beams.instance_id'),
+//         "secretKey" => config('services.beams.secret_key'),
+//     ]);
 
-    // Remove user from Pusher Beams
-    $beamsClient->deleteUser($userId);
+//     // Remove user from Pusher Beams
+//     $beamsClient->deleteUser($userId);
 
-    // Logout the user
-    // auth()->logout();
-    // Session::flush();
+//     // Logout the user
+//     // auth()->logout();
+//     // Session::flush();
 
-    return response()->json(['message' => 'Logged out successfully']);
+//     return response()->json(['message' => 'Logged out successfully']);
+// });
+
+
+
+Route::get("/send-notification",[FirebaseNotificationController::class,"sendNotification"])->name("sendNotification");
+Route::post('/save-fcm-token', function (Illuminate\Http\Request $request) {
+    $request->validate(['fcm_token' => 'required']);
+
+    \App\Models\FCMSubscription::updateOrCreate(
+        ['fcm_token' => $request->fcm_token],
+        [
+            'user_id' => auth()->id(),
+            'status_id' => 1
+        ]
+    );
+
+    return response()->json(['success' => true]);
 });

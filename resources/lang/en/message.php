@@ -104,5 +104,9 @@
         'select_supplier_name' => 'Please Select Supplier Name',
 
         'add_supplier' => 'please add supplier',
+
+
+        'formresult_title' => "Your rating-value doesn't match the given-rating-scale-values!",
+        'formresult_description' => 'Please enter one of: '
     ]
 ?>

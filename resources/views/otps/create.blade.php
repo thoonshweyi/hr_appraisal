@@ -55,6 +55,9 @@
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
 <script type="text/javascript">
     $(document).ready(function(){
 
@@ -154,9 +157,11 @@
              url:"/verifyotps/signin",
              type:"POST",
              data:$(this).serialize(),
-             success:function(response){
+             success: function(response){
                 console.log(response);
                 if(response.message && response.valid == "true"){
+
+
                     window.location.href = "{{ route('home') }}";
                 }else{
                     Swal.fire({

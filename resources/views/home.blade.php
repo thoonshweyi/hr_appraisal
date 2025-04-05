@@ -43,90 +43,70 @@
     });
 </script> --}}
 
-<script src="https://cdn.jsdelivr.net/npm/@pusher/push-notifications-web@1.1.0/dist/push-notifications-cdn.js"></script>
+
+
+@endsection
+
+
+@section('js')
+<!-- Firebase scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-messaging-compat.js"></script>
 <script>
-    navigator.serviceWorker.register('/service-worker.js')
+    navigator.serviceWorker.register('/firebase-messaging-sw.js')
     .then((registration) => {
         console.log("Service Worker registered with scope:", registration.scope);
     })
     .catch(console.error);
+    const firebaseConfig = {
+        apiKey: "AIzaSyBpHbI8rMw6pWjWalY5yF2jjOc2dOYwQ3Q",
+        authDomain: "hr-appraisal.firebaseapp.com",
+        projectId: "hr-appraisal",
+        storageBucket: "hr-appraisal.firebasestorage.app",
+        messagingSenderId: "254575584163",
+        appId: "1:254575584163:web:66f30fcd9199f938eb7016",
+        measurementId: "G-X1625951R8"
+      };
 
-    {{-- const beamsClient = new PusherPushNotifications.Client({
-        instanceId: "3c970f94-fe4f-491d-99ec-f82430cae1cb",
-    });
 
-    beamsClient.start()
-        .then(() => beamsClient.addDeviceInterest("general")) // Subscribe to "general"
-        .then(() => console.log("Successfully subscribed to push notifications!"))
-        .catch(console.error); --}}
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
 
+    function initFirebaseMessagingRegistration() {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            messaging.getToken({ vapidKey: "BNVN308vit0ouOpfUT-L7C6VQS0gRqOjPvUKIk99eYa1n4ce6dX9g0YEki3cB2vXEffZNOVK_HbHm2PD_p1zy8o" })
+              .then((token) => {
+                console.log("FCM Token:", token);
 
-
-        const beamsClient = new PusherPushNotifications.Client({
-            instanceId: "3c970f94-fe4f-491d-99ec-f82430cae1cb", // Replace with your Instance ID
+                // Send token to backend
+                $.ajax({
+                  url: '/save-fcm-token',
+                  method: 'POST',
+                  data: {
+                    fcm_token: token,
+                    _token: '{{ csrf_token() }}'
+                  },
+                  success: function(response) {
+                    console.log("Token saved");
+                  }
+                });
+              }).catch((err) => {
+                console.error("Error getting token", err);
+              });
+          } else {
+            console.error("Permission not granted for notifications");
+          }
         });
+      }
 
-        {{-- beamsClient.start()
-        .then(() => {
-            // Get user ID dynamically from backend session or authentication system
-            let userId = "{{ Auth::id() }}"; // Replace this dynamically
+      initFirebaseMessagingRegistration();
 
-            return beamsClient.setUserId(userId, {
-                fetchToken: () => {
-                    return fetch("/api/pusher-auth", {
-                        method: "POST",
-                        body: JSON.stringify({ user_id: userId }),
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                        }
-                    })
-                    .then(response => response.json())
-                    .then((data)=>{
-                        console.log(data.token)
-                        return data.token}); // Corrected token extraction
-                }
-            });
-        })
-        .catch(console.error); --}}
-
-
-        beamsClient.clearAllState()
-        .then(() => {
-            console.log("Beams client reset.");
-            return beamsClient.start();
-        })
-        .then(() => {
-            let userId = "{{ Auth::id() }}"; // Replace this dynamically
-
-            return beamsClient.setUserId(userId, {
-                fetchToken: () => {
-                    return fetch("/api/pusher-auth", {
-                        method: "POST",
-                        body: JSON.stringify({ user_id: userId }),
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                        }
-                    })
-                    .then(response => response.json())
-                    .then((data) => {
-
-                        Swal.fire({
-                            icon: "success",
-                            title: "{{ Auth::user()->name }} can now receive notification on this device.",
-                            text: "Notification will appear when you receive appraisal forms.",
-                        });
-                        console.log("New Token:", data.token);
-                        return data.token;
-                    });
-                }
-            });
-        })
-        .catch(console.error);
-
-
-
-</script>
+    // Handle foreground messages
+    messaging.onMessage(function(payload) {
+      console.log("Message received: ", payload);
+      alert(payload.notification.title + "\n" + payload.notification.body);
+    });
+  </script>
 
 @endsection

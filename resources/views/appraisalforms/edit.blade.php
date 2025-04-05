@@ -17,15 +17,20 @@
 
 
             <div class="col-md-12 mb-2">
-                @if (count($errors) > 0)
-                <div class="alert alert-danger">
-                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+                @php
+                $errorCounts = array_count_values($errors->all());
+                @endphp
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                @once($error)
+                                    <li>{{ $error }} x{{ $errorCounts[$error] }} times.</li>
+                                @endonce
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
 
                 @if ($message = Session::get('error'))
@@ -65,7 +70,7 @@
                     @can('print-appraisal-form')
                     <div class="col-auto mb-2">
                         {{-- <a href="{{ route('appraisalforms.printpdf',$appraisalform->id) }}" class="btn  cus_btn">Print</a> --}}
-                        <a href="javascript:void(0);" class="btn cus_btn">Print</a>
+                        <a href="javascript:void(0);" class="btn cus_btn">{{ __('button.print_document')}}</a>
 
                     </div>
                     @endcan
@@ -216,11 +221,11 @@
 
                         <div class="col-md-12 mt-2">
 
-                            <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
-                            <input type="button" name="savedraft" class="btn btn-warning btn-sm rounded-0 savedraftbtns" value="Save Draft" />
+                            <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">{{ __('button.back')}}</button>
+                            <input type="button" name="savedraft" class="btn btn-warning btn-sm rounded-0 savedraftbtns" value="{{ __('button.savedraft')}}" />
 
 
-                            <button type="button" class="btn btn-success btn-sm rounded-0 submitbtns">Submit</button>
+                            <button type="button" class="btn btn-success btn-sm rounded-0 submitbtns">{{ __('button.submit')}}</button>
                         </div>
                     </form>
                     </div>
@@ -289,15 +294,13 @@
 
                     Swal.fire({
                         icon: "warning",
-                        title: "Your rating-value doesn't match the given-rating-scale-values!",
-                        text:"Please enter one of: " + allowed.join(', '),
+                        title: "သတ်မှတ်ထားသော အဆင့်သတ်မှတ်ချက်များနှင့် မကိုက်ညီပါ။",
+                        text: allowed.join(', ')+" ထဲမှ တစ်ခုကို ရွေးပါ" ,
                     });
                     this.value = ''; // Clear invalid input
                 }
                 updateTotals();
-
             });
-
         });
 
         function updateTotals() {

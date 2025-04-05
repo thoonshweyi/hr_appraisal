@@ -81,11 +81,18 @@
     </head>
   <body class="  ">
     <!-- loader Start -->
-    <!-- <div id="loading">
+     {{-- <div id="loading">
           <div id="loading-center">
           </div>
-    </div> -->
+    </div> --}}
     <!-- loader END -->
+
+
+    {{-- <div class="cusloading-container">
+        <div>
+            <img src="{{ asset('images/spinner.gif') }}" alt="spinner"/>
+        </div>
+    </div> --}}
     <!-- Wrapper Start -->
     <div class="wrapper">
         <div class="iq-sidebar  sidebar-default ">
@@ -133,6 +140,7 @@
                 "progressBar":true,
                 "closeButton":true
             };
+            toastr.options.preventDuplicates = true;
     </script>
 
         @if(Session::has("success"))
