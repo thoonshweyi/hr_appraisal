@@ -13,20 +13,36 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage(function(payload) {
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        data: {
-            click_action: payload.data.click_action || payload.data.link
-        }
-    };
+// messaging.onBackgroundMessage(function(payload) {
+//   console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
-});
+//   const notificationTitle = payload.notification.title;
+//   const link = payload.data.link || 'https://yourdomain.com';
 
-self.addEventListener('notificationclick', function(event) {
-    const click_action = event.notification.data?.click_action || 'https://your-fallback-url.com';
-    event.notification.close();
-    event.waitUntil(clients.openWindow(click_action));
-});
+//   const notificationOptions = {
+//     body: payload.notification.body,
+//     data: {
+//       link: link,
+//     },
+//   };
+
+//   self.registration.showNotification(notificationTitle, notificationOptions);
+// });
+
+// self.addEventListener('notificationclick', function(event) {
+//   event.notification.close();
+//   const link = event.notification.data.link;
+
+//   event.waitUntil(
+//     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+//       for (const client of clientList) {
+//         if (client.url === link && 'focus' in client) {
+//           return client.focus();
+//         }
+//       }
+//       if (clients.openWindow) {
+//         return clients.openWindow(link);
+//       }
+//     })
+//   );
+// });

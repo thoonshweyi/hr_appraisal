@@ -34,19 +34,16 @@ class FirebaseNotificationController extends Controller
                     'token' => $fcmToken,
                     'notification' => [
                         'title' => 'Hello!',
-                        'body' => 'This is a push notification using HTTP v1 API',
-                    ],
-                    'data' => [
-                        'click_action' => 'https://www.youtube.com/',
-                        'link' => 'https://www.youtube.com/',
+                        'body' => 'Click to see more details.',
                     ],
                     'webpush' => [
                         'fcm_options' => [
-                            'link' => 'https://www.youtube.com/',
-                        ],
-                    ],
+                            'link' => 'http://127.0.0.1:8000/'
+                        ]
+                    ]
                 ],
             ];
+
 
             $response = Http::withToken($accessToken)->post($url, $message);
             $results[] = [

@@ -35,12 +35,12 @@ class FCMHelper
                         'body' => $message,
                     ],
                     'data' => [
-                        'click_action' => 'https://your-website.com/some-path',
-                        'link' => 'https://your-website.com/some-path',
+                        'click_action' => 'http://localhost',
+                        'link' => 'http://localhost',
                     ],
                     'webpush' => [
                         'fcm_options' => [
-                            'link' => 'https://your-website.com/some-path',
+                            'link' => route('appraisalforms.show',$appraisal_form_id),
                         ],
                     ],
                 ],

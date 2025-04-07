@@ -103,10 +103,10 @@
       initFirebaseMessagingRegistration();
 
     // Handle foreground messages
-    messaging.onMessage(function(payload) {
+    {{-- messaging.onMessage(function(payload) {
       console.log("Message received: ", payload);
       alert(payload.notification.title + "\n" + payload.notification.body);
-    });
+    }); --}}
   </script>
 
 @endsection
