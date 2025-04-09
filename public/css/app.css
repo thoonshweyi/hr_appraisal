@@ -357,6 +357,7 @@ cursor: pointer;
 transition: background-color 0.3s ease-in;
 }
 .nav .tablinks:hover{
+    color:#000;
 background-color: #f3f3f3;
 }
 
@@ -484,22 +485,22 @@ display: none;
 
 
 .wrapped_assformcats .selectize-control .selectize-input {
-    white-space: normal !important; /* Allow text wrapping */
-    overflow: visible !important; /* Ensure overflow is shown */
-    text-overflow: unset !important; /* Prevent text from being shortened */
-    word-break: break-word !important; /* Ensure long words wrap */
-    min-height: 40px !important; /* Adjust height dynamically */
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    word-break: break-word !important;
+    min-height: 40px !important;
 }
 
 .wrapped_assformcats .selectize-control .selectize-input > div {
-    white-space: normal !important; /* Allow wrapping inside selected items */
+    white-space: normal !important;
     overflow: visible !important;
     word-break: break-word !important;
 }
 
 .wrapped_assformcats .selectize-dropdown {
-    width: auto !important; /* Allow dynamic width */
-    min-width: 200px !important; /* Adjust width as needed */
+    width: auto !important;
+    min-width: 200px !important;
     max-width: 100% !important;
     word-break: break-word !important;
     white-space: normal !important;
@@ -816,6 +817,15 @@ height: auto !important;
 
     z-index: 100;
 }
-.myloading-container{
-}
+
 /* End Custom Loading */
+
+
+/* Start Custom Sidebar */
+.iq-sidebar{
+    background-color: #1f4e78;
+}
+.iq-sidebar-menu a{
+    color: #ffff !important;
+}
+/* End Custom Sidebar */

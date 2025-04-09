@@ -212,6 +212,8 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::delete("/appraisalcycles/{id}",[AppraisalCyclesController::class,"destroy"])->name("appraisalcycles.destroy");
     Route::post("/appraisalcyclesstatus",[AppraisalCyclesController::class,"changestatus"])->name("appraisalcycles.changestatus");
     Route::get("/appraisalcycles/{id}/countdown",[AppraisalCyclesController::class,"countdown"])->name("appraisalcycles.countdown");
+    Route::get("/appraisalcyclessendnotifications",[AppraisalCyclesController::class,"sendNotifications"])->name("appraisalcycles.sendnotifications");
+
 
 
 
@@ -246,6 +248,7 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::get("/fillform",[AppraisalFormsController::class,"fillform"])->name("appraisalforms.fillform");
     Route::get("/appraisalformsprintpdf/{id}",[AppraisalFormsController::class,"printpdf"])->name("appraisalforms.printpdf");
     Route::get("/appraisalformsshowprintframe/{id}",[AppraisalFormsController::class,"showprintframe"])->name("appraisalforms.showprintframe");
+    Route::get("/appraisalformsgroupedforms",[AppraisalFormsController::class,"groupedforms"])->name("appraisalforms.groupedforms");
 
 
 
@@ -259,7 +262,15 @@ Route::group(['middleware' => ['auth','otp']], function () {
 
 
 
-
+    Route::post('/clear-filter-sessions', function () {
+        session()->forget([
+            'filter_employee_name',
+            'filter_employee_code',
+            'filter_branch_id',
+            'filter_position_level_id',
+        ]);
+        return response()->json(['status' => 'success']);
+    })->name('clear.filter.sessions');
 
 });
 Route::group(['middleware' => ['auth']], function () {

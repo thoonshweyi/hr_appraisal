@@ -9,7 +9,7 @@
                     <div>
                         <h4 class="mb-3">Sections</h4>
 
-                        <a href="#createmodal" class="btn btn-primary" data-toggle="modal">Create</a>
+                        {{-- <a href="#createmodal" class="btn btn-primary" data-toggle="modal">Create</a> --}}
 
 
 
@@ -43,21 +43,11 @@
             <div class="col-lg-12 my-2 ">
                 <form class="d-inline" action="{{ route('sections.index') }}" method="GET">
                     @csrf
-                    <div class="row align-items-end justify-content-end ">
+                    <div class="row align-items-end">
 
                         <div class="col-md-2">
                             <label for="filter_name">Name <span class="text-danger">*</span></label>
                             <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Department Name" value="{{ request()->filter_name }}"/>
-                        </div>
-
-                        <div class="col-md-2">
-                            <label for="filter_division_id">Division</label>
-                            <select name="filter_division_id" id="filter_division_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Division</option>
-                                @foreach($divisions as $division)
-                                    <option value="{{$division['id']}}" {{ $division['id'] == request()->filter_division_id ? 'selected' : '' }}>{{$division['name']}}</option>
-                                @endforeach
-                            </select>
                         </div>
 
 
@@ -138,9 +128,9 @@
                     <tr class="ligth ligth-data">
                         <th>No</th>
                         <th>Name</th>
-                        <th>Division</th>
+                        {{-- <th>Division</th>
                         <th>Department</th>
-                        <th>Sub Department</th>
+                        <th>Sub Department</th> --}}
                         <th>Status</th>
                         <th>By</th>
                         <th>Created At</th>
@@ -153,9 +143,9 @@
                     <tr>
                         <td>{{$idx + $sections->firstItem()}}</td>
                         <td>{{$section["name"]}}</td>
-                        <td>{{ $section->division->name }}</td>
+                        {{-- <td>{{ $section->division->name }}</td>
                         <td>{{ $section->department->name}}</td>
-                        <td>{{ $section->subdepartment->name}}</td>
+                        <td>{{ $section->subdepartment->name}}</td> --}}
                         <td>
                             <div class="custom-switch p-0">
                                 <!-- The actual checkbox that controls the switch -->

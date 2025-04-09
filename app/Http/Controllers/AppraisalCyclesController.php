@@ -10,10 +10,12 @@ use App\Models\Status;
 use App\Models\Section;
 use App\Models\Division;
 use App\Models\Position;
+use App\Helpers\FCMHelper;
 use App\Models\BranchUser;
 use App\Models\PeerToPeer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\AppraisalForm;
 use App\Models\PositionLevel;
 use App\Models\SubDepartment;
 use App\Imports\SectionImport;
@@ -338,7 +340,7 @@ class AppraisalCyclesController extends Controller
                                 <input type='hidden' name='assessor_user_id' value='$participantuser->id'>
                                 <input type='hidden' name='appraisal_cycle_id' value='$id'/>
                                <button type='submit' class='btn btn-link p-0 m-0' title='Send'>
-                                    <i class='fas fa-paper-plane text-primary mr-2'></i>
+                                    <i class='far fa-paper-plane text-primary mr-2'></i>
                                 </button>
                             </form>
 
@@ -347,6 +349,14 @@ class AppraisalCyclesController extends Controller
                                 <input type='hidden' name='filter_appraisal_cycle_id' value='$id'/>
                                     <button type='submit' class='btn btn-link p-0 m-0' title='Open'>
                                         <i class='far fa-envelope-open text-primary'></i>
+                                    </button>
+                            </form>
+
+                            <form id='sendnotiform' action='".route('appraisalcycles.sendnotifications')."' method='GET'>
+                                <input type='hidden' name='assessor_user_id' value='$participantuser->id'>
+                                <input type='hidden' name='appraisal_cycle_id' value='$id'/>
+                                    <button type='button' class='btn btn-link p-0 m-0 notify-btns' title='Notify'>
+                                        <i class='fas fa-bullhorn'></i>
                                     </button>
                             </form>
                         </div>
@@ -438,18 +448,25 @@ class AppraisalCyclesController extends Controller
             $results = $results->whereHas('employee',function($query) use($filter_employee_name){
                 $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
             });
+
+            $request->session()->put('filter_employee_name', $filter_employee_name);
         }
 
         if (!empty($filter_employee_code)) {
             $results = $results->whereHas('employee',function($query) use($filter_employee_code){
                 $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%');
             });
+
+            $request->session()->put('filter_employee_code', $filter_employee_code);
+
         }
 
         if (!empty($filter_branch_id)) {
             $results = $results->whereHas('employee',function($query) use($filter_branch_id){
                 $query->where('branch_id', $filter_branch_id);
             });
+
+            $request->session()->put('filter_branch_id', $filter_branch_id);
         }
 
 
@@ -457,6 +474,9 @@ class AppraisalCyclesController extends Controller
             $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
                 $query->where('position_level_id', $filter_position_level_id);
             });
+
+            $request->session()->put('filter_position_level_id', $filter_position_level_id);
+
         }
 
 
@@ -470,7 +490,7 @@ class AppraisalCyclesController extends Controller
    }
 
 
-   public function countdown(Request $request,string $id){
+    public function countdown(Request $request,string $id){
         $appraisalcycle = AppraisalCycle::find($id);
         $startdate = Carbon::parse($appraisalcycle->action_start_date)->startOfDay()->format('M d Y 00:00:00');
         // dd($startdate);
@@ -479,6 +499,28 @@ class AppraisalCyclesController extends Controller
             return redirect(route("appraisalforms.index"))->with('error',"AppraisalCycle can only be counted before action start.");
         }
         return view("appraisalcycles.countdown",compact('appraisalcycle','startdate'));
+    }
+
+
+    public function sendNotifications(Request $request){
+        $assessor_user_id = $request->assessor_user_id;
+        $appraisal_cycle_id = $request->appraisal_cycle_id;
+
+        $appraisalforms = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
+        ->where('assessor_user_id', $assessor_user_id)
+        ->get();
+
+        $responses = [];
+
+        forEach($appraisalforms as $appraisalform){
+                $title = "ရာထူးတိုးဖောင်တစ်ခု လက်ခံရရှိခြင်း";
+                $message = "သင်အကဲဖြတ်ပေးရန် ရာထူးတိုးဖောင်တစ်ခုရရှိပါသည်။ သတ်မှတ်အချိန်ကာလအတွင်း အကဲဖြတ်၍ဖောင်ကိုပြန်လည်၍ပေးပို့ပေးရန်ဖြစ်ပါသည်။";
+                $responses[] =  $response = FCMHelper::sendFCMNotification($assessor_user_id,$title,$message,$appraisalform->id);
+        }
+
+        return response()->json($responses);
+
+
     }
 }
 

@@ -81,7 +81,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group d-flex wrapped_assformcats" style="white-space: nowrap;">
 
-                                        <label for="filter_ass_form_cat_id">Assessment Form Category</label>
+                                        <label for="filter_ass_form_cat_id">Form Category</label>
                                         <select name="filter_ass_form_cat_id" id="filter_ass_form_cat_id" class="form-control form-control-sm rounded-0 ml-2" value="">
                                             <option value="" selected disabled>Choose Attach Form Type</option>
                                             @foreach($assformcats as $assformcat)
@@ -217,7 +217,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Assessment Form Category',
+            placeholder: 'Choose Form Category',
             searchField: ["value", "label"]
         });
 
@@ -228,7 +228,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Assessment Form Category',
+            placeholder: 'Choose Branch',
             searchField: ["value", "label"]
         });
 
@@ -239,7 +239,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Assessment Form Category',
+            placeholder: 'Choose Department',
             searchField: ["value", "label"]
         });
 

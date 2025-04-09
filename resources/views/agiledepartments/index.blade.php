@@ -50,7 +50,7 @@
                             <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Department Name" value="{{ request()->filter_name }}"/>
                         </div>
 
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <label for="filter_division_id">Division</label>
                             <select name="filter_division_id" id="filter_division_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Division</option>
@@ -58,7 +58,7 @@
                                     <option value="{{$division['id']}}" {{ $division['id'] == request()->filter_division_id ? 'selected' : '' }}>{{$division['name']}}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
                         <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</a>
                         @if(count(request()->query()) > 0)
@@ -137,7 +137,7 @@
                     <tr class="ligth ligth-data">
                         <th>No</th>
                         <th>Name</th>
-                        <th>Division</th>
+                        {{-- <th>Division</th> --}}
                         <th>Status</th>
                         <th>By</th>
                         <th>Created At</th>
@@ -150,7 +150,7 @@
                     <tr>
                         <td>{{$idx + $agiledepartments->firstItem()}}</td>
                         <td>{{$agiledepartment["name"]}}</td>
-                        <td>{{ $agiledepartment->division->name }}</td>
+                        {{-- <td>{{ $agiledepartment->division->name }}</td> --}}
                         <td>
                             <div class="custom-switch p-0">
                                 <!-- The actual checkbox that controls the switch -->

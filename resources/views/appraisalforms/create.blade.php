@@ -122,8 +122,7 @@
 
                                 <div class="col-md-12 mt-2">
 
-                                    <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
-
+                                    <button type="button" class="btn btn-light btn-sm rounded-0" onclick="window.location.href='{{route('appraisalcycles.edit',request('appraisal_cycle_id'))}}'">Back</button>
                                     <button type="button" class="btn btn-success btn-sm rounded-0 send_btn">Send Form</button>
                                 </div>
                             </div>

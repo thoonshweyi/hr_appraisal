@@ -59,7 +59,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
             'position_level'=> "required|exists:position_levels,name",
             "nrc"=> "required",
             "father_name"=> "required",
-            'attach_form_type' => 'required|exists:attach_form_types,name',
+            'attach_form_type' => '',
         ]);
         // If validation fails, throw an exception with the row number
         if ($validator->fails()) {
@@ -96,7 +96,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
                 "division_id"        => Division::where('name', $row['division'])->first()?->id,
                 "department_id"      => AgileDepartment::where('name', $row['department'])->first()?->id,
                 "sub_department_id"  => SubDepartment::where('name', $row['sub_department'])->first()?->id,
-                "section_id"         => Section::where('name', $row['section'])->first()?->id,
+                "section_id"         => Section::where('name', 'like' , "%".$row['section'].'%')->first()?->id,
                 "position_id"        => Position::where('name', $row['position'])->first()?->id,
                 'status_id'          => 1, // Default status_id (change as needed)
                 'user_id'            => $user_id,

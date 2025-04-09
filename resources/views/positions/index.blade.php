@@ -138,10 +138,10 @@
                     <tr class="ligth ligth-data">
                         <th>No</th>
                         <th>Name</th>
-                        <th>Division</th>
+                        {{-- <th>Division</th>
                         <th>Department</th>
                         <th>Sub Department</th>
-                        <th>Section</th>
+                        <th>Section</th> --}}
                         <th>Status</th>
                         <th>By</th>
                         <th>Created At</th>
@@ -154,10 +154,10 @@
                     <tr>
                         <td>{{$idx + $positions->firstItem()}}</td>
                         <td>{{$position["name"]}}</td>
-                        <td>{{ $position->division->name }}</td>
+                        {{-- <td>{{ $position->division->name }}</td>
                         <td>{{ $position->department->name}}</td>
                         <td>{{ $position->subdepartment->name}}</td>
-                        <td>{{ $position->section->name}}</td>
+                        <td>{{ $position->section->name}}</td> --}}
 
                         <td>
                             <div class="custom-switch p-0">

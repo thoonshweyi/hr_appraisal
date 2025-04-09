@@ -26,12 +26,11 @@ class PositionImport implements ToModel,WithHeadingRow, OnEachRow{
         // $row['department'] = Str::lower($row['department']);
 
         $validator = Validator::make($row, [
-            'name'      => 'required|string|max:255|unique:positions,name',
-            'division' => 'required|exists:divisions,name',
-            // 'department' => 'required|exists:agile_departments,name',
-            'department' => ['required',"exists:agile_departments,name"],
-            'sub_department' => 'required|exists:sub_departments,name',
-            'section' => 'required|exists:sections,name',
+            'name'      => 'required|string|max:255',
+            // 'division' => 'required|exists:divisions,name',
+            // 'department' => ['required',"exists:agile_departments,name"],
+            // 'sub_department' => 'required|exists:sub_departments,name',
+            // 'section' => 'required|exists:sections,name',
         ]);
         // If validation fails, throw an exception with the row number
         if ($validator->fails()) {
@@ -48,22 +47,21 @@ class PositionImport implements ToModel,WithHeadingRow, OnEachRow{
 
         $this->rowNumber += 1;
 
-
-        return new Position([
-            'name'      => $row['name'],
+        return Position::firstOrCreate([
+            'name'      => $row['name']
+        ],[
             'slug'      => Str::slug($row['name']),
-            "division_id"=> Division::where('name',$row['division'])->first()->id,
-            "department_id"=> AgileDepartment::where('name',$row['department'])->first()->id,
-            "sub_department_id"=> SubDepartment::where('name',$row['sub_department'])->first()->id,
-            "section_id"=> Section::where('name',$row['section'])->first()->id,
-            'status_id' => 1, // Default status_id (change as needed)
+            // "division_id"=> Division::where('name',$row['division'])->first()->id,
+            // "department_id"=> AgileDepartment::where('name',$row['department'])->first()->id,
+            // "sub_department_id"=> SubDepartment::where('name',$row['sub_department'])->first()->id,
+            // "section_id"=> Section::where('name',$row['section'])->first()->id,
+            'status_id' => 1,
             'user_id'   => $user_id,
         ]);
     }
 
     public function onRow($row)
     {
-        // Increment the row number with each row
         $this->rowNumber += 1;
     }
 

@@ -20,8 +20,8 @@ class AgileDepartmentImport implements ToModel,WithHeadingRow, OnEachRow{
     {
         // Validate data
         $validator = Validator::make($row, [
-            'name'      => 'required|string|max:255|unique:agile_departments,name',
-            'division' => 'required|exists:divisions,name',
+            'name'      => 'required|string|max:255',
+            // 'division' => 'required|exists:divisions,name',
         ]);
 
         // If validation fails, throw an exception with the row number
@@ -37,10 +37,12 @@ class AgileDepartmentImport implements ToModel,WithHeadingRow, OnEachRow{
         $user_id = $user["id"];
 
         $this->rowNumber += 1;
-        return new AgileDepartment([
-            'name'      => $row['name'],
+
+        return AgileDepartment::firstOrCreate([
+            'name'      => $row['name']
+        ],[
             'slug'      => Str::slug($row['name']),
-            "division_id"=> Division::where('name',$row['division'])->first()->id,
+            // "division_id"=> Division::where('name',$row['division'])->first()->id,
             'status_id' => 1, // Default status_id (change as needed)
             'user_id'   => $user_id,
         ]);

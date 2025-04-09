@@ -176,6 +176,7 @@
 
                             <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
 
+
                             <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
                         </div>
                     </div>

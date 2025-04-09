@@ -101,7 +101,7 @@
                     <img src="{{ asset('images/hrlogo.jpg') }}" class="img-fluid rounded-normal light-logo" alt="logo"><h5 class="logo-title light-logo ml-3">{{ config('app.name', 'Laravel') }}</h5>
                 </a>
                 <div class="iq-menu-bt-sidebar ml-0">
-                    <i class="las la-bars wrapper-menu"></i>
+                    <i class="las la-bars wrapper-menu text-white"></i>
                 </div>
             </div>
 

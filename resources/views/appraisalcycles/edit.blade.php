@@ -39,7 +39,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     {{-- <label for="filter_employee_name">Enployee Name <span class="text-danger">*</span></label> --}}
-                                    <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Name" value="{{ request()->filter_name }}"/>
+                                    <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Name" value="{{ session('filter_employee_name') }}"/>
                                     <i class="fas fa-user"></i>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     {{-- <label for="filter_employee_code">Enployee Code <span class="text-danger">*</span></label> --}}
-                                    <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
+                                    <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Code" value="{{ session('filter_employee_code') }}"/>
                                     <i class="fas fa-id-card"></i>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                                     <select name="filter_branch_id" id="filter_branch_id" class="custom-select custom-select-sm rounded-0 filter_input">
                                         <option value="" selected disabled>Choose Branch</option>
                                         @foreach($branches as $branch)
-                                            <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
+                                            <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == session('filter_branch_id') ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
                                         @endforeach
                                     </select>
                                     <i class="fas fa-building"></i>
@@ -71,16 +71,20 @@
                                     <select name="filter_position_level_id" id="filter_position_level_id" class="custom-select custom-select-sm rounded-0 filter_input">
                                         <option value="" selected disabled>Choose Position Level</option>
                                         @foreach($positionlevels as $positionlevel)
-                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == session('filter_position_level_id') ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
                                         @endforeach
                                     </select>
                                     <i class="fas fa-briefcase"></i>
                                 </div>
                             </div>
 
-                            <div class="col-auto">
-                                <button type="button" class="btn my-2 ml-auto cus_btn searchbtns">Search</button>
-                           </div>
+                            <div class="col-auto ">
+                                <div class="d-flex align-items-end">
+                                    <button type="button" class="btn  ml-auto mr-2 cus_btn searchbtns">Search</button>
+                                    <button type="button" id="btn-clear" class="btn btn-light ml-auto">Reset</button>
+                                </div>
+
+                            </div>
 
                         </div>
 
@@ -216,6 +220,12 @@
                                         <small class="subtitle">Search by name or employee id</small>
                                         <input type="text" name="search" id="search" class="search" placeholder="Search...."/>
                                     </div>
+
+                                    <div id="myloading-container" class=" d-none">
+                                        <div class="text-center">
+                                            <img src="{{ asset('images/spinner.gif') }}" id="myloading" class="myloading" alt="loading"/>
+                                        </div>
+                                    </div>
                                     <ul id="result" class="user-list">
                                         {{-- @foreach($users as $user)
                                         <div class="user-info">
@@ -258,7 +268,17 @@
                                             </div>
                                         </div> --}}
                                         <div class="col-md-12 col-sm-12 mb-2 ">
+                                            <div class="d-flex justify-content-between mt-2">
+                                                <h4 class="card-title">Assessees List</h4>
+                                                <div  class="dropdown">
+                                                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
+                                                     <div class="dropdown-menu shadow">
+                                                        <a href="javascript:void(0);" id="assessmentviewbtn" class="dropdown-item">360° Assessment View</a>
+                                                     </div>
+                                                </div>
+                                            </div>
                                             <div class="table-responsive rounded mb-3 position-relative">
+
                                                 <table id="peertopeer" class="table mb-0 " style="min-height: 100px !important">
                                                     <thead class="bg-white text-uppercase">
                                                         <tr class="ligth ligth-data">
@@ -272,15 +292,6 @@
                                                             <th>Assessment-form Category</th>
                                                             <th>
                                                                 Action
-                                                                <div class="dropdown position-absolute table-dropdowns">
-                                                                    <a  class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="More">
-                                                                        <i class="ri-more-2-line"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu">
-                                                                      {{-- <a href="#ptopmodal" id="assessmentviewbtn" class="dropdown-item"  data-toggle="modal">360° Assessment View</a> --}}
-                                                                      <a href="javascript:void(0);" id="assessmentviewbtn" class="dropdown-item">360° Assessment View</a>
-                                                                    </div>
-                                                                </div>
                                                             </th>
                                                         </tr>
                                                     </thead>
@@ -437,6 +448,7 @@
                     </div>
 
                     <div class="modal-body">
+                        <label for="" class="mr-2">Assessor: </label><h6 id="assessorname" class="text-dark fw-bold d-inline text-lg">name</h6>
                         <div class="d-flex justify-content-center">
                             <canvas id="leadcharts"></canvas>
                             </div>
@@ -635,6 +647,9 @@
                 type: "GET",
                 dataType: "json",
                 data: $('#searchnfilterform').serialize(),
+                beforeSend : function(){
+                    $("#myloading-container").removeClass('d-none');
+                },
                 success: function (response) {
                     console.log(response);
 
@@ -644,7 +659,7 @@
                     assessorusers.forEach(function(assessoruser,idx){
                         html += `
                         <div class="user-info">
-                            <li data-user_id = ${assessoruser.id}>
+                            <li data-user_id = ${assessoruser.id} data-user_name = '${assessoruser.employee.employee_name}'>
                                 <i class="ri-folder-4-line"></i>
                                     <h4>${assessoruser.name} ( ${assessoruser.employee_id} )</h4>
                             </li>
@@ -658,6 +673,9 @@
 
 
                 },
+                complete: function(){
+                    $("#myloading-container").addClass('d-none');
+                },
                 error: function (response) {
                     console.log("Error:", response);
                 }
@@ -670,6 +688,8 @@
         $('#assessmentviewbtn').click(function(){
 
             let assessor_user_id = $('.user-info li.active').data('user_id');
+            let assessor_user_name = $('.user-info li.active').data('user_name');
+
 
             $.ajax({
                 url: `/api/assessmentnetwork/${assessor_user_id}/{{ $appraisalcycle->id }}/`,
@@ -678,6 +698,8 @@
                      console.log(data)
                      const ctx = document.getElementById('leadcharts');
                      ctx.height = 250;
+
+                     $('#assessorname').html(assessor_user_name);
 
                     if (assessmentNetworkChart) {
                         assessmentNetworkChart.destroy();
@@ -713,6 +735,37 @@
             $('#searchnfilterform').submit();
         });
         {{-- End Export Btn --}}
+
+
+        {{-- Start Clear Btn --}}
+
+        $('#btn-clear').click(function(){
+            $('#searchnfilterform').trigger('reset');
+
+            // Send request to Laravel to forget session variables
+            $.ajax({
+                url: '{{ route("clear.filter.sessions") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    console.log('Session cleared');
+
+                    // Clear frontend input fields (optional)
+                    $('#filter_employee_name').val('');
+                    $('#filter_employee_code').val('');
+                    $('#filter_branch_id').val('');
+                    $('#filter_position_level_id').val('');
+
+                    // Redraw DataTables
+                    $('#participantusertable').DataTable().draw(true);
+                    $('#assesseeusertable').DataTable().draw(true);
+                    getAssessorUsers();
+                }
+            });
+        });
+        {{-- End Clear Btn --}}
     });
 
     // Start Tag Box
@@ -965,6 +1018,33 @@
             }
         });
     });
+
+
+    {{-- Start notify btn --}}
+
+    $(document).on('click','.notify-btns',function(){
+        $.ajax({
+            url: `/appraisalcyclessendnotifications`,
+            type: "GET",
+            dataType: "json",
+            data: $('#sendnotiform').serialize(),
+            success: function (response) {
+                console.log(response);
+                Swal.fire({
+                    title: "Notify",
+                    text: "Send Notification to assessor successfully.",
+                    icon: "success"
+               });
+
+
+            },
+            error: function (response) {
+                console.log("Error:", response);
+            }
+        });
+    });
+
+    {{-- End notify btn --}}
 
 
 

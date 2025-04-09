@@ -24,10 +24,10 @@ class SectionImport implements ToModel,WithHeadingRow, OnEachRow{
         // Validate data
 
         $validator = Validator::make($row, [
-            'name'      => 'required|string|max:255|unique:sections,name',
-            'division' => 'required|exists:divisions,name',
-            'department' => 'required|exists:agile_departments,name',
-            'sub_department' => 'required|exists:sub_departments,name',
+            'name'      => 'required|string|max:255',
+            // 'division' => 'required|exists:divisions,name',
+            // 'department' => 'required|exists:agile_departments,name',
+            // 'sub_department' => 'required|exists:sub_departments,name',
         ]);
         // If validation fails, throw an exception with the row number
         if ($validator->fails()) {
@@ -44,15 +44,17 @@ class SectionImport implements ToModel,WithHeadingRow, OnEachRow{
         $this->rowNumber += 1;
 
         // dd($row);
-        return new Section([
-            'name'      => $row['name'],
-            'slug'      => Str::slug($row['name']),
-            "division_id"=> Division::where('name',$row['division'])->first()->id,
-            "department_id"=> AgileDepartment::where('name',$row['department'])->first()->id,
-            "sub_department_id"=> SubDepartment::where('name',$row['sub_department'])->first()->id,
-            'status_id' => 1, // Default status_id (change as needed)
-            'user_id'   => $user_id,
-        ]);
+        return Section::firstOrCreate(
+            ['name' => $row['name']],
+            [
+                'slug'              => Str::slug($row['name']),
+                // 'division_id'       => Division::where('name', $row['division'])->first()?->id,
+                // 'department_id'     => AgileDepartment::where('name', $row['department'])->first()?->id,
+                // 'sub_department_id' => SubDepartment::where('name', $row['sub_department'])->first()?->id,
+                'status_id'         => 1,
+                'user_id'           => $user_id,
+            ]
+        );
     }
 
     public function onRow($row)

@@ -426,4 +426,16 @@ class AppraisalFormsController extends Controller
         return view('appraisalforms.print', compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
     }
 
+    public function groupedforms(Request $request)
+    {
+        $appraisalforms = AppraisalForm::where('appraisal_cycle_id', 2)
+            ->get()->groupBy('assessor_user_id');
+
+
+
+        foreach ($appraisalforms as $key => $appraisalform) {
+            echo($appraisalform);
+        }
+    }
+
 }

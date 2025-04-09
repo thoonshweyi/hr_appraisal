@@ -21,7 +21,7 @@ class DivisionImport implements ToModel, WithHeadingRow, OnEachRow
     {
         // Validate data
         $validator = Validator::make($row, [
-            'name'      => 'required|string|max:255|unique:divisions,name',
+            'name'      => 'required|string|max:255',
             // 'slug'      => 'nullable|string|max:255',
             // 'status_id' => 'required|integer|exists:statuses,id',  // assuming 'statuses' table and 'id' field exist
             // 'user_id'   => 'nullable|integer|exists:users,id',      // assuming 'users' table and 'id' field exist
@@ -41,10 +41,12 @@ class DivisionImport implements ToModel, WithHeadingRow, OnEachRow
         $user_id = $user["id"];
 
         $this->rowNumber += 1;
-        return new Division([
-            'name'      => $row['name'],
+
+        return Division::firstOrCreate([
+            'name'      => $row['name']
+        ],[
             'slug'      => Str::slug($row['name']),
-            'status_id' => 1, // Default status_id (change as needed)
+            'status_id' => 1,
             'user_id'   => $user_id,
         ]);
     }
