@@ -248,7 +248,7 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::get("/fillform",[AppraisalFormsController::class,"fillform"])->name("appraisalforms.fillform");
     Route::get("/appraisalformsprintpdf/{id}",[AppraisalFormsController::class,"printpdf"])->name("appraisalforms.printpdf");
     Route::get("/appraisalformsshowprintframe/{id}",[AppraisalFormsController::class,"showprintframe"])->name("appraisalforms.showprintframe");
-    Route::get("/appraisalformsgroupedforms",[AppraisalFormsController::class,"groupedforms"])->name("appraisalforms.groupedforms");
+    Route::get("/appraisalformsbyuser/{id}",[AppraisalFormsController::class,"userforms"])->name("appraisalforms.userforms");
 
 
 

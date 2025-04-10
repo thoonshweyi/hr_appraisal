@@ -639,6 +639,28 @@
             getAssessorUsers();
 
         })
+        $('#participantusertable').on('click', '.show-forms', function () {
+            var tr = $(this).closest('tr');
+            var userId = $(this).data('user');
+            console.log('showed')
+
+            if (tr.next('.child-row').length) {
+                tr.next('.child-row').toggle(); // Toggle visibility
+            } else {
+                $.ajax({
+                    url: `/appraisalformsbyuser/${userId}/`,
+                    type: 'GET',
+                    success: function (forms) {
+                        var html = '<table class="table table-sm userforms"><tr><th>Form ID</th><th>Title</th><th>Created At</th></tr>';
+                        forms.forEach(form => {
+                            html += `<tr><td>#${form.id}</td><td>${form.assformcat.name}</td><td>${form.created_at}</td></tr>`;
+                        });
+                        html += '</table>';
+                        tr.after(`<tr class="child-row"><td colspan="7">${html}</td></tr>`);
+                    }
+                });
+            }
+        });
         {{-- End participantusers --}}
 
         function getAssessorUsers(){

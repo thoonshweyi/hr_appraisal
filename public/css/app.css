@@ -829,3 +829,10 @@ height: auto !important;
     color: #ffff !important;
 }
 /* End Custom Sidebar */
+
+
+/* Start User Form Table */
+.userforms td,.userforms th{
+    border: none;
+}
+/* End User Form Table */

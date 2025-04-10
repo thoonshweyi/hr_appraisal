@@ -431,11 +431,27 @@ class AppraisalFormsController extends Controller
         $appraisalforms = AppraisalForm::where('appraisal_cycle_id', 2)
             ->get()->groupBy('assessor_user_id');
 
+            $appraisalforms = AppraisalForm::where('appraisal_cycle_id', 2)
+            ->get();
 
+        // foreach ($appraisalforms as $key => $appraisalform) {
+        //     echo($appraisalform);
+        // }
 
-        foreach ($appraisalforms as $key => $appraisalform) {
-            echo($appraisalform);
-        }
+        return response()->json($appraisalforms);
     }
 
+
+    public function userforms(Request $request,$id){
+        $filter_appraisal_cycle_id = $request->filter_appraisal_cycle_id;
+
+        $appraisalforms = AppraisalForm::where('assessor_user_id', $id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        if (!empty($filter_appraisal_cycle_id)) {
+            $appraisalforms = $appraisalforms->where('appraisal_cycle_id', $filter_appraisal_cycle_id);
+        }
+        return response()->json($appraisalforms);
+    }
 }

@@ -359,6 +359,7 @@ class AppraisalCyclesController extends Controller
                                         <i class='fas fa-bullhorn'></i>
                                     </button>
                             </form>
+                            <button class='btn btn-sm btn-primary show-forms' data-user='$participantuser->id'>Show</button>
                         </div>
                     ";
                 })
