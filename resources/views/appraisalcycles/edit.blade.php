@@ -1027,7 +1027,7 @@
             url: `/appraisalcyclessendnotifications`,
             type: "GET",
             dataType: "json",
-            data: $('#sendnotiform').serialize(),
+            data: $(this).closest('form').serialize(),
             success: function (response) {
                 console.log(response);
                 Swal.fire({

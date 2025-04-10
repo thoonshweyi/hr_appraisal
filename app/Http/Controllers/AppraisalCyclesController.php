@@ -505,7 +505,6 @@ class AppraisalCyclesController extends Controller
     public function sendNotifications(Request $request){
         $assessor_user_id = $request->assessor_user_id;
         $appraisal_cycle_id = $request->appraisal_cycle_id;
-
         $appraisalforms = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
         ->where('assessor_user_id', $assessor_user_id)
         ->get();

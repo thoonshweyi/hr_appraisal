@@ -23,7 +23,6 @@ class FCMHelper
         $url = "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send";
 
         $fcmTokens = FCMSubscription::where('user_id', $user_id)->pluck('fcm_token')->toArray();
-
         $results = [];
 
         foreach ($fcmTokens as $fcmToken) {
