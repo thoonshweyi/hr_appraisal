@@ -451,14 +451,37 @@
                         <label for="" class="mr-2">Assessor: </label><h6 id="assessorname" class="text-dark fw-bold d-inline text-lg">name</h6>
                         <div class="d-flex justify-content-center">
                             <canvas id="leadcharts"></canvas>
-                            </div>
-                        <div>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
 
                     </div>
                 </div>
+        </div>
+    </div>
+
+
+    <div id="formchartmodal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h6 class="modal-title">Form Chart Modal</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center">
+                        <canvas id="formchart" style="min-width: 100%;min-height:250px;"></canvas>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+
+                </div>
+            </div>
         </div>
     </div>
     <!-- end create modal -->
@@ -504,9 +527,8 @@
 
 
 
-        {{-- Start participantusers  --}}
-        const appraisalCycleId = {{ $appraisalcycle->id }}; // Make sure you have this ID in a hidden input
-
+        {{-- Start assessorusers, participantusers, assesseeusers  --}}
+        const appraisalCycleId = {{ $appraisalcycle->id }};
         $('#participantusertable').DataTable({
             "processing": true,
             "serverSide": true,
@@ -640,28 +662,109 @@
 
         })
         $('#participantusertable').on('click', '.show-forms', function () {
-            var tr = $(this).closest('tr');
-            var userId = $(this).data('user');
-            console.log('showed')
+            var $btn = $(this); // The clicked <a>
+            var $icon = $btn.find('i'); // The <i> inside it
+            var tr = $btn.closest('tr');
+            var userId = $btn.data('user');
 
             if (tr.next('.child-row').length) {
                 tr.next('.child-row').toggle(); // Toggle visibility
+
+                // Toggle the icon
+                if ($icon.hasClass('fa-chevron-down')) {
+                    $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                } else {
+                    $icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                }
             } else {
+                $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
                 $.ajax({
                     url: `/appraisalformsbyuser/${userId}/`,
                     type: 'GET',
                     success: function (forms) {
-                        var html = '<table class="table table-sm userforms"><tr><th>Form ID</th><th>Title</th><th>Created At</th></tr>';
+                        var html =`
+                        <div class="d-flex justify-content-between mt-2">
+                            <h4 class="card-title">Form Lists</h4>
+                            <div class="dropdown">
+                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
+                                 <div class="dropdown-menu shadow">
+                                    <a href="javascript:void();" id="" class="dropdown-item formchart-btn" data-toggle="modal" data-user=${userId}>Form Chart</a>
+                                 </div>
+                            </div>
+                        </div>
+                        <table class="table table-sm userforms">
+                            <tr>
+                                <th>Form ID</th>
+                                <th>Title</th>
+                                <th>Appraisal Cycle</th>
+                                <th>Status</th>
+                        </tr>`;
                         forms.forEach(form => {
-                            html += `<tr><td>#${form.id}</td><td>${form.assformcat.name}</td><td>${form.created_at}</td></tr>`;
+                            let statusClass = '';
+                            if (form.status_id === 19) {
+                                statusClass = 'bg-success';
+                            } else if (form.status_id === 21) {
+                                statusClass = 'bg-primary';
+                            } else if (form.status_id === 20) {
+                                statusClass = 'bg-warning';
+                            }
+                            html += `
+                            <tr>
+                                <td>#${form.id}</td>
+                                <td><a href="/appraisalforms/${form.id}/edit">${form.assformcat.name}</a></td>
+                                <td>${form.appraisalcycle.name}</td>
+                                <td><span class="badge ${statusClass}">${form.status.name}</span></td>
+                            </tr>`;
                         });
                         html += '</table>';
-                        tr.after(`<tr class="child-row"><td colspan="7">${html}</td></tr>`);
+                        tr.after(`<tr class="child-row"><td claass="m-0" colspan="7">${html}</td></tr>`);
                     }
                 });
             }
         });
-        {{-- End participantusers --}}
+        let formChart = null;
+        $(document).on('click', '.formchart-btn', function () {
+            var userId = $(this).data('user');
+
+            $.ajax({
+                url: `/appraisalformsuserdashboard/${userId}`,
+                method: 'GET',
+                success:function(data){
+
+
+                    const formctx = document.getElementById('formchart');
+                    {{-- formctx.height = 250; --}}
+
+
+                    if (formChart) {
+                        formChart.destroy();
+                    }
+                    formChart = new Chart(formctx, {
+                        type: 'bar',
+
+                        data: {
+                            labels: Object.keys(data.formgroups),
+                            datasets: [{
+                                label: 'Form Analysis',
+                                data:  Object.values(data.formgroups),
+                                backgroundColor: "steelblue",
+                                borderWidth:1
+                            }]
+                        },
+                        options: {
+                            responsive:true,
+                            {{-- scales: {
+                                y:{
+                                    beginAtZero: true
+                                }
+                            } --}}
+                        }
+                    });
+                }
+            });
+
+            $('#formchartmodal').modal('show');
+        });
 
         function getAssessorUsers(){
             $.ajax({
@@ -704,6 +807,8 @@
             });
         }
         getAssessorUsers();
+        {{-- End assessorusers, participantusers, assesseeusers --}}
+
 
         {{-- Start Assessment Network --}}
         let assessmentNetworkChart = null;
@@ -991,7 +1096,6 @@
 
    });
    // End Delete Item
-    {{-- End User List Filter --}}
 
 
     $(document).on('click',".assessor-info li",function(){
@@ -1040,6 +1144,7 @@
             }
         });
     });
+    {{-- End User List Filter --}}
 
 
     {{-- Start notify btn --}}

@@ -249,6 +249,8 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::get("/appraisalformsprintpdf/{id}",[AppraisalFormsController::class,"printpdf"])->name("appraisalforms.printpdf");
     Route::get("/appraisalformsshowprintframe/{id}",[AppraisalFormsController::class,"showprintframe"])->name("appraisalforms.showprintframe");
     Route::get("/appraisalformsbyuser/{id}",[AppraisalFormsController::class,"userforms"])->name("appraisalforms.userforms");
+    Route::get("/appraisalformsuserdashboard/{id}",[AppraisalFormsController::class,"userdashboard"])->name("appraisalforms.userdashboard");
+
 
 
 

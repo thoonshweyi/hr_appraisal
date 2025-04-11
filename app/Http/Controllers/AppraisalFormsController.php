@@ -447,11 +447,30 @@ class AppraisalFormsController extends Controller
 
         $appraisalforms = AppraisalForm::where('assessor_user_id', $id)
         ->orderBy('created_at', 'desc')
-        ->get();
+        ->with(['assformcat','appraisalcycle','status'])->get();
 
         if (!empty($filter_appraisal_cycle_id)) {
             $appraisalforms = $appraisalforms->where('appraisal_cycle_id', $filter_appraisal_cycle_id);
         }
         return response()->json($appraisalforms);
+    }
+
+    public function userdashboard(Request $request,$id){
+        $filter_appraisal_cycle_id = $request->filter_appraisal_cycle_id;
+
+        $appraisalforms = AppraisalForm::where('assessor_user_id', $id)
+        ->orderBy('created_at', 'desc')
+        ->with(['assformcat','appraisalcycle','status'])->get();
+
+
+        $formgroups = [
+            "User Forms" =>  $appraisalforms->count(),
+            "Finish Forms"=> $appraisalforms->where('status_id',19)->count(),
+            "On-hold Forms"=> $appraisalforms->where('status_id',21)->count(),
+            "In-progress Forms"=> $appraisalforms->where('status_id',20)->count(),
+        ];
+
+
+        return response()->json(['formgroups' => $formgroups]);
     }
 }

@@ -335,7 +335,7 @@ class AppraisalCyclesController extends Controller
                 })
                 ->addColumn('action', function ($participantuser) use ($id) {
                     return "
-                        <div class='d-flex justify-content-center'>
+                        <div class='d-flex justify-content-center align-items-center'>
                             <form id='appraisalform' action='".route('appraisalforms.create')."' method='GET'>
                                 <input type='hidden' name='assessor_user_id' value='$participantuser->id'>
                                 <input type='hidden' name='appraisal_cycle_id' value='$id'/>
@@ -344,13 +344,6 @@ class AppraisalCyclesController extends Controller
                                 </button>
                             </form>
 
-                            <form action='".route('appraisalforms.index')."' method='GET'>
-                                <input type='hidden' name='filter_assessor_user_id' value='$participantuser->id'>
-                                <input type='hidden' name='filter_appraisal_cycle_id' value='$id'/>
-                                    <button type='submit' class='btn btn-link p-0 m-0' title='Open'>
-                                        <i class='far fa-envelope-open text-primary'></i>
-                                    </button>
-                            </form>
 
                             <form id='sendnotiform' action='".route('appraisalcycles.sendnotifications')."' method='GET'>
                                 <input type='hidden' name='assessor_user_id' value='$participantuser->id'>
@@ -359,7 +352,8 @@ class AppraisalCyclesController extends Controller
                                         <i class='fas fa-bullhorn'></i>
                                     </button>
                             </form>
-                            <button class='btn btn-sm btn-primary show-forms' data-user='$participantuser->id'>Show</button>
+
+                            <a href='javascript:void(0);' class='show-forms' data-user='$participantuser->id' title='Open'><i class='fas fa-chevron-down'></i></a>
                         </div>
                     ";
                 })

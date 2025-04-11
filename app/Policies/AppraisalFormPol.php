@@ -27,7 +27,7 @@ class AppraisalFormPol
     }
 
     public function edit(User $user,AppraisalForm $appraisalform){
-        return ($user->can("edit-add-on")  || $this->isOwner($user,$appraisalform)) && !$appraisalform->assessed;
+        return ($user->can("edit-add-on")  || $this->isOwner($user,$appraisalform));
     }
 
     public function isOwner($user,$appraisalform){

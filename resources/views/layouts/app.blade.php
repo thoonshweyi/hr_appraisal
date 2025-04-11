@@ -135,6 +135,10 @@
 
     <!-- toastr css1 js1 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" type="text/javascript"></script>
+
+    {{-- chart js --}}
+    <script src="{{ asset('assets/libs/chartjs/chart.js') }}" type="text/javascript"></script>
+
     <script>
             toastr.options = {
                 "progressBar":true,
