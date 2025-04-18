@@ -462,6 +462,7 @@ class AppraisalFormsController extends Controller
         ->orderBy('created_at', 'desc')
         ->with(['assformcat','appraisalcycle','status'])->get();
 
+        $assessoruser = User::where('id',$id)->with(['employee'])->first();
 
         $formgroups = [
             "User Forms" =>  $appraisalforms->count(),
@@ -471,6 +472,6 @@ class AppraisalFormsController extends Controller
         ];
 
 
-        return response()->json(['formgroups' => $formgroups]);
+        return response()->json(['formgroups' => $formgroups,'assessoruser'=>$assessoruser]);
     }
 }

@@ -473,6 +473,7 @@
                 </div>
 
                 <div class="modal-body">
+                    <label for="" class="mr-2">Assessor: </label><h6 id="assessorusername" class="text-dark fw-bold d-inline text-lg">name</h6>
                     <div class="d-flex justify-content-center">
                         <canvas id="formchart" style="min-width: 100%;min-height:250px;"></canvas>
                     </div>
@@ -730,11 +731,13 @@
                 url: `/appraisalformsuserdashboard/${userId}`,
                 method: 'GET',
                 success:function(data){
-
+                    console.log(data);
 
                     const formctx = document.getElementById('formchart');
                     {{-- formctx.height = 250; --}}
 
+                    let assessor_user_name = data.assessoruser.employee.employee_name;
+                    $('#assessorusername').html(assessor_user_name);
 
                     if (formChart) {
                         formChart.destroy();
@@ -776,7 +779,7 @@
                     $("#myloading-container").removeClass('d-none');
                 },
                 success: function (response) {
-                    console.log(response);
+                    {{-- console.log(response); --}}
 
                     let html = '';
                     const assessorusers = response.users;
@@ -1024,7 +1027,7 @@
             dataType: "json",
             data: $('#peer_to_peer_form').serialize(),
             success: function (response) {
-                console.log(response);
+                {{-- console.log(response); --}}
 
                 let html = '';
                 const peertopeers = response;
@@ -1111,7 +1114,7 @@
             dataType: "json",
             data: $('#peer_to_peer_form').serialize(),
             success: function (response) {
-                console.log(response);
+                {{-- console.log(response); --}}
 
                 let html = '';
                 const peertopeers = response;
@@ -1156,7 +1159,7 @@
             dataType: "json",
             data: $(this).closest('form').serialize(),
             success: function (response) {
-                console.log(response);
+                {{-- console.log(response); --}}
                 Swal.fire({
                     title: "Notify",
                     text: "Send Notification to assessor successfully.",
