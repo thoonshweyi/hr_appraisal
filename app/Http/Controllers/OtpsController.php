@@ -22,20 +22,20 @@ class OtpsController extends Controller
         $userid = Auth::id();
         $getotp = $this->otpservice->generateotp($userid,$type);
 
-        //  //Send OTP via to email / sms
-        //   //dispatch(new OtpMailJob($user_email,$randomotp));
-        // $token = "9LsE1Sl3ul3I89k4WDPdps_Ssx15jrHNgniRnIq5chFn0Pzrf0yYIN8xGYVDzstb";
-        // $headers = [
-        //     'Content-Type'=> 'application/json',
-        //     'Authorization'=> "Bearer $token"
-        // ];
-        // $phoneNo = $user->employee ? $user->employee->phone : $user->phone_no;
-        // // dd($phoneNo);
-        // $body = [
-        //     "to"=> "+95$phoneNo",
-        //     "message"=> "Your register OTP code is $getotp for PRO 1 Installer Benefit Program."
-        // ];
-        // $response = Http::withHeaders($headers)->post('https://smspoh.com/api/v2/send', $body);
+         //Send OTP via to email / sms
+          //dispatch(new OtpMailJob($user_email,$randomotp));
+        $token = "9LsE1Sl3ul3I89k4WDPdps_Ssx15jrHNgniRnIq5chFn0Pzrf0yYIN8xGYVDzstb";
+        $headers = [
+            'Content-Type'=> 'application/json',
+            'Authorization'=> "Bearer $token"
+        ];
+        $phoneNo = $user->employee ? $user->employee->phone : $user->phone_no;
+        // dd($phoneNo);
+        $body = [
+            "to"=> "+95$phoneNo",
+            "message"=> "Your register OTP code is $getotp for PRO 1 Installer Benefit Program."
+        ];
+        $response = Http::withHeaders($headers)->post('https://smspoh.com/api/v2/send', $body);
 
         return response()->json([
             "message"=>"OTP generated successfully",
