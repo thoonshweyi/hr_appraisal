@@ -117,11 +117,11 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        try {
+        // try {
             $this->validate($request, [
                 'name' => 'required',
                 'branch_id' => 'required',
-                'employee_id' => 'required|unique:users,employee_id',
+                'employee_id' => 'required',
                 // 'email' => 'required|email|unique:users,email',
                 'password' => 'required|same:confirm-password',
                 'roles' => 'required',
@@ -141,12 +141,12 @@ class UserController extends Controller
             $user->assignRole($request->input('roles'));
             return redirect()->route('users.index')
                 ->with('success', 'User created successfully');
-        } catch (\Exception $e) {
-            Log::debug($e->getMessage());
-            return redirect()
-                ->intended(route("users.index"))
-                ->with('error', 'Fail to Store User!');
-        }
+        // } catch (\Exception $e) {
+        //     Log::debug($e->getMessage());
+        //     return redirect()
+        //         ->intended(route("users.index"))
+        //         ->with('error', 'Fail to Store User!');
+        // }
     }
 
     public function show($id)

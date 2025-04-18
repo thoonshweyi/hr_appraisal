@@ -282,6 +282,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/otps/create",[OtpsController::class,"create"])->name("otps.create");
 });
 
+Route::get('/phpinfo', function () {
+    phpinfo();
+});
+
 // Route::get("/send-notification",[PushNotificationController::class,"sendNotification"])->name("sendNotification");
 
 // Route::post('/api/pusher-auth', function (Request $request) {

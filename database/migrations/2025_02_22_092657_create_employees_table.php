@@ -39,12 +39,12 @@ class CreateEmployeesTable extends Migration
             $table->string('major_graduated')->nullable();
             $table->string('position_level_id')->nullable();
             $table->string("nrc")->unique();
-            $table->string("father_name");
+            $table->string("father_name")->nullable();
             $table->unsignedBigInteger("attach_form_type_id");
-            $table->enum("job_status",['p'])->unique()->nullable();
+            $table->enum("job_status",['p'])->nullable();
             $table->string("phone")->unique()->nullable();
-            $table->string("address")->unique()->nullable();
-            $table->date("dob")->unique()->nullable();
+            $table->string("address")->nullable();
+            $table->date("dob")->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
         });

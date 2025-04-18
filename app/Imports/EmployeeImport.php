@@ -53,12 +53,12 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
 
             'beginning_date'=> "required|date",
             "employee_code"=> "required",
-            "branch"=> "required|exists:branches,branch_name",
+            "branch_code"=> "required|exists:branches,branch_code",
             "age"=> "required",
             "gender"=> "required|exists:genders,name",
             'position_level'=> "required|exists:position_levels,name",
-            "nrc"=> "required",
-            "father_name"=> "required",
+            // "nrc"=> "required",
+            // "father_name"=> "required",
             'attach_form_type' => '',
         ]);
         // If validation fails, throw an exception with the row number
@@ -85,7 +85,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
         );
         // $userBranch['user_id'] = $empuser->id;
         // $userBranch['branch_id'] = Branch::where('branch_name',$row['branch'])->first()->branch_id;
-        BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>Branch::where('branch_name',$row['branch'])->first()->branch_id]);
+        BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>Branch::where('branch_code',$row['branch_code'])->first()->branch_id]);
 
 
         return Employee::updateOrCreate(
@@ -101,7 +101,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
                 'status_id'          => 1, // Default status_id (change as needed)
                 'user_id'            => $user_id,
                 'beginning_date'     => $row['beginning_date'],
-                "branch_id"          => Branch::where('branch_name', $row['branch'])->first()?->branch_id,
+                "branch_id"          => Branch::where('branch_code', $row['branch_code'])->first()?->branch_id,
                 "age"                => $row['age'],
                 "gender_id"          => Gender::where('name', $row['gender'])->first()?->id,
                 "position_level_id"  => PositionLevel::where('name', $row['position_level'])->first()?->id,

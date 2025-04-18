@@ -19,7 +19,7 @@
 
 
             <div class="col-lg-12">
-                <form class="d-inline" action="{{ route('employees.excel_import') }}" method="POST" enctype="multipart/form-data">
+                <form id="empimportform" class="d-inline" action="{{ route('employees.excel_import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row align-items-end">
 
@@ -370,6 +370,20 @@
 
         {{-- End Preview Image --}}
 
+
+        {{-- Start Import --}}
+        $('#empimportform').submit(function(){
+            Swal.fire({
+                title: "Processing....",
+                // html: "I will close in <b></b> milliseconds.",
+                text: "Please wait while we import employee datas",
+                allowOutsideClick:false,
+                didOpen: () => {
+                     Swal.showLoading();
+                }
+           });
+        });
+        {{-- End Import --}}
 
     });
 </script>
