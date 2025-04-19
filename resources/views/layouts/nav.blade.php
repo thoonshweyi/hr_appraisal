@@ -296,7 +296,7 @@
             @endcan
 
 
-            {{-- <li>
+            <li>
             <a href="{{ asset('/download/Imported Claim System (Operation User Guide).pdf') }}" class="btn btn-large pull-right" target="_blank">
                     <?xml version="1.0" encoding="iso-8859-1"?>
                     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
@@ -310,9 +310,9 @@
                             c-11.4,0-20.8,9.4-20.8,20.8v130h-111.3V41.6h169.6v86.3c0,11.4,9.4,20.8,20.8,20.8h74.9v183.1h-112.4V331.9z"/>
                     </g>
                     </svg>
-                    <span class="ml-4">Import Claim User Guide</span>
+                    <span class="ml-4">HR Appraisal User Guide</span>
                 </a>
-            </li> --}}
+            </li>
         </ul>
     </nav>
     <div class="p-3"></div>

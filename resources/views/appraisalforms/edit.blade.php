@@ -85,7 +85,8 @@
                         $assesseeChunks = $assesseeusers->chunk(5);
                         @endphp
                         @foreach($assesseeChunks as $chunkIndex => $chunk)
-                        <div class="printableArea" style="{{ $chunkIndex > 0 ? 'page-break-before: always;' : '' }}">
+
+                        <div class="printableArea page" style="{{ $chunkIndex > 0 ? 'page-break-before: always;' : '' }}">
 
                             <div class="table-responsive" style="">
                                 <table class="assessmentformtable">
@@ -221,6 +222,8 @@
                         </div>
                         @endforeach
 
+
+
                         <div class="col-md-12 mt-2">
 
                             <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">{{ __('button.back')}}</button>
@@ -230,6 +233,13 @@
                             <button type="button" class="btn btn-success btn-sm rounded-0 submitbtns">{{ __('button.submit')}}</button>
                         </div>
                     </form>
+                    <div class="pagination-controls mt-3 text-center">
+                        <button type="button" id="prevPage" class="btn btn-secondary btn-sm me-1" disabled>Previous</button>
+
+                        <span id="pageNumbers" class="d-inline-block"></span>
+
+                        <button type="button" id="nextPage" class="btn btn-secondary btn-sm ms-1 {{ $assesseeChunks->count() <= 1 ? 'd-none' : '' }}">Next</button>
+                    </div>
                     </div>
                 </div>
            </div>
@@ -466,5 +476,70 @@
         });
         {{-- End Print Arera --}}
     });
+
+
+
+    {{-- Start Pages --}}
+
+    let currentPage = 0;
+    const pages = document.querySelectorAll('.printableArea.page');
+    const totalPages = pages.length;
+
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+    const pageNumbersContainer = document.getElementById('pageNumbers');
+
+    // Create page number buttons
+    for (let i = 0; i < totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i + 1;
+        btn.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'mx-1', 'page-number');
+        btn.setAttribute('data-page', i);
+
+        btn.addEventListener('click', function () {
+            currentPage = i;
+            updatePagination();
+        });
+
+        pageNumbersContainer.appendChild(btn);
+    }
+
+    const pageButtons = document.querySelectorAll('.page-number');
+
+    function updatePagination() {
+        pages.forEach((page, index) => {
+            page.style.display = index === currentPage ? 'block' : 'none';
+        });
+
+        prevBtn.disabled = currentPage === 0;
+        nextBtn.disabled = currentPage === totalPages - 1;
+
+        pageButtons.forEach((btn, index) => {
+            if (index === currentPage) {
+                btn.classList.remove('btn-outline-primary');
+                btn.classList.add('btn-primary');
+            } else {
+                btn.classList.add('btn-outline-primary');
+                btn.classList.remove('btn-primary');
+            }
+        });
+    }
+
+    prevBtn.addEventListener('click', function () {
+        if (currentPage > 0) {
+            currentPage--;
+            updatePagination();
+        }
+    });
+
+    nextBtn.addEventListener('click', function () {
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            updatePagination();
+        }
+    });
+
+    updatePagination();
+    {{-- End Pages --}}
 </script>
 @stop
