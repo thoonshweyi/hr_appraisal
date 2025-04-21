@@ -62,12 +62,31 @@
 
 
                     <div class="col-md-12">
+                        <nav aria-label="Pagination" class="mt-2">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" id="prevPage">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                    ‹
+                                    </a>
+                                </li>
+
+                                <!-- Page buttons will be inserted here -->
+                                <li id="pageNumbers" class="d-flex"></li>
+
+                                <li class="page-item" id="nextPage">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                    ›
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+
                         @php
                         $assesseeChunks = $assesseeusers->chunk(5);
                         @endphp
                         @foreach($assesseeChunks as $chunkIndex => $chunk)
 
-                        <div class="printableArea" style="{{ $chunkIndex > 0 ? 'page-break-before: always;' : '' }}">
+                        <div class="printableArea page" style="{{ $chunkIndex > 0 ? 'page-break-before: always;' : '' }}">
                             <div class="table-responsive">
 
                                 <table  class="assessmentformtable">
@@ -170,6 +189,30 @@
                                         <td colspan="5">Voter's Signature:</td>
                                     </tr>
                                 </table>
+                                  <!-- Notice Section -->
+                                <div class="notice-section">
+                                    <span class="notice">အမှတ်ပေးသူများသတိပြုရန်</span>
+                                    <div class="flex-row">
+                                        <div class="col-50">
+                                            <ul class="list-unstyled">
+                                                <li>၁။ မိမိပေးသောအမှတ်ကို မိမိတာဝန်ယူရမည်။</li>
+                                                <li>၂။ အမှတ်ပေးရာတွင် အောက်ပါအချက်များကို သတိပြုရှောင်ကြဉ်ရမည်။</li>
+                                                <li>(က) တစ်ချက်ကောင်းမြင်ရုံနှင့် အမှတ်များများပေးခြင်း။</li>
+                                                <li>(ခ) တစ်ချက်ဆိုးမြင်ရုံနှင့် အမှတ်နဲနဲပေးခြင်း။</li>
+                                                <li>(ဂ) လတ်တလောအခြေအနေကြည့်ပြီး အမှတ်ပေးခြင်း။</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-50">
+                                            <ul class="list-unstyled">
+                                                <li>(ဃ) မျက်နှာလိုက်ပြီး အမှတ်ပေးခြင်း။</li>
+                                                <li>(င) အမှတ်ပေးကပ်စီးနဲခြင်း။</li>
+                                                <li>(စ) အမှတ်ပေးရက်ရောခြင်း။</li>
+                                                <li>(ဆ) အမြဲတမ်းပျမ်းမျှပေးခြင်း။</li>
+                                                <li>(ဇ) စိတ်မကြည်လင်သော အချိန်ပေးခြင်း။</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         @endforeach
@@ -213,7 +256,72 @@
 
     });
 
+    {{-- Start Pages --}}
+    let currentPage = 0;
+    const pages = document.querySelectorAll('.printableArea.page');
+    const totalPages = pages.length;
 
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+    const pageNumbersContainer = document.getElementById('pageNumbers');
+
+    // Create page number buttons like Laravel pagination
+    for (let i = 0; i < totalPages; i++) {
+        const li = document.createElement('li');
+        li.classList.add('page-item');
+
+        const a = document.createElement('a');
+        a.classList.add('page-link');
+        a.classList.add('rounded-0');
+        a.href = "#";
+        a.textContent = i + 1;
+        a.setAttribute('data-page', i);
+
+        a.addEventListener('click', function (e) {
+            e.preventDefault();
+            currentPage = i;
+            updatePagination();
+        });
+
+        li.appendChild(a);
+        pageNumbersContainer.appendChild(li);
+    }
+
+    const pageButtons = pageNumbersContainer.querySelectorAll('.page-item');
+
+    function updatePagination() {
+        pages.forEach((page, index) => {
+            page.style.display = index === currentPage ? 'block' : 'none';
+        });
+
+        // Toggle prev/next
+        prevBtn.classList.toggle('disabled', currentPage === 0);
+        nextBtn.classList.toggle('disabled', currentPage === totalPages - 1);
+
+        // Highlight active page
+        pageButtons.forEach((li, index) => {
+            li.classList.toggle('active', index === currentPage);
+        });
+    }
+
+    prevBtn.querySelector('a').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (currentPage > 0) {
+            currentPage--;
+            updatePagination();
+        }
+    });
+
+    nextBtn.querySelector('a').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            updatePagination();
+        }
+    });
+
+    updatePagination();
+    {{-- End Pages --}}
 
 </script>
 @stop

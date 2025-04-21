@@ -38,10 +38,13 @@ return [
 
     'addon'                     => "Add On",
     'employee_list'             => 'Employee List',
+    'assformcat_list'             => 'Assessment-form Category List',
     'appraisalcycle_list'             => 'Appraisal Cycle List',
     'attachformtype_list'             => 'Attach Form Type List',
     'appraisalform_list'             => 'Appraisal Form List',
 
-
+    'excelformats'                     => "Excel Formats",
+    'assformcat_format'                     => "Assessment-form Category Format",
+    'employee_format'                     => "Employee Format",
 
 ];

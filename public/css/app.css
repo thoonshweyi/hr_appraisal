@@ -676,7 +676,36 @@ height: auto !important;
     font-weight: bold;
     background-color: #f9f9f9;
 }
+.notice-section {
+    margin-top: 2px;
+}
 
+.flex-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.col-50 {
+    width: 48%;
+}
+
+.col-100 {
+    width: 100%;
+}
+
+.list-unstyled {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.notice {
+    font-weight: bold;
+    text-decoration: underline;
+    display: block;
+    margin-bottom: 5px;
+}
 .vertical-header {
     writing-mode: vertical-rl;
     transform: rotate(180deg);

@@ -56,5 +56,9 @@ return [
     'attachformtype_list'             => 'Attach Form Type List',
     'appraisalform_list'             => 'Appraisal Form List',
 
+    'excelformats'                     => "Excel Formats",
+    'employee_format'                     => "Employee Format",
+
+
 ];
 

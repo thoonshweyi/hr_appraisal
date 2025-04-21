@@ -161,7 +161,7 @@
 
         @if($errors)
             @foreach($errors->all() as $error)
-                <script>toastr.error('{{$error}}', 'Warning!',{timeOut:3000})</script>
+                <script></script>
             @endforeach
         @endif
 

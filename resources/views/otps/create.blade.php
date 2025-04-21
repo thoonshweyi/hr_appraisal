@@ -11,7 +11,18 @@
             <div class="mb-4">
                 <img src="{{ asset('images/otpsend.png') }}" alt="OTP Icon" width="80" height="80">
                 <h5 class="mt-3">Verification</h5>
-                <p>We will send you a One Time Password on your phone number</p>
+                <p>
+                    We will send you a One Time Password on your phone number
+                    <br/>
+                    <strong>
+                        {{-- {{ $user->employee->phone }} --}}
+                        {{-- {{ dd(substr($user->employee->phone,0,2)) }} --}}
+
+                        {{ substr($user->employee->phone,0,2) }}
+                        {{ "****" }}
+                        {{ substr($user->employee->phone,-4) }}
+                    </strong>
+                </p>
             </div>
 
             <div class="mb-3">

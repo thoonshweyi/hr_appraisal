@@ -13,8 +13,9 @@ class OtpsController extends Controller
         $this->otpservice = $otpservice;
     }
     public function create(Request $request){
-
-        return view("otps.create");
+        $user = Auth::user();
+        $userid = Auth::id();
+        return view("otps.create",compact("user"));
     }
 
     public function generate(Request $request,$type){

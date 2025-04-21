@@ -98,7 +98,7 @@
 
 
                                 <div class="col-md-3 d-flex justify-content-end">
-                                    <button class="btn rounded-0 flex-fill mr-2 fill_btn" >
+                                    <button type="button" class="btn rounded-0 flex-fill mr-2 fill_btn" >
                                         <i class="fas fa-list-ol"></i> Fill
                                     </button>
                                     <button type="button" class="btn btn-danger rounded-0 flex-fill remove_btn">
@@ -218,80 +218,29 @@
                         success: function (response) {
                             console.log(response);
 
-                            let ths = "";
-                            const assesseeusers = response.assesseeusers;
-                            assesseeusers.forEach(function(assesseeuser){
-                                ths += `
-                                    <th style="width:auto;">${assesseeuser.employee.employee_name}</th>
-                                    <input type="hidden" name="assessee_user_ids[]" value="${assesseeuser.id}"/>
-                                `;
+                            let html = response.html;
 
-                            });
-
-
-                            let trs = "";
-                            const criterias = response.criterias;
-                            criterias.forEach(function(criteria,idx){
-                                var tds = "";
-                                const assesseeusers = response.assesseeusers;
-                                assesseeusers.forEach(function(assesseeuser){
-                                    tds += `<td></td>`;
-                                });
-
-
-                                trs += `
-                                    <tr>
-                                        <td>${++idx}</td>
-                                        <td class="text-left">${criteria.name}</td>
-                                        <td >${criteria.excellent}</td>
-                                        <td >${criteria.good}</td>
-                                        <td >${criteria.meet_standard}</td>
-                                        <td >${criteria.below_standard}</td>
-                                        <td >${criteria.weak}</td>
-
-                                        ${tds}
-                                    </tr>
-                                `;
-                            });
-
-
-                            table = `
-
-                            <div class="table-responsive">
-
-                                <table id="mytable" class="table table-bordered custables">
-                                    <thead>
-                                        <tr>
-                                            <th>S/No</th>
-                                            <th>CRITERIA Description</th>
-                                            <th>Excellent</th>
-                                            <th>Good</th>
-                                            <th>Meet Standard</th>
-                                            <th>Below Standard</th>
-                                            <th>Weak</th>
-                                            ${ths}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${trs}
-
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            `
                             $("#table_containers").removeClass('d-none');
-                            $("#table_containers").append(table);
+                            $("#table_containers").append(html);
 
                             $('.fill_btn').attr('disabled','disabled')
 
                         },
+                        error: function (response) {
+                            console.log("Error:", response);
+
+                            {{-- console.log(response.responseJSON.errors);
+
+                            if(errors = response.responseJSON.errors){
+
+                                errors.forEach(error=>{
+                                    toastr.error(error, 'Warning!',{timeOut:3000})
+                                })
+                            } --}}
+                        },
                         complete: function(){
                             $("#myloading-container").addClass('d-none');
                         },
-                        error: function (response) {
-                            console.log("Error:", response);
-                        }
                     });
                 }
             });
@@ -334,7 +283,6 @@
 
 
         {{-- Start Send Btn--}}
-
         $('.send_btn').click(function(e){
             e.preventDefault();
             Swal.fire({

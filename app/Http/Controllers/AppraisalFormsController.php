@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Helpers\PusherHelper;
 use App\Models\AppraisalForm;
 use App\Models\AppraisalCycle;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AppraisalFormAssesseeUser;
 
@@ -353,29 +354,67 @@ class AppraisalFormsController extends Controller
     }
 
     public function fillform(Request $request){
-        // dd('hay');
 
-        $appraisal_cycle_id = $request->appraisal_cycle_id;
-        $assessor_user_id = $request->assessor_user_id;
-        $ass_form_cat_id = $request->ass_form_cat_id;
+        $this->validate($request,[
+            "assessor_user_id" => "required",
+            "appraisal_cycle_id" => "required",
+            "ass_form_cat_id" => "required",
 
-        $assessee_ids = PeerToPeer::where('assessor_user_id', $assessor_user_id)
-        ->where('appraisal_cycle_id', $appraisal_cycle_id)
-        ->where('ass_form_cat_id',$ass_form_cat_id)
-        ->get()
-        ->pluck('assessee_user_id');
-        // dd($assessee_ids);
+            "assessee_user_ids" => "required|array",
+            "assessee_user_ids.*"=>"required|string",
+        ],[
+            'assessee_user_ids.*.required' => 'Please Assessee User Values.',
+        ]);
 
-        $assesseeusers = User::whereIn("id",$assessee_ids)
-        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
-        ->get();
+        \DB::beginTransaction();
 
-        $criterias = Criteria::where("ass_form_cat_id",$ass_form_cat_id)->get();
+        try{
+
+            $assessor_user_id = $request->assessor_user_id;
+            $ass_form_cat_id = $request->ass_form_cat_id;
+            $appraisal_cycle_id = $request->appraisal_cycle_id;
+            $assessee_ids = PeerToPeer::where('assessor_user_id', $assessor_user_id)
+            ->where('appraisal_cycle_id', $appraisal_cycle_id)
+            ->where('ass_form_cat_id',$ass_form_cat_id)
+            ->get()
+            ->pluck('assessee_user_id');
+            // dd($assessee_ids);
 
 
 
+            $user = Auth::user();
+            $user_id = $user->id;
+            $appraisalform = AppraisalForm::create([
+                "assessor_user_id"=> $assessor_user_id,
+                "ass_form_cat_id"=> $ass_form_cat_id,
+                "appraisal_cycle_id"=> $appraisal_cycle_id,
+                "user_id"=> $user_id
+            ]);
 
-        return response()->json(["assesseeusers"=>$assesseeusers,"criterias"=>$criterias]);
+            foreach($assessee_ids as $assessee_user_id){
+                AppraisalFormAssesseeUser::create([
+                    "appraisal_form_id" => $appraisalform->id,
+                    "assessee_user_id" => $assessee_user_id
+                ]);
+            }
+
+            $assesseeusers = $appraisalform->assesseeusers;
+
+            $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
+
+            $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
+            $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');
+            $total_meet_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('meet_standard');
+            $total_below_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('below_standard');
+            $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
+
+            $html = view('appraisalforms.fill',  compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"))->render();
+            // Log::info($html);
+            return response()->json(['html' => $html]);
+        }catch(Exception $err){
+            return redirect()->back()->with("error","There is an error in fillingsubmitting Appraisal Form.".$err);
+
+        }
     }
 
     public function printpdf($id)
