@@ -17,7 +17,7 @@
 
 
             <div class="col-lg-12 my-2 ">
-                <form id="" action="{{route('assformcats.update',$assformcat->id)}}" method="POST">
+                <form id="assformcats_form" action="{{route('assformcats.update',$assformcat->id)}}" method="POST">
                     {{ csrf_field() }}
                     @method('PUT')
                     <div class="row align-items-start">
@@ -147,7 +147,7 @@
 
                             <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
 
-                            <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
+                            <button type="button" class="btn btn-primary btn-sm rounded-0 update_btns">Update</button>
                         </div>
                     </div>
                 </form>
@@ -179,7 +179,7 @@
 
             <div class="col-md-12 mb-2">
                 @if (count($errors) > 0)
-                <div class="alert alert-danger">
+                <div class="alert alert-danger alert-dismissible fade show">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -190,20 +190,26 @@
                 @endif
 
                 @if ($message = Session::get('error'))
-                <div class="alert alert-danger">
+                <div class="alert alert-danger alert-dismissible fade show">
                     <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                 </div>
                 @endif
                 @if ($message = Session::get('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show">
                     <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                 </div>
                 @endif
 
 
                 @if($getvalidationerrors = Session::get('validation_errors'))
                     {{-- <li>{{ Session::get('validation_errors') }}</li> --}}
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger alert-dismissible fade show">
                         <strong>Whoops!</strong> There were some problems with your excel file at row {{ json_decode($getvalidationerrors)->row }}.<br><br>
                         <ul>
                             {{-- {{ dd(json_decode($getvalidationerrors)) }} --}}
@@ -239,92 +245,6 @@
 
 <!-- START MODAL AREA -->
 
-
-
-    <!-- start edit modal -->
-    {{-- <div id="editmodal" class="modal fade">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title">Edit Form</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <form id="formaction" action="" method="POST">
-                        {{ csrf_field() }}
-                        {{ method_field('PUT') }}
-                        <div class="row align-items-end">
-                                <div class="col-md-6">
-                                    <label for="edit_name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="edit_name" id="edit_name" class="form-control form-control-sm rounded-0" placeholder="Enter Status Name" value="{{ old('name') }}"/>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_division_id">Division</label>
-                                    <select name="edit_division_id" id="edit_division_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($divisions as $division)
-                                            <option value="{{$division['id']}}">{{$division['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_department_id">Departments</label>
-                                    <select name="edit_department_id" id="edit_department_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Department</option>
-                                        @foreach($departments as $department)
-                                            <option value="{{$department['id']}}">{{$department['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_sub_department_id">Sub Departments</label>
-                                    <select name="edit_sub_department_id" id="edit_sub_department_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Sub Department</option>
-                                        @foreach($subdepartments as $subdepartment)
-                                            <option value="{{$subdepartment['id']}}">{{$subdepartment['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_section_id">Sections</label>
-                                    <select name="edit_section_id" id="edit_section_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Section</option>
-                                        @foreach($sections as $section)
-                                            <option value="{{$section['id']}}">{{$section['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-
-                                <div class="col-md-6">
-                                    <label for="edit_status_id">Status</label>
-                                    <select name="edit_status_id" id="edit_status_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($statuses as $status)
-                                            <option value="{{$status['id']}}">{{$status['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-12 mt-2">
-                                    <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
-                                </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-
-                </div>
-            </div>
-    </div>
-    </div> --}}
-      <!-- end edit modal -->
 
 <!-- End MODAL AREA -->
 @endsection
@@ -442,93 +362,27 @@
 
 
 
+       {{-- Start Update Btn --}}
 
-        // Start Delete Item
-        $(".delete-btns").click(function(){
-            // console.log('hay');
-
-            var getidx = $(this).data("idx");
-            {{-- // console.log(getidx); --}}
-
-
+       $('.update_btns').click(function(e){
             Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
+                title: "Are you sure you want to update Assessment-Form Category",
+                text: "",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
+                confirmButtonText: "Yes, update it!"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#formdelete-'+getidx).submit();
-
+                    $('#assformcats_form').submit();
                 }
             });
 
 
-       });
-       // End Delete Item
 
-
-
-       // Start Edit Form
-       $(document).on("click",".editform",function(e){
-            {{-- console.log($(this).attr("data-id"),$(this).attr("data-name")); --}}
-            {{-- console.log($(this).attr("data-status")); --}}
-
-            $("#edit_name").val($(this).attr("data-name"));
-            $("#edit_code").val($(this).attr("data-code"));
-            $("#edit_division_id").val($(this).attr("data-division"));
-            $("#edit_department_id").val($(this).attr("data-department"));
-            $("#edit_sub_department_id").val($(this).attr("data-sub_department"));
-            $("#edit_status_id").val($(this).attr("data-status"));
-            $("#edit_section_id").val($(this).attr("data-section"));
-
-
-            const getid = $(this).attr("data-id");
-            $("#formaction").attr("action",`/positions/${getid}`);
-
-            e.preventDefault();
-       });
-       // End Edit Form
-
-
-        //Start change-btn
-        $(document).on("change",".statuschange-btn",function(){
-
-             var getid = $(this).data("id");
-             // console.log(getid);
-             {{-- console.log(getid); --}}
-
-             var setstatus = $(this).prop("checked") === true ? 1 : 2;
-             {{-- console.log(setstatus); --}}
-
-             $.ajax({
-                  url:"/positionsstatus",
-                  type:"POST",
-                  dataType:"json",
-                  data:{
-                        "id":getid,
-                        "status_id":setstatus,
-                        "_token": '{{ csrf_token()}}'
-                    },
-                  success:function(response){
-                       console.log(response); // {success: 'Status Change Successfully'}
-                       console.log(response.success); // Status Change Successfully
-
-                       Swal.fire({
-                            title: "Updated!",
-                            text: "Status Updated Successfully",
-                            icon: "success"
-                       });
-                  },
-                  error:function(response){
-                    console.log(response);
-                  }
-             });
         });
-        // End change btn
+       {{-- End Update Btn --}}
 
       {{-- Start Preview Image --}}
 

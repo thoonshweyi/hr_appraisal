@@ -360,10 +360,10 @@ class AppraisalFormsController extends Controller
             "appraisal_cycle_id" => "required",
             "ass_form_cat_id" => "required",
 
-            "assessee_user_ids" => "required|array",
-            "assessee_user_ids.*"=>"required|string",
+            // "assessee_user_ids" => "required|array",
+            // "assessee_user_ids.*"=>"required|string",
         ],[
-            'assessee_user_ids.*.required' => 'Please Assessee User Values.',
+            // 'assessee_user_ids.*.required' => 'Please Assessee User Values.',
         ]);
 
         \DB::beginTransaction();

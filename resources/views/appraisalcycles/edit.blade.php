@@ -13,6 +13,56 @@
             </div> --}}
 
 
+            <div class="col-md-12 mb-2">
+                @if (count($errors) > 0)
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                @if ($message = Session::get('error'))
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <p>{{ $message }}</p>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+                @endif
+                @if ($message = Session::get('success'))
+                <div class="alert alert-success alert-dismissible fade show">
+                    <p>{{ $message }}</p>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @endif
+
+
+                @if($getvalidationerrors = Session::get('validation_errors'))
+                    {{-- <li>{{ Session::get('validation_errors') }}</li> --}}
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <strong>Whoops!</strong> There were some problems with your excel file at row {{ json_decode($getvalidationerrors)->row }}.<br><br>
+                        <ul>
+                            {{-- {{ dd(json_decode($getvalidationerrors)) }} --}}
+                            @foreach ($validationerrors = json_decode($getvalidationerrors) as $idx=>$import_errors)
+                                {{-- {{dd($errors)}} --}}
+                                @if($idx != 'row')
+                                    @foreach($import_errors as $import_error)
+                                        <li>{{ $import_error }}</li>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </div>
+
 
             <div class="col-lg-12 pt-0">
 
@@ -279,7 +329,7 @@
                                             </div>
                                             <div class="table-responsive rounded mb-3 position-relative">
 
-                                                <table id="peertopeer" class="table mb-0 " style="min-height: 100px !important">
+                                                <table id="peertopeer" class="table mb-0 w-100" style="min-height: 100px !important;">
                                                     <thead class="bg-white text-uppercase">
                                                         <tr class="ligth ligth-data">
                                                             <th>No</th>
@@ -375,59 +425,6 @@
 
 
 
-            <div class="col-md-12 mb-2">
-                @if (count($errors) > 0)
-                <div class="alert alert-danger">
-                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
-
-                @if ($message = Session::get('error'))
-                <div class="alert alert-danger">
-                    <p>{{ $message }}</p>
-                </div>
-                @endif
-                @if ($message = Session::get('success'))
-                <div class="alert alert-success">
-                    <p>{{ $message }}</p>
-                </div>
-                @endif
-
-
-                @if($getvalidationerrors = Session::get('validation_errors'))
-                    {{-- <li>{{ Session::get('validation_errors') }}</li> --}}
-                    <div class="alert alert-danger">
-                        <strong>Whoops!</strong> There were some problems with your excel file at row {{ json_decode($getvalidationerrors)->row }}.<br><br>
-                        <ul>
-                            {{-- {{ dd(json_decode($getvalidationerrors)) }} --}}
-                            @foreach ($validationerrors = json_decode($getvalidationerrors) as $idx=>$import_errors)
-                                {{-- {{dd($errors)}} --}}
-                                @if($idx != 'row')
-                                    @foreach($import_errors as $import_error)
-                                        <li>{{ $import_error }}</li>
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-           </div>
-            {{-- <div class="col-lg-12 d-flex mb-4">
-                <div class="form-row col-md-2">
-                    <label> {{__('branch.branch_name')}} </label>
-                    <input type="input" class="form-control" id="branch_name" value="">
-                </div>
-                <div class="form-row col-md-2">
-                    <label> {{__('branch.branch_short_name')}}</label>
-                    <input type="input" class="form-control" id="branch_short_name" value="">
-                </div>
-                <button id="branch_search" class="btn btn-primary document_search ml-2 mr-2 mt-4">{{__('button.search')}}</button>
-            </div> --}}
         </div>
     </div>
 
@@ -1011,6 +1008,62 @@
         });
     }
 
+
+
+    $('#peertopeer').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "searching": false,
+        "lengthChange": false,
+        "pageLength": 10,
+        "autoWidth": true,
+        "responsive": false,
+        "order": [
+            [1, 'des']
+        ],
+        'ajax': {
+            url: `/getAssessorAssessees`,
+            'type': 'GET',
+            'data': function(d) {
+                var formData = $('#peer_to_peer_form').serializeArray();
+                formData.forEach(function(item) {
+                    d[item.name] = item.value;
+                });
+            }
+        },
+        columns: [
+            {
+                data: null,
+                name: 'no',
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false},
+            { data: 'assesseeuser.employee.employee_name', name: 'assesseeuser.employee.employee_name', orderable: false},
+            { data: 'assesseeuser.employee.department.name', name: 'assesseeuser.employee.department.name', orderable: false },
+            { data: 'assesseeuser.employee.branch.branch_name', name: 'assesseeuser.employee.branch.branch_name', orderable: false },
+            { data: 'assesseeuser.employee.positionlevel.name', name: 'assesseeuser.employee.positionlevel.name', orderable: false },
+            { data: 'assesseeuser.employee.position.name', name: 'assesseeuser.employee.position.name', orderable: false },
+            { data: 'assformcat.name', name: 'assformcat.name', orderable: false },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row) {
+                    return data ?? '';
+                }
+            }
+        ],
+        "columnDefs": [{
+            "searchable": false,
+            "orderable": false,
+            "targets": 0,
+        }],
+    })
     let tableBody = document.querySelector("#peertopeer tbody");
     $(document).on('click',".user-info li",function(){
         let getuser_id = $(this).data('user_id');
@@ -1020,55 +1073,7 @@
         $(this).toggleClass('active');
         $('#assessor_user_id').val(getuser_id);
 
-
-        $.ajax({
-            url: `/getAssessorAssessees`,
-            type: "GET",
-            dataType: "json",
-            data: $('#peer_to_peer_form').serialize(),
-            success: function (response) {
-                {{-- console.log(response); --}}
-
-                let html = '';
-                const peertopeers = response;
-
-                peertopeers.forEach(function(peertopeer,idx){
-                    html += `
-                    <tr>
-                        <td>
-                            ${++idx}
-                        </td>
-                        <td>${peertopeer.assessoruser.employee.employee_name}</td>
-                        <td>${peertopeer.assesseeuser.employee.employee_name}</td>
-                        <td>${peertopeer.assesseeuser.employee.department.name}</td>
-                        <td>${peertopeer.assesseeuser.employee.branch.branch_name}</td>
-                        <td>${peertopeer.assesseeuser.employee.positionlevel.name}</td>
-                        <td>${peertopeer.assesseeuser.employee.position.name}</td>
-                        <td style="width:150px;">${peertopeer.assformcat.name}</td>
-                        <td class="text-center">
-                            @if($appraisalcycle->isBeforeActionStart())
-                            <a href="#" class="text-danger ms-2 delete-btns" data-idx="${idx}"><i class="fas fa-trash-alt"></i></a>
-                            <form id="formdelete-${idx}" class="" action="/peertopeers/${peertopeer.id}" method="POST">
-                                @csrf
-                                @method("DELETE")
-                            </form>
-                            @endif
-                        </td>
-
-                    </tr>`;
-                })
-
-
-                tableBody.innerHTML = html;
-
-
-            },
-            error: function (response) {
-                console.log("Error:", response);
-            }
-        });
-
-
+        $('#peertopeer').DataTable().draw(true);
 
     });
 
@@ -1100,53 +1105,6 @@
    });
    // End Delete Item
 
-
-    $(document).on('click',".assessor-info li",function(){
-        let getuser_id = $(this).data('user_id');
-        $(".assessor-info li").removeClass('active');
-        $(this).toggleClass('active');
-        $('#aassessor_user_id').val(getuser_id);
-
-
-        $.ajax({
-            url: `/getAssessorAssessees`,
-            type: "GET",
-            dataType: "json",
-            data: $('#peer_to_peer_form').serialize(),
-            success: function (response) {
-                {{-- console.log(response); --}}
-
-                let html = '';
-                const peertopeers = response;
-
-                peertopeers.forEach(function(peertopeer,idx){
-                    html += `
-                    <tr>
-                        <td>
-                            ${++idx}
-                        </td>
-                        <td>${peertopeer.assessoruser.employee.employee_name}</td>
-                        <td>${peertopeer.assesseeuser.employee.employee_name}</td>
-                        <td>${peertopeer.assesseeuser.employee.department.name}</td>
-                        <td>${peertopeer.assesseeuser.employee.branch.branch_name}</td>
-                        <td>${peertopeer.assesseeuser.employee.positionlevel.name}</td>
-                        <td>${peertopeer.assesseeuser.employee.position.name}</td>
-                        <td style="width:150px;">${peertopeer.assformcat.name}</td>
-
-
-                    </tr>`;
-                })
-
-
-                tableBody.innerHTML = html;
-
-
-            },
-            error: function (response) {
-                console.log("Error:", response);
-            }
-        });
-    });
     {{-- End User List Filter --}}
 
 

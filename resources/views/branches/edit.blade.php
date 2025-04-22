@@ -13,7 +13,7 @@
 </div>
 
 @if (count($errors) > 0)
-<div class="alert alert-danger">
+<div class="alert alert-danger alert-dismissible fade show">
     <strong>Whoops!</strong> There were some problems with your input.<br><br>
     <ul>
         @foreach ($errors->all() as $error)
@@ -68,7 +68,7 @@
             </select>
         </div>
     </div>
-  
+
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="form-group">
             <strong>Password:</strong>

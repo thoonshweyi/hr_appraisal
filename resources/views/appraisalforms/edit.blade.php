@@ -178,7 +178,7 @@
                                                                 <input type="number" name="appraisalformresults[{{$chunkArray[$i]->id}}][{{ $criteria->id }}]" class="custom-input" max="{{ $criteria->excellent }}" min="{{ $criteria->weak }}"
                                                                 value="{{ old('appraisalformresults') ? old('appraisalformresults')[$chunkArray[$i]->id][$criteria->id] :  $appraisalform->getResult($chunkArray[$i]->id,$criteria->id) }}"  data-valids="{{ implode(',', $criteria->getRatingScaleAttribute()) }}"
                                                                 data-assessee="{{ $chunkArray[$i]->id }}" data-assessee-name="{{ $chunkArray[$i]->employee->employee_name }}" data-criteria-name="{{ $criteria->name }}"
-                                                                />
+                                                                readonly/>
                                                                 {{-- @if($i == 0 && $idx == 0) --}}
                                                                 <div class="d-none critooltips">
                                                                     <h6> <span>{{ $chunkArray[$i]->employee->employee_name }}</span>

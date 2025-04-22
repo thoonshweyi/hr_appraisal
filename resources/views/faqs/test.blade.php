@@ -12,13 +12,19 @@
                 </div>
             </div>
             @if ($message = Session::get('error'))
-            <div class="alert alert-danger">
+            <div class="alert alert-danger alert-dismissible fade show">
                 <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
             </div>
             @endif
             @if ($message = Session::get('success'))
-            <div class="alert alert-success">
+            <div class="alert alert-success alert-dismissible fade show">
                 <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
             </div>
             @endif
             <div class="col-lg-12 d-flex mb-2">
@@ -116,11 +122,11 @@
                     name: 'action',
                     orderable: false,
                     render: function(data, type, row) {
-                            return `  
+                            return `
                                 <div class="d-flex align-items-center list-action">
                                     <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title="Edit" data-original-title="Edit"
                                         href="/lucky_draw_types/${row.id}/edit"><i class="ri-pencil-line mr-0"></i></a>
-                                    
+
                                     <a class="badge bg-warning mr-2" data-toggle="tooltip" data-placement="top" title="Delete" data-original-title="Delete"
                                         id="delete" href="#"" data-lucky_draw_type_id="${row.id}"
                                         ><i class="ri-delete-bin-line mr-0"></i></a>

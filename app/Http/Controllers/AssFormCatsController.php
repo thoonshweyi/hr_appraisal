@@ -85,7 +85,7 @@ class AssFormCatsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            "name" => "required|max:255|unique:position_levels",
+            "name" => "required|max:255|unique:ass_form_cats",
             "status_id" => "required|in:1,2",
             "position_level_ids" => "required|array",
             "position_level_ids.*"=>"required|string",
@@ -152,7 +152,7 @@ class AssFormCatsController extends Controller
 
 
         $this->validate($request,[
-            "name" => ["required","max:50","unique:position_levels,name,".$id],
+            "name" => ["required","max:255","unique:ass_form_cats,name,".$id],
             "status_id" => ["required","in:1,2"],
             "names" => "required|array",
             "names.*"=>"required|string",

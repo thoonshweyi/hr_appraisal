@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AgileDepartmentImport;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\AppraisalFormAssesseeUser;
 use App\Exceptions\ExcelImportValidationException;
 
@@ -133,6 +134,7 @@ class PeerToPeersController extends Controller
         $assessor_user_id = $request->assessor_user_id;
         $appraisal_cycle_id = $request->appraisal_cycle_id;
 
+        $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
 
         // dd($assessor_user_id,$appraisal_cycle_id);
 
@@ -143,9 +145,20 @@ class PeerToPeersController extends Controller
                         ->with(["assesseeuser.employee.branch","assesseeuser.employee.department","assesseeuser.employee.position","assesseeuser.employee.positionlevel"])
                         ->with(["assformcat"])
                         ->get();
-        // dd($peertopeers);
 
-        return response()->json($peertopeers);
+
+        return DataTables::of($peertopeers)
+                ->addColumn('action', function ($peertopeer) use($appraisalcycle){
+                    return $action = $appraisalcycle->isBeforeActionStart() ? "
+                            <a href='#' class='text-danger ms-2 delete-btns' data-idx='$peertopeer->id'><i class='fas fa-trash-alt'></i></a>
+                            <form id='formdelete-$peertopeer->id' class='' action='/peertopeers/$peertopeer->id' method='POST'>"
+                            .csrf_field().method_field('DELETE').
+                        "
+                                </form>
+                        " : '';
+                })
+                ->rawColumns(['action']) //
+                ->make(true);
 
     }
 

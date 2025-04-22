@@ -11,7 +11,7 @@
             </div>
 
             @if (count($errors) > 0)
-            <div class="alert alert-danger">
+            <div class="alert alert-danger alert-dismissible fade show">
                 <strong>Whoops!</strong> There were some problems with your input.<br><br>
                 <ul>
                     @foreach ($errors->all() as $error)

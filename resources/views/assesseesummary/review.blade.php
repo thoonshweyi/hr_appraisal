@@ -19,7 +19,7 @@
 
             <div class="col-md-12 mb-2">
                 @if (count($errors) > 0)
-                <div class="alert alert-danger">
+                <div class="alert alert-danger alert-dismissible fade show">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -30,20 +30,26 @@
                 @endif
 
                 @if ($message = Session::get('error'))
-                <div class="alert alert-danger">
+                <div class="alert alert-danger alert-dismissible fade show">
                     <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                 </div>
                 @endif
                 @if ($message = Session::get('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show">
                     <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                 </div>
                 @endif
 
 
                 @if($getvalidationerrors = Session::get('validation_errors'))
                     {{-- <li>{{ Session::get('validation_errors') }}</li> --}}
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger alert-dismissible fade show">
                         <strong>Whoops!</strong> There were some problems with your excel file at row {{ json_decode($getvalidationerrors)->row }}.<br><br>
                         <ul>
                             {{-- {{ dd(json_decode($getvalidationerrors)) }} --}}
@@ -68,57 +74,12 @@
 
                 <div class="row">
 
+                    <div class="col-md-12 mb-2">
 
+                        <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
+
+                    </div>
                     <div class="col-md-12">
-                        {{-- <div class="header-bar mb-0">{{ $assesseeuser->getAssFormCat()->name }}</div> --}}
-                        {{-- <div class="table-responsive">
-
-                            <table id="mytable" class="table table-bordered custables">
-
-                                <thead class=" m-0">
-
-
-                                    <tr class="table_headers">
-                                        <th>S/No</th>
-                                        <th>CRITERIA Description</th>
-                                        <th>Excellent</th>
-                                        <th>Good</th>
-                                        <th>Meet Standard</th>
-                                        <th>Below Standard</th>
-                                        <th>Weak</th>
-
-                                    </tr>
-
-                                </thead>
-                                <tbody class="">
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-
-
-
-                                <tfoot>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div> --}}
-
-
 
                         <div class="table-responsive">
 
@@ -175,11 +136,7 @@
                         </table>
 
                         </div>
-                        <div class="col-md-12 mt-2">
 
-                            <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
-
-                        </div>
                     </div>
                 </div>
            </div>

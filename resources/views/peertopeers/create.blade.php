@@ -9,40 +9,38 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    {{-- <div class="col-lg-12">
-                        <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-2">
-                                <h4 class="mb-3 peertopeers_titles">An Assessor tag to Assessee(s)</h4>
+                    <div class="col-md-12 mb-2">
+                        @if (count($errors) > 0)
+                        <div class="alert alert-danger alert-dismissible fade show alert-dismissible fade show">
+                            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                    </div> --}}
+                        @endif
 
-                    {{-- <div class="col-lg-12 my-2 ">
-                        <h4>Assessor Filter</h4>
-                        <form class="d-inline" action="{{ route('positions.index') }}" method="GET">
-                            @csrf
-                            <div class="row align-items-end">
-
-                                <div class="col-md-2">
-                                    <label for="filter_name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Department Name" value="{{ request()->filter_name }}"/>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <label for="filter_division_id">Division</label>
-                                    <select name="filter_division_id" id="filter_division_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Division</option>
-                                        @foreach($divisions as $division)
-                                            <option value="{{$division['id']}}" {{ $division['id'] == request()->filter_division_id ? 'selected' : '' }}>{{$division['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-
-
-                            </div>
-
-                        </form>
-                        <hr>
-                    </div> --}}
+                        @if ($message = Session::get('error'))
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <p>{{ $message }}</p>
+                            <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        @endif
+                        @if ($message = Session::get('success'))
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <p>{{ $message }}</p>
+                            <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        @endif
+                    </div>
 
 
 

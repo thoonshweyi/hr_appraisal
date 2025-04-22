@@ -326,6 +326,11 @@ class UserController extends Controller
         ->pluck('assessee_user_id');
         $results = $results->whereNotIn('id',$assessee_user_ids);
 
+        // $results = $results->whereHas('roles', function($query){
+        //     $query->whereIn('name', [$role_names]);
+        // });
+        $results = $results->doesntHave('roles');
+
 
         $users = $results->orderBy('id','asc')
         ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])

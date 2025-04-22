@@ -17,7 +17,7 @@
 
             <div class="col-md-12 mb-2">
                 @if (count($errors) > 0)
-                <div class="alert alert-danger">
+                <div class="alert alert-danger alert-dismissible fade show">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -28,13 +28,19 @@
                 @endif
 
                 @if ($message = Session::get('error'))
-                <div class="alert alert-danger">
+                <div class="alert alert-danger alert-dismissible fade show">
                     <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                 </div>
                 @endif
                 @if ($message = Session::get('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show">
                     <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                 </div>
                 @endif
            </div>

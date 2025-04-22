@@ -17,10 +17,18 @@
                     <strong>
                         {{-- {{ $user->employee->phone }} --}}
                         {{-- {{ dd(substr($user->employee->phone,0,2)) }} --}}
+                        @php
+                            $phone = $user->employee->phone;
+                            $prefixLength = 2;
+                            $suffixLength = 4;
 
-                        {{ substr($user->employee->phone,0,2) }}
-                        {{ "****" }}
-                        {{ substr($user->employee->phone,-4) }}
+                            $prefix = substr($phone, 0, $prefixLength);
+                            $suffix = substr($phone, -$suffixLength);
+                            $middleLength = strlen($phone) - ($prefixLength + $suffixLength);
+                            $maskedMiddle = str_repeat('*', $middleLength);
+                        @endphp
+
+                        {{ $prefix . ' ' . $maskedMiddle . $suffix }}
                     </strong>
                 </p>
             </div>
