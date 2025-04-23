@@ -305,12 +305,12 @@
                     </svg>
                 </a>
                 <ul id="excelformats" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                    <li class="{{ (request()->routeIs('employees.index')) ? 'active' : '' }}">
+                    <li class="">
                         <a download href="{{ asset('/download/HR Staff Assessment Form - Rank 4 & 5.xlsx') }}" target="_blank">
                             <i class="las la-minus"></i><span>{{ __('nav.assformcat_format')}}</span>
                         </a>
                     </li>
-                    <li class="{{ (request()->routeIs('employees.index')) ? 'active' : '' }}">
+                    <li class="">
                         <a download href="{{ asset('/download/HR Staff Assessment Form - Rank 4 & 5.xlsx') }}" target="_blank">
                             <i class="las la-minus"></i><span>{{ __('nav.employee_format')}}</span>
                         </a>

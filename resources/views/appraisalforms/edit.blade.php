@@ -350,7 +350,7 @@
             }
 
             updateTotals();
-            autofocusNextInput();
+            autofocusNextInput($input);
         });
 
         function updateTotals() {
@@ -386,9 +386,10 @@
             console.log(totals);
         }
 
-        function autofocusNextInput() {
-            const $activeInput = $(':focus');
-            if (!$activeInput.hasClass('custom-input')) return;
+        function autofocusNextInput(input) {
+            {{-- console.log(input); --}}
+            const $focused = $(':focus');
+            const $activeInput = $focused.length ? $focused : input;
 
             const $td = $activeInput.closest('td');
             const $tr = $td.closest('tr');
@@ -444,12 +445,12 @@
 
             // Remove old handlers to avoid duplicates and update input value on criteria circle click
             input.next(".critooltips").find('.criteria-circles').off('mousedown').on('mousedown', function (e) {
-                e.preventDefault(); // Prevent input blur
+                {{-- e.preventDefault(); // Prevent input blur --}}
                 const value = $(this).data('value');
                 input.val(value);
                 updateTotals();
 
-                autofocusNextInput();
+                autofocusNextInput(input);
             });
         });
 
@@ -464,6 +465,14 @@
             $(this).closest('.critooltips').addClass('d-none');
         });
 
+        $(document).on('mousedown',function(e){
+            {{-- console.log(e.target.classList.contains('custom-input')); --}}
+            {{-- console.log(e.target.closest('.critooltips')) --}}
+
+            if(!e.target.classList.contains('custom-input') && !e.target.closest('.critooltips')){
+                $('.critooltips').addClass('d-none');
+            }
+        });
 {{--
         document.addEventListener('click', function (e) {
 

@@ -60,6 +60,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
             // "nrc"=> "required",
             // "father_name"=> "required",
             'attach_form_type' => '',
+            // 'phone' => 'required'
         ]);
         // If validation fails, throw an exception with the row number
         if ($validator->fails()) {
@@ -108,6 +109,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
                 "nrc"                => $row['nrc'],
                 "father_name"        => $row['father_name'],
                 "attach_form_type_id"=> AttachFormType::where('name', $row['attach_form_type'])->first()?->id,
+                // "phone"                => $row['phone'] ? $row['phone'] : null,
             ]
         );
     }

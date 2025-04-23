@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use App\Models\Branch;
 use App\Models\Gender;
@@ -271,8 +272,7 @@ class EmployeesController extends Controller
         $request->validate([
             'file' => 'required|mimes:xls,xlsx|max:2048',
         ]);
-
-        ini_set('max_execution_time', 300);
+        // ini_set('max_execution_time', 300);
 
         \DB::beginTransaction();
 
@@ -286,11 +286,11 @@ class EmployeesController extends Controller
         }catch (ExcelImportValidationException $e) {
             // If validation fails, show the error message to the user
             \DB::rollback();
-            return back()->with('validation_errors', $e->getMessage());
+            return redirect(route("employees.index"))->with('validation_errors', $e->getMessage());
         } catch (\Exception $e) {
             \DB::rollback();
             // Handle the exception and notify the user
-            return redirect()->back()->with('error', "System Error:".$e->getMessage());
+            return redirect(route("employees.index"))->with('error', "System Error:".$e->getMessage());
         }
    }
 
