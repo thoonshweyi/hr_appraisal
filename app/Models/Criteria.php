@@ -50,7 +50,7 @@ class Criteria extends Model
         return $this->belongsTo(Status::class);
     }
     public function assformcat(){
-        return $this->belongsTo(Status::class,'ass_form_cat_id','id');
+        return $this->belongsTo(AssFormCat::class,'ass_form_cat_id','id');
     }
     public function getRatingScaleAttribute()
     {

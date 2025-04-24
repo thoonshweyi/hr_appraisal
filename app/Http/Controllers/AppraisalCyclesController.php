@@ -473,6 +473,7 @@ class AppraisalCyclesController extends Controller
             $request->session()->put('filter_position_level_id', $filter_position_level_id);
 
         }
+        $results = $results->doesntHave('roles');
 
 
         $users = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])

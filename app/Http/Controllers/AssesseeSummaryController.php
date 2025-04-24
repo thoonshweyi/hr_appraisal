@@ -25,7 +25,7 @@ class AssesseeSummaryController extends Controller
 
         $ass_form_cat_ids = $assesseeuser ? $assesseeuser->getAssFormCats()->pluck('id'): '';
         $criterias = Criteria::whereIn("ass_form_cat_id",$ass_form_cat_ids)->get();
-
+        // dd($ass_form_cat_ids);
         foreach($criterias as $criteria){
             $criteria_totals[$criteria->id] = $this->getCriteriaTotal($assessee_user_id,$criteria->id,$appraisal_cycle_id);
         }
