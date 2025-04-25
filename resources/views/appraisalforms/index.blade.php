@@ -21,45 +21,71 @@
                     <form id="searchnfilterform" class="" action="{{ route('appraisalforms.index') }}" method="GET">
                         @csrf
                         <div class="row align-items-end justify-content-start">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    {{-- <label for="filter_employee_name">Enployee Name <span class="text-danger">*</span></label> --}}
-                                    <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0 filter_input" placeholder="Enter Employee Name" value="{{ request()->filter_employee_name }}"/>
-                                    <i class="fas fa-user"></i>
+
+                            <div class="col-md-2  px-1">
+                                <div class="form-group d-flex">
+                                    <label for="filter_employee_code"><i class="fas fa-user-tag text-primary mx-2"></i></label>
+                                    <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0 " placeholder="Enter Employee Code / Name" value="{{ session('filter_employee_code') }}"/>
+                                    {{-- <i class="fas fa-id-card"></i> --}}
                                 </div>
                             </div>
 
-
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    {{-- <label for="filter_branch_id">Branch</label> --}}
-                                    <select name="filter_branch_id" id="filter_branch_id" class="custom-select custom-select-sm rounded-0 filter_input">
+                            <div class="col-md-2 px-1">
+                                <div class="form-group d-flex">
+                                    <label for="filter_branch_id"><i class="fas fa-map-marker-alt text-primary mx-2"></i></label>
+                                    <select name="filter_branch_id" id="filter_branch_id" class="form-control form-control-sm rounded-0 ">
                                         <option value="" selected disabled>Choose Branch</option>
                                         @foreach($branches as $branch)
-                                            <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_branch_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
+                                            <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == session('filter_branch_id') ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
                                         @endforeach
                                     </select>
-                                    <i class="fas fa-building"></i>
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    {{-- <label for="filter_branch_id">Branch</label> --}}
-                                    <select name="filter_appraisal_cycle_id" id="filter_appraisal_cycle_id" class="custom-select custom-select-sm rounded-0 filter_input">
-                                        <option value="" selected disabled>Choose Appraisal Cycle</option>
-                                        @foreach($appraisalcycles as $appraisalcycle)
-                                            <option value="{{$appraisalcycle['id']}}" {{ $appraisalcycle['id'] == request()->filter_appraisal_cycle_id ? 'selected' : '' }}>{{$appraisalcycle['name']}}</option>
+                            {{-- <div class="col-md-2 px-1">
+                                <div class="form-group d-flex">
+                                    <label for="filter_position_level_id"><i class="fas fa-briefcase text-primary mx-2"></i></label>
+                                    <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0 ">
+                                        <option value="" selected disabled>Choose Position Level</option>
+                                        @foreach($positionlevels as $positionlevel)
+                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == session('filter_position_level_id') ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
                                         @endforeach
                                     </select>
-                                    <i class="fas fa-building"></i>
+                                </div>
+                            </div> --}}
+
+                            <div class="col-md-2 px-1">
+                                <div class="form-group d-flex">
+                                    <label for="filter_subdepartment_id"><i class="fas fa-building text-primary mx-2"></i></label>
+                                    <select name="filter_subdepartment_id" id="filter_subdepartment_id" class="form-control form-control-sm rounded-0 ">
+                                        <option value="" selected disabled>Choose Sub Department</option>
+                                        @foreach($subdepartments as $subdepartment)
+                                            <option value="{{$subdepartment['id']}}" {{ $subdepartment['id'] == session('filter_subdepartment_id') ? 'selected' : '' }}>{{$subdepartment['name']}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
 
 
-                            <div class="col-auto">
+                            <div class="col-md-2 px-1">
+                                <div class="form-group d-flex">
+                                    <label for="filter_position_level_id"><i class="fas fa-briefcase text-primary mx-2"></i></label>
+                                    <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0 ">
+                                        <option value="" selected disabled>Choose Position Level</option>
+                                        @foreach($positionlevels as $positionlevel)
+                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == session('filter_position_level_id') ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="d-flex align-items-end">
                                 <button type="submit" class="btn my-2 ml-auto cus_btn searchbtns">Search</button>
-                           </div>
+                                @if(count(request()->query()) > 0)
+                                    <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
+                                @endif
+                            </div>
 
                         </div>
 
@@ -139,7 +165,7 @@
                 <thead class="bg-white text-uppercase">
                     <tr class="ligth ligth-data">
                         <th>No</th>
-                        <th>Assessment-form Category</th>
+                        <th>Criteria Set</th>
                         <th>Assessor</th>
                         <th>Appraisal Cycle</th>
                         <th>Status</th>
@@ -190,7 +216,36 @@
 @section('js')
 <script>
     $(document).ready(function() {
-
+        $("#filter_branch_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Branch',
+            searchField: ["value", "label"]
+        });
+        $("#filter_position_level_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Position Level',
+            searchField: ["value", "label"]
+        });
+        $("#filter_subdepartment_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Sub Department',
+            searchField: ["value", "label"]
+        });
 
     });
 </script>

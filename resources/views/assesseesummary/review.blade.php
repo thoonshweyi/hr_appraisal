@@ -96,7 +96,7 @@
                             <tr>
                                 <td class="label-cell">Position:</td>
                                 <td class="value-cell">{{ $assesseeuser->employee->position->name }}</td>
-                                <td class="label-cell">Assessment-Form Category:</td>
+                                <td class="label-cell">Criteria Set:</td>
                                 <td class="value-cell">{{ $assesseeuser->getAssFormCat()->name }}</td>
                             </tr>
                             <tr>
@@ -169,7 +169,7 @@
 
                     <label for="" class="mr-2">Assessee: </label><h6 class="text-dark fw-bold d-inline text-lg">{{ $assesseeuser->employee->employee_name }}</h6>
                     <div>
-                        <label for="" class="mr-2">Assment-Form Category: </label>
+                        <label for="" class="mr-2">Criteria Set: </label>
                           {{-- {{ dd($assesseesummary->getAssesseeAssFormCats($assesseeuser->id, Route::current()->parameter('appraisal_cycle_id'))) }} --}}
                           @php
                           $asseseeformcats = $assesseesummary->getAssesseeAssFormCats($assesseeuser->id, Route::current()->parameter('appraisal_cycle_id'));

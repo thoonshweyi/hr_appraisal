@@ -7,7 +7,7 @@
             <div class="col-lg-12">
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
-                        <h4 class="mb-3">Assessment Form Category</h4>
+                        <h4 class="mb-3">Criteria Set</h4>
 
                         <a href="{{ route('assformcats.create') }}" class="btn btn-primary">Create</a>
 
@@ -27,8 +27,8 @@
                     <div class="row align-items-end justify-content-start ">
 
                         <div class="col-md-2">
-                            <label for="filter_name">Assment-form Category Name <span class="text-danger">*</span></label>
-                            <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Assment-form Category Name" value="{{ request()->filter_name }}"/>
+                            <label for="filter_name">Criteria Set Name <span class="text-danger">*</span></label>
+                            <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Criteria Set Name" value="{{ request()->filter_name }}"/>
                         </div>
 
 

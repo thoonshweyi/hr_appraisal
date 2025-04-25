@@ -9,7 +9,7 @@
             <div class="col-lg-12">
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
-                        <h4 class="mb-3">Assessment-form Category Edit</h4>
+                        <h4 class="mb-3">Criteria Set Edit</h4>
                     </div>
                 </div>
             </div>
@@ -97,20 +97,20 @@
                                                     <textarea type="text" name="names[]" class="custom-input-lg" value="{{ $criteria->name }}" placeholder="Write Something....">{{ $criteria->name }}</textarea>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="excellents[]" class="custom-input" value="{{ $criteria->excellent }}">
+                                                    <input type="text" name="excellents[]" class="custom-input" value="{{ $criteria->excellent }}" data-oldVal={{ $criteria->excellent }}>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="goods[]" class="custom-input" value="{{ $criteria->good }}">
+                                                    <input type="text" name="goods[]" class="custom-input" value="{{ $criteria->good }}" data-oldVal={{ $criteria->good }}>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="meet_standards[]" class="custom-input" value="{{ $criteria->meet_standard }}">
+                                                    <input type="text" name="meet_standards[]" class="custom-input" value="{{ $criteria->meet_standard }}" data-oldVal={{ $criteria->meet_standard }}>
                                                 </td>
 
                                                 <td>
-                                                    <input type="text" name="below_standards[]" class="custom-input" value="{{ $criteria->below_standard }}">
+                                                    <input type="text" name="below_standards[]" class="custom-input" value="{{ $criteria->below_standard }}" data-oldVal={{ $criteria->below_standard }}>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="weaks[]" class="custom-input" value="{{ $criteria->weak }}">
+                                                    <input type="text" name="weaks[]" class="custom-input" value="{{ $criteria->weak }}" data-oldVal={{ $criteria->weak }}>
                                                 </td>
                                                 <td>
                                                     <input type="checkbox" name="status_ids[]" class="status_ids" value="1" {{ $criteria->status_id == 1 ? "checked" : ''  }}>
@@ -127,11 +127,11 @@
                                         <tfoot>
                                             <tr>
                                                 <td colspan="2">Total Score</td>
-                                                <td><span id="total_excellent">{{ $total_excellent }}</span></td>
-                                                <td><span id="total_good">{{ $total_good }}</span></td>
-                                                <td><span id="total_meet_standard">{{ $total_meet_standard }}</span></td>
-                                                <td><span id="total_below_standard">{{ $total_below_standard }}</span></td>
-                                                <td><span id="total_weak">{{ $total_weak }}</span></td>
+                                                <td><span id="total_excellent">{{ $total_excellent }}</span> <input type="hidden" name="total_excellent" /></td>
+                                                <td><span id="total_good">{{ $total_good }}</span> <input type="hidden" name="total_good" /></td>
+                                                <td><span id="total_meet_standard">{{ $total_meet_standard }}</span> <input type="hidden" name="total_meet_standard" /></td>
+                                                <td><span id="total_below_standard">{{ $total_below_standard }}</span> <input type="hidden" name="total_below_standard" /></td>
+                                                <td><span id="total_weak">{{ $total_weak }}</span> <input type="hidden" name="total_weak" /></td>
 
                                                 <td></td>
                                                 <td></td>
@@ -251,49 +251,6 @@
 @section('js')
 <script>
     $(document).ready(function() {
-        $("#division_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Division',
-            searchField: ["value", "label"]
-        });
-
-        $("#department_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Department',
-            searchField: ["value", "label"]
-        });
-
-        $("#sub_department_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Sub Department',
-            searchField: ["value", "label"]
-        });
-
-        $("#section_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Section',
-            searchField: ["value", "label"]
-        });
 
 
         $("#status_id").selectize({
@@ -308,27 +265,6 @@
         });
 
 
-        $("#position_ids").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Position',
-            searchField: ["value", "label"]
-        });
-
-        $("#gender_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
 
         $("#position_level_ids").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
@@ -342,12 +278,6 @@
         });
 
 
-
-        $("#beginning_date,#enddate").flatpickr({
-            dateFormat: "Y-m-d",
-            {{-- minDate: "today", --}}
-            {{-- maxDate: new Date().fp_incr(30) --}}
-        });
 
         $("#attach_form_type_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
@@ -366,7 +296,7 @@
 
        $('.update_btns').click(function(e){
             Swal.fire({
-                title: "Are you sure you want to update Assessment-Form Category",
+                title: "Are you sure you want to update Criteria Set",
                 text: "",
                 icon: "warning",
                 showCancelButton: true,
@@ -550,7 +480,12 @@
     });
 
 
-
+    const max_total_excellent = 100;
+    const max_total_good = 84;
+    const max_total_meet_standard = 67;
+    const max_total_below_standard = 40;
+    const max_total_weak = 19;
+    console.log(max_total_excellent);
     function updateTotals() {
         let total_excellent = 0;
         let total_good = 0;
@@ -579,17 +514,79 @@
             total_weak += parseInt($(this).val()) || 0;
         });
 
+
+        // Validate limits
+        if (total_excellent > max_total_excellent) {
+            {{-- alert("Total Excellent cannot exceed " + max_total_excellent); --}}
+            Swal.fire({
+                title: "Invalid Value",
+                text: "Total Excellent cannot exceed " + max_total_excellent,
+                icon: "error"
+           });
+            return false;
+        }
+
+        if (total_good > max_total_good) {
+            {{-- alert("Total Good cannot exceed " + max_total_good); --}}
+            Swal.fire({
+                title: "Invalid Value",
+                text: "Total Good cannot exceed " + max_total_good,
+                icon: "error"
+           });
+            return false;
+        }
+
+        if (total_meet_standard > max_total_meet_standard) {
+            {{-- alert("Total Meet Standard cannot exceed " + max_total_meet_standard); --}}
+            Swal.fire({
+                title: "Invalid Value",
+                text: "Total Meet Standard cannot exceed " + max_total_meet_standard,
+                icon: "error"
+           });
+            return false;
+        }
+
+        if (total_below_standard > max_total_below_standard) {
+            {{-- alert("Total Below Standard cannot exceed " + max_total_below_standard); --}}
+            Swal.fire({
+                title: "Invalid Value",
+                text: "Total Below Standard cannot exceed " + max_total_below_standard,
+                icon: "error"
+           });
+            return false;
+        }
+
+        if (total_weak > max_total_weak) {
+            {{-- alert("Total Weak cannot exceed " + max_total_weak); --}}
+            Swal.fire({
+                title: "Invalid Value",
+                text: "Total Weak cannot exceed " + max_total_weak,
+                icon: "error"
+           });
+            return false;
+        }
+
         // Update UI with new totals
         $("#total_excellent").text(total_excellent);
         $("#total_good").text(total_good);
         $("#total_meet_standard").text(total_meet_standard);
         $("#total_below_standard").text(total_below_standard);
         $("#total_weak").text(total_weak);
+        return true;
     }
 
     // Call updateTotals() when an input changes
-    $(".custom-input").on("input", function() {
-        updateTotals();
+    $(".custom-input").on("input", function () {
+        const oldValue = $(this).data('oldval') ;
+        console.log(oldValue);
+        const isValid = updateTotals();
+
+        if (!isValid) {
+            $(this).val(oldValue);
+            return;
+        }
+
+        $(this).data('oldVal', $(this).val());
     });
 </script>
 @stop

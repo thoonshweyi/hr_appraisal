@@ -15,6 +15,8 @@ use App\Models\PeerToPeer;
 use Illuminate\Http\Request;
 use App\Helpers\PusherHelper;
 use App\Models\AppraisalForm;
+use App\Models\PositionLevel;
+use App\Models\SubDepartment;
 use App\Models\AppraisalCycle;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +42,8 @@ class AppraisalFormsController extends Controller
 
         $appraisalcycles = AppraisalCycle::where('status_id',1)->orderBy('id')->get();
         $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
+        $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
+        $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
 
 
         $filter_assessor_user_id = $request->filter_assessor_user_id;
@@ -89,7 +93,7 @@ class AppraisalFormsController extends Controller
 
 
 
-        return view("appraisalforms.index",compact('appraisalforms','branches','appraisalcycles'));
+        return view("appraisalforms.index",compact('appraisalforms','branches','appraisalcycles', 'positionlevels' ,'subdepartments'));
     }
 
 
