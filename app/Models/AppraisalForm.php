@@ -63,6 +63,8 @@ class AppraisalForm extends Model
         $totalresult = FormResult::where('appraisal_form_id',$this->id)
         ->where('assessee_user_id',$assessee_user_id)
        ->sum("result");
+
+    //    dd($totalresult);
         return $totalresult;
     }
 

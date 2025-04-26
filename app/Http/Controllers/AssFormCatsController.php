@@ -149,28 +149,15 @@ class AssFormCatsController extends Controller
 
         // \DB::beginTransaction();
 
-
-
-        $this->validate($request,[
-            "name" => ["required","max:255","unique:ass_form_cats,name,".$id],
-            "status_id" => ["required","in:1,2"],
-            "names" => "required|array",
-            "names.*"=>"required|string",
-            "excellents" => "required|array",
-            "excellents.*"=>"required|string",
-            "goods" => "required|array",
-            "goods.*"=>"required|string",
-            "meet_standards" => "required|array",
-            "meet_standards.*"=>"required|string",
-            "below_standards" => "required|array",
-            "below_standards.*"=>"required|string",
-            "weaks" => "required|array",
-            "weaks.*"=>"required|string",
+        $baseRules = [
+            "name" => ["required", "max:255", "unique:ass_form_cats,name," . $id],
+            "status_id" => ["required", "in:1,2"],
             "position_level_ids" => "required|array",
-            "position_level_ids.*"=>"required|string",
+            "position_level_ids.*" => "required|string",
             "attach_form_type_id" => "required",
+        ];
 
-        ],[
+        $messages = [
             'names.*.required' => 'Please enter criteria name values.',
             'excellents.*.required' => 'Please enter excellent values.',
             'goods.*.required' => 'Please enter good values.',
@@ -178,8 +165,46 @@ class AssFormCatsController extends Controller
             'below_standards.*.required' => 'Please enter below standard values.',
             'weaks.*.required' => 'Please enter weak values.',
             'position_level_ids.*.required' => 'Please enter position level values.',
-        ]);
 
+            'newnames.*.required' => 'Please enter new criteria name values.',
+            'newexcellents.*.required' => 'Please enter new excellent values.',
+            'newgoods.*.required' => 'Please enter new good values.',
+            'newmeet_standards.*.required' => 'Please enter new meet standard values.',
+            'newbelow_standards.*.required' => 'Please enter new below standard values.',
+            'newweaks.*.required' => 'Please enter new weak values.',
+        ];
+
+        if ($request->has('names')) {
+            $baseRules["names"] = "required|array";
+            $baseRules["names.*"] = "required|string";
+            $baseRules["excellents"] = "required|array";
+            $baseRules["excellents.*"] = "required|string";
+            $baseRules["goods"] = "required|array";
+            $baseRules["goods.*"] = "required|string";
+            $baseRules["meet_standards"] = "required|array";
+            $baseRules["meet_standards.*"] = "required|string";
+            $baseRules["below_standards"] = "required|array";
+            $baseRules["below_standards.*"] = "required|string";
+            $baseRules["weaks"] = "required|array";
+            $baseRules["weaks.*"] = "required|string";
+        }
+
+        if ($request->has('newnames')) {
+            $baseRules["newnames"] = "required|array";
+            $baseRules["newnames.*"] = "required|string";
+            $baseRules["newexcellents"] = "required|array";
+            $baseRules["newexcellents.*"] = "required|string";
+            $baseRules["newgoods"] = "required|array";
+            $baseRules["newgoods.*"] = "required|string";
+            $baseRules["newmeet_standards"] = "required|array";
+            $baseRules["newmeet_standards.*"] = "required|string";
+            $baseRules["newbelow_standards"] = "required|array";
+            $baseRules["newbelow_standards.*"] = "required|string";
+            $baseRules["newweaks"] = "required|array";
+            $baseRules["newweaks.*"] = "required|string";
+        }
+
+        $this->validate($request, $baseRules, $messages);
 
 
         $user = Auth::user();
@@ -193,38 +218,65 @@ class AssFormCatsController extends Controller
         $assformcat->save();
 
 
-        $names = $request->names;
-        $excellents = $request->excellents;
-        $goods = $request->goods;
-        $meet_standards = $request->meet_standards;
-        $below_standards = $request->below_standards;
-        $weaks = $request->weaks;
-        $status_ids = $request->status_ids;
+
 
         $position_level_ids = $request->position_level_ids;
 
 
         // dd($excellents);
-        $criterias = Criteria::where('ass_form_cat_id',$id)->delete();
 
-        if(!empty($names)){
-            foreach($names as $idx=>$name){
-                // dd($excellents[$idx]);
+        if($request->has('newnames')){
+            $newnames = $request->newnames;
+            $newexcellents = $request->newexcellents;
+            $newgoods = $request->newgoods;
+            $newmeet_standards = $request->newmeet_standards;
+            $newbelow_standards = $request->newbelow_standards;
+            $newweaks = $request->newweaks;
+            $newstatus_ids = $request->newstatus_ids;
+            foreach($newnames as $idx=>$newname){
                 $criteria = Criteria::create([
-                    "name" => $name,
-                    "status_id" => $status_ids[$idx],
+                    "name" => $newname,
+                    "status_id" => $newstatus_ids[$idx],
                     "user_id" => $user_id,
                     "ass_form_cat_id" => $assformcat->id,
 
-                    "excellent" => $excellents[$idx],
-                    "good" => $goods[$idx],
-                    "meet_standard" => $meet_standards[$idx],
-                    "below_standard" => $below_standards[$idx],
-                    "weak" => $weaks[$idx],
+                    "excellent" => $newexcellents[$idx],
+                    "good" => $newgoods[$idx],
+                    "meet_standard" => $newmeet_standards[$idx],
+                    "below_standard" => $newbelow_standards[$idx],
+                    "weak" => $newweaks[$idx],
                 ]);
             }
         }
 
+        if($request->has('names') && $request->has('criteriaids')){
+            $names = $request->names;
+            $excellents = $request->excellents;
+            $goods = $request->goods;
+            $meet_standards = $request->meet_standards;
+            $below_standards = $request->below_standards;
+            $weaks = $request->weaks;
+            $status_ids = $request->status_ids;
+
+
+            foreach($request->names as $key=>$name){
+                if(!empty(trim($name)) && isset($request->criteriaids[$key])){
+                    $getcriteriaid = $request->criteriaids[$key];
+                    Criteria::findOrFail($getcriteriaid)->update([
+                        "name" => $name,
+                        "status_id" => $status_ids[$key],
+                        "user_id" => $user_id,
+                        "ass_form_cat_id" => $assformcat->id,
+
+                        "excellent" => $excellents[$key],
+                        "good" => $goods[$key],
+                        "meet_standard" => $meet_standards[$key],
+                        "below_standard" => $below_standards[$key],
+                        "weak" => $weaks[$key],
+                    ]);
+                }
+            }
+        }
 
 
         $position_level_ids = $request->position_level_ids;

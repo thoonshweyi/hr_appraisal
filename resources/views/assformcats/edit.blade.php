@@ -15,6 +15,55 @@
             </div>
 
 
+            <div class="col-md-12 mb-2">
+                @if (count($errors) > 0)
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                @if ($message = Session::get('error'))
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+                @endif
+                @if ($message = Session::get('success'))
+                <div class="alert alert-success alert-dismissible fade show">
+                    <p>{{ $message }}</p>
+  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+                @endif
+
+
+                @if($getvalidationerrors = Session::get('validation_errors'))
+                    {{-- <li>{{ Session::get('validation_errors') }}</li> --}}
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <strong>Whoops!</strong> There were some problems with your excel file at row {{ json_decode($getvalidationerrors)->row }}.<br><br>
+                        <ul>
+                            {{-- {{ dd(json_decode($getvalidationerrors)) }} --}}
+                            @foreach ($validationerrors = json_decode($getvalidationerrors) as $idx=>$import_errors)
+                                {{-- {{dd($errors)}} --}}
+                                @if($idx != 'row')
+                                    @foreach($import_errors as $import_error)
+                                        <li>{{ $import_error }}</li>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+           </div>
+
 
             <div class="col-lg-12 my-2 ">
                 <form id="assformcats_form" action="{{route('assformcats.update',$assformcat->id)}}" method="POST">
@@ -93,6 +142,7 @@
                                             @endphp
                                             <tr id="tb_row_{{$idx}}">
                                                 <td>{{ $idx}}</td>
+                                                <input type="hidden" name="criteriaids[]" id="{{ $criteria->id }}" value="{{ $criteria->id }}">
                                                 <td class="cells">
                                                     <textarea type="text" name="names[]" class="custom-input-lg" value="{{ $criteria->name }}" placeholder="Write Something....">{{ $criteria->name }}</textarea>
                                                 </td>
@@ -177,54 +227,7 @@
             </div>
 
 
-            <div class="col-md-12 mb-2">
-                @if (count($errors) > 0)
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
 
-                @if ($message = Session::get('error'))
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                </div>
-                @endif
-                @if ($message = Session::get('success'))
-                <div class="alert alert-success alert-dismissible fade show">
-                    <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                </div>
-                @endif
-
-
-                @if($getvalidationerrors = Session::get('validation_errors'))
-                    {{-- <li>{{ Session::get('validation_errors') }}</li> --}}
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <strong>Whoops!</strong> There were some problems with your excel file at row {{ json_decode($getvalidationerrors)->row }}.<br><br>
-                        <ul>
-                            {{-- {{ dd(json_decode($getvalidationerrors)) }} --}}
-                            @foreach ($validationerrors = json_decode($getvalidationerrors) as $idx=>$import_errors)
-                                {{-- {{dd($errors)}} --}}
-                                @if($idx != 'row')
-                                    @foreach($import_errors as $import_error)
-                                        <li>{{ $import_error }}</li>
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-           </div>
             {{-- <div class="col-lg-12 d-flex mb-4">
                 <div class="form-row col-md-2">
                     <label> {{__('branch.branch_name')}} </label>
@@ -410,17 +413,17 @@
                     <tr id="tb_row_${cri_idx}">
                         <td>${cri_idx}</td>
                         <td class="cells">
-                            <input type="text" name="names[]" class="custom-input-lg" value="" placeholder="Write Something....">
+                            <input type="text" name="newnames[]" class="custom-input-lg" value="" placeholder="Write Something....">
                         </td>
 
-                        <td><input type="text" name="excellents[]" class="custom-input" value=""></td>
-                        <td><input type="text" name="goods[]" class="custom-input" value=""></td>
-                        <td><input type="text" name="meet_standards[]" class="custom-input" value=""></td>
-                        <td><input type="text" name="below_standards[]" class="custom-input" value=""></td>
-                        <td><input type="text" name="weaks[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="newexcellents[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="newgoods[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="newmeet_standards[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="newbelow_standards[]" class="custom-input" value=""></td>
+                        <td><input type="text" name="newweaks[]" class="custom-input" value=""></td>
 
                         <td>
-                            <input type="checkbox" name="status_ids[]" class="status_ids" value="1" checked>
+                            <input type="checkbox" name="newstatus_ids[]" class="status_ids newstatus_ids" value="1" checked>
                         </td>
                         <td>
                             <a href="javascript:void(0);" type="button" title="Remove" class="remove-btns text-danger" data-id='${cri_idx}'>
@@ -435,7 +438,12 @@
 
             $(document).on('change', '.status_ids', function() {
                 if (!$(this).is(':checked')) {
-                    $(this).after('<input type="hidden" name="status_ids[]" value="2">');
+
+                    if($(this).hasClass('newstatus_ids')){
+                        $(this).after('<input type="hidden" name="newstatus_ids[]" value="2">');
+                    }else{
+                        $(this).after('<input type="hidden" name="status_ids[]" value="2">');
+                    }
                 } else {
                     $(this).siblings('input[type="hidden"]').remove();
                 }
@@ -494,23 +502,23 @@
         let total_weak = 0;
 
         // Loop through each input and sum values
-        $("input[name='excellents[]']").each(function() {
+        $("input[name='excellents[]'], input[name='newexcellents[]']").each(function() {
             total_excellent += parseInt($(this).val()) || 0;
         });
 
-        $("input[name='goods[]']").each(function() {
+        $("input[name='goods[]'], input[name='newgoods[]']").each(function() {
             total_good += parseInt($(this).val()) || 0;
         });
 
-        $("input[name='meet_standards[]']").each(function() {
+        $("input[name='meet_standards[]'], input[name='newmeet_standards[]']").each(function() {
             total_meet_standard += parseInt($(this).val()) || 0;
         });
 
-        $("input[name='below_standards[]']").each(function() {
+        $("input[name='below_standards[]'], input[name='newbelow_standards[]']").each(function() {
             total_below_standard += parseInt($(this).val()) || 0;
         });
 
-        $("input[name='weaks[]']").each(function() {
+        $("input[name='weaks[]'], input[name='newweaks[]']").each(function() {
             total_weak += parseInt($(this).val()) || 0;
         });
 
@@ -576,8 +584,22 @@
     }
 
     // Call updateTotals() when an input changes
-    $(".custom-input").on("input", function () {
+    {{-- $(".custom-input").on("input", function () {
         const oldValue = $(this).data('oldval') ;
+        console.log(oldValue);
+        const isValid = updateTotals();
+
+        if (!isValid) {
+            $(this).val(oldValue);
+            return;
+        }
+
+        $(this).data('oldVal', $(this).val());
+    }); --}}
+
+
+    $(document).on('input', '.custom-input', function() {
+        const oldValue = $(this).data('oldval');
         console.log(oldValue);
         const isValid = updateTotals();
 

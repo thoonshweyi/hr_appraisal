@@ -79,9 +79,9 @@
                                 <div class="col-md-4">
                                     <div class="form-group d-flex wrapped_assformcats" style="white-space: nowrap;">
 
-                                        <label for="filter_ass_form_cat_id">Form Category</label>
+                                        <label for="filter_ass_form_cat_id">Criteria Set</label>
                                         <select name="filter_ass_form_cat_id" id="filter_ass_form_cat_id" class="form-control form-control-sm rounded-0 ml-2" value="">
-                                            <option value="" selected disabled>Choose Attach Form Type</option>
+                                            <option value="" selected disabled>Choose Criteria Set</option>
                                             @foreach($assformcats as $assformcat)
                                                 <option value="{{$assformcat['id']}}" {{ $assformcat['id'] == old('filter_ass_form_cat_id') ? "selected" : "" }}>{{$assformcat['name']}}</option>
                                             @endforeach
@@ -143,7 +143,7 @@
                                                    <th>Branch</th>
                                                    <th>Position Level</th>
                                                    <th>Position</th>
-                                                   <th>Assessment-form Category</th>
+                                                   <th>Criteria Set</th>
                                                </tr>
                                            </thead>
                                            <tbody id="assesseeTable">
@@ -215,7 +215,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Form Category',
+            placeholder: 'Choose  Criteria Set',
             searchField: ["value", "label"]
         });
 

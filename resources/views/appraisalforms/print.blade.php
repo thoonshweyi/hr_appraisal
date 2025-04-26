@@ -92,6 +92,9 @@
             max-width: 4% !important;;
 
             vertical-align: middle;
+
+            min-height: 100px;
+            max-height: 100px;
         }
         .header-row td{
             padding: 5px 40px;
