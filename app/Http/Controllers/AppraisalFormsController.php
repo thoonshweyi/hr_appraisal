@@ -48,8 +48,11 @@ class AppraisalFormsController extends Controller
 
         $filter_assessor_user_id = $request->filter_assessor_user_id;
         $filter_employee_name = $request->filter_employee_name;
+        $filter_employee_code = $request->filter_employee_code;
         $filter_appraisal_cycle_id = $request->filter_appraisal_cycle_id;
         $filter_branch_id = $request->filter_branch_id;
+        $filter_position_level_id = $request->filter_position_level_id;
+        $filter_subdepartment_id = $request->filter_subdepartment_id;
 
 
         if (!empty($filter_assessor_user_id)) {
@@ -65,6 +68,14 @@ class AppraisalFormsController extends Controller
         }
 
 
+        if (!empty($filter_employee_code)) {
+            $results = $results->whereHas('assessoruser',function($query) use($filter_employee_code){
+                $query->whereHas('employee',function($query) use($filter_employee_code){
+                    $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%')->orWhere('employee_name', 'like', '%'.$filter_employee_code.'%');
+                });
+            });
+        }
+
         if (!empty($filter_appraisal_cycle_id)) {
             $results = $results->where('appraisal_cycle_id', $filter_appraisal_cycle_id);
         }
@@ -73,6 +84,22 @@ class AppraisalFormsController extends Controller
             $results = $results->whereHas('assessoruser',function($query) use($filter_branch_id){
                 $query->whereHas('employee',function($query) use($filter_branch_id){
                     $query->where('branch_id', $filter_branch_id);
+                });
+            });
+        }
+
+        if (!empty($filter_subdepartment_id)) {
+            $results = $results->whereHas('assessoruser',function($query) use($filter_subdepartment_id){
+                $query->whereHas('employee',function($query) use($filter_subdepartment_id){
+                    $query->where('sub_department_id', $filter_subdepartment_id);
+                });
+            });
+        }
+
+        if (!empty($filter_position_level_id)) {
+            $results = $results->whereHas('assessoruser',function($query) use($filter_position_level_id){
+                $query->whereHas('employee',function($query) use($filter_position_level_id){
+                    $query->where('position_level_id', $filter_position_level_id);
                 });
             });
         }

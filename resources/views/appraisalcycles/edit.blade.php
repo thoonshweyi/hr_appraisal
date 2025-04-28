@@ -350,7 +350,7 @@
                                                 <table id="peertopeer" class="table mb-0 w-100" style="min-height: 100px !important;">
                                                     <thead class="bg-white text-uppercase">
                                                         <tr class="ligth ligth-data">
-                                                            <th>No</th>
+                                                            <th style="">No</th>
                                                             <th>Assessor Name</th>
                                                             <th>Assessee Name</th>
                                                             <th>Department</th>

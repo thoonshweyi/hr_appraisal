@@ -79,4 +79,9 @@ class Employee extends Model
     public function branch(){
         return $this->belongsTo(Branch::class,'branch_id','branch_id');
     }
+
+    public function attachformtype(){
+        return $this->belongsTo(AttachFormType::class,'attach_form_type_id','id');
+    }
+
 }

@@ -171,7 +171,7 @@
                     <div class="assessor-infos">
                         <strong>Department (ဌာန)</strong>
                         <span class="delimiter">-</span>
-                        <span class="value">{{ $appraisalform->assessoruser->employee->department->name }}</span>
+                        <span class="value">{{ $appraisalform->assessoruser->employee->attachformtype->name }}</span>
                     </div>
                 </td>
                 <th colspan="10" class="text-left">Assessees Location : ____</th>

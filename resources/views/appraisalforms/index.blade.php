@@ -22,6 +22,20 @@
                         @csrf
                         <div class="row align-items-end justify-content-start">
 
+
+
+                            <div class="col-md-2 px-1">
+                                <div class="form-group d-flex">
+                                    <label for="filter_appraisal_cycle_id"><i class="fas fa-clock text-primary mx-2"></i></label>
+                                    <select name="filter_appraisal_cycle_id" id="filter_appraisal_cycle_id" class="form-control form-control-sm rounded-0 ">
+                                        <option value="" selected disabled>Choose Appraisal Cycle</option>
+                                        @foreach($appraisalcycles as $appraisalcycle)
+                                            <option value="{{$appraisalcycle['id']}}" {{ $appraisalcycle['id'] == session('filter_appraisal_cycle_id') ? 'selected' : '' }}>{{$appraisalcycle['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="col-md-2  px-1">
                                 <div class="form-group d-flex">
                                     <label for="filter_employee_code"><i class="fas fa-user-tag text-primary mx-2"></i></label>
@@ -42,17 +56,6 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="col-md-2 px-1">
-                                <div class="form-group d-flex">
-                                    <label for="filter_position_level_id"><i class="fas fa-briefcase text-primary mx-2"></i></label>
-                                    <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0 ">
-                                        <option value="" selected disabled>Choose Position Level</option>
-                                        @foreach($positionlevels as $positionlevel)
-                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == session('filter_position_level_id') ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
 
                             <div class="col-md-2 px-1">
                                 <div class="form-group d-flex">
@@ -246,7 +249,16 @@
             placeholder: 'Choose Sub Department',
             searchField: ["value", "label"]
         });
-
+        $("#filter_appraisal_cycle_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Appraisal Cycle',
+            searchField: ["value", "label"]
+        });
     });
 </script>
 @stop
