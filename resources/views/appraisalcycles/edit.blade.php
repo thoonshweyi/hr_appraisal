@@ -202,7 +202,7 @@
                                             @error("end_date")
                                                     <span class="text-danger">{{ $message }}<span>
                                             @enderror
-                                            <input type="date" name="end_date" id="end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('start_date',$appraisalcycle->end_date) }}"/>
+                                            <input type="date" name="end_date" id="end_date" class="form-control form-control-sm rounded-0" placeholder="Choose End Date" value="{{ old('start_date',$appraisalcycle->end_date) }}"/>
                                         </div>
 
 
@@ -211,7 +211,9 @@
                                             @error("action_start_date")
                                                     <span class="text-danger">{{ $message }}<span>
                                             @enderror
-                                            <input type="date" name="action_start_date" id="action_start_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_start_date',$appraisalcycle->action_start_date) }}"/>
+                                            <input type="date" name="action_start_date" id="action_start_date" class="form-control form-control-sm rounded-0" placeholder="Choose Action Start Date" value="{{ old('action_start_date',$appraisalcycle->action_start_date) }}"
+                                            onChange="check_start_date(this.value);"
+                                            />
                                         </div>
 
 
@@ -220,12 +222,14 @@
                                             @error("action_end_date")
                                                     <span class="text-danger">{{ $message }}<span>
                                             @enderror
-                                            <input type="date" name="action_end_date" id="action_end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_end_date',$appraisalcycle->action_end_date) }}"/>
+                                            <input type="date" name="action_end_date" id="action_end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Action End Date" value="{{ old('action_end_date',$appraisalcycle->action_end_date) }}"
+                                            onChange="check_end_date(this.value);"
+                                            />
                                         </div>
 
 
 
-                                        <div class="col-md-3">
+                                        {{-- <div class="col-md-3">
                                             <label for="action_start_time">Action Start Time <span class="text-danger">*</span></label>
                                             @error("action_start_date")
                                                     <span class="text-danger">{{ $message }}<span>
@@ -240,7 +244,7 @@
                                                     <span class="text-danger">{{ $message }}<span>
                                             @enderror
                                             <input type="time" name="action_end_time" id="action_end_time" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_end_time',$appraisalcycle->action_end_time) }}"/>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="col-md-12">
                                             <label for="description">Description <span class="text-danger">*</span></label>
@@ -558,7 +562,7 @@
         });
 
 
-        $("#start_date,#end_date,#action_start_date,#action_end_date").flatpickr({
+        $("#start_date,#end_date").flatpickr({
             dateFormat: "Y-m-d",
             {{-- minDate: "today", --}}
             {{-- maxDate: new Date().fp_incr(30) --}}
@@ -569,6 +573,14 @@
             noCalendar: true, // Hide the calendar if only time is neededparticipantusers
             dateFormat: "H:i", // Format for hours and minutes
             time_24hr: true // Use 24-hour format
+        });
+
+
+        $('#action_start_date').flatpickr({
+            dateFormat: "Y-m-d",
+       });
+       $('#action_end_date').flatpickr({
+                dateFormat: "Y-m-d",
         });
 
 
@@ -1193,6 +1205,80 @@
     {{-- End notify btn --}}
 
 
+    function check_start_date(start_date) {
+        start_date = new Date(start_date);
+        end_date = $('#action_end_date').val();
+        var today = new Date();
+        d_end_date = new Date(end_date);
+        if (start_date > d_end_date) {
+            Swal.fire({
+                icon: 'warning',
+                title: "{{ __('message.warning') }}",
+                text: "{{ __('message.start_date_is_not_grether_than_end_date') }}",
+                confirmButtonText: "{{ __('message.ok') }}",
+            }).then(function() {
+                $('#action_start_date').val(end_date);
+                return false;
 
+            });
+        }
+        if (today > start_date) {
+            Swal.fire({
+                icon: 'warning',
+                title: "{{ __('message.warning') }}",
+                text: "{{ __('message.start_date_is_not_last_than_today') }}",
+                confirmButtonText: "{{ __('message.ok') }}",
+            }).then(function() {
+                $('#action_start_date').val(formatDate(today));
+                return false;
+
+            });
+        }
+    }
+
+
+    function check_end_date(end_date) {
+        end_date = new Date(end_date);
+        start_date = $('#action_start_date').val();
+        var today = new Date();
+        d_start_date = new Date(start_date);
+        if (d_start_date > end_date) {
+            Swal.fire({
+                icon: 'warning',
+                title: "{{ __('message.warning') }}",
+                text: "{{ __('message.end_date_is_not_last_than_start_date') }}",
+                confirmButtonText: "{{ __('message.ok') }}",
+            }).then(function() {
+                $('#action_end_date').val(start_date);
+                return false;
+
+            });
+        }
+        if (today > end_date) {
+            Swal.fire({
+                icon: 'warning',
+                title: "{{ __('message.warning') }}",
+                text: "{{ __('message.end_date_is_not_last_than_today') }}",
+                confirmButtonText: "{{ __('message.ok') }}",
+            }).then(function() {
+                $('#action_end_date').val(formatDate(today));
+                return false;
+
+            });
+        }
+    }
+
+
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
 </script>
 @stop

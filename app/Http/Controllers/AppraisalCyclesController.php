@@ -113,10 +113,10 @@ class AppraisalCyclesController extends Controller
             "description" => "required",
             "start_date" => "required",
             "end_date" => "required",
-            "action_start_date" => "required",
-            "action_end_date" => "required",
-            "action_start_time" => "required",
-            "action_end_time" => "required",
+            "action_start_date" => "required|date|after_or_equal:today|before_or_equal:action_end_date",
+            "action_end_date" => "required|date|after_or_equal:action_start_date",
+            // "action_start_time" => "required",
+            // "action_end_time" => "required",
             "status_id" => "required|in:1,2",
         ]);
 
@@ -185,10 +185,10 @@ class AppraisalCyclesController extends Controller
             "description" => "required",
             "start_date" => "required",
             "end_date" => "required",
-            "action_start_date" => "required",
-            "action_end_date" => "required",
-            "action_start_time" => "required",
-            "action_end_time" => "required",
+            "action_start_date" => "required|date|after_or_equal:today|before_or_equal:action_end_date",
+            "action_end_date" => "required|date|after_or_equal:action_start_date",
+            // "action_start_time" => "required",
+            // "action_end_time" => "required",
             "status_id" => "required|in:1,2",
         ]);
 
@@ -207,8 +207,8 @@ class AppraisalCyclesController extends Controller
         $appraisalcycle->end_date = $request["end_date"];
         $appraisalcycle->action_start_date = $request["action_start_date"];
         $appraisalcycle->action_end_date = $request["action_end_date"];
-        $appraisalcycle->action_start_time = $request["action_start_time"];
-        $appraisalcycle->action_end_time = $request["action_end_time"];
+        // $appraisalcycle->action_start_time = $request["action_start_time"];
+        // $appraisalcycle->action_end_time = $request["action_end_time"];
         $appraisalcycle->status_id = $request["status_id"];
         $appraisalcycle->user_id = $user_id;
         $appraisalcycle->save();

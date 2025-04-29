@@ -107,6 +107,12 @@
 
 
         'formresult_title' => "Your rating-value doesn't match the given-rating-scale-values!",
-        'formresult_description' => 'Please enter one of: '
+        'formresult_description' => 'Please enter one of: ',
+
+        'start_date_is_not_grether_than_end_date' => 'Start Date can not greater than end Date',
+        'start_date_is_not_last_than_today' => 'Start Date can not last than today',
+        'end_date_is_must_greather_than_today' => 'End Date muste be greather than today',
+        'end_date_is_not_last_than_start_date' => 'End Date can not last than start Date',
+        'end_date_is_not_last_than_today' => 'End Date can not last than today',
     ]
 ?>

@@ -25,6 +25,7 @@ class OtpsController extends Controller
 
          //Send OTP via to email / sms
           //dispatch(new OtpMailJob($user_email,$randomotp));
+
         $token = "9LsE1Sl3ul3I89k4WDPdps_Ssx15jrHNgniRnIq5chFn0Pzrf0yYIN8xGYVDzstb";
         $headers = [
             'Content-Type'=> 'application/json',

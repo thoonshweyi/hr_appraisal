@@ -85,6 +85,10 @@ return [
     'vat_no_vat'           => 'Vat/no Vat ရွေးပေးပါ',
     'need_product_price' =>'Product စျေးနှုန်း 0 ကျပ် ဖြစ်နေ၍ Product အား သိမ်း၍ မရနိုင်ပါ။ ',
 
-
+    'start_date_is_not_grether_than_end_date' => 'စတင်သည့်နေ့သည် ပြီးဆုံးသည့်နေ့ထက် မကြီးရပါ',
+    'start_date_is_not_last_than_today' => 'စတင်သည့်နေ့သည် ယနေ့ရက်ထက် မကြီးရပါ',
+    'end_date_is_must_greather_than_today' => 'ပြီးဆုံးသည့်နေ့သည် ယနေ့ရက်ထက် ကြီးရပါမည်',
+    'end_date_is_not_last_than_start_date' => 'ပြီးဆုံးရက်သည် စတင်သည့်နေ့ထက် မငယ်ရပါ',
+    'end_date_is_not_last_than_today' => 'ပြီးဆုံးရက်သည် ယနေ့ရက်ထက် မငယ်ရပါ',
 
 ];

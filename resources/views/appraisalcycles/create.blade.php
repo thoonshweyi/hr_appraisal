@@ -51,7 +51,7 @@
                             @error("end_date")
                                     <span class="text-danger">{{ $message }}<span>
                             @enderror
-                            <input type="date" name="end_date" id="end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('end_date') }}"/>
+                            <input type="date" name="end_date" id="end_date" class="form-control form-control-sm rounded-0" placeholder="Choose End Date" value="{{ old('end_date') }}"/>
                         </div>
 
 
@@ -60,7 +60,9 @@
                             @error("action_start_date")
                                     <span class="text-danger">{{ $message }}<span>
                             @enderror
-                            <input type="date" name="action_start_date" id="action_start_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_start_date') }}"/>
+                            <input type="date" name="action_start_date" id="action_start_date" class="form-control form-control-sm rounded-0" placeholder="Choose Action Start Date" value="{{ old('action_start_date') }}"
+                            onChange="check_start_date(this.value);"
+                            />
                         </div>
 
 
@@ -69,30 +71,10 @@
                             @error("action_end_date")
                                     <span class="text-danger">{{ $message }}<span>
                             @enderror
-                            <input type="date" name="action_end_date" id="action_end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_end_date') }}"/>
+                            <input type="date" name="action_end_date" id="action_end_date" class="form-control form-control-sm rounded-0" placeholder="Choose Action End Date" value="{{ old('action_end_date') }}"
+                             onChange="check_end_date(this.value);"
+                            />
                         </div>
-
-
-
-                        <div class="col-md-3">
-                            <label for="action_start_time">Action Start Time <span class="text-danger">*</span></label>
-                            @error("action_start_date")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="time" name="action_start_time" id="action_start_time" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_start_time') }}"/>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="action_end_time">Action End Time <span class="text-danger">*</span></label>
-                            @error("action_end_time")
-                                    <span class="text-danger">{{ $message }}<span>
-                            @enderror
-                            <input type="time" name="action_end_time" id="action_end_time" class="form-control form-control-sm rounded-0" placeholder="Choose Start Date" value="{{ old('action_end_time') }}"/>
-                        </div>
-
-
-
 
 
                         <div class="col-md-12">
@@ -102,30 +84,6 @@
                             @enderror
                             <textarea name="description" id="description" class="form-control form-control-sm rounded-0 fixedtxtareas" cols="30" rows="4" placeholder="Write Something...."></textarea>
                         </div>
-
-
-                        {{-- <div class="col-md-3">
-                            <label for="branch_id">Branch</label>
-                            <select name="branch_id" id="branch_id" class="form-control form-control-sm rounded-0">
-                                @foreach($branches as $branch)
-                                    <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == old('branch_id') ? "selected" : "" }}>{{$branch['branch_name']}}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-
-
-{{--
-                        <div class="col-md-3">
-                            <label for="position_level_id">Position Level</label>
-                            <select name="position_level_id" id="position_level_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Position Level</option>
-
-                                @foreach($positionlevels as $positionlevel)
-                                    <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == old('position_level_id') ? "selected" : "" }}>{{$positionlevel['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-
 
 
                         <div class="col-md-12 mt-2">
@@ -303,191 +261,26 @@
 @section('js')
 <script>
     $(document).ready(function() {
-        $("#division_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Division',
-            searchField: ["value", "label"]
-        });
 
-        $("#department_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Department',
-            searchField: ["value", "label"]
-        });
-
-        $("#sub_department_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Sub Department',
-            searchField: ["value", "label"]
-        });
-
-        $("#section_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Section',
-            searchField: ["value", "label"]
-        });
-
-
-        $("#status_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
-
-
-        $("#position_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Position',
-            searchField: ["value", "label"]
-        });
-
-        $("#gender_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
-
-        $("#position_level_id").selectize({
-            plugins: ["restore_on_backspace", "remove_button"],
-            delimiter: " - ",
-            persist: true,
-            maxItems: 1,
-            valueField: "value",
-            labelField: "label",
-            placeholder: 'Choose Status',
-            searchField: ["value", "label"]
-        });
-
-
-
-        $("#beginning_date,#enddate").flatpickr({
+        $("#start_date,#end_date").flatpickr({
             dateFormat: "Y-m-d",
             {{-- minDate: "today", --}}
             {{-- maxDate: new Date().fp_incr(30) --}}
        });
 
-
-        // Start Delete Item
-        $(".delete-btns").click(function(){
-            // console.log('hay');
-
-            var getidx = $(this).data("idx");
-            {{-- // console.log(getidx); --}}
-
-
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#formdelete-'+getidx).submit();
-
-                }
-            });
-
-
+        $('#action_start_date').flatpickr({
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            {{-- maxDate: new Date().fp_incr(30) --}}
        });
-       // End Delete Item
-
-
-
-       // Start Edit Form
-       $(document).on("click",".editform",function(e){
-            {{-- console.log($(this).attr("data-id"),$(this).attr("data-name")); --}}
-            {{-- console.log($(this).attr("data-status")); --}}
-
-            $("#edit_name").val($(this).attr("data-name"));
-            $("#edit_code").val($(this).attr("data-code"));
-            $("#edit_division_id").val($(this).attr("data-division"));
-            $("#edit_department_id").val($(this).attr("data-department"));
-            $("#edit_sub_department_id").val($(this).attr("data-sub_department"));
-            $("#edit_status_id").val($(this).attr("data-status"));
-            $("#edit_section_id").val($(this).attr("data-section"));
-
-
-            const getid = $(this).attr("data-id");
-            $("#formaction").attr("action",`/positions/${getid}`);
-
-            e.preventDefault();
-       });
-       // End Edit Form
-
-
-        //Start change-btn
-        $(document).on("change",".statuschange-btn",function(){
-
-             var getid = $(this).data("id");
-             // console.log(getid);
-             {{-- console.log(getid); --}}
-
-             var setstatus = $(this).prop("checked") === true ? 1 : 2;
-             {{-- console.log(setstatus); --}}
-
-             $.ajax({
-                  url:"/positionsstatus",
-                  type:"POST",
-                  dataType:"json",
-                  data:{
-                        "id":getid,
-                        "status_id":setstatus,
-                        "_token": '{{ csrf_token()}}'
-                    },
-                  success:function(response){
-                       console.log(response); // {success: 'Status Change Successfully'}
-                       console.log(response.success); // Status Change Successfully
-
-                       Swal.fire({
-                            title: "Updated!",
-                            text: "Status Updated Successfully",
-                            icon: "success"
-                       });
-                  },
-                  error:function(response){
-                    console.log(response);
-                  }
-             });
+       $('#action_end_date').flatpickr({
+                dateFormat: "Y-m-d",
+                minDate: new Date($("#action_start_date").val()),
+                {{-- maxDate: new Date().fp_incr(30) --}}
         });
-        // End change btn
+
+
+
 
       {{-- Start Preview Image --}}
 
@@ -579,5 +372,81 @@
 
 
     });
+
+    function check_start_date(start_date) {
+        start_date = new Date(start_date);
+        end_date = $('#action_end_date').val();
+        var today = new Date();
+        d_end_date = new Date(end_date);
+        if (start_date > d_end_date) {
+            Swal.fire({
+                icon: 'warning',
+                title: "{{ __('message.warning') }}",
+                text: "{{ __('message.start_date_is_not_grether_than_end_date') }}",
+                confirmButtonText: "{{ __('message.ok') }}",
+            }).then(function() {
+                $('#action_start_date').val(end_date);
+                return false;
+
+            });
+        }
+        if (today > start_date) {
+            Swal.fire({
+                icon: 'warning',
+                title: "{{ __('message.warning') }}",
+                text: "{{ __('message.start_date_is_not_last_than_today') }}",
+                confirmButtonText: "{{ __('message.ok') }}",
+            }).then(function() {
+                $('#action_start_date').val(formatDate(today));
+                return false;
+
+            });
+        }
+    }
+
+
+    function check_end_date(end_date) {
+        end_date = new Date(end_date);
+        start_date = $('#action_start_date').val();
+        var today = new Date();
+        d_start_date = new Date(start_date);
+        if (d_start_date > end_date) {
+            Swal.fire({
+                icon: 'warning',
+                title: "{{ __('message.warning') }}",
+                text: "{{ __('message.end_date_is_not_last_than_start_date') }}",
+                confirmButtonText: "{{ __('message.ok') }}",
+            }).then(function() {
+                $('#action_end_date').val(start_date);
+                return false;
+
+            });
+        }
+        if (today > end_date) {
+            Swal.fire({
+                icon: 'warning',
+                title: "{{ __('message.warning') }}",
+                text: "{{ __('message.end_date_is_not_last_than_today') }}",
+                confirmButtonText: "{{ __('message.ok') }}",
+            }).then(function() {
+                $('#action_end_date').val(formatDate(today));
+                return false;
+
+            });
+        }
+    }
+
+
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
 </script>
 @stop
