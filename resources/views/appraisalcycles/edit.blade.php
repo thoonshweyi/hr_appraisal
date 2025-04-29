@@ -319,63 +319,58 @@
                                 </div>
 
                                 <div class="col-lg-9">
-                                    <div class="row">
 
-                                        {{-- <div class="col-auto mt-2">
-                                            <div class="dropdown">
-                                                <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="ri-more-line"></i>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                  <a class="dropdown-item" href="#">Action</a>
-                                                  <a class="dropdown-item" href="#">Another action</a>
-                                                  <a class="dropdown-item" href="#">Something else here</a>
-                                                  <div class="dropdown-divider"></div>
-                                                  <a class="dropdown-item" href="#">Separated link</a>
-                                                </div>
-                                            </div>
-                                        </div> --}}
-                                        <div class="col-md-12 col-sm-12 mb-2 ">
-                                            <div class="d-flex justify-content-between mt-2">
-                                                <h4 class="card-title">Assessees List</h4>
-                                                <div  class="dropdown">
-                                                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
-                                                     <div class="dropdown-menu shadow">
-                                                        <a href="javascript:void(0);" id="assessmentviewbtn" class="dropdown-item">360° Assessment View</a>
-                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="table-responsive rounded mb-3 position-relative">
-
-                                                <table id="peertopeer" class="table mb-0 w-100" style="min-height: 100px !important;">
-                                                    <thead class="bg-white text-uppercase">
-                                                        <tr class="ligth ligth-data">
-                                                            <th style="">No</th>
-                                                            <th>Assessor Name</th>
-                                                            <th>Assessee Name</th>
-                                                            <th>Department</th>
-                                                            <th>Branch</th>
-                                                            <th>Position Level</th>
-                                                            <th>Position</th>
-                                                            {{-- <th>Assessment-form Category</th> --}}
-                                                            <th>Criteria Set</th>
-                                                            <th>
-                                                                Action
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="ligth-body">
-
-                                                    </tbody>
-                                                </table>
-                                                <div class="d-flex justify-content-center">
-                                                    {{-- {{ $genders->appends(request()->all())->links("pagination::bootstrap-4") }} --}}
-                                                </div>
-
-
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <h4 class="card-title">Employee Assessment Overview</h4>
+                                            <div  class="dropdown">
+                                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
+                                                 <div class="dropdown-menu shadow">
+                                                    <a href="javascript:void(0);" id="assessmentviewbtn" class="dropdown-item">360° Assessment View</a>
+                                                 </div>
                                             </div>
                                         </div>
+                                    <div class="row g-4">
+                                        <!-- Assessors -->
+                                        <div class="col-md-12 d-flex justify-content-center align-items-center">
 
+                                            <a href="#" class="d-flex align-items-center justify-content-center mx-2 balance-icon" title="Balance">
+                                              Balance
+                                            </a>
+
+                                          </div>
+                                        <div class="col-md-6">
+                                          <div class="card shadow-sm h-100">
+                                            <div class="card-body">
+                                              <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h5 class="card-title mb-0"><i class="bi bi-person-check-fill mr-2 text-primary"></i>Assessors</h5>
+                                                <span class="badge bg-primary card-count ">3</span>
+                                              </div>
+                                              <ul id="empassessorschart" class="list-group list-group-flush ">
+                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Alice Smith</strong> — HR Manager</li>
+                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>David Lee</strong> — Team Lead, IT</li>
+                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Sara Tan</strong> — Project Manager</li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <!-- Assessees -->
+                                        <div class="col-md-6">
+                                          <div class="card shadow-sm h-100">
+                                            <div class="card-body">
+                                              <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h5 class="card-title mb-0"><i class="bi bi-people-fill mr-2 text-success"></i>Assessees</h5>
+                                                <span id="empassesseescount" class="badge bg-success card-count d-none">0</span>
+                                              </div>
+                                              <ul id="assesseeschart" class="list-group list-group-flush">
+                                                {{-- <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Michael Chan</strong> — Junior Developer</li>
+                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Lily Zhao</strong> — IT Intern</li>
+                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Tommy Brown</strong> — QA Engineer</li>
+                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Jessica Wong</strong> — UI/UX Designer</li> --}}
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -509,7 +504,32 @@
 @endsection
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('assets/libs/jstreerepo/dist/themes/default/style.min.css')}}"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+    .card-count {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .list-icon {
+      color: #6c757d;
+      margin-right: 0.5rem;
+    }
+    .balance-icon {
+        width: 96px;
+        height: 24px;
+        color: white;
+        border-radius: 50px;
+        background-color: #444; /* Bootstrap warning color */
+        text-decoration: none;
+        transition: transform 0.2s ease;
+        margin: 8px 0px;
+  }
+
+  .balance-icon:hover {
+    transform: scale(1.1);
+    background-color: #e0a800; /* Slightly darker on hover */
+  }
+  </style>
 @endsection
 @section('js')
     <script src="{{ asset('assets/libs/jstreerepo/dist/jstree.min.js') }}" type="text/javascript"></script>
@@ -1131,8 +1151,84 @@
         $(this).toggleClass('active');
         $('#assessor_user_id').val(getuser_id);
 
-        $('#peertopeer').DataTable().draw(true);
+        {{-- $('#peertopeer').DataTable().draw(true); --}}
 
+
+        {{-- Start Employee Assessees Chart --}}
+        $.ajax({
+            url: '/api/getrecentassessees',
+            method: 'GET',
+            data: $('#peer_to_peer_form').serialize(),
+            success:function(data){
+                console.log(data);
+
+                let html = '';
+                $.each(data,function(idx,employeeassessee){
+
+
+                    html += `
+                    <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>${employeeassessee.assesseeuser.employee.employee_name}</strong> — ${employeeassessee.assesseeuser.employee.position.name}</li>
+                    `;
+
+                });
+
+
+                $('#assesseeschart').html(html);
+
+                if(data.length <= 0){
+                    $("#empassesseescount").addClass('d-none');
+                    $("#empassesseescount").html(0);
+                }else if(data.length > 0){
+                    $("#empassesseescount").removeClass('d-none');
+                    $("#empassesseescount").html(data.length);
+                }
+
+
+            },
+            error:function(){
+                $('#postchart').html('<span class="text-danger">Failed to load articles data.<span>')
+            }
+        });
+        {{-- End Employee Assessees Chart --}}
+
+
+        {{-- Start Employeee Assessors Chart --}}
+        $.ajax({
+            url: '/api/getrecentassessors',
+            method: 'GET',
+            data: $('#peer_to_peer_form').serialize(),
+            success:function(data){
+                console.log(data);
+
+                let html = '';
+                $.each(data,function(idx,employeeassessors){
+
+
+                    html += `
+                    <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>${employeeassessors.assessoruser.employee.employee_name}</strong> — ${employeeassessors.assessoruser.employee.position.name}</li>
+                    `;
+
+                });
+
+
+                $('#empassessorschart').html(html);
+
+                if(data.length <= 0){
+                    $("#empassesseescount").addClass('d-none');
+                    $("#empassesseescount").html(0);
+                }else if(data.length > 0){
+                    $("#empassesseescount").removeClass('d-none');
+                    $("#empassesseescount").html(data.length);
+                }
+
+
+            },
+            error:function(){
+                $('#postchart').html('<span class="text-danger">Failed to load articles data.<span>')
+            }
+        });
+
+        {{-- End Employee Assessors Chart --}}
     });
 
 
@@ -1191,7 +1287,6 @@
     });
 
     {{-- End notify btn --}}
-
 
 
 </script>

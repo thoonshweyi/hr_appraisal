@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\PeerToPeer;
 use Illuminate\Http\Request;
+use App\Models\AppraisalCycle;
 use App\Http\Controllers\Controller;
 
 class PeerToPeersController extends Controller
@@ -87,6 +88,38 @@ class PeerToPeersController extends Controller
             "assessmentnetworksrcs" => $assessmentnetworksrcs
        ]);
 
+    }
 
+    public function employeesRecentAssessees(Request $request){
+        $assessor_user_id = $request->assessor_user_id;
+
+        $appraisal_cycle_id = $request->appraisal_cycle_id;
+
+        $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
+
+        // dd($assessor_user_id,$appraisal_cycle_id);
+
+
+        $peertopeers = PeerToPeer::where('assessor_user_id',$assessor_user_id)
+                        ->where('appraisal_cycle_id',$appraisal_cycle_id)
+                        ->with(["assessoruser.employee"])
+                        ->with(["assesseeuser.employee.branch","assesseeuser.employee.department","assesseeuser.employee.position","assesseeuser.employee.positionlevel"])
+                        ->with(["assformcat"])
+                        ->get();
+        return response()->json($peertopeers);
+
+    }
+
+    public function employeesRecentAssessors(Request $request){
+        $assessor_user_id = $request->assessor_user_id;
+        $appraisal_cycle_id = $request->appraisal_cycle_id;
+        $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
+
+        $peertopeers = PeerToPeer::where('assessee_user_id',$assessor_user_id)
+                        ->where('appraisal_cycle_id',$appraisal_cycle_id)
+                        ->with(["assessoruser.employee.position"])
+                        ->get();
+
+        return response()->json($peertopeers);
     }
 }
