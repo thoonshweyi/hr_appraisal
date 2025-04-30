@@ -319,7 +319,7 @@ thead th {
     content: '\f068';
     } */
     .shown::after{
-    content: '\f2B6';
+    /* content: '\f2B6'; */
     }
     .acccontent{
     height: 0;
@@ -866,5 +866,9 @@ height: auto !important;
 /* Start User Form Table */
 .userforms td,.userforms th{
     border: none;
+}
+.empinfos td,.empinfos th{
+    border: none;
+    padding: 0px !important;
 }
 /* End User Form Table */

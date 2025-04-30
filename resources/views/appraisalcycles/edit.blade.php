@@ -333,44 +333,46 @@
                                         <!-- Assessors -->
                                         <div class="col-md-12 d-flex justify-content-center align-items-center">
 
-                                            <a href="#" class="d-flex align-items-center justify-content-center mx-2 balance-icon" title="Balance">
+                                            <a href="#balancemodal" class="d-flex align-items-center justify-content-center mx-2 balance-icon" title="Balance" data-toggle="modal">
                                               Balance
                                             </a>
 
-                                          </div>
+                                        </div>
+
+                                        <!-- Assessees -->
+                                        <div class="col-md-6">
+                                            <div class="card shadow-sm h-100">
+                                                <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title mb-0"><i class="bi bi-people-fill mr-2 text-success"></i>Assessees</h5>
+                                                    <span id="empassesseescount" class="badge bg-success card-count d-none">0</span>
+                                                </div>
+                                                <ul id="assesseeschart" class="list-group list-group-flush">
+                                                    {{-- <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Michael Chan</strong> — Junior Developer</li>
+                                                    <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Lily Zhao</strong> — IT Intern</li>
+                                                    <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Tommy Brown</strong> — QA Engineer</li>
+                                                    <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Jessica Wong</strong> — UI/UX Designer</li> --}}
+                                                </ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-md-6">
                                           <div class="card shadow-sm h-100">
                                             <div class="card-body">
                                               <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <h5 class="card-title mb-0"><i class="bi bi-person-check-fill mr-2 text-primary"></i>Assessors</h5>
-                                                <span class="badge bg-primary card-count ">3</span>
+                                                <span id="empassessorscount" class="badge bg-primary card-count d-none">0</span>
                                               </div>
                                               <ul id="empassessorschart" class="list-group list-group-flush ">
-                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Alice Smith</strong> — HR Manager</li>
+                                                {{-- <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Alice Smith</strong> — HR Manager</li>
                                                 <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>David Lee</strong> — Team Lead, IT</li>
-                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Sara Tan</strong> — Project Manager</li>
+                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Sara Tan</strong> — Project Manager</li> --}}
                                               </ul>
                                             </div>
                                           </div>
                                         </div>
 
-                                        <!-- Assessees -->
-                                        <div class="col-md-6">
-                                          <div class="card shadow-sm h-100">
-                                            <div class="card-body">
-                                              <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h5 class="card-title mb-0"><i class="bi bi-people-fill mr-2 text-success"></i>Assessees</h5>
-                                                <span id="empassesseescount" class="badge bg-success card-count d-none">0</span>
-                                              </div>
-                                              <ul id="assesseeschart" class="list-group list-group-flush">
-                                                {{-- <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Michael Chan</strong> — Junior Developer</li>
-                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Lily Zhao</strong> — IT Intern</li>
-                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Tommy Brown</strong> — QA Engineer</li>
-                                                <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Jessica Wong</strong> — UI/UX Designer</li> --}}
-                                              </ul>
-                                            </div>
-                                          </div>
-                                        </div>
+
                                     </div>
 
                                 </div>
@@ -498,7 +500,65 @@
     </div>
     <!-- end create modal -->
 
+    <div id="balancemodal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h6 class="modal-title">Balance Modal</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
+                <div class="modal-body">
+                    <div class="tabs">
+                        <div class="tab active" onclick="showTab('assesseescontent')">Assessees</div>
+                        <div class="tab " onclick="showTab('assessorscontent')">Assessors</div>
+                    </div>
+
+                    <div id="assesseescontent" class="transactions">
+                        <div class="table-responsive rounded mb-3 position-relative" style="height:60vh;">
+
+                            <table id="peertopeer" class="table mb-0 w-100" style="min-height: 100px !important;">
+                                <thead class="bg-white text-uppercase">
+                                    <tr class="ligth ligth-data">
+                                        <th></th>
+                                        <th style="">No</th>
+                                        {{-- <th>Assessor Name</th> --}}
+                                        <th>Assessee Name</th>
+                                        <th>Department</th>
+                                        {{-- <th>Branch</th>
+                                        <th>Position Level</th>
+                                        <th>Position</th> --}}
+                                        {{-- <th>Assessment-form Category</th> --}}
+                                        <th style="width: 40% !important;">Criteria Set</th>
+                                        <th>
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ligth-body">
+
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-center">
+                                {{-- {{ $genders->appends(request()->all())->links("pagination::bootstrap-4") }} --}}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="assessorscontent" class="transactions"  style="display: none;">
+                        <h1>Assessors</h1>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
 
 <!-- End MODAL AREA -->
 @endsection
@@ -506,29 +566,67 @@
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <style>
+    /* Start Assessor Assessee Card */
     .card-count {
-      font-size: 0.9rem;
-      font-weight: 500;
+        font-size: 0.9rem;
+        font-weight: 500;
+        }
+        .list-icon {
+        color: #6c757d;
+        margin-right: 0.5rem;
+        }
+        .balance-icon {
+            width: 96px;
+            height: 24px;
+            color: white;
+            border-radius: 50px;
+            background-color: #444; /* Bootstrap warning color */
+            text-decoration: none;
+            transition: transform 0.2s ease;
+            margin: 8px 0px;
     }
-    .list-icon {
-      color: #6c757d;
-      margin-right: 0.5rem;
-    }
-    .balance-icon {
-        width: 96px;
-        height: 24px;
-        color: white;
-        border-radius: 50px;
-        background-color: #444; /* Bootstrap warning color */
-        text-decoration: none;
-        transition: transform 0.2s ease;
-        margin: 8px 0px;
-  }
 
-  .balance-icon:hover {
-    transform: scale(1.1);
-    background-color: #e0a800; /* Slightly darker on hover */
-  }
+    .balance-icon:hover {
+        transform: scale(1.1);
+        background-color: #e0a800; /* Slightly darker on hover */
+    }
+    /* End Assessor Assessee Card */
+
+    /* Start Assessor Assessee  Table Detail*/
+    td.details-control {
+      background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+    tr.shown td.details-control {
+      background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+    }
+    /* End Assessor Assessee Table Detail */
+
+
+
+    /* Start Assessor Assessee Tab*/
+        .tabs {
+            display: flex;
+            gap: 10px;
+            /* margin-bottom: 20px; */
+        }
+    .tab {
+            flex: 1;
+            padding: 2px;
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab.active {
+            background: #4facfe;
+            color: white;
+        }
+    /* End Assessor Assessee Tab */
   </style>
 @endsection
 @section('js')
@@ -1088,13 +1186,13 @@
 
 
 
-    $('#peertopeer').DataTable({
+    const peertopeertable =  $('#peertopeer').DataTable({
         "processing": true,
         "serverSide": true,
         "searching": false,
         "lengthChange": false,
         "pageLength": 10,
-        "autoWidth": true,
+        "autoWidth": false,
         "responsive": false,
         "order": [
             [1, 'des']
@@ -1111,20 +1209,27 @@
         },
         columns: [
             {
+                className: 'details-control',
+                orderable: false,
+                data: null,
+                defaultContent: ''
+            },
+            {
                 data: null,
                 name: 'no',
+                width: "2%",
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
-            { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false},
+            {{-- { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false}, --}}
             { data: 'assesseeuser.employee.employee_name', name: 'assesseeuser.employee.employee_name', orderable: false},
             { data: 'assesseeuser.employee.department.name', name: 'assesseeuser.employee.department.name', orderable: false },
-            { data: 'assesseeuser.employee.branch.branch_name', name: 'assesseeuser.employee.branch.branch_name', orderable: false },
+            {{-- { data: 'assesseeuser.employee.branch.branch_name', name: 'assesseeuser.employee.branch.branch_name', orderable: false },
             { data: 'assesseeuser.employee.positionlevel.name', name: 'assesseeuser.employee.positionlevel.name', orderable: false },
-            { data: 'assesseeuser.employee.position.name', name: 'assesseeuser.employee.position.name', orderable: false },
+            { data: 'assesseeuser.employee.position.name', name: 'assesseeuser.employee.position.name', orderable: false }, --}}
             { data: 'assformcat.name', name: 'assformcat.name', orderable: false },
             {
                 data: 'action',
@@ -1151,7 +1256,7 @@
         $(this).toggleClass('active');
         $('#assessor_user_id').val(getuser_id);
 
-        {{-- $('#peertopeer').DataTable().draw(true); --}}
+        $('#peertopeer').DataTable().draw(true);
 
 
         {{-- Start Employee Assessees Chart --}}
@@ -1214,11 +1319,11 @@
                 $('#empassessorschart').html(html);
 
                 if(data.length <= 0){
-                    $("#empassesseescount").addClass('d-none');
-                    $("#empassesseescount").html(0);
+                    $("#empassessorscount").addClass('d-none');
+                    $("#empassessorscount").html(0);
                 }else if(data.length > 0){
-                    $("#empassesseescount").removeClass('d-none');
-                    $("#empassesseescount").html(data.length);
+                    $("#empassessorscount").removeClass('d-none');
+                    $("#empassessorscount").html(data.length);
                 }
 
 
@@ -1227,9 +1332,47 @@
                 $('#postchart').html('<span class="text-danger">Failed to load articles data.<span>')
             }
         });
-
         {{-- End Employee Assessors Chart --}}
     });
+    $('#peertopeer tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = peertopeertable.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
+        }
+    });
+    function format(d) {
+        // You can customize this to show more info about the row
+        return `
+            <table cellpadding="5" cellspacing="0" border="0" style="width:100%;padding-left:50px;" class='empinfos'>
+                <tr>
+                    <td><strong>Department:</strong></td>
+                    <td >${d.assesseeuser.employee.department.name ?? 'N/A'}</td>
+                </tr>
+                <tr>
+                    <td><strong>Branch:</strong></td>
+                    <td >${d.assesseeuser.employee.branch.branch_name ?? 'N/A'}</td>
+                </tr>
+                <tr>
+                    <td><strong>Position Level:</strong></td>
+                    <td >${d.assesseeuser.employee.positionlevel.name ?? 'N/A'}</td>
+                </tr>
+                <tr>
+                    <td><strong>Position:</strong></td>
+                    <td >${d.assesseeuser.employee.position.name ?? 'N/A'}</td>
+                </tr>
+            </table>
+        `;
+    }
+
+
 
 
     // Start Delete Item
@@ -1288,6 +1431,17 @@
 
     {{-- End notify btn --}}
 
+
+
+    {{-- Start Assessor Assessee Tab --}}
+    function showTab(tabId) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+
+        document.querySelectorAll('.transactions').forEach(tx => tx.style.display = 'none');
+        document.querySelector(`#${tabId}`).style.display = 'block';
+    }
+    {{-- End Assessor Assessee Tab --}}
 
 </script>
 @stop
