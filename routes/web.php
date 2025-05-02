@@ -225,7 +225,8 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::put("/peertopeers/{id}",[PeerToPeersController::class,"update"])->name("peertopeers.update");
     Route::delete("/peertopeers/{id}",[PeerToPeersController::class,"destroy"])->name("peertopeers.destroy");
     Route::post("peertopeersstatus",[PeerToPeersController::class,"changestatus"])->name("peertopeers.changestatus");
-    Route::get('/getAssessorAssessees', [PeerToPeersController::class, 'getAssessorAssessees'])->name('users.getassessorassessees');
+    Route::get('/getEmployeeAssessees', [PeerToPeersController::class, 'getEmployeeAssessees'])->name('peertopeers.getemployeeassessees');
+    Route::get('/getEmployeeAssessors', [PeerToPeersController::class, 'getEmployeeAssessors'])->name('peertopeers.getemployeeassessors');
 
 
 

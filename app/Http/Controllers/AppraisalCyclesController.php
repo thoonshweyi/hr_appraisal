@@ -443,16 +443,27 @@ class AppraisalCyclesController extends Controller
         ->whereNotIn('id',[1]);
 
 
-
         $filter_employee_name = $request->filter_employee_name;
         $filter_employee_code = $request->filter_employee_code;
         $filter_branch_id = $request->filter_branch_id;
         $filter_position_level_id = $request->filter_position_level_id;
         $filter_subdepartment_id = $request->filter_subdepartment_id;
+        $filter_user_id = $request->filter_user_id;
 
         // $results = PeerToPeer::query();
         $results = $users;
 
+          // for getting employee info
+        if(!empty($filter_user_id)){
+            $results = $results->where("id",$filter_user_id);
+
+            $user = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+            ->first();
+
+            return response()->json([
+                "user"=>$user
+            ]);
+        }
 
         if (!empty($filter_employee_name)) {
             $results = $results->whereHas('employee',function($query) use($filter_employee_name){
@@ -497,10 +508,9 @@ class AppraisalCyclesController extends Controller
         }
         $results = $results->doesntHave('roles');
 
+            $users = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+            ->get();
 
-        $users = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
-        ->get();
-        // ->paginate(10);
 
         return response()->json([
             "users"=>$users

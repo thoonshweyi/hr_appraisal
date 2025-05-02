@@ -333,9 +333,9 @@
                                         <!-- Assessors -->
                                         <div class="col-md-12 d-flex justify-content-center align-items-center">
 
-                                            <a href="#balancemodal" class="d-flex align-items-center justify-content-center mx-2 balance-icon" title="Balance" data-toggle="modal">
+                                            {{-- <a href="#balancemodal" class="d-flex align-items-center justify-content-center mx-2 balance-icon" title="Balance" data-toggle="modal">
                                               Balance
-                                            </a>
+                                            </a> --}}
 
                                         </div>
 
@@ -343,9 +343,10 @@
                                         <div class="col-md-6">
                                             <div class="card shadow-sm h-100">
                                                 <div class="card-body">
-                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div class="d-flex justify-content-between align-items-center mb-3 underline" >
                                                     <h5 class="card-title mb-0"><i class="bi bi-people-fill mr-2 text-success"></i>Assessees</h5>
                                                     <span id="empassesseescount" class="badge bg-success card-count d-none">0</span>
+                                                    <a href="#balancemodal" data-toggle="modal" onclick="$('#assesseestab').trigger('click');">Show More</a>
                                                 </div>
                                                 <ul id="assesseeschart" class="list-group list-group-flush">
                                                     {{-- <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Michael Chan</strong> — Junior Developer</li>
@@ -362,6 +363,7 @@
                                               <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <h5 class="card-title mb-0"><i class="bi bi-person-check-fill mr-2 text-primary"></i>Assessors</h5>
                                                 <span id="empassessorscount" class="badge bg-primary card-count d-none">0</span>
+                                                <a href="#balancemodal" data-toggle="modal" onclick="$('#assessorstab').trigger('click');">Show More</a>
                                               </div>
                                               <ul id="empassessorschart" class="list-group list-group-flush ">
                                                 {{-- <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Alice Smith</strong> — HR Manager</li>
@@ -511,9 +513,25 @@
                 </div>
 
                 <div class="modal-body">
+                    <!-- Employee Info Card -->
+
+                    <div id="employeeinfo">
+                    {{-- <div class="card shadow-sm mb-0">
+                        <div class="card-body">
+                        <h5 class="card-title mb-1"><i class="bi bi-person-badge-fill me-2"></i>Employee Information</h5>
+                        <div class="row">
+                            <div class="col-md-3"><strong>Name:</strong> John Doe</div>
+                            <div class="col-md-3"><strong>Position:</strong> Senior Developer</div>
+                            <div class="col-md-3"><strong>Department:</strong> IT</div>
+                            <div class="col-md-3"><strong>Employee ID:</strong> EMP-001</div>
+                        </div>
+                        </div>
+                    </div> --}}
+                    </div>
+
                     <div class="tabs">
-                        <div class="tab active" onclick="showTab('assesseescontent')">Assessees</div>
-                        <div class="tab " onclick="showTab('assessorscontent')">Assessors</div>
+                        <div id="assesseestab" class="tab active" onclick="showTab('assesseescontent')">Assessees</div>
+                        <div id="assessorstab" class="tab " onclick="showTab('assessorscontent')">Assessors</div>
                     </div>
 
                     <div id="assesseescontent" class="transactions">
@@ -547,7 +565,29 @@
                         </div>
                     </div>
                     <div id="assessorscontent" class="transactions"  style="display: none;">
-                        <h1>Assessors</h1>
+                        <div class="table-responsive rounded mb-3 position-relative" style="height:60vh;">
+
+                            <table id="empassessorstable" class="table mb-0 w-100" style="min-height: 100px !important;">
+                                <thead class="bg-white text-uppercase">
+                                    <tr class="ligth ligth-data">
+                                        <th></th>
+                                        <th style="">No</th>
+                                        {{-- <th>Assessor Name</th> --}}
+                                        <th>Assessor Name</th>
+                                        <th>Department</th>
+                                        {{-- <th>Branch</th>
+                                        <th>Position Level</th>
+                                        <th>Position</th> --}}
+                                        <th>
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ligth-body">
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
 
@@ -691,95 +731,21 @@
 
 
 
-        {{-- Start assessorusers, participantusers, assesseeusers  --}}
-        const appraisalCycleId = {{ $appraisalcycle->id }};
-        $('#participantusertable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "searching": false,
-            "lengthChange": false,
-            "pageLength": 10,
-            "autoWidth": true,
-            "responsive": false,
-            "order": [
-              [1, 'des']
-            ],
-            'ajax': {
-                url: `/${appraisalCycleId}/participantusers/`, // <-- include the ID here
-              'type': 'GET',
-              'data': function(d) {
-                d.filter_employee_name = $('#filter_employee_name').val();
-                d.filter_employee_code = $('#filter_employee_code').val();
-                d.filter_branch_id = $('#filter_branch_id').val();
-                d.filter_position_level_id = $('#filter_position_level_id').val();
-                d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
-              }
-            },
-            columns: [
-                {
-                    data: null,
-                    name: 'no',
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                { data: 'employee.employee_name', name: 'employee.employee_name' },
-                { data: 'employee.employee_code', name: 'employee.employee_code' },
-                { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
-                {{-- { data: 'employee.department.name', name: 'employee.department.name' },
-                { data: 'employee.position.name', name: 'employee.position.name' },
-                { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' } --}}
-
-                {
-                    data: 'form_count',
-                    name: 'form_count',
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row) {
-                        return data ?? ''; // Render raw value
-                    }
-                },
-                {
-                    data: 'progress',
-                    name: 'progress',
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row) {
-                        return data ?? '';
-                    }
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row) {
-                        return data ?? '';
-                    }
-                }
-            ],
-            "columnDefs": [{
-              "searchable": false,
-              "orderable": false,
-              "targets": 0,
-            }],
-        })
-
-        $('#assesseeusertable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "searching": false,
-            "lengthChange": false,
-            "pageLength": 10,
-            "autoWidth": true,
-            "responsive": true,
-            "order": [
-              [1, 'asc']
-            ],
-            'ajax': {
-                url: `/${appraisalCycleId}/assesseeusers/`, // <-- include the ID here
+        {{-- Start assessorusers, participantusers, assesseeusers, peertopeer  --}}
+            const appraisalCycleId = {{ $appraisalcycle->id }};
+            $('#participantusertable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "searching": false,
+                "lengthChange": false,
+                "pageLength": 10,
+                "autoWidth": true,
+                "responsive": false,
+                "order": [
+                [1, 'des']
+                ],
+                'ajax': {
+                    url: `/${appraisalCycleId}/participantusers/`, // <-- include the ID here
                 'type': 'GET',
                 'data': function(d) {
                     d.filter_employee_name = $('#filter_employee_name').val();
@@ -787,195 +753,529 @@
                     d.filter_branch_id = $('#filter_branch_id').val();
                     d.filter_position_level_id = $('#filter_position_level_id').val();
                     d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
-                  }
-            },
-            columns: [
-                {
-                    data: null,
-                    name: 'no',
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
+                }
+                },
+                columns: [
+                    {
+                        data: null,
+                        name: 'no',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: 'employee.employee_name', name: 'employee.employee_name' },
+                    { data: 'employee.employee_code', name: 'employee.employee_code' },
+                    { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
+                    {{-- { data: 'employee.department.name', name: 'employee.department.name' },
+                    { data: 'employee.position.name', name: 'employee.position.name' },
+                    { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' } --}}
+
+                    {
+                        data: 'form_count',
+                        name: 'form_count',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return data ?? ''; // Render raw value
+                        }
+                    },
+                    {
+                        data: 'progress',
+                        name: 'progress',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return data ?? '';
+                        }
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return data ?? '';
+                        }
+                    }
+                ],
+                "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0,
+                }],
+            })
+
+            $('#assesseeusertable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "searching": false,
+                "lengthChange": false,
+                "pageLength": 10,
+                "autoWidth": true,
+                "responsive": true,
+                "order": [
+                [1, 'asc']
+                ],
+                'ajax': {
+                    url: `/${appraisalCycleId}/assesseeusers/`, // <-- include the ID here
+                    'type': 'GET',
+                    'data': function(d) {
+                        d.filter_employee_name = $('#filter_employee_name').val();
+                        d.filter_employee_code = $('#filter_employee_code').val();
+                        d.filter_branch_id = $('#filter_branch_id').val();
+                        d.filter_position_level_id = $('#filter_position_level_id').val();
+                        d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
                     }
                 },
-                { data: 'employee.employee_name', name: 'employee.employee_name' },
-                { data: 'employee.employee_code', name: 'employee.employee_code' },
-                { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
-                { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' },
-                {{-- { data: 'employee.department.name', name: 'employee.department.name' },
-                { data: 'employee.position.name', name: 'employee.position.name' }, --}}
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row) {
-                        return data ?? '';
+                columns: [
+                    {
+                        data: null,
+                        name: 'no',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: 'employee.employee_name', name: 'employee.employee_name' },
+                    { data: 'employee.employee_code', name: 'employee.employee_code' },
+                    { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
+                    { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' },
+                    {{-- { data: 'employee.department.name', name: 'employee.department.name' },
+                    { data: 'employee.position.name', name: 'employee.position.name' }, --}}
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return data ?? '';
+                        }
                     }
-                }
-            ],
-            "columnDefs": [{
-              "searchable": false,
-              "orderable": false,
-              "targets": 0,
-            }],
-        })
-        $('.searchbtns').on('click', function(e) {
-            $('#participantusertable').DataTable().draw(true);
-            $('#assesseeusertable').DataTable().draw(true);
-            getAssessorUsers();
+                ],
+                "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0,
+                }],
+            })
+            $('.searchbtns').on('click', function(e) {
+                $('#participantusertable').DataTable().draw(true);
+                $('#assesseeusertable').DataTable().draw(true);
+                getAssessorUsers();
 
-        })
-        $('#participantusertable').on('click', '.show-forms', function () {
-            var $btn = $(this); // The clicked <a>
-            var $icon = $btn.find('i'); // The <i> inside it
-            var tr = $btn.closest('tr');
-            var userId = $btn.data('user');
+            })
+            $('#participantusertable').on('click', '.show-forms', function () {
+                var $btn = $(this); // The clicked <a>
+                var $icon = $btn.find('i'); // The <i> inside it
+                var tr = $btn.closest('tr');
+                var userId = $btn.data('user');
 
-            if (tr.next('.child-row').length) {
-                tr.next('.child-row').toggle(); // Toggle visibility
+                if (tr.next('.child-row').length) {
+                    tr.next('.child-row').toggle(); // Toggle visibility
 
-                // Toggle the icon
-                if ($icon.hasClass('fa-chevron-down')) {
-                    $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                    // Toggle the icon
+                    if ($icon.hasClass('fa-chevron-down')) {
+                        $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                    } else {
+                        $icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                    }
                 } else {
-                    $icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
-                }
-            } else {
-                $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
-                $.ajax({
-                    url: `/appraisalformsbyuser/${userId}/`,
-                    type: 'GET',
-                    success: function (forms) {
-                        var html =`
-                        <div class="d-flex justify-content-between mt-2">
-                            <h4 class="card-title">Form Lists</h4>
-                            <div class="dropdown">
-                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
-                                 <div class="dropdown-menu shadow">
-                                    <a href="javascript:void();" id="" class="dropdown-item formchart-btn" data-toggle="modal" data-user=${userId}>Form Chart</a>
-                                 </div>
+                    $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                    $.ajax({
+                        url: `/appraisalformsbyuser/${userId}/`,
+                        type: 'GET',
+                        success: function (forms) {
+                            var html =`
+                            <div class="d-flex justify-content-between mt-2">
+                                <h4 class="card-title">Form Lists</h4>
+                                <div class="dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
+                                    <div class="dropdown-menu shadow">
+                                        <a href="javascript:void();" id="" class="dropdown-item formchart-btn" data-toggle="modal" data-user=${userId}>Form Chart</a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <table class="table table-sm userforms">
-                            <tr>
-                                <th>Form ID</th>
-                                <th>Title</th>
-                                <th>Appraisal Cycle</th>
-                                <th>Status</th>
-                        </tr>`;
-                        forms.forEach(form => {
-                            let statusClass = '';
-                            if (form.status_id === 19) {
-                                statusClass = 'bg-success';
-                            } else if (form.status_id === 21) {
-                                statusClass = 'bg-primary';
-                            } else if (form.status_id === 20) {
-                                statusClass = 'bg-warning';
-                            }
-                            html += `
-                            <tr>
-                                <td>#${form.id}</td>
-                                <td><a href="/appraisalforms/${form.id}/edit">${form.assformcat.name}</a></td>
-                                <td>${form.appraisalcycle.name}</td>
-                                <td><span class="badge ${statusClass}">${form.status.name}</span></td>
+                            <table class="table table-sm userforms">
+                                <tr>
+                                    <th>Form ID</th>
+                                    <th>Title</th>
+                                    <th>Appraisal Cycle</th>
+                                    <th>Status</th>
                             </tr>`;
-                        });
-                        html += '</table>';
-                        tr.after(`<tr class="child-row"><td claass="m-0" colspan="7">${html}</td></tr>`);
-                    }
-                });
-            }
-        });
-        let formChart = null;
-        $(document).on('click', '.formchart-btn', function () {
-            var userId = $(this).data('user');
-
-            $.ajax({
-                url: `/appraisalformsuserdashboard/${userId}`,
-                method: 'GET',
-                success:function(data){
-                    console.log(data);
-
-                    const formctx = document.getElementById('formchart');
-                    {{-- formctx.height = 250; --}}
-
-                    let assessor_user_name = data.assessoruser.employee.employee_name;
-                    $('#assessorusername').html(assessor_user_name);
-
-                    if (formChart) {
-                        formChart.destroy();
-                    }
-                    formChart = new Chart(formctx, {
-                        type: 'bar',
-
-                        data: {
-                            labels: Object.keys(data.formgroups),
-                            datasets: [{
-                                label: 'Form Analysis',
-                                data:  Object.values(data.formgroups),
-                                backgroundColor: "steelblue",
-                                borderWidth:1
-                            }]
-                        },
-                        options: {
-                            responsive:true,
-                            {{-- scales: {
-                                y:{
-                                    beginAtZero: true
+                            forms.forEach(form => {
+                                let statusClass = '';
+                                if (form.status_id === 19) {
+                                    statusClass = 'bg-success';
+                                } else if (form.status_id === 21) {
+                                    statusClass = 'bg-primary';
+                                } else if (form.status_id === 20) {
+                                    statusClass = 'bg-warning';
                                 }
-                            } --}}
+                                html += `
+                                <tr>
+                                    <td>#${form.id}</td>
+                                    <td><a href="/appraisalforms/${form.id}/edit">${form.assformcat.name}</a></td>
+                                    <td>${form.appraisalcycle.name}</td>
+                                    <td><span class="badge ${statusClass}">${form.status.name}</span></td>
+                                </tr>`;
+                            });
+                            html += '</table>';
+                            tr.after(`<tr class="child-row"><td claass="m-0" colspan="7">${html}</td></tr>`);
                         }
                     });
                 }
             });
+            let formChart = null;
+            $(document).on('click', '.formchart-btn', function () {
+                var userId = $(this).data('user');
 
-            $('#formchartmodal').modal('show');
-        });
+                $.ajax({
+                    url: `/appraisalformsuserdashboard/${userId}`,
+                    method: 'GET',
+                    success:function(data){
+                        console.log(data);
 
-        function getAssessorUsers(){
-            $.ajax({
-                url: `/${appraisalCycleId}/assessorusers/`,
-                type: "GET",
-                dataType: "json",
-                data: $('#searchnfilterform').serialize(),
-                beforeSend : function(){
-                    $("#myloading-container").removeClass('d-none');
+                        const formctx = document.getElementById('formchart');
+                        {{-- formctx.height = 250; --}}
+
+                        let assessor_user_name = data.assessoruser.employee.employee_name;
+                        $('#assessorusername').html(assessor_user_name);
+
+                        if (formChart) {
+                            formChart.destroy();
+                        }
+                        formChart = new Chart(formctx, {
+                            type: 'bar',
+
+                            data: {
+                                labels: Object.keys(data.formgroups),
+                                datasets: [{
+                                    label: 'Form Analysis',
+                                    data:  Object.values(data.formgroups),
+                                    backgroundColor: "steelblue",
+                                    borderWidth:1
+                                }]
+                            },
+                            options: {
+                                responsive:true,
+                                {{-- scales: {
+                                    y:{
+                                        beginAtZero: true
+                                    }
+                                } --}}
+                            }
+                        });
+                    }
+                });
+
+                $('#formchartmodal').modal('show');
+            });
+
+            function getAssessorUsers(){
+                $.ajax({
+                    url: `/${appraisalCycleId}/assessorusers/`,
+                    type: "GET",
+                    dataType: "json",
+                    data: $('#searchnfilterform').serialize(),
+                    beforeSend : function(){
+                        $("#myloading-container").removeClass('d-none');
+                    },
+                    success: function (response) {
+                        {{-- console.log(response); --}}
+
+                        let html = '';
+                        const assessorusers = response.users;
+
+                        assessorusers.forEach(function(assessoruser,idx){
+                            html += `
+                            <div class="user-info">
+                                <li data-user_id = ${assessoruser.id} data-user_name = '${assessoruser.employee.employee_name}'>
+                                    <i class="ri-folder-4-line"></i>
+                                        <h4>${assessoruser.name} ( ${assessoruser.employee_id} )</h4>
+                                </li>
+
+                            </div>
+                            `;
+                        })
+
+
+                        $('#result').html(html);
+
+
+                    },
+                    complete: function(){
+                        $("#myloading-container").addClass('d-none');
+                    },
+                    error: function (response) {
+                        console.log("Error:", response);
+                    }
+                });
+            }
+            getAssessorUsers();
+
+
+
+
+
+            const peertopeertable =  $('#peertopeer').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "searching": false,
+                "lengthChange": false,
+                "pageLength": 10,
+                "autoWidth": false,
+                "responsive": false,
+                "order": [
+                    [1, 'des']
+                ],
+                'ajax': {
+                    url: `/getEmployeeAssessees`,
+                    'type': 'GET',
+                    'data': function(d) {
+                        var formData = $('#peer_to_peer_form').serializeArray();
+                        formData.forEach(function(item) {
+                            d[item.name] = item.value;
+                        });
+                    },
+                    dataSrc: function (json) {
+                        {{-- console.log('Success response:', json); --}}
+                        const rowcount = json.recordsTotal;
+
+                        if(rowcount <= 0){
+                            $("#empassesseescount").addClass('d-none');
+                            $("#empassesseescount").html(0);
+                        }else if(json.recordsTotal > 0){
+                            $("#empassesseescount").removeClass('d-none');
+                            $("#empassesseescount").html(rowcount);
+                        }
+
+                        // Return the data array to populate the table
+                        return json.data;
+                    }
                 },
-                success: function (response) {
-                    {{-- console.log(response); --}}
+                columns: [
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: ''
+                    },
+                    {
+                        data: null,
+                        name: 'no',
+                        width: "2%",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {{-- { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false}, --}}
+                    { data: 'assesseeuser.employee.employee_name', name: 'assesseeuser.employee.employee_name', orderable: false},
+                    { data: 'assesseeuser.employee.department.name', name: 'assesseeuser.employee.department.name', orderable: false },
+                    {{-- { data: 'assesseeuser.employee.branch.branch_name', name: 'assesseeuser.employee.branch.branch_name', orderable: false },
+                    { data: 'assesseeuser.employee.positionlevel.name', name: 'assesseeuser.employee.positionlevel.name', orderable: false },
+                    { data: 'assesseeuser.employee.position.name', name: 'assesseeuser.employee.position.name', orderable: false }, --}}
+                    { data: 'assformcat.name', name: 'assformcat.name', orderable: false },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return data ?? '';
+                        }
+                    }
+                ],
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0,
+                }],
+            })
 
-                    let html = '';
-                    const assessorusers = response.users;
+            $('#peertopeer tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = peertopeertable.row(tr);
 
-                    assessorusers.forEach(function(assessoruser,idx){
-                        html += `
-                        <div class="user-info">
-                            <li data-user_id = ${assessoruser.id} data-user_name = '${assessoruser.employee.employee_name}'>
-                                <i class="ri-folder-4-line"></i>
-                                    <h4>${assessoruser.name} ( ${assessoruser.employee_id} )</h4>
-                            </li>
-
-                        </div>
-                        `;
-                    })
-
-
-                    $('#result').html(html);
-
-
-                },
-                complete: function(){
-                    $("#myloading-container").addClass('d-none');
-                },
-                error: function (response) {
-                    console.log("Error:", response);
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+                function format(d) {
+                    // You can customize this to show more info about the row
+                    return `
+                        <table cellpadding="5" cellspacing="0" border="0" style="width:100%;padding-left:50px;" class='empinfos'>
+                            <tr>
+                                <td><strong>Department:</strong></td>
+                                <td >${d.assesseeuser.employee.department.name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Branch:</strong></td>
+                                <td >${d.assesseeuser.employee.branch.branch_name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Position Level:</strong></td>
+                                <td >${d.assesseeuser.employee.positionlevel.name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Position:</strong></td>
+                                <td >${d.assesseeuser.employee.position.name ?? 'N/A'}</td>
+                            </tr>
+                        </table>
+                    `;
                 }
             });
-        }
-        getAssessorUsers();
-        {{-- End assessorusers, participantusers, assesseeusers --}}
+
+            // Start Delete Item
+            $(document).on("click",".delete-btns",function(){
+                console.log('hay');
+
+                var getidx = $(this).data("idx");
+                {{-- // console.log(getidx); --}}
+
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#formdelete-'+getidx).submit();
+
+                    }
+                });
+
+
+            });
+            // End Delete Item
+
+
+            const empassessorstable = $('#empassessorstable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "searching": false,
+                "lengthChange": false,
+                "pageLength": 10,
+                "autoWidth": false,
+                "responsive": false,
+                "order": [
+                    [1, 'des']
+                ],
+                'ajax': {
+                    url: `/getEmployeeAssessors`,
+                    'type': 'GET',
+                    'data': function(d) {
+                        var formData = $('#peer_to_peer_form').serializeArray();
+                        formData.forEach(function(item) {
+                            d[item.name] = item.value;
+                        });
+                    },
+                    dataSrc: function (json) {
+                        {{-- console.log('Success response:', json); --}}
+                        const rowcount = json.recordsTotal;
+
+                        if(rowcount <= 0){
+                            $("#empassessorscount").addClass('d-none');
+                            $("#empassessorscount").html(0);
+                        }else if(json.recordsTotal > 0){
+                            $("#empassessorscount").removeClass('d-none');
+                            $("#empassessorscount").html(rowcount);
+                        }
+
+                        // Return the data array to populate the table
+                        return json.data;
+                    }
+                },
+                columns: [
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: ''
+                    },
+                    {
+                        data: null,
+                        name: 'no',
+                        width: "2%",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {{-- { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false}, --}}
+                    { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false},
+                    { data: 'assessoruser.employee.department.name', name: 'assessoruser.employee.department.name', orderable: false },
+                    {{-- { data: 'assessoruser.employee.branch.branch_name', name: 'assessoruser.employee.branch.branch_name', orderable: false },
+                    { data: 'assessoruser.employee.positionlevel.name', name: 'assessoruser.employee.positionlevel.name', orderable: false },
+                    { data: 'assessoruser.employee.position.name', name: 'assessoruser.employee.position.name', orderable: false }, --}}
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return data ?? '';
+                        }
+                    }
+                ],
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0,
+                }],
+            })
+            $('#empassessorstable tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = empassessorstable.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+                function format(d) {
+                    // You can customize this to show more info about the row
+                    return `
+                        <table cellpadding="5" cellspacing="0" border="0" style="width:100%;padding-left:50px;" class='empinfos'>
+                            <tr>
+                                <td><strong>Department:</strong></td>
+                                <td >${d.assessoruser.employee.department.name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Branch:</strong></td>
+                                <td >${d.assessoruser.employee.branch.branch_name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Position Level:</strong></td>
+                                <td >${d.assessoruser.employee.positionlevel.name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Position:</strong></td>
+                                <td >${d.assessoruser.employee.position.name ?? 'N/A'}</td>
+                            </tr>
+                        </table>
+                    `;
+                }
+            });
+        {{-- End assessorusers, participantusers, assesseeusers, peertopeer --}}
 
 
         {{-- Start Assessment Network --}}
@@ -1022,6 +1322,7 @@
 
            $('#ptopmodal').modal();
         });
+
         {{-- End Assessment Network --}}
 
 
@@ -1183,81 +1484,17 @@
             }
         });
     }
-
-
-
-    const peertopeertable =  $('#peertopeer').DataTable({
-        "processing": true,
-        "serverSide": true,
-        "searching": false,
-        "lengthChange": false,
-        "pageLength": 10,
-        "autoWidth": false,
-        "responsive": false,
-        "order": [
-            [1, 'des']
-        ],
-        'ajax': {
-            url: `/getAssessorAssessees`,
-            'type': 'GET',
-            'data': function(d) {
-                var formData = $('#peer_to_peer_form').serializeArray();
-                formData.forEach(function(item) {
-                    d[item.name] = item.value;
-                });
-            }
-        },
-        columns: [
-            {
-                className: 'details-control',
-                orderable: false,
-                data: null,
-                defaultContent: ''
-            },
-            {
-                data: null,
-                name: 'no',
-                width: "2%",
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                }
-            },
-            {{-- { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false}, --}}
-            { data: 'assesseeuser.employee.employee_name', name: 'assesseeuser.employee.employee_name', orderable: false},
-            { data: 'assesseeuser.employee.department.name', name: 'assesseeuser.employee.department.name', orderable: false },
-            {{-- { data: 'assesseeuser.employee.branch.branch_name', name: 'assesseeuser.employee.branch.branch_name', orderable: false },
-            { data: 'assesseeuser.employee.positionlevel.name', name: 'assesseeuser.employee.positionlevel.name', orderable: false },
-            { data: 'assesseeuser.employee.position.name', name: 'assesseeuser.employee.position.name', orderable: false }, --}}
-            { data: 'assformcat.name', name: 'assformcat.name', orderable: false },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row) {
-                    return data ?? '';
-                }
-            }
-        ],
-        "columnDefs": [{
-            "searchable": false,
-            "orderable": false,
-            "targets": 0,
-        }],
-    })
     let tableBody = document.querySelector("#peertopeer tbody");
     $(document).on('click',".user-info li",function(){
         let getuser_id = $(this).data('user_id');
         {{-- let getassformcat_id =  --}}
-        console.log(getuser_id);
+        {{-- console.log(getuser_id); --}}
         $(".user-info li").removeClass('active');
         $(this).toggleClass('active');
         $('#assessor_user_id').val(getuser_id);
 
         $('#peertopeer').DataTable().draw(true);
-
+        $('#empassessorstable').DataTable().draw(true);
 
         {{-- Start Employee Assessees Chart --}}
         $.ajax({
@@ -1265,7 +1502,7 @@
             method: 'GET',
             data: $('#peer_to_peer_form').serialize(),
             success:function(data){
-                console.log(data);
+                {{-- console.log(data); --}}
 
                 let html = '';
                 $.each(data,function(idx,employeeassessee){
@@ -1280,18 +1517,9 @@
 
                 $('#assesseeschart').html(html);
 
-                if(data.length <= 0){
-                    $("#empassesseescount").addClass('d-none');
-                    $("#empassesseescount").html(0);
-                }else if(data.length > 0){
-                    $("#empassesseescount").removeClass('d-none');
-                    $("#empassesseescount").html(data.length);
-                }
-
-
             },
             error:function(){
-                $('#postchart').html('<span class="text-danger">Failed to load articles data.<span>')
+                $('#postchart').html('<span class="text-danger">Failed to load employee assessees data.<span>')
             }
         });
         {{-- End Employee Assessees Chart --}}
@@ -1303,7 +1531,7 @@
             method: 'GET',
             data: $('#peer_to_peer_form').serialize(),
             success:function(data){
-                console.log(data);
+                {{-- console.log(data); --}}
 
                 let html = '';
                 $.each(data,function(idx,employeeassessors){
@@ -1317,90 +1545,62 @@
 
 
                 $('#empassessorschart').html(html);
-
-                if(data.length <= 0){
-                    $("#empassessorscount").addClass('d-none');
-                    $("#empassessorscount").html(0);
-                }else if(data.length > 0){
-                    $("#empassessorscount").removeClass('d-none');
-                    $("#empassessorscount").html(data.length);
-                }
-
-
             },
             error:function(){
-                $('#postchart').html('<span class="text-danger">Failed to load articles data.<span>')
+                $('#postchart').html('<span class="text-danger">Failed to load employee assessors data.<span>')
             }
         });
         {{-- End Employee Assessors Chart --}}
-    });
-    $('#peertopeer tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = peertopeertable.row(tr);
 
-        if (row.child.isShown()) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        } else {
-            // Open this row
-            row.child(format(row.data())).show();
-            tr.addClass('shown');
-        }
+
+        getEmployeeInfo(getuser_id);
     });
-    function format(d) {
-        // You can customize this to show more info about the row
-        return `
-            <table cellpadding="5" cellspacing="0" border="0" style="width:100%;padding-left:50px;" class='empinfos'>
-                <tr>
-                    <td><strong>Department:</strong></td>
-                    <td >${d.assesseeuser.employee.department.name ?? 'N/A'}</td>
-                </tr>
-                <tr>
-                    <td><strong>Branch:</strong></td>
-                    <td >${d.assesseeuser.employee.branch.branch_name ?? 'N/A'}</td>
-                </tr>
-                <tr>
-                    <td><strong>Position Level:</strong></td>
-                    <td >${d.assesseeuser.employee.positionlevel.name ?? 'N/A'}</td>
-                </tr>
-                <tr>
-                    <td><strong>Position:</strong></td>
-                    <td >${d.assesseeuser.employee.position.name ?? 'N/A'}</td>
-                </tr>
-            </table>
-        `;
+    function getEmployeeInfo(userid){
+        console.log(userid);
+        const appraisalCycleId = {{ $appraisalcycle->id }};
+
+        $.ajax({
+            url: `/${appraisalCycleId}/assessorusers/`,
+            type: "GET",
+            dataType: "json",
+            data: {
+                filter_user_id: userid
+            },
+            success: function (response) {
+                {{-- console.log(response); --}}
+
+                let html = ``;
+                const userempinfo = response.user;
+                html += `
+                <div class="card shadow-sm mb-0">
+                    <div class="card-body">
+                    <h5 class="card-title mb-1"><i class="bi bi-person-badge-fill me-2"></i>Employee Information</h5>
+                    <div class="row">
+                        <div class="col-md-3"><strong>Name:</strong> ${userempinfo.employee.employee_name}</div>
+                        <div class="col-md-3"><strong>Position:</strong> ${userempinfo.employee.position.name}</div>
+                        <div class="col-md-3"><strong>Department:</strong> ${userempinfo.employee.department.name}</div>
+                        <div class="col-md-3"><strong>Employee ID:</strong> ${userempinfo.employee.employee_code}</div>
+                    </div>
+                    </div>
+                </div>
+                `
+
+                console.log(userempinfo);
+
+                $('#employeeinfo').html(html);
+
+
+            },
+            error: function (response) {
+                console.log("Error:", response);
+            }
+        });
     }
 
 
 
 
-    // Start Delete Item
-    $(document).on("click",".delete-btns",function(){
-        console.log('hay');
 
-        var getidx = $(this).data("idx");
-        {{-- // console.log(getidx); --}}
-
-
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('#formdelete-'+getidx).submit();
-
-            }
-        });
-
-
-   });
-   // End Delete Item
 
     {{-- End User List Filter --}}
 
