@@ -38,5 +38,28 @@ class PeerToPeer extends Model
         return $this->belongsTo(AssFormCat::class,"ass_form_cat_id");
     }
 
+    public static function getRecentAssessees($assessor_user_id, $appraisal_cycle_id)
+    {
+        return self::where('assessor_user_id', $assessor_user_id)
+            ->where('appraisal_cycle_id', $appraisal_cycle_id)
+            ->with([
+                "assessoruser.employee",
+                "assesseeuser.employee.branch",
+                "assesseeuser.employee.department",
+                "assesseeuser.employee.position",
+                "assesseeuser.employee.positionlevel",
+                "assformcat"
+            ])
+            ->get();
+    }
+
+
+    public static function getRecentAssessors($assessor_user_id, $appraisal_cycle_id)
+    {
+        return self::where('assessee_user_id', $assessor_user_id)
+            ->where('appraisal_cycle_id', $appraisal_cycle_id)
+            ->with(['assessoruser.employee.position'])
+            ->get();
+    }
 
 }

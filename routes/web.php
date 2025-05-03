@@ -213,6 +213,7 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::post("/appraisalcyclesstatus",[AppraisalCyclesController::class,"changestatus"])->name("appraisalcycles.changestatus");
     Route::get("/appraisalcycles/{id}/countdown",[AppraisalCyclesController::class,"countdown"])->name("appraisalcycles.countdown");
     Route::get("/appraisalcyclessendnotifications",[AppraisalCyclesController::class,"sendNotifications"])->name("appraisalcycles.sendnotifications");
+    Route::post("/appraisalcycles/{id}/compareemployees",[AppraisalCyclesController::class,"compareEmployees"])->name("appraisalcycles.compareemployees");
 
 
 

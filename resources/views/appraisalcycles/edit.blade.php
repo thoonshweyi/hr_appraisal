@@ -308,14 +308,20 @@
 
                                         {{-- <li><h3>Loading...</h3></li> --}}
                                     </ul>
+                                    <div class="d-flex">
+                                        <form id="peer_to_peer_form" action="{{ route('peertopeers.create') }}" method="" class="my-2">
+                                            <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
+                                            <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>
+                                            @if($appraisalcycle->isBeforeActionStart())
+                                                <button type="submit" class="btn new_btn mr-2">New</button>
+                                            @endif
+                                        </form>
+                                        <form id="" action="{{ route('appraisalcycles.compareemployees',$appraisalcycle->id) }}" method="POST" class="my-2">
+                                            @csrf
+                                            <button type="submit" class="btn compare_btn">Compare</button>
+                                        </form>
+                                    </div>
 
-                                    <form id="peer_to_peer_form" action="{{ route('peertopeers.create') }}" method="" class="my-2">
-                                        <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
-                                        <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>
-                                        @if($appraisalcycle->isBeforeActionStart())
-                                        <button type="submit" class="btn new_btn">New</button>
-                                        @endif
-                                    </form>
                                 </div>
 
                                 <div class="col-lg-9">

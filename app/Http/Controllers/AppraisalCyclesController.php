@@ -549,6 +549,92 @@ class AppraisalCyclesController extends Controller
 
 
     }
+
+    public function compareEmployees(Request $request, string $id){
+        $users = User::where('status',1)
+        ->whereNotIn('id',[1]);
+
+
+        $filter_employee_name = $request->filter_employee_name;
+        $filter_employee_code = $request->filter_employee_code;
+        $filter_branch_id = $request->filter_branch_id;
+        $filter_position_level_id = $request->filter_position_level_id;
+        $filter_subdepartment_id = $request->filter_subdepartment_id;
+        $filter_user_id = $request->filter_user_id;
+
+        // $results = PeerToPeer::query();
+        $results = $users;
+
+          // for getting employee info
+        if(!empty($filter_user_id)){
+            $results = $results->where("id",$filter_user_id);
+
+            $user = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+            ->first();
+
+            return response()->json([
+                "user"=>$user
+            ]);
+        }
+
+        if (!empty($filter_employee_name)) {
+            $results = $results->whereHas('employee',function($query) use($filter_employee_name){
+                $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
+            });
+
+            $request->session()->put('filter_employee_name', $filter_employee_name);
+        }
+
+        if (!empty($filter_employee_code)) {
+            $results = $results->whereHas('employee',function($query) use($filter_employee_code){
+                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%')->orWhere('employee_name', 'like', '%'.$filter_employee_code.'%');;
+            });
+
+            $request->session()->put('filter_employee_code', $filter_employee_code);
+
+        }
+
+        if (!empty($filter_branch_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_branch_id){
+                $query->where('branch_id', $filter_branch_id);
+            });
+
+            $request->session()->put('filter_branch_id', $filter_branch_id);
+        }
+
+
+        if (!empty($filter_position_level_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
+                $query->where('position_level_id', $filter_position_level_id);
+            });
+
+            $request->session()->put('filter_position_level_id', $filter_position_level_id);
+
+        }
+
+        if (!empty($filter_subdepartment_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_subdepartment_id){
+                $query->where('sub_department_id', $filter_subdepartment_id);
+            });
+            $request->session()->put('filter_subdepartment_id', $filter_subdepartment_id);
+        }
+        $results = $results->doesntHave('roles');
+
+        $users = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->get();
+
+
+        foreach($users as $user){
+            $user->assessees = PeerToPeer::getRecentAssessees($user->id, $id);
+            $user->assessors = PeerToPeer::getRecentAssessors($user->id, $id);
+            // dd($user);
+        }
+        // dd($users[0]);
+
+        return view("appraisalcycles.compare",compact("users"));
+
+   }
+
 }
 
 

@@ -244,7 +244,7 @@ input[type="number"] {
 .appraisal_headers th{
     padding: 4px 12px;
 }
-.add_btn,.new_btn,.apply_btn,.fill_btn,.cus_btn{
+.add_btn,.new_btn,.apply_btn,.fill_btn,.cus_btn,.compare_btn{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -253,7 +253,7 @@ input[type="number"] {
     color: white;
     margin-bottom: 0 !important;
 }
-.add_btn:hover,.new_btn:hover,.apply_btn:hover,.fill_btn:hover,.cus_btn:hover{
+.add_btn:hover,.new_btn:hover,.apply_btn:hover,.fill_btn:hover,.cus_btn:hover,.compare_btn:hover{
     color: white;
 }
 
