@@ -316,9 +316,10 @@
                                                 <button type="submit" class="btn new_btn mr-2">New</button>
                                             @endif
                                         </form>
-                                        <form id="" action="{{ route('appraisalcycles.compareemployees',$appraisalcycle->id) }}" method="POST" class="my-2">
+                                        <form id="compare-form" action="{{ route('appraisalcycles.compareemployees',$appraisalcycle->id) }}" method="POST" class="my-2">
+                                            <input type="hidden" id="empuser_ids" name="empuser_ids" value={{ $appraisalcycle->id }}>
                                             @csrf
-                                            <button type="submit" class="btn compare_btn">Compare</button>
+                                            <button type="button" class="btn compare_btn">Compare</button>
                                         </form>
                                     </div>
 
@@ -1370,6 +1371,19 @@
             });
         });
         {{-- End Clear Btn --}}
+
+
+        {{-- Start Compare Form --}}
+
+
+        $('.compare_btn').click(function(){
+            let selectedIds = [1, 2, 3];
+            document.querySelector('#empuser_ids').value = selectedIds;
+
+            $('#compare-form').submit();
+        });
+        {{-- End Compare Form --}}
+
     });
 
     // Start Tag Box

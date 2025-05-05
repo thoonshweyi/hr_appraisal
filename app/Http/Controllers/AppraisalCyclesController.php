@@ -555,6 +555,8 @@ class AppraisalCyclesController extends Controller
         ->whereNotIn('id',[1]);
 
 
+        // dd(gettype($request->empuser_ids));
+
         $filter_employee_name = $request->filter_employee_name;
         $filter_employee_code = $request->filter_employee_code;
         $filter_branch_id = $request->filter_branch_id;
