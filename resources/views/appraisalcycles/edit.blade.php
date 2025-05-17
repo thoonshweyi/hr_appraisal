@@ -294,20 +294,26 @@
                                             <img src="{{ asset('images/spinner.gif') }}" id="myloading" class="myloading" alt="loading"/>
                                         </div>
                                     </div>
-                                    <ul id="result" class="user-list">
-                                        {{-- @foreach($users as $user)
-                                        <div class="user-info">
-                                            <li data-user_id = {{ $user->id }}>
-                                                <i class="ri-folder-4-line"></i>
-                                                    <h4>{{ $user->name }} ( {{ $user->employee_id }} )</h4>
-                                            </li>
+                                    <form id="compare-form" action="{{ route('appraisalcycles.compareemployees',$appraisalcycle->id) }}" method="POST" class="my-2">
+                                        @csrf
 
-                                        </div>
-                                        @endforeach --}}
+                                        <ul id="result" class="user-list">
+                                            {{-- @foreach($users as $user)
+                                            <div class="user-info">
+                                                <li data-user_id = {{ $user->id }}>
+                                                    <i class="ri-folder-4-line"></i>
+                                                        <h4>{{ $user->name }} ( {{ $user->employee_id }} )</h4>
+                                                </li>
+
+                                            </div>
+                                            @endforeach --}}
 
 
-                                        {{-- <li><h3>Loading...</h3></li> --}}
-                                    </ul>
+                                            {{-- <li><h3>Loading...</h3></li> --}}
+
+                                        </ul>
+                                    </form>
+
                                     <div class="d-flex">
                                         <form id="peer_to_peer_form" action="{{ route('peertopeers.create') }}" method="" class="my-2">
                                             <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
@@ -316,11 +322,8 @@
                                                 <button type="submit" class="btn new_btn mr-2">New</button>
                                             @endif
                                         </form>
-                                        <form id="compare-form" action="{{ route('appraisalcycles.compareemployees',$appraisalcycle->id) }}" method="POST" class="my-2">
-                                            <input type="hidden" id="empuser_ids" name="empuser_ids" value={{ $appraisalcycle->id }}>
-                                            @csrf
+                                            {{-- <input type="hidden" id="empuser_ids" name="empuser_ids[]" value={{ $appraisalcycle->id }}> --}}
                                             <button type="button" class="btn compare_btn">Compare</button>
-                                        </form>
                                     </div>
 
                                 </div>
@@ -1002,6 +1005,7 @@
                                 <li data-user_id = ${assessoruser.id} data-user_name = '${assessoruser.employee.employee_name}'>
                                     <i class="ri-folder-4-line"></i>
                                         <h4>${assessoruser.name} ( ${assessoruser.employee_id} )</h4>
+                                        <input type="hidden" class="empuser_ids" name="empuser_ids[]" value="${assessoruser.id}">
                                 </li>
 
                             </div>
@@ -1377,8 +1381,6 @@
 
 
         $('.compare_btn').click(function(){
-            let selectedIds = [1, 2, 3];
-            document.querySelector('#empuser_ids').value = selectedIds;
 
             $('#compare-form').submit();
         });
@@ -1499,8 +1501,10 @@
             // console.log(listitem);
             if(listitem.innerText.toLocaleLowerCase().includes(search.toLowerCase())){
                 listitem.classList.remove('hide');
+                listitem.querySelector('.empuser_ids').removeAttribute('disabled');
             }else{
                 listitem.classList.add('hide');
+                listitem.querySelector('.empuser_ids').setAttribute('disabled','true');
             }
         });
     }
@@ -1616,10 +1620,6 @@
             }
         });
     }
-
-
-
-
 
 
     {{-- End User List Filter --}}

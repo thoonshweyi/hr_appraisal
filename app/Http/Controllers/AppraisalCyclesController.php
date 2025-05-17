@@ -551,11 +551,13 @@ class AppraisalCyclesController extends Controller
     }
 
     public function compareEmployees(Request $request, string $id){
-        $users = User::where('status',1)
-        ->whereNotIn('id',[1]);
 
 
-        // dd(gettype($request->empuser_ids));
+        // dd($request->empuser_ids);
+
+        $empuser_ids = $request->empuser_ids;
+        $users = User::whereIn('id',$empuser_ids);
+
 
         $filter_employee_name = $request->filter_employee_name;
         $filter_employee_code = $request->filter_employee_code;

@@ -30,6 +30,7 @@ use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
 use App\Http\Controllers\AppraisalFormsController;
+use App\Http\Controllers\AssesseeDetailController;
 use App\Http\Controllers\PositionLevelsController;
 use App\Http\Controllers\SubDepartmentsController;
 use App\Http\Controllers\AppraisalCyclesController;
@@ -258,7 +259,7 @@ Route::group(['middleware' => ['auth','otp']], function () {
 
     Route::get("/assesseesummary/{assessee_user_id}/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"review"])->name("assesseesummary.review");
     Route::get("/assesseesummarysexport/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"export"])->name("assesseesummary.export");
-
+    Route::get("/assesseesdetail/{appraisal_cycle_id}",[AssesseeDetailController::class,"exportview"])->name("assesseesdetail.export");
 
     Route::get("/{appraisal_cycle_id}/participantusers",[AppraisalCyclesController::class,"participantusers"])->name("participantusers.index");
     Route::get("/{appraisal_cycle_id}/assesseeusers",[AppraisalCyclesController::class,"assesseeusers"])->name("assesseeusers.index");

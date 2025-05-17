@@ -17,8 +17,9 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class AssesseeSummaryExport implements FromCollection, WithHeadings, WithDrawings, ShouldAutoSize, WithEvents, WithColumnFormatting, WithMapping,WithColumnWidths
+class AssesseeSummaryExport implements FromCollection, WithHeadings, WithDrawings, ShouldAutoSize, WithEvents, WithColumnFormatting, WithMapping,WithColumnWidths, WithTitle
 {
 
     private $assesseeusers;
@@ -32,7 +33,10 @@ class AssesseeSummaryExport implements FromCollection, WithHeadings, WithDrawing
 
         // dd($this->assesseeusers);
     }
-
+    public function title(): string
+    {
+        return "Assesseee Summary";
+    }
 
     public function headings(): array
     {
@@ -53,7 +57,6 @@ class AssesseeSummaryExport implements FromCollection, WithHeadings, WithDrawing
     public function collection()
     {
         $data = collect();
-
         foreach($this->assesseeusers as $assesseeuser){
             $assessors = $assesseeuser->getAssessors($this->appraisal_cycle_id);
             $assessoruserscount = $assesseeuser->getAssessorUsersCount($assessors);

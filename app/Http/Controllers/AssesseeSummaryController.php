@@ -10,6 +10,7 @@ use App\Models\FormResult;
 use Illuminate\Http\Request;
 use App\Models\AppraisalForm;
 use App\Models\AssesseeSummary;
+use App\Exports\AppraisalExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AssesseeSummaryExport;
 use App\Models\AppraisalFormAssesseeUser;
@@ -119,7 +120,8 @@ class AssesseeSummaryController extends Controller
         ->get();
 
 
-        $response = Excel::download(new AssesseeSummaryExport($assesseeusers,$appraisal_cycle_id), "AssesseeSummaryReport".Carbon::now()->format('Y-m-d').".xlsx");
+        // $response = Excel::download(new AssesseeSummaryExport($assesseeusers,$appraisal_cycle_id), "AssesseeSummaryReport".Carbon::now()->format('Y-m-d').".xlsx");
+        $response = Excel::download(new AppraisalExport($assesseeusers,$appraisal_cycle_id), "AppraisalReport".Carbon::now()->format('Y-m-d').".xlsx");
 
         return $response;
     }
