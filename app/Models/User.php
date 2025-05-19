@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\AssFormCat;
 use App\Models\PeerToPeer;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -166,6 +167,20 @@ class User extends Authenticatable
             $query->where('assessee_user_id',$this->id);
         })->pluck('assessor_user_id');
         $assessorusers = User::whereIn("id",$assessor_user_ids)->get();
+        return $assessorusers;
+    }
+
+    public function getAssessorsByAssFormCat($appraisal_cycle_id,$ass_form_cat_id){
+        $assessor_user_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
+        ->whereHas('assesseeusers',function($query) {
+            $query->where('assessee_user_id',$this->id);
+        })
+        ->where('ass_form_cat_id',$ass_form_cat_id)
+        ->pluck('assessor_user_id');
+
+        $assessorusers = User::whereIn("id",$assessor_user_ids)->get();
+
+        Log::info("Assessee".$this->id."Ass form cat:". $ass_form_cat_id ."Assessors".count($assessorusers));
         return $assessorusers;
     }
     public function getAssessorUsersCount($assessorusers){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\AssesseeDetail;
 use App\Models\AppraisalFormAssesseeUser;
 
 class AssesseeDetailController extends Controller
@@ -54,7 +55,10 @@ class AssesseeDetailController extends Controller
 
         $assesseeusers = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
         ->get();
-        return view('assesseesdetail.detail')->with('assesseeusers',$assesseeusers);
+
+        $assesseedetail = new AssesseeDetail();
+
+        return view('assesseesdetail.detail')->with('assesseeusers',$assesseeusers)->with('appraisal_cycle_id',$appraisal_cycle_id)->with('assesseedetail',$assesseedetail);
 
     }
 }

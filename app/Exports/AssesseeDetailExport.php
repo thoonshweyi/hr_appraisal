@@ -1,10 +1,17 @@
 <?php
 
 namespace App\Exports;
+use App\Models\AssesseeDetail;
 use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\FromView;
-class AssesseeDetailExport implements FromView, WithTitle
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+
+
+class AssesseeDetailExport implements FromView, WithTitle, ShouldAutoSize, WithEvents
 {
 
     private $assesseeusers;
@@ -25,8 +32,23 @@ class AssesseeDetailExport implements FromView, WithTitle
     public function view(): View
     {
 
-        
-        return view('assesseesdetail.detail')->with("assesseeusers",$this->assesseeusers);
+        $assesseedetail = new AssesseeDetail();
+
+        return view('assesseesdetail.detail')->with("assesseeusers",$this->assesseeusers)->with('appraisal_cycle_id',$this->appraisal_cycle_id)->with('assesseedetail',$assesseedetail);
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            // AfterSheet::class => function (AfterSheet $event) {
+            //     $sheet = $event->sheet->getDelegate();
+
+            //     $sheet->getStyle('A1:P1000')
+            //     ->getAlignment()
+            //     ->setVertical(Alignment::VERTICAL_CENTER)
+            //     ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            // },
+        ];
     }
 
 }
