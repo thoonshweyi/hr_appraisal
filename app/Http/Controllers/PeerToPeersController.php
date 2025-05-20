@@ -130,7 +130,7 @@ class PeerToPeersController extends Controller
         }
     }
 
-    public function getAssessorAssessees(Request $request){
+    public function getEmployeeAssessees(Request $request){
         $assessor_user_id = $request->assessor_user_id;
         $appraisal_cycle_id = $request->appraisal_cycle_id;
 
@@ -160,6 +160,32 @@ class PeerToPeersController extends Controller
                 ->rawColumns(['action']) //
                 ->make(true);
 
+    }
+
+    public function getEmployeeAssessors(Request $request){
+        $assessor_user_id = $request->assessor_user_id;
+        $appraisal_cycle_id = $request->appraisal_cycle_id;
+
+        $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
+
+        $peertopeers = PeerToPeer::where('assessee_user_id',$assessor_user_id)
+        ->where('appraisal_cycle_id',$appraisal_cycle_id)
+        ->with(["assesseeuser.employee"])
+        ->with(["assessoruser.employee.branch","assessoruser.employee.department","assessoruser.employee.position","assessoruser.employee.positionlevel"])
+        ->get();
+
+        return DataTables::of($peertopeers)
+        ->addColumn('action', function ($peertopeer) use($appraisalcycle){
+            return $action = $appraisalcycle->isBeforeActionStart() ? "
+                    <a href='#' class='text-danger ms-2 delete-btns' data-idx='$peertopeer->id'><i class='fas fa-trash-alt'></i></a>
+                    <form id='formdelete-$peertopeer->id' class='' action='/peertopeers/$peertopeer->id' method='POST'>"
+                    .csrf_field().method_field('DELETE').
+                "
+                        </form>
+                " : '';
+        })
+        ->rawColumns(['action']) //
+        ->make(true);
     }
 
 

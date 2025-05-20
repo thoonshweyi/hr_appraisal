@@ -30,6 +30,7 @@ use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
 use App\Http\Controllers\AppraisalFormsController;
+use App\Http\Controllers\AssesseeDetailController;
 use App\Http\Controllers\PositionLevelsController;
 use App\Http\Controllers\SubDepartmentsController;
 use App\Http\Controllers\AppraisalCyclesController;
@@ -213,6 +214,7 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::post("/appraisalcyclesstatus",[AppraisalCyclesController::class,"changestatus"])->name("appraisalcycles.changestatus");
     Route::get("/appraisalcycles/{id}/countdown",[AppraisalCyclesController::class,"countdown"])->name("appraisalcycles.countdown");
     Route::get("/appraisalcyclessendnotifications",[AppraisalCyclesController::class,"sendNotifications"])->name("appraisalcycles.sendnotifications");
+    Route::post("/appraisalcycles/{id}/compareemployees",[AppraisalCyclesController::class,"compareEmployees"])->name("appraisalcycles.compareemployees");
 
 
 
@@ -225,7 +227,8 @@ Route::group(['middleware' => ['auth','otp']], function () {
     Route::put("/peertopeers/{id}",[PeerToPeersController::class,"update"])->name("peertopeers.update");
     Route::delete("/peertopeers/{id}",[PeerToPeersController::class,"destroy"])->name("peertopeers.destroy");
     Route::post("peertopeersstatus",[PeerToPeersController::class,"changestatus"])->name("peertopeers.changestatus");
-    Route::get('/getAssessorAssessees', [PeerToPeersController::class, 'getAssessorAssessees'])->name('users.getassessorassessees');
+    Route::get('/getEmployeeAssessees', [PeerToPeersController::class, 'getEmployeeAssessees'])->name('peertopeers.getemployeeassessees');
+    Route::get('/getEmployeeAssessors', [PeerToPeersController::class, 'getEmployeeAssessors'])->name('peertopeers.getemployeeassessors');
 
 
 
@@ -256,7 +259,7 @@ Route::group(['middleware' => ['auth','otp']], function () {
 
     Route::get("/assesseesummary/{assessee_user_id}/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"review"])->name("assesseesummary.review");
     Route::get("/assesseesummarysexport/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"export"])->name("assesseesummary.export");
-
+    Route::get("/assesseesdetail/{appraisal_cycle_id}",[AssesseeDetailController::class,"exportview"])->name("assesseesdetail.export");
 
     Route::get("/{appraisal_cycle_id}/participantusers",[AppraisalCyclesController::class,"participantusers"])->name("participantusers.index");
     Route::get("/{appraisal_cycle_id}/assesseeusers",[AppraisalCyclesController::class,"assesseeusers"])->name("assesseeusers.index");

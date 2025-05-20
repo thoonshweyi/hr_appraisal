@@ -204,7 +204,7 @@ class AppraisalFormsController extends Controller
             // dd($title);
             // $message = "You have received a new appraisal form for assessment. Kindly review and submit your feedback within the given timeframe.";
             $message = "သင်အကဲဖြတ်ပေးရန် ရာထူးတိုးဖောင်တစ်ခုရရှိပါသည်။ သတ်မှတ်အချိန်ကာလအတွင်း အကဲဖြတ်၍ဖောင်ကိုပြန်လည်၍ပေးပို့ပေးရန်ဖြစ်ပါသည်။";
-           $response = FCMHelper::sendFCMNotification($assessor_user_id,$title,$message,$appraisalform->id);
+            $response = FCMHelper::sendFCMNotification($assessor_user_id,$title,$message,$appraisalform->id);
 
             \DB::commit();
 
