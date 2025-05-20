@@ -169,9 +169,9 @@
                     <tr class="ligth ligth-data">
                         <th>No</th>
                         <th>Criteria Set</th>
-                        <th>Assessor</th>
-                        <th>Appraisal Cycle</th>
                         <th>Status</th>
+                        <th>Appraisal Cycle</th>
+                        <th>Assessor</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -180,9 +180,9 @@
                     <tr>
                         <td>{{$idx + $appraisalforms->firstItem()}}</td>
                         <td><a href="{{ $appraisalform->assessed ? route('appraisalforms.show',$appraisalform->id) : route('appraisalforms.edit',$appraisalform->id) }}">{{$appraisalform->assformcat["name"]}}</a></td>
-                        <td>{{ $appraisalform->assessoruser->employee->employee_name }}</td>
-                        <td>{{$appraisalform->appraisalcycle["name"]}}</td>
                         <td> <span class="badge {{  $appraisalform->status_id == 19 ? 'bg-success' : ($appraisalform->status_id == 21 ? 'bg-primary' : ($appraisalform->status_id == 20 ? 'bg-warning' : '')) }}"> {{ $appraisalform->status->name }} </span></td>
+                        <td>{{$appraisalform->appraisalcycle["name"]}}</td>
+                        <td>{{ $appraisalform->assessoruser->employee->employee_name }}</td>
                         <td class="text-center">
                             @if($appraisalform->assessed)
                             <a href="{{ route('appraisalforms.show',$appraisalform->id) }}" class="text-info mr-2" title="Open"><i class="fas fa-eye"></i></a>

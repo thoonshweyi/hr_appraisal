@@ -24,7 +24,7 @@
                 <td colspan="16" style="text-align:center;vertical-align: middle;font-family:'Times New Roman'; font-size:14; font-weight: bold; word-wrap: break-word; text-align:center; margin:auto;">
                     <div>
                         <h4>Pro 1 Global CO., LTD</h4>
-                        <h5>Appraisal Name: 2025 Test</h5>
+                        <h5>Appraisal Name: {{ $appraisalcycle->name }}</h5>
                     </div>
                 </td>
             </tr>

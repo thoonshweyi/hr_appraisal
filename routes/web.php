@@ -52,7 +52,9 @@ use App\Http\Controllers\FirebaseNotificationController;
  */
 
 Route::get('/', function () {
-    return view('auth.login');
+    // return view('auth.login');
+    return redirect()->route('login');
+
 });
 Route::get('/user_login/{employee_id}/{password}', [LoginController::class, 'user_login'])->name('user_login');
 
