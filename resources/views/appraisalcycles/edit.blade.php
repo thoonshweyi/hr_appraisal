@@ -318,7 +318,7 @@
                                         </ul>
                                     </form>
 
-                                    <div class="d-flex">
+                                    <div class="d-flex align-items-center">
                                         <form id="peer_to_peer_form" action="{{ route('peertopeers.create') }}" method="" class="my-2">
                                             <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
                                             <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>

@@ -24,7 +24,7 @@
 
                             $prefix = substr($phone, 0, $prefixLength);
                             $suffix = substr($phone, -$suffixLength);
-                            $middleLength = strlen($phone) - ($prefixLength + $suffixLength);
+                            $middleLength = (strlen($phone) - ($prefixLength + $suffixLength)) || 0;
                             $maskedMiddle = str_repeat('*', $middleLength);
                         @endphp
 
