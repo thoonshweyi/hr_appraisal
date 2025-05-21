@@ -7,13 +7,13 @@
         <div class="row">
 
 
-            <div class="col-lg-12">
-                <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
+            {{-- <div class="col-lg-12">
+                <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-1">
                     <div>
                         <h4 class="mb-1">Performance Appraisal Assessment (Mobile)</h4>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
             <div class="col-md-12 mb-2">
@@ -65,10 +65,104 @@
            </div>
 
            <div class="col-md-12 mb-2">
-                
+                <div class="form-header mb-2">
+                        {{-- <h4 class="text-center">PRO1 Global Company Co.,Ltd</h4> --}}
+                        <h5 class="">{{ $appraisalform->assformcat->name }}</h5>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="assessor-infos">
+                                <strong>Assessor (အကဲဖြတ်အမှတ်ပေးမည့်သူ)</strong>
+                                <span class="delimiter">-</span>
+                                <span class="value">{{ $appraisalform->assessoruser->employee->employee_name }}</span>
+                            </div>
+                            <div class="assessor-infos">
+                                <strong>Position (ရာထူး)</strong>
+                                <span class="delimiter">-</span>
+                                <span class="value">{{ $appraisalform->assessoruser->employee->position->name }}</span>
+                            </div>
+                            <div class="assessor-infos">
+                                <strong>Department (ဌာန)</strong>
+                                <span class="delimiter">-</span>
+                                <span class="value">{{ $appraisalform->assessoruser->employee->attachformtype->name }}</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="assessees" class="form-label"><strong>Assessees (အမှတ်ပေးခံရမည့်သူ) </strong></label>
+                            <select class="form-control" id="current_assessees">
+                                @foreach($assesseeusers as $assesseeuser)
+                                    <option value="{{$assesseeuser->id}}">{{ $assesseeuser->employee->employee_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                    <form id="appraisalformf" action="" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                    @foreach($assesseeusers as $assesseeuser)
+                        <div id="assessee_{{ $assesseeuser->id }}_criterias" class="assessee_criterias" style="display: none;">
+                        @foreach ($criterias as $idx=>$criteria)
+
+                            <div class="form-card">
+                                <div class="section-title">{{ $criteria->name }}</div>
+                                <div class="score-radio d-flex flex-wrap">
+                                    <div class="form-check me-2">
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1" value="{{ $criteria->excellent }}" {{ $checked = ($appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->excellent) ? 'checked' : '' }}/>
+                                        @if (!$checked)
+                                            <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
+                                        @endif
+                                        <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1">{{ $criteria->excellent }}</label>
+                                    </div>
+
+                                    <div class="form-check me-2">
+                                        <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2" value="{{ $criteria->good }}" {{ $appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->good ? 'checked' : '' }}/>
+                                        <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2">{{ $criteria->good }}</label>
+                                    </div>
+
+                                    <div class="form-check me-2">
+                                        <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3" value="{{ $criteria->meet_standard }}" {{ $appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->meet_standard ? 'checked' : '' }}/>
+                                        <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3">{{ $criteria->meet_standard }}</label>
+                                    </div>
+
+                                    <div class="form-check me-2">
+                                        <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4" value="{{ $criteria->below_standard }}" {{ $appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->below_standard ? 'checked' : '' }}/>
+                                        <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4">{{ $criteria->below_standard }}</label>
+                                    </div>
+
+                                    <div class="form-check me-2">
+                                        <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5" value="{{ $criteria->weak }}" {{ $appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->weak ? 'checked' : '' }}/>
+                                        <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5">{{ $criteria->weak }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                        </div>
+                    @endforeach
+                    </form>
+
+
+                {{-- <div class="navigation-bar">
+                    <button class="btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                    <h6 id="assesseeName">Yin Min Hlaing</h6>
+                    <button class="btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+                </div> --}}
+
            </div>
 
+            <div class="col-md-12 mt-2">
 
+                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">{{ __('button.back')}}</button>
+                <input type="button" name="savedraft" class="btn btn-warning btn-sm rounded-0 savedraftbtns" value="{{ __('button.savedraft')}}" />
+
+
+                <button type="button" class="btn btn-success btn-sm rounded-0 submitbtns">{{ __('button.submit')}}</button>
+            </div>
         </div>
     </div>
 
@@ -87,37 +181,86 @@
 
 <!-- End MODAL AREA -->
 
-<iframe id="reprint_frame" name="reprint_frame" src="{{ url('appraisalformsshowprintframe/'.$appraisalform->id) }}" style="position: absolute;width:auto;height:auto;border:0;display: none;"  class=""></iframe>
+{{-- <iframe id="reprint_frame" name="reprint_frame" src="{{ url('appraisalformsshowprintframe/'.$appraisalform->id) }}" style="position: absolute;width:auto;height:auto;border:0;display: none;"  class=""></iframe> --}}
 
 @endsection
+
+@section('css')
+<style type="text/css">
+      .form-header {
+        background-color: #ffffff;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+        border-top: 8px solid orange;
+        }
+
+       .navigation-bar {
+      background: #fff;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .navigation-bar h6 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .navigation-bar .btn {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: #333;
+    }
+
+
+   .score-radio input {
+      display: none;
+    }
+    .score-radio label {
+      margin: 0 3px;
+      cursor: pointer;
+    }
+    .score-radio input:checked + label {
+      background-color: #0d6efd;
+      color: white;
+    }
+    .score-radio label {
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      padding: 0.4em 0.8em;
+    }
+    .form-header {
+      background-color: #ffffff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .section-title {
+      font-weight: 600;
+      /* font-size: 16px; */
+      margin-bottom: 0.75rem;
+    }
+    .form-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
+    }
+</style>
+@endsection
+
 @section('js')
 <script>
     $(document).ready(function() {
-
-
-        {{-- Your rating-value doesn't match the given-rating-scale-values! --}}
-        {{-- $(".custom-input").on("input", function () {
-            let min = parseInt($(this).attr("min"));
-            let max = parseInt($(this).attr("max"));
-            let value = parseInt($(this).val());
-
-            if (value > max) {
-
-                Swal.fire({
-                    icon: "warning",
-                    title: "Greater than maximum value.",
-                    text:"Value cannot be greater than " + max,
-                });
-                $(this).val(max);
-            } else if (value < min) {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Less than minimum value.",
-                    text: "Value cannot be less than " + min,
-                });
-                $(this).val(min);
-            }
-        }); --}}
 
 
         $('.custom-input').on('input', function () {
@@ -258,62 +401,7 @@
                 $('.critooltips').addClass('d-none');
             }
         });
-{{--
-        document.addEventListener('click', function (e) {
 
-            if(e.target.className != 'custom-input'){
-                console.log(e.target);
-                $(".critooltips").addClass('d-none'); // Hide all tooltips first
-
-            }
-        }); --}}
-
-
-
-        {{-- Start Global tooltip --}}
-        {{-- $('.custom-input').focus(function () {
-            let $input = $(this);
-            let tooltip = $input.next('.critooltips').clone(); // clone the actual tooltip content
-
-            // Set content and remove previous
-            $('#global-tooltip').html(tooltip.html()).removeClass('d-none');
-
-            // Get input offset
-            let offset = $input.offset();
-            console.log(offset.top);
-            let inputHeight = $input.outerHeight();
-
-            // Position tooltip above the input
-            $('#global-tooltip').css({
-                position:absolute,
-                top: offset.top - 210 + 'px', // adjust based on your tooltip height
-                left: offset.left + ($input.outerWidth() / 2) + 'px',
-                transform: 'translateX(-50%)',
-                position: 'absolute',
-                zIndex: 9999
-            });
-        });
-
-        $('.custom-input').blur(function () {
-            $('#global-tooltip').addClass('d-none');
-        });
-
-
-        tippy('.custom-input', {
-            content: 'My tooltip!',
-        }); --}}
-
-        {{-- End Global tooltip --}}
-
-        {{-- End Tooltip --}}
-
-        {{-- Start Save Draft --}}
-        {{-- $('#appraisalform').submit(function(e){
-            e.preventDefault();
-            console.log('hi');
-
-            $(this).action('')
-        }); --}}
 
         $('.submitbtns').click(function(e){
             Swal.fire({
@@ -347,75 +435,25 @@
                             pdfFrame1.print();
         });
         {{-- End Print Arera --}}
+
+
+
+
+        {{-- Start Target Each Assessee  --}}
+
+        {{-- End Target Each Assessee --}}
     });
 
 
+    $('#current_assessees').change(function(){
+        let val = this.value;
+        console.log(val);
 
-    {{-- Start Pages --}}
-    let currentPage = 0;
-    const pages = document.querySelectorAll('.printableArea.page');
-    const totalPages = pages.length;
+          $('.assessee_criterias').css('display', 'none');
 
-    const prevBtn = document.getElementById('prevPage');
-    const nextBtn = document.getElementById('nextPage');
-    const pageNumbersContainer = document.getElementById('pageNumbers');
-
-    // Create page number buttons like Laravel pagination
-    for (let i = 0; i < totalPages; i++) {
-        const li = document.createElement('li');
-        li.classList.add('page-item');
-
-        const a = document.createElement('a');
-        a.classList.add('page-link');
-        a.classList.add('rounded-0');
-        a.href = "#";
-        a.textContent = i + 1;
-        a.setAttribute('data-page', i);
-
-        a.addEventListener('click', function (e) {
-            e.preventDefault();
-            currentPage = i;
-            updatePagination();
-        });
-
-        li.appendChild(a);
-        pageNumbersContainer.appendChild(li);
-    }
-
-    const pageButtons = pageNumbersContainer.querySelectorAll('.page-item');
-
-    function updatePagination() {
-        pages.forEach((page, index) => {
-            page.style.display = index === currentPage ? 'block' : 'none';
-        });
-
-        // Toggle prev/next
-        prevBtn.classList.toggle('disabled', currentPage === 0);
-        nextBtn.classList.toggle('disabled', currentPage === totalPages - 1);
-
-        // Highlight active page
-        pageButtons.forEach((li, index) => {
-            li.classList.toggle('active', index === currentPage);
-        });
-    }
-
-    prevBtn.querySelector('a').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (currentPage > 0) {
-            currentPage--;
-            updatePagination();
-        }
+        $(`#assessee_${val}_criterias`).css('display', 'block');
     });
+    $('#current_assessees').trigger('change')
 
-    nextBtn.querySelector('a').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (currentPage < totalPages - 1) {
-            currentPage++;
-            updatePagination();
-        }
-    });
-
-    updatePagination();
-    {{-- End Pages --}}
 </script>
 @stop

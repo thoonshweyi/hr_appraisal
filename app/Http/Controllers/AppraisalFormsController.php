@@ -279,6 +279,7 @@ class AppraisalFormsController extends Controller
     public function update(Request $request,$id){
 
         // dd('submitted');
+        // dd($request);
 
         $this->validate($request, [
             "appraisalformresults" => "required|array",
