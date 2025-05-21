@@ -60,7 +60,8 @@ Route::get('/user_login/{employee_id}/{password}', [LoginController::class, 'use
 
 Auth::routes();
 
-Route::group(['middleware' => ['auth','otp']], function () {
+Route::group(['middleware' => ['auth']], function () {
+// Route::group(['middleware' => ['auth','otp']], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/make_as_read/{notification_id}/{document_id}', [HomeController::class, 'make_as_read'])->name('home.make_as_read');
     Route::get('/see_document/{document_id}/{type}/{notification_id}', [HomeController::class, 'see_document'])->name('home.see_document');

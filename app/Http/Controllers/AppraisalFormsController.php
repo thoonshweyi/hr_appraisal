@@ -265,8 +265,15 @@ class AppraisalFormsController extends Controller
         $total_below_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('below_standard');
         $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
 
-
-        return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+        $roles = Auth::user()->roles->pluck('name');
+        $adminauthorize = $roles->contains('Admin') || $roles->contains('HR Authorized');
+        // dd($adminauthorize);
+        if($adminauthorize){
+            return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+        }else{
+            return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+            // return view("appraisalforms.editmobile",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+        }
 
     }
     public function update(Request $request,$id){
