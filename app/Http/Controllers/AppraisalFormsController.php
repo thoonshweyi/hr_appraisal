@@ -271,8 +271,8 @@ class AppraisalFormsController extends Controller
         if($adminauthorize){
             return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
         }else{
-            return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
-            // return view("appraisalforms.editmobile",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+            // return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+            return view("appraisalforms.editmobile",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
         }
 
     }

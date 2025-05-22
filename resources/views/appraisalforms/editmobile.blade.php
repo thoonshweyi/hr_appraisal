@@ -1,6 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+<a href="#" class="fab expanded text-white" id="mainFab">
+    <div class="fab-content">
+        <span class="fab-icon">
+            <i class="fas fa-arrow-circle-right"></i>
+            {{-- <img src="{{ asset('./images/expand-up-down-line.svg') }}" alt=""> --}}
+        </span>
+        <span class="fab-text" id="fabAssesseeName">Assessee</span>
+    </div>
+</a>
 <div class="content-page">
 
     <div class="container-fluid">
@@ -65,7 +74,7 @@
            </div>
 
            <div class="col-md-12 mb-2">
-                <div class="form-header mb-2">
+                <div class="form-header mb-2" style="position: sticky;">
                         {{-- <h4 class="text-center">PRO1 Global Company Co.,Ltd</h4> --}}
                         <h5 class="">{{ $appraisalform->assformcat->name }}</h5>
                     <div class="row">
@@ -96,6 +105,7 @@
                         </div>
                     </div>
                 </div>
+                                        {{-- {{ dd(old('appraisalformresults')) }} --}}
 
                     <form id="appraisalformf" action="" method="POST">
                         @csrf
@@ -109,36 +119,56 @@
                                 <div class="section-title">{{ $criteria->name }}</div>
                                 <div class="score-radio d-flex flex-wrap">
                                     <div class="form-check me-2">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1" value="{{ $criteria->excellent }}" {{ $checked = ($appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->excellent) ? 'checked' : '' }}/>
-                                        @if (!$checked)
-                                            <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
-                                        @endif
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1" value="{{ $criteria->excellent }}"
+                                          {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->excellent)
+                                                ? 'checked'
+                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->excellent ? 'checked' : '') }}
+                                        />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1">{{ $criteria->excellent }}</label>
                                     </div>
 
                                     <div class="form-check me-2">
-                                        <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2" value="{{ $criteria->good }}" {{ $appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->good ? 'checked' : '' }}/>
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2" value="{{ $criteria->good }}"
+                                          {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->good)
+                                                ? 'checked'
+                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->good ? 'checked' : '') }}
+                                        />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2">{{ $criteria->good }}</label>
                                     </div>
 
                                     <div class="form-check me-2">
-                                        <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3" value="{{ $criteria->meet_standard }}" {{ $appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->meet_standard ? 'checked' : '' }}/>
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3" value="{{ $criteria->meet_standard }}"
+                                            {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->meet_standard)
+                                                ? 'checked'
+                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->meet_standard ? 'checked' : '') }}
+                                        />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3">{{ $criteria->meet_standard }}</label>
                                     </div>
 
                                     <div class="form-check me-2">
-                                        <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4" value="{{ $criteria->below_standard }}" {{ $appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->below_standard ? 'checked' : '' }}/>
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4" value="{{ $criteria->below_standard }}"
+                                         {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->below_standard)
+                                                ? 'checked'
+                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->below_standard ? 'checked' : '') }}
+                                        />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4">{{ $criteria->below_standard }}</label>
                                     </div>
 
                                     <div class="form-check me-2">
-                                        <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5" value="{{ $criteria->weak }}" {{ $appraisalform->getResult($assesseeuser->id,$criteria->id) == $criteria->weak ? 'checked' : '' }}/>
+                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5" value="{{ $criteria->weak }}"
+                                        {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->weak)
+                                                ? 'checked'
+                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->weak ? 'checked' : '') }}
+                                        />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5">{{ $criteria->weak }}</label>
                                     </div>
+                                    <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
+                                    {{-- @php
+                                        $checked = in_array($appraisalform->getResult($assesseeuser->id,$criteria->id),[$criteria->excellent,$criteria->good,$criteria->meet_standard, $criteria->below_standard,$criteria->weak  ])
+                                    @endphp
+                                        @if (!$checked)
+                                        <input type="hidden" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]"  value="">
+                                    @endif --}}
                                 </div>
                             </div>
                         @endforeach
@@ -255,6 +285,76 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.05);
       margin-bottom: 1rem;
     }
+
+
+
+    .fab {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+
+            background-color: #007bff;
+            color: white;
+            width: 56px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease, width 0.3s ease, border-radius 0.3s ease, font-size 0.3s ease;
+            z-index: 900;
+            border: none;
+            overflow: hidden; /* Hide overflowing text when not expanded */
+        }
+
+        .fab:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Dynamic Assessee Indicator - integrated with FAB */
+        .fab.expanded {
+            width: auto; /* Allow width to expand */
+            padding: 0 10px; /* Add padding for text */
+            border-radius: 28px; /* Pill shape when expanded */
+            font-size: 1em; /* Smaller font for text */
+            justify-content: flex-start; /* Align text to start */
+            padding-right: 15px; /* Adjust padding */
+        }
+
+        .fab-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .fab-icon {
+            flex-shrink: 0;
+            font-size: 2em; /* Ensure icon stays large */
+            margin-right: 0;
+            transition: margin-right 0.3s ease;
+        }
+
+        .fab.expanded .fab-icon {
+            margin-right: 10px; /* Add space when expanded */
+            font-size: 1.2em; /* Shrink icon slightly when text is present */
+        }
+
+        .fab-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            opacity: 0; /* Start hidden */
+            transition: opacity 0.2s ease;
+            flex-grow: 1;
+        }
+
+        .fab.expanded .fab-text {
+            opacity: 1; /* Fade in text when expanded */
+        }
 </style>
 @endsection
 
@@ -429,11 +529,10 @@
         {{-- End Save Draft --}}
 
         {{-- Start Print Area --}}
-        document.querySelector('.cus_btn').addEventListener('click', function () {
+        {{-- document.querySelector('.cus_btn').addEventListener('click', function () {
             var pdfFrame1 = window.frames["reprint_frame"];
-                            {{-- pdfFrame1.focus(); --}}
                             pdfFrame1.print();
-        });
+        }); --}}
         {{-- End Print Arera --}}
 
 
@@ -441,19 +540,29 @@
 
         {{-- Start Target Each Assessee  --}}
 
+        $('#current_assessees').change(function(){
+            let val = this.value;
+            console.log(val);
+
+            $('.assessee_criterias').css('display', 'none');
+
+            $(`#assessee_${val}_criterias`).css('display', 'block');
+
+            $('#fabAssesseeName').text($(this).find("option:selected").text());
+        });
+        $('#current_assessees').trigger('change')
+
+        $('.form-check-input').change(function(){
+               if ($(this).is(':checked')) {
+                    var name = $(this).attr('name');
+                    $('input[type="hidden"][name="' + name + '"]').remove();
+                }
+        });
+        $('.form-check-input').trigger('change')
+
         {{-- End Target Each Assessee --}}
     });
 
-
-    $('#current_assessees').change(function(){
-        let val = this.value;
-        console.log(val);
-
-          $('.assessee_criterias').css('display', 'none');
-
-        $(`#assessee_${val}_criterias`).css('display', 'block');
-    });
-    $('#current_assessees').trigger('change')
 
 </script>
 @stop

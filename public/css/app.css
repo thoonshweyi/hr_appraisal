@@ -1,3 +1,7 @@
+body{
+    transition: all 2s linear !important;
+}
+
 .document_search{
     width: 150px;
     height: 50px;
