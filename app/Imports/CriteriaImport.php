@@ -17,9 +17,24 @@ use App\Exceptions\ExcelImportValidationException;
 class CriteriaImport implements ToModel,WithHeadingRow, OnEachRow{
     protected $rowNumber = 1;  // Initialize row number
     protected $ass_form_cat_id;
+    protected $max_totals = [];
 
-    function __construct($ass_form_cat_id) {
+    protected  $total_excellent = 0;
+    protected $total_good = 0;
+    protected $total_meet_standard = 0;
+    protected $total_below_standard = 0;
+    protected $total_weak = 0;
+    function __construct($ass_form_cat_id,$max_totals) {
         $this->ass_form_cat_id = $ass_form_cat_id;
+        $this->max_totals = $max_totals;
+
+        // need to add existing total
+        // $criterias = Criteria::where('ass_form_cat_id',$ass_form_cat_id);
+        // $this->total_excellent = $criterias->sum('excellent');
+        // $this->total_good = $criterias->sum('good');
+        // $this->total_meet_standard = $criterias->sum('meet_standard');
+        // $this->total_below_standard = $criterias->sum('below_standard');
+        // $this->total_weak = $criterias->sum('weak');
     }
 
 
@@ -28,11 +43,11 @@ class CriteriaImport implements ToModel,WithHeadingRow, OnEachRow{
         // Validate data
         $validator = Validator::make($row, [
             'name'      => 'required|string',
-            "excellent" => 'required',
-            "good" => 'required',
-            "meet_standard" => 'required',
-            "below_standard" => 'required',
-            "weak" => 'required',
+            "excellent" => 'required|numeric',
+            "good" => 'required|numeric',
+            "meet_standard" => 'required|numeric',
+            "below_standard" => 'required|numeric',
+            "weak" => 'required|numeric',
         ]);
 
         // If validation fails, throw an exception with the row number
@@ -43,6 +58,42 @@ class CriteriaImport implements ToModel,WithHeadingRow, OnEachRow{
             );
 
         }
+
+        // Start Max Validation
+        $this->total_excellent += (int) $row['excellent'];
+        $this->total_good += (int) $row['good'];
+        $this->total_meet_standard += (int) $row['meet_standard'];
+        $this->total_below_standard += (int) $row['below_standard'];
+        $this->total_weak += (int) $row['weak'];
+
+        $max_errors = [];
+        if($this->total_excellent > $this->max_totals['max_total_excellent']){
+            $max_errors[][] = "Total Excellent cannot exceed ".$this->max_totals['max_total_excellent'];
+        }
+
+        if($this->total_good > $this->max_totals['max_total_good']){
+            $max_errors[][] = "Total Good cannot exceed ".$this->max_totals['max_total_good'];
+        }
+
+        if($this->total_meet_standard > $this->max_totals['max_total_meet_standard']){
+            $max_errors[][] = "Total Meet Standard cannot exceed ".$this->max_totals['max_total_meet_standard'];
+        }
+
+        if($this->total_below_standard > $this->max_totals['max_total_below_standard']){
+            $max_errors[][] = "Total Below Standard cannot exceed ".$this->max_totals['max_total_below_standard'];
+        }
+
+        if($this->total_weak > $this->max_totals['max_total_weak']){
+            $max_errors[][] = "Total Weak cannot exceed ".$this->max_totals['max_total_weak'];
+        }
+        if(!empty($max_errors)){
+            throw new ExcelImportValidationException(
+                $max_errors,
+                $this->rowNumber
+            );
+        }
+
+        // End Max Validation
 
 
         $user = Auth::user();

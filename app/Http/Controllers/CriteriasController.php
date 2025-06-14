@@ -14,6 +14,12 @@ use App\Exceptions\ExcelImportValidationException;
 
 class CriteriasController extends Controller
 {
+    private $max_total_excellent = 100;
+    private $max_total_good = 84;
+    private $max_total_meet_standard = 67;
+    private $max_total_below_standard = 40;
+    private $max_total_weak = 19;
+    private $max_totals = [];
 
     function __construct()
     {
@@ -22,6 +28,14 @@ class CriteriasController extends Controller
         $this->middleware('permission:create-add-on', ['only' => ['create', 'store']]);
         $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete-add-on', ['only' => ['destroy']]);
+
+         $this->max_totals = [
+            "max_total_excellent" => $this->max_total_excellent,
+            "max_total_good" => $this->max_total_good,
+            "max_total_meet_standard" => $this->max_total_meet_standard,
+            "max_total_below_standard" => $this->max_total_below_standard,
+            "max_total_weak" => $this->max_total_weak,
+        ];
     }
     public function index(){
 
@@ -106,7 +120,7 @@ class CriteriasController extends Controller
         \DB::beginTransaction();
         try {
             $file = $request->file('file');
-            Excel::import(new CriteriaImport($ass_form_cat_id), $file);
+            Excel::import(new CriteriaImport($ass_form_cat_id,$this->max_totals), $file);
 
             \DB::commit();
             return redirect()->back()->with('success',"Criteria excel imported successfully");

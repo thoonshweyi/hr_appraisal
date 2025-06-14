@@ -112,6 +112,26 @@
                         </div>
 
 
+                        <div class="col-md-3">
+                            <label for="lang">Language</label>
+
+                            <div class="d-flex">
+                                <div class="form-check">
+                                    <input class="form-check-input lang d-none" type="radio" name="lang" id="langmm" value="mm" {{ $assformcat->lang == 'mm' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="langmm">
+                                        <span class="badge bg-light me-1" style="font-size: 12px !important;">Myanmar</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input lang d-none" type="radio" name="lang" id="langen" value="en" {{ $assformcat->lang == 'en' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="langen">
+                                        <span class="badge bg-light me-1" style="font-size: 12px !important;">English</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
 
 
                         <div class="col-lg-12 d-flex justify-content-end">

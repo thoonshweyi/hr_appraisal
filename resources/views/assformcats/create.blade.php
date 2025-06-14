@@ -9,7 +9,7 @@
             <div class="col-lg-12">
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
-                        <h4 class="mb-3">Assessment-form Category Create</h4>
+                        <h4 class="mb-3">Criteria Set Create</h4>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                             @error("name")
                                     <span class="text-danger">{{ $message }}<span>
                             @enderror
-                            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Asssessment-form Category Name" value="{{ old('name') }}"/>
+                            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Criteria Set Name" value="{{ old('name') }}"/>
                         </div>
 
 
@@ -59,6 +59,26 @@
                                     <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id') ? "selected" : "" }}>{{$attachformtype['name']}}</option>
                                 @endforeach
                             </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="lang">Language</label>
+
+                            <div class="d-flex">
+                                <div class="form-check">
+                                    <input class="form-check-input lang d-none" type="radio" name="lang" id="langmm" value="mm">
+                                    <label class="form-check-label" for="langmm">
+                                        <span class="badge bg-light me-1" style="font-size: 12px !important;">Myanmar</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input lang d-none" type="radio" name="lang" id="langen" value="en">
+                                    <label class="form-check-label" for="langen">
+                                        <span class="badge bg-light me-1" style="font-size: 12px !important;">English</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
 

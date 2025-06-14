@@ -876,3 +876,12 @@ height: auto !important;
     padding: 0px !important;
 }
 /* End User Form Table */
+
+/* Start Tag */
+
+input.lang:checked + label .badge {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+/* End Tag */

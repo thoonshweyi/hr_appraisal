@@ -102,6 +102,7 @@ class User extends Authenticatable
         ->whereHas('positionlevels',function($query) use($position_level_id){
             $query->where('position_levels.id',$position_level_id);
         })
+        ->where('status_id',1)
         ->get();
 
         return $assformcat;

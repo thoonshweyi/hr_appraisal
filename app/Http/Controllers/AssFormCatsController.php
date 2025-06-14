@@ -54,7 +54,7 @@ class AssFormCatsController extends Controller
             $results = $results->where('attach_form_type_id', $filter_attachformtype_id);
         }
 
-        $assformcats = $results->orderBy('id','asc')->paginate(10);
+        $assformcats = $results->orderBy('created_at','desc')->paginate(10);
 
         // dd($statuses);
         return view("assformcats.index",compact("assformcats","statuses","positionlevels","attachformtypes"));
@@ -90,8 +90,10 @@ class AssFormCatsController extends Controller
             "position_level_ids" => "required|array",
             "position_level_ids.*"=>"required|string",
             "attach_form_type_id" => "required",
+            "lang" => "required"
         ],[
             'position_level_ids.*.required' => 'Please enter position level values.',
+            'lang.required' => 'Please choose language',
         ]);
 
        $user = Auth::user();
@@ -102,6 +104,7 @@ class AssFormCatsController extends Controller
        $assformcat->status_id = $request["status_id"];
        $assformcat->user_id = $user_id;
        $assformcat->attach_form_type_id = $request["attach_form_type_id"];
+       $assformcat->lang = $request["lang"];
        $assformcat->save();
 
        $position_level_ids = $request->position_level_ids;
@@ -155,6 +158,7 @@ class AssFormCatsController extends Controller
             "position_level_ids" => "required|array",
             "position_level_ids.*" => "required|string",
             "attach_form_type_id" => "required",
+            "lang" => "required"
         ];
 
         $messages = [
@@ -165,6 +169,7 @@ class AssFormCatsController extends Controller
             'below_standards.*.required' => 'Please enter below standard values.',
             'weaks.*.required' => 'Please enter weak values.',
             'position_level_ids.*.required' => 'Please enter position level values.',
+            'lang.required' => 'Please choose language',
 
             'newnames.*.required' => 'Please enter new criteria name values.',
             'newexcellents.*.required' => 'Please enter new excellent values.',
@@ -215,6 +220,7 @@ class AssFormCatsController extends Controller
         $assformcat->status_id = $request["status_id"];
         $assformcat->user_id = $user_id;
         $assformcat->attach_form_type_id = $request["attach_form_type_id"];
+        $assformcat->lang = $request["lang"];
         $assformcat->save();
 
 

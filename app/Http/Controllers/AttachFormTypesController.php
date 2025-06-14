@@ -22,10 +22,19 @@ class AttachFormTypesController extends Controller
         $this->middleware('permission:edit-fixed-analysis', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete-fixed-analysis', ['only' => ['destroy']]);
     }
-    public function index(){
+    public function index(Request $request){
+        $filter_name = $request->filter_name;
 
-        $attachformtypes = AttachFormType::orderBy('id','asc')->paginate(10);
+        // $attachformtypes = AttachFormType::orderBy('id','asc')->paginate(10);
+        $results = AttachFormType::query();
+
+        if (!empty($filter_name)) {
+            $results = $results->where('name', 'like', '%'.$filter_name.'%');
+        }
+
+        $attachformtypes = $results->orderBy('id','asc')->paginate(10);
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
+
         // dd($statuses);
         return view("attachformtypes.index",compact("attachformtypes","statuses"));
     }

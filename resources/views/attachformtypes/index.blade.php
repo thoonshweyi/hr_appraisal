@@ -42,6 +42,27 @@
             </div>
 
 
+            <div class="col-lg-12 my-2 ">
+                <form class="d-inline" action="{{ route('attachformtypes.index') }}" method="GET">
+                    @csrf
+                    <div class="row align-items-end justify-content-start ">
+
+                        <div class="col-md-2">
+                            <label for="filter_name">Enployee Name <span class="text-danger">*</span></label>
+                            <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Form Type Name" value="{{ request()->filter_name }}"/>
+                        </div>
+
+                        <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</a>
+                        @if(count(request()->query()) > 0)
+                            <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
+                        @endif
+
+                    </div>
+
+                </form>
+            </div>
+
+
 
             <div class="col-md-12 mb-2">
                 @if (count($errors) > 0)
