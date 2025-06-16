@@ -51,6 +51,7 @@ class EmployeesController extends Controller
         $filter_employee_code = $request->filter_employee_code;
         $filter_branch_id = $request->filter_branch_id;
         $filter_position_level_id = $request->filter_position_level_id;
+        $filter_subdepartment_id = $request->filter_subdepartment_id;
 
         $results = Employee::query();
 
@@ -66,6 +67,7 @@ class EmployeesController extends Controller
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
         $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
 
+        $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
 
 
 
@@ -90,9 +92,12 @@ class EmployeesController extends Controller
         }
 
 
+        if (!empty($filter_subdepartment_id)) {
+            $results = $results->where('sub_department_id', $filter_subdepartment_id);
+        }
         $employees = $results->orderBy('id','asc')->paginate(10);
 
-        return view("employees.index",compact("employees","statuses","divisions","departments","subdepartments","sections","positions","branches","positionlevels","attachformtypes"));
+        return view("employees.index",compact("employees","statuses","divisions","departments","subdepartments","sections","positions","branches","positionlevels","attachformtypes","subdepartments"));
     }
 
     public function create(Request $request){

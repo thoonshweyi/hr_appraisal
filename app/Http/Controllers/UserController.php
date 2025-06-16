@@ -280,6 +280,7 @@ class UserController extends Controller
         $filter_ass_form_cat_id = $request->filter_ass_form_cat_id;
         $filter_branch_id = $request->filter_branch_id;
         $filter_department_id =  $request->filter_department_id;
+        $filter_subdepartment_id =  $request->filter_subdepartment_id;
 
 
         $assessor_user_id = $request->assessor_user_id;
@@ -293,9 +294,17 @@ class UserController extends Controller
             $attach_form_type_id = $assformcat->attach_form_type_id;
             $position_level_ids = $assformcat->positionlevels->pluck('id');
             // dd($position_level_ids);
+            $location_id = $assformcat->location_id;
+
 
             $employee_codes = Employee::where('attach_form_type_id',$attach_form_type_id)
                                 ->whereIn('position_level_id',$position_level_ids)
+                                ->when($location_id == '7', function ($query) {
+                                    $query->where('branch_id','7');
+                                })
+                                ->when($location_id != '7', function ($query) {
+                                    $query->where('branch_id',"!=",'7');
+                                })
                                 ->pluck('employee_code');
 
             $results = $results->whereIn('employee_id', $employee_codes);
@@ -311,6 +320,13 @@ class UserController extends Controller
         if (!empty($filter_department_id)) {
 
             $employee_codes = Employee::where('department_id',$filter_department_id)
+                                ->pluck('employee_code');
+            $results = $results->whereIn('employee_id', $employee_codes);
+        }
+
+        if (!empty($filter_subdepartment_id)) {
+
+            $employee_codes = Employee::where('sub_department_id',$filter_subdepartment_id)
                                 ->pluck('employee_code');
             $results = $results->whereIn('employee_id', $employee_codes);
         }
@@ -333,7 +349,7 @@ class UserController extends Controller
 
 
         $users = $results->orderBy('id','asc')
-        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel","employee.subdepartment"])
         ->get();
 
         // dd($users[0]->getAssFormCat());
@@ -342,9 +358,18 @@ class UserController extends Controller
         foreach($users as $user){
             $assformcats = $user->getAssFormCats();
             foreach($assformcats as $assformcat){
-                $userCopy = clone $user; // Clone user to avoid reference issues
-                $userCopy['assformcat'] = $assformcat;
-                $dulusers[] = $userCopy;
+                if (!empty($filter_ass_form_cat_id)) {
+                    if($assformcat->id == $filter_ass_form_cat_id){
+                        $userCopy = clone $user; // Clone user to avoid reference issues
+                        $userCopy['assformcat'] = $assformcat;
+                        $dulusers[] = $userCopy;
+                    }
+
+                }else{
+                    $userCopy = clone $user; // Clone user to avoid reference issues
+                    $userCopy['assformcat'] = $assformcat;
+                    $dulusers[] = $userCopy;
+                }
             }
 
         }

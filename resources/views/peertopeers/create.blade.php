@@ -102,7 +102,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
+                                {{-- <div class="col-md-4">
                                     <div class="form-group d-flex" style="white-space: nowrap">
 
                                         <label for="filter_department_id">Departments: </label>
@@ -113,8 +113,20 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
 
+
+                                <div class="col-md-4">
+                                    <div class="form-group d-flex" style="white-space: nowrap">
+                                           <label for="filter_subdepartment_id">Sub Department: </label>
+                                            <select name="filter_subdepartment_id" id="filter_subdepartment_id" class="form-control form-control-sm rounded-0 ml-2">
+                                            <option value="" selected disabled>Choose Sub Department</option>
+                                            @foreach($subdepartments as $subdepartment)
+                                                        <option value="{{$subdepartment['id']}}" {{ $subdepartment['id'] == request()->filter_subdepartment_id ? 'selected' : '' }}>{{$subdepartment['name']}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
 
                                 <div class="col-md-3 d-flex justify-content-end">
                                     <button class="btn rounded-0 flex-fill mr-2 apply_btn" >
@@ -139,7 +151,8 @@
                                                    <th><input type="checkbox" id="selectAll"></th>
                                                    <th>Assessee Code</th>
                                                    <th>Assessee</th>
-                                                   <th>Department</th>
+                                                   {{-- <th>Department</th> --}}
+                                                   <th>Sub Department</th>
                                                    <th>Branch</th>
                                                    <th>Position Level</th>
                                                    <th>Position</th>
@@ -230,7 +243,7 @@
             searchField: ["value", "label"]
         });
 
-        $("#filter_department_id").selectize({
+        $("#filter_subdepartment_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
@@ -314,7 +327,8 @@
                     </td>
                     <td>${assesseeuser.employee.employee_code}</td>
                     <td>${assesseeuser.employee.employee_name}</td>
-                    <td>${assesseeuser.employee.department.name}</td>
+                    {{-- <td>${assesseeuser.employee.department.name}</td> --}}
+                    <td>${assesseeuser.employee.subdepartment.name}</td>
                     <td>${assesseeuser.employee.branch.branch_name}</td>
                     <td>${assesseeuser.employee.positionlevel.name}</td>
                     <td>${assesseeuser.employee.position.name}</td>

@@ -75,6 +75,15 @@
                             </select>
                         </div>
 
+                        <div class="col-md-2">
+                            <label for="filter_subdepartment_id">Sub Department</label>
+                            <select name="filter_subdepartment_id" id="filter_subdepartment_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Sub Department</option>
+                                @foreach($subdepartments as $subdepartment)
+                                            <option value="{{$subdepartment['id']}}" {{ $subdepartment['id'] == request()->filter_subdepartment_id ? 'selected' : '' }}>{{$subdepartment['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</a>
                         @if(count(request()->query()) > 0)
