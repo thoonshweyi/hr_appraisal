@@ -90,10 +90,12 @@ class AssFormCatsController extends Controller
             "position_level_ids" => "required|array",
             "position_level_ids.*"=>"required|string",
             "attach_form_type_id" => "required",
-            "lang" => "required"
+            "lang" => "required",
+            "location_id" => "required",
         ],[
             'position_level_ids.*.required' => 'Please enter position level values.',
             'lang.required' => 'Please choose language',
+            "location_id.required" => "Please choose location",
         ]);
 
        $user = Auth::user();
@@ -105,6 +107,7 @@ class AssFormCatsController extends Controller
        $assformcat->user_id = $user_id;
        $assformcat->attach_form_type_id = $request["attach_form_type_id"];
        $assformcat->lang = $request["lang"];
+       $assformcat->location_id = $request["location_id"];
        $assformcat->save();
 
        $position_level_ids = $request->position_level_ids;
@@ -120,7 +123,7 @@ class AssFormCatsController extends Controller
         }
 
 
-       return redirect(route("assformcats.index"))->with('success',"AssFormCat created successfully");
+       return redirect(route("assformcats.index"))->with('success',"Criteria Set created successfully");
     }
 
 
@@ -158,7 +161,8 @@ class AssFormCatsController extends Controller
             "position_level_ids" => "required|array",
             "position_level_ids.*" => "required|string",
             "attach_form_type_id" => "required",
-            "lang" => "required"
+            "lang" => "required",
+            "location_id" => "required",
         ];
 
         $messages = [
@@ -170,6 +174,8 @@ class AssFormCatsController extends Controller
             'weaks.*.required' => 'Please enter weak values.',
             'position_level_ids.*.required' => 'Please enter position level values.',
             'lang.required' => 'Please choose language',
+            "location_id.required" => "Please choose location",
+
 
             'newnames.*.required' => 'Please enter new criteria name values.',
             'newexcellents.*.required' => 'Please enter new excellent values.',
@@ -221,6 +227,7 @@ class AssFormCatsController extends Controller
         $assformcat->user_id = $user_id;
         $assformcat->attach_form_type_id = $request["attach_form_type_id"];
         $assformcat->lang = $request["lang"];
+        $assformcat->location_id = $request["location_id"];
         $assformcat->save();
 
 
@@ -288,7 +295,7 @@ class AssFormCatsController extends Controller
         $position_level_ids = $request->position_level_ids;
         $assformcat->positionlevels()->sync($position_level_ids);
 
-        return redirect(route("assformcats.index"))->with('success',"AssFormCat updated successfully");
+        return redirect(route("assformcats.index"))->with('success',"Criteria Set updated successfully");
     }
 
     public function destroy(string $id)
@@ -300,7 +307,7 @@ class AssFormCatsController extends Controller
         $assformcat->criterias()->delete();
         $assformcat->positionlevels()->detach();
 
-        return redirect()->back()->with('success',"AssFormCat deleted successfully");
+        return redirect()->back()->with('success',"Criteria Set deleted successfully");
     }
 
     public function changestatus(Request $request){

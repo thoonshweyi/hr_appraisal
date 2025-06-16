@@ -78,29 +78,6 @@
                             <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Asssessment-form Category Name" value="{{ old('assformcat_name',$assformcat->name) }}"/>
                         </div>
 
-
-
-                        <div class="col-md-3">
-                            <label for="status_id">Status</label>
-                            <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
-                                @foreach($statuses as $status)
-                                    <option value="{{$status['id']}}" {{ $status['id'] == old('status_id',$assformcat->status_id) ? "selected" : "" }}>{{$status['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <label for="position_level_ids">Position Level</label>
-                            <select name="position_level_ids[]" id="position_level_ids" class="form-control form-control-sm rounded-0" multiple>
-                                <option value="" selected disabled>Choose Position Level</option>
-
-                                @foreach($positionlevels as $positionlevel)
-                                    <option value="{{$positionlevel['id']}}"  {{ in_array($positionlevel->id,$assformcat->positionlevels->pluck('id')->toArray()) ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
                         <div class="col-md-3">
                             <label for="attach_form_type_id">Attach Form Type</label>
                             <select name="attach_form_type_id" id="attach_form_type_id" class="form-control form-control-sm rounded-0">
@@ -108,6 +85,19 @@
                                 @foreach($attachformtypes as $attachformtype)
                                     <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id',$assformcat->attach_form_type_id) ? "selected" : "" }}>{{$attachformtype['name']}}</option>
                                 @endforeach
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <label for="location_id">Location</label>
+                            <select name="location_id" id="location_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Location</option>
+                                <option value="7" {{ old('location_id',$assformcat->location_id) == '7' ? 'selected' : '' }}>HO</option>
+                                <option value="0" {{ old('location_id',$assformcat->location_id) == '0' ? 'selected' : '' }}>Branch</option>
+                                {{-- @foreach($attachformtypes as $attachformtype)
+                                    <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id') ? "selected" : "" }}>{{$attachformtype['name']}}</option>
+                                @endforeach --}}
                             </select>
                         </div>
 
@@ -131,6 +121,34 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <div class="col-md-3">
+                            <label for="position_level_ids">Position Level</label>
+                            <select name="position_level_ids[]" id="position_level_ids" class="form-control form-control-sm rounded-0" multiple>
+                                <option value="" selected disabled>Choose Position Level</option>
+
+                                @foreach($positionlevels as $positionlevel)
+                                    <option value="{{$positionlevel['id']}}"  {{ in_array($positionlevel->id,$assformcat->positionlevels->pluck('id')->toArray()) ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
+
+                        <div class="col-md-3">
+                            <label for="status_id">Status</label>
+                            <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
+                                @foreach($statuses as $status)
+                                    <option value="{{$status['id']}}" {{ $status['id'] == old('status_id',$assformcat->status_id) ? "selected" : "" }}>{{$status['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
+
+
+
 
 
 
@@ -313,7 +331,16 @@
             searchField: ["value", "label"]
         });
 
-
+        $("#location_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Status',
+            searchField: ["value", "label"]
+        });
 
        {{-- Start Update Btn --}}
 
