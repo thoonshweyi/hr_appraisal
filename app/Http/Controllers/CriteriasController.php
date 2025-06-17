@@ -7,6 +7,7 @@ use App\Models\Criteria;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\CriteriaImport;
+use App\Imports\CriteriasAllImport;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exceptions\ExcelImportValidationException;
@@ -140,4 +141,45 @@ class CriteriasController extends Controller
 
    }
 
+
+   public function all_excel_import(Request $request)
+   {
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx|max:2048',
+        ]);
+
+
+          // Multi Images Upload
+        //   if($request->hasFile('file')){
+        //     // dd('hay');
+        //     // foreach($request->file("file") as $image){
+        //     //     Excel::import(new CriteriaImport, $request->file('file'));
+        //     // }
+        //     Excel::import(new CriteriaImport, $request->file('file'));
+
+        // }
+        // $ass_form_cat_id = $request->ass_form_cat_id;
+
+        \DB::beginTransaction();
+        try {
+            $file = $request->file('file');
+            Excel::import(new CriteriasAllImport($this->max_totals), $file);
+
+            \DB::commit();
+            return redirect()->back()->with('success',"Criteria excel imported successfully");
+
+        }catch (ExcelImportValidationException $e) {
+            // If validation fails, show the error message to the user
+            \DB::rollback();
+            return back()->with('validation_errors', $e->getMessage());
+        } catch (\Exception $e) {
+            \DB::rollback();
+            // Handle the exception and notify the user
+            return redirect()->back()->with('error', "System Error:".$e->getMessage());
+        }
+
+
+
+
+   }
 }

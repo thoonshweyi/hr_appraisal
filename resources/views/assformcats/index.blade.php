@@ -8,16 +8,29 @@
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
                         <h4 class="mb-3">Criteria Set</h4>
-
                         <a href="{{ route('assformcats.create') }}" class="btn btn-primary">Create</a>
-
-
-
                     </div>
                 </div>
+            </div>
+
+            <div class="col-lg-12">
+                <form id="empimportform" class="d-inline" action="{{ route('criterias.all_excel_import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row align-items-end">
+
+                        <div class="col-md-4">
+                            @error("file")
+                            <b class="text-danger">{{ $message }}</b>
+                            @enderror
+                            <label for="file" class="gallery @error('file') is-invalid @enderror mb-0"><span>Choose Excel File</span></label>
+                            <input type="file" name="file" id="file" class="form-control form-control-sm rounded-0" value="" hidden/>
+                        </div>
 
 
+                        <button type="submit" class="btn btn-light" class=""><i class="ri-file-download-line"></i> Import</a>
+                    </div>
 
+                </form>
             </div>
 
 

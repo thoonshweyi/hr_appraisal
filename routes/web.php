@@ -205,6 +205,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete("/criterias/{id}",[CriteriasController::class,"destroy"])->name("criterias.destroy");
     Route::post("/criteriasstatus",[CriteriasController::class,"changestatus"])->name("criterias.changestatus");
     Route::post("/criterias_excel_import",[CriteriasController::class,"excel_import"])->name("criterias.excel_import");
+    Route::post("/criterias_all_excel_import",[CriteriasController::class,"all_excel_import"])->name("criterias.all_excel_import");
 
 
     Route::get("/appraisalcycles",[AppraisalCyclesController::class,"index"])->name("appraisalcycles.index");
