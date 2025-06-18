@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\CriteriaImport;
 use App\Imports\CriteriasAllImport;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exceptions\ExcelImportValidationException;
@@ -171,9 +172,11 @@ class CriteriasController extends Controller
         }catch (ExcelImportValidationException $e) {
             // If validation fails, show the error message to the user
             \DB::rollback();
+            Log::info($e);
             return back()->with('validation_errors', $e->getMessage());
         } catch (\Exception $e) {
             \DB::rollback();
+            Log::info($e);
             // Handle the exception and notify the user
             return redirect()->back()->with('error', "System Error:".$e->getMessage());
         }

@@ -54,7 +54,7 @@ class AssFormCatsController extends Controller
             $results = $results->where('attach_form_type_id', $filter_attachformtype_id);
         }
 
-        $assformcats = $results->orderBy('created_at','desc')->paginate(10);
+        $assformcats = $results->orderBy('id','desc')->paginate(10);
 
         // dd($statuses);
         return view("assformcats.index",compact("assformcats","statuses","positionlevels","attachformtypes"));

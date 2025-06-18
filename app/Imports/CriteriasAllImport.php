@@ -137,8 +137,16 @@ class CriteriasAllImport implements ToModel,WithHeadingRow, OnEachRow{
             "user_id" => $user_id,
         ]);
 
-
-        $ranks_arr = explode(',', $row['ranks']);
+        $ranksstr = $row['ranks'];
+        if (str_contains($ranksstr, 'Above') || str_contains($ranksstr, 'above')) {
+            // dd('hay');
+            $aboverank = substr($ranksstr, 0, 1);
+            $ranks_arr = PositionLevel::where("id",">=",$aboverank)->pluck("id")->toArray();
+        }elseif(str_contains($ranksstr, 'All') || str_contains($ranksstr, 'all')){
+            $ranks_arr = PositionLevel::all()->pluck("id")->toArray();
+        }else{
+            $ranks_arr = explode(',', $ranksstr);
+        }
         foreach($ranks_arr as $idx=>$rank){
             $rankable = Rankable::firstOrCreate([
                 "position_level_id"=> $rank,
@@ -152,13 +160,15 @@ class CriteriasAllImport implements ToModel,WithHeadingRow, OnEachRow{
             // "ass_form_cat_id" => AssFormCat::where('name',$row['division'])->first()->id,
             "ass_form_cat_id" => $assformcat->id,
             'status_id' => 1, // Default status_id (change as needed)
-            'user_id'   => $user_id,
+            // 'user_id'   => $user_id,
 
             "excellent" => $row['excellent'],
             "good" => $row['good'],
             "meet_standard" => $row['meet_standard'],
             "below_standard" => $row['below_standard'],
             "weak" => $row['weak'],
+        ],[
+            'user_id'   => $user_id,
         ]);
     }
 
