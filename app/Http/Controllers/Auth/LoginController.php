@@ -62,7 +62,7 @@ class LoginController extends Controller
         $pattern_3 = '/^\d{3}(-\d{6})?$/';
         $case_3 = preg_match($pattern_3, $login_value);
         if ($case_3 === 1) {
-            $user = User::where(['employee_id'=> $login_value])->first();
+            $user = User::where(['employee_id'=> $login_value])->whereNull("email")->first();
         } else if ($case_2 === 1) {
             $user = User::where(['email'=> $login_value])->first();
         } else if ($case_1 === 1) {
