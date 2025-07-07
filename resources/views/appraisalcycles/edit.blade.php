@@ -272,9 +272,9 @@
 
                                             <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
 
-                                            @if($appraisalcycle->isBeforeActionStart())
+                                            {{-- @if($appraisalcycle->isBeforeActionStart()) --}}
                                             <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
-                                            @endif
+                                            {{-- @endif --}}
                                         </div>
                                     </div>
                                 </form>
@@ -322,9 +322,9 @@
                                         <form id="peer_to_peer_form" action="{{ route('peertopeers.create') }}" method="" class="my-2">
                                             <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
                                             <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>
-                                            @if($appraisalcycle->isBeforeActionStart())
+                                            {{-- @if($appraisalcycle->isBeforeActionStart()) --}}
                                                 <button type="submit" class="btn new_btn mr-2">New</button>
-                                            @endif
+                                            {{-- @endif --}}
                                         </form>
                                             {{-- <input type="hidden" id="empuser_ids" name="empuser_ids[]" value={{ $appraisalcycle->id }}> --}}
                                             <button type="button" class="btn compare_btn">Compare</button>

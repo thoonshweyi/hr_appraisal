@@ -8,9 +8,9 @@
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
                         <h4 class="mb-3">Rating Scales</h4>
-
+                        @can('create-fixed-analysis')
                         <a href="#createmodal" class="btn btn-primary" data-toggle="modal">Create</a>
-
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -30,17 +30,17 @@
                 @if ($message = Session::get('error'))
                 <div class="alert alert-danger alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @endif
                 @if ($message = Session::get('success'))
                 <div class="alert alert-success alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
-                            </button>
+                    </button>
                 </div>
                 @endif
            </div>
@@ -89,8 +89,13 @@
                         <td>{{ $ratingscale->created_at->format('d M Y') }}</td>
                         <td>{{ $ratingscale->updated_at->format('d M Y') }}</td>
                         <td class="text-center">
-                             <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$ratingscale->id}}" data-name="{{$ratingscale->name}}" data-status="{{$ratingscale->status_id}}"><i class="fas fa-pen"></i></a>
-                             <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
+                            @can('edit-fixed-analysis')
+                            <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$ratingscale->id}}" data-name="{{$ratingscale->name}}" data-status="{{$ratingscale->status_id}}"><i class="fas fa-pen"></i></a>
+                            @endcan
+
+                            @can('delete-fixed-analysis')
+                            <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
+                            @endcan
                         </td>
                         <form id="formdelete-{{ $idx }}" class="" action="{{route('ratingscales.destroy',$ratingscale->id)}}" method="POST">
                              @csrf

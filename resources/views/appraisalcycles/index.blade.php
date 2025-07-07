@@ -8,11 +8,9 @@
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
                         <h4 class="mb-3">Appraisal Cycles</h4>
-
+                        @can('create-add-on')
                         <a href="{{ route('appraisalcycles.create') }}" class="btn btn-primary" >Create</a>
-
-
-
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -85,17 +83,17 @@
                 @if ($message = Session::get('error'))
                 <div class="alert alert-danger alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @endif
                 @if ($message = Session::get('success'))
                 <div class="alert alert-success alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @endif
 
@@ -174,8 +172,12 @@
                         <td>{{ $appraisalcycle->created_at->format('d M Y') }}</td>
                         {{-- <td>{{ $appraisalcycle->updated_at->format('d M Y') }}</td> --}}
                         <td class="text-center">
-                             <a href="{{ route('appraisalcycles.edit',$appraisalcycle->id) }}" class="text-info mr-2"><i class="fas fa-pen"></i></a>
-                             <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
+                            @can('edit-add-on')
+                            <a href="{{ route('appraisalcycles.edit',$appraisalcycle->id) }}" class="text-info mr-2"><i class="fas fa-pen"></i></a>
+                            @endcan
+                            @can('delete-add-on')
+                            <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
+                            @endcan
                         </td>
                         <form id="formdelete-{{ $idx }}" class="" action="{{route('appraisalcycles.destroy',$appraisalcycle->id)}}" method="POST">
                              @csrf

@@ -8,11 +8,9 @@
                 <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
                     <div>
                         <h4 class="mb-3">Sub Departments</h4>
-
-                        {{-- <a href="#createmodal" class="btn btn-primary" data-toggle="modal">Create</a> --}}
-
-
-
+                        @can('create-fixed-analysis')
+                        <a href="#createmodal" class="btn btn-primary" data-toggle="modal">Create</a>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -81,17 +79,17 @@
                 @if ($message = Session::get('error'))
                 <div class="alert alert-danger alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @endif
                 @if ($message = Session::get('success'))
                 <div class="alert alert-success alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @endif
 
@@ -163,8 +161,12 @@
                         <td>{{ $subdepartment->created_at->format('d M Y') }}</td>
                         <td>{{ $subdepartment->updated_at->format('d M Y') }}</td>
                         <td class="text-center">
-                             <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$subdepartment->id}}" data-name="{{$subdepartment->name}}" data-code="{{$subdepartment->code}}" data-division="{{$subdepartment->division_id}}" data-department="{{$subdepartment->department_id}}" data-status="{{$subdepartment->status_id}}"><i class="fas fa-pen"></i></a>
-                             <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
+                            @can('edit-fixed-analysis')
+                                <a href="javascript:void(0);" class="text-info editform mr-2" data-toggle="modal" data-target="#editmodal" data-id="{{$subdepartment->id}}" data-name="{{$subdepartment->name}}" data-code="{{$subdepartment->code}}" data-division="{{$subdepartment->division_id}}" data-department="{{$subdepartment->department_id}}" data-status="{{$subdepartment->status_id}}"><i class="fas fa-pen"></i></a>
+                            @endcan
+                            @can('delete-fixed-analysis')
+                                <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
+                            @endcan
                         </td>
                         <form id="formdelete-{{ $idx }}" class="" action="{{route('subdepartments.destroy',$subdepartment->id)}}" method="POST">
                              @csrf
