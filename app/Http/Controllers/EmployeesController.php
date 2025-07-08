@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AgileDepartmentImport;
 use App\Exceptions\ExcelImportValidationException;
+use App\Imports\MultipleSheetImport;
 
 
 class EmployeesController extends Controller
@@ -283,7 +284,7 @@ class EmployeesController extends Controller
 
         try {
             $file = $request->file('file');
-            Excel::import(new EmployeeImport, $file);
+            Excel::import(new MultipleSheetImport, $file);
 
             \DB::commit();
             return redirect(route("employees.index"))->with('success',"Employee excel imported successfully");

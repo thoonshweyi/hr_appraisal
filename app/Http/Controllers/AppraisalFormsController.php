@@ -166,6 +166,7 @@ class AppraisalFormsController extends Controller
             "assessee_user_ids.*"=>"required|string",
         ],[
             'assessee_user_ids.*.required' => 'Please Assessee User Values.',
+            //  __('appraisalform.appraisalformresults')
         ]);
 
         \DB::beginTransaction();
@@ -286,7 +287,7 @@ class AppraisalFormsController extends Controller
             "appraisalformresults.*" => "required|array",
             "appraisalformresults.*.*" => "required", // Ensure all values inside each assessee are filled
         ], [
-            'appraisalformresults.*.*.required' => 'Please enter a rating value for each assessee.',
+            'appraisalformresults.*.*.required' => __('appraisalform.appraisalformresults'),
         ]);
 
         \DB::beginTransaction();
