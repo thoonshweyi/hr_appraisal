@@ -26,7 +26,7 @@
                         @if ($message = Session::get('error'))
                         <div class="alert alert-danger alert-dismissible fade show">
                             <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                            <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -34,7 +34,7 @@
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-dismissible fade show">
                             <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                            <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -92,7 +92,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group d-flex wrapped_assformcats" style="white-space: nowrap;">
 
-                                        <label for="ass_form_cat_id">Assessment Form Category</label>
+                                        <label for="ass_form_cat_id">Criteria Set</label>
                                         <select name="ass_form_cat_id" id="ass_form_cat_id" class="form-control form-control-sm rounded-0 ml-2" value="">
                                             <option value="" selected disabled>Choose Attach Form Type</option>
                                             @foreach($assformcats as $assformcat)
@@ -187,7 +187,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Assessment Form Category',
+            placeholder: 'Choose Criteria Set',
             searchField: ["value", "label"]
         });
 

@@ -165,9 +165,15 @@ class AppraisalFormsController extends Controller
             "assessee_user_ids" => "required|array",
             "assessee_user_ids.*"=>"required|string",
         ],[
-            'assessee_user_ids.*.required' => 'Please Assessee User Values.',
-            //  __('appraisalform.appraisalformresults')
+            "assessor_user_id.required" =>  __('appraisalcycle.assessor_user_id'),
+            "appraisal_cycle_id.required" =>  __('appraisalcycle.appraisal_cycle_id'),
+            "ass_form_cat_id.required" => __('appraisalcycle.ass_form_cat_id'),
+
+            "assessee_user_ids.required" => __('appraisalcycle.assessee_user_ids'),
+            'assessee_user_ids.*.required' => __('appraisalcycle.assessee_user_ids'),
         ]);
+
+
 
         \DB::beginTransaction();
         try {
@@ -180,15 +186,16 @@ class AppraisalFormsController extends Controller
 
             $user = Auth::user();
             $user_id = $user->id;
-            $appraisalform = AppraisalForm::create([
+            $appraisalform = AppraisalForm::updateOrcreate([
                 "assessor_user_id"=> $assessor_user_id,
                 "ass_form_cat_id"=> $ass_form_cat_id,
                 "appraisal_cycle_id"=> $appraisal_cycle_id,
+            ],[
                 "user_id"=> $user_id
             ]);
 
             foreach($assessee_user_ids as $assessee_user_id){
-                AppraisalFormAssesseeUser::create([
+                AppraisalFormAssesseeUser::firstOrcreate([
                     "appraisal_form_id" => $appraisalform->id,
                     "assessee_user_id" => $assessee_user_id
                 ]);

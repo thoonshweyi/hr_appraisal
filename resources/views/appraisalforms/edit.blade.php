@@ -225,8 +225,6 @@
                                                     @else
                                                         &nbsp;
                                                     @endif
-
-
                                                 </td>
                                             @endfor
                                         </tr>
@@ -296,9 +294,7 @@
 
 
 
-    <!-- start edit modal -->
-
-      <!-- end edit modal -->
+ 
 
 <!-- End MODAL AREA -->
 

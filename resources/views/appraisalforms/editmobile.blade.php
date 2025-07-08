@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<a href="#" class="fab expanded text-white" id="mainFab">
+<a href="#assesseemodal" class="fab expanded text-white" id="mainFab" data-toggle="modal">
     <div class="fab-content">
         <span class="fab-icon">
             <i class="fas fa-arrow-circle-right"></i>
@@ -10,6 +10,12 @@
         <span class="fab-text" id="fabAssesseeName">Assessee</span>
     </div>
 </a>
+
+
+
+
+
+
 <div class="content-page">
 
     <div class="container-fluid">
@@ -119,46 +125,53 @@
                                 <div class="section-title">{{ $criteria->name }}</div>
                                 <div class="score-radio d-flex flex-wrap">
                                     <div class="form-check me-2">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1" value="{{ $criteria->excellent }}"
-                                          {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->excellent)
+                                        <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1" value="{{ $criteria->excellent }}"
+                                            {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->excellent)
                                                 ? 'checked'
-                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->excellent ? 'checked' : '') }}
+                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->excellent ? 'checked' : '')
+                                            }}
+
+                                            data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1">{{ $criteria->excellent }}</label>
                                     </div>
 
                                     <div class="form-check me-2">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2" value="{{ $criteria->good }}"
+                                        <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2" value="{{ $criteria->good }}"
                                           {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->good)
                                                 ? 'checked'
                                                 : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->good ? 'checked' : '') }}
+                                            data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2">{{ $criteria->good }}</label>
                                     </div>
 
                                     <div class="form-check me-2">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3" value="{{ $criteria->meet_standard }}"
+                                        <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3" value="{{ $criteria->meet_standard }}"
                                             {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->meet_standard)
                                                 ? 'checked'
                                                 : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->meet_standard ? 'checked' : '') }}
+                                            data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3">{{ $criteria->meet_standard }}</label>
                                     </div>
 
                                     <div class="form-check me-2">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4" value="{{ $criteria->below_standard }}"
+                                        <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4" value="{{ $criteria->below_standard }}"
                                          {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->below_standard)
                                                 ? 'checked'
                                                 : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->below_standard ? 'checked' : '') }}
+                                            data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4">{{ $criteria->below_standard }}</label>
                                     </div>
 
                                     <div class="form-check me-2">
-                                        <input class="form-check-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5" value="{{ $criteria->weak }}"
+                                        <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5" value="{{ $criteria->weak }}"
                                         {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->weak)
                                                 ? 'checked'
                                                 : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->weak ? 'checked' : '') }}
+                                            data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5">{{ $criteria->weak }}</label>
                                     </div>
@@ -172,6 +185,10 @@
                                 </div>
                             </div>
                         @endforeach
+                            <div class="form-card">
+                                <span>Total Score: </span>
+                                <span id="total_results_{{ $assesseeuser->id }}"> {{ $appraisalform->getTotalResult($assesseeuser->id) != 0 ? $appraisalform->getTotalResult($assesseeuser->id) : '' }} </span>
+                            </div>
                         </div>
                     @endforeach
                     </form>
@@ -185,9 +202,10 @@
 
            </div>
 
+
             <div class="col-md-12 mt-2">
 
-                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">{{ __('button.back')}}</button>
+                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0 back-btn">{{ __('button.back')}}</button>
                 <input type="button" name="savedraft" class="btn btn-warning btn-sm rounded-0 savedraftbtns" value="{{ __('button.savedraft')}}" />
 
 
@@ -203,11 +221,31 @@
 
 <!-- START MODAL AREA -->
 
+   <!-- start edit modal -->
+    <div id="assesseemodal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h6 class="modal-title">Select an Assessee</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
+                    <div class="modal-body">
 
-    <!-- start edit modal -->
+                        {{-- <ul class="assessee-list">
+                            <li></li>
+                        </ul> --}}
+                    </div>
 
-      <!-- end edit modal -->
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!-- end edit modal -->
 
 <!-- End MODAL AREA -->
 
@@ -289,11 +327,10 @@
 
 
     .fab {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
+
 
             background-color: #007bff;
+            border: none;
             color: white;
             width: 56px;
             height: 40px;
@@ -305,8 +342,11 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.2s ease, width 0.3s ease, border-radius 0.3s ease, font-size 0.3s ease;
+
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
             z-index: 900;
-            border: none;
             overflow: hidden; /* Hide overflowing text when not expanded */
         }
 
@@ -355,6 +395,11 @@
         .fab.expanded .fab-text {
             opacity: 1; /* Fade in text when expanded */
         }
+
+
+    .assessee-list{
+        background: green;
+    }
 </style>
 @endsection
 
@@ -363,19 +408,19 @@
     $(document).ready(function() {
 
 
-        $('.custom-input').on('input', function () {
+        $('.custom-input').on('click', function () {
             const $input = $(this);
-            const allowed = $input.data('valids').toString().split(',').map(Number);
-            const value = parseInt($input.val());
+            {{-- const allowed = $input.data('valids').toString().split(',').map(Number);
+            const value = parseInt($input.val()); --}}
 
-            if ($input.val() !== '' && !allowed.includes(value)) {
+            {{-- if ($input.val() !== '' && !allowed.includes(value)) {
                 Swal.fire({
                     icon: "warning",
                     title: "သတ်မှတ်ထားသော အဆင့်သတ်မှတ်ချက်များနှင့် မကိုက်ညီပါ။",
                     text: allowed.join(', ') + " ထဲမှ တစ်ခုကို ရွေးပါ",
                 });
                 $input.val('');
-            }
+            } --}}
 
             updateTotals();
             autofocusNextInput($input);
@@ -390,9 +435,10 @@
             });
 
             // Sum up scores by assessee
-            document.querySelectorAll('.custom-input').forEach(input => {
+            document.querySelectorAll('.form-check-input.custom-input:checked').forEach(input => {
                 const assesseeId = input.dataset.assessee;
                 const val = parseFloat(input.value);
+                console.log(val);
 
                 if (!totals[assesseeId]) {
                     totals[assesseeId] = 0;
@@ -561,6 +607,29 @@
         $('.form-check-input').trigger('change')
 
         {{-- End Target Each Assessee --}}
+
+
+
+        {{-- Start Back Btn --}}
+        $(".back-btn").click(function(){
+            Swal.fire({
+                title: "Do you want to save your rating marks?",
+                text: "",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, save it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('.savedraftbtns').click();
+                }else{
+                    window.history.back();
+                }
+            });
+
+        })
+        {{-- End Back Btn --}}
     });
 
 

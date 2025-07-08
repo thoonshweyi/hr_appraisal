@@ -206,7 +206,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Division',
+            placeholder: 'Choose Assessor',
             searchField: ["value", "label"]
         });
 
@@ -217,7 +217,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Division',
+            placeholder: 'Choose Appraisal Cycle',
             searchField: ["value", "label"]
         });
 
@@ -250,7 +250,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Department',
+            placeholder: 'Choose Sub Department',
             searchField: ["value", "label"]
         });
 
@@ -320,7 +320,7 @@
                 html += `
                 <tr>
                     <td>
-                        <input type="checkbox" name="asssessee_user_ids[]" class="assesseeCheckbox"
+                        <input type="checkbox" name="assessee_user_ids[]" class="assesseeCheckbox"
                             value="${assesseeID}" ${isChecked} data-id="${assesseeID}">
                         <input type="hidden" name="ass_form_cat_ids[]" class="ass_form_cat_ids"
                         value="${assesseeuser.assformcat ? assesseeuser.assformcat.id : ''}" ${isDisabled} data-id="${assesseeID}">

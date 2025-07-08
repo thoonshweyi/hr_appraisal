@@ -84,14 +84,18 @@ class PeerToPeersController extends Controller
         $this->validate($request,[
              "assessor_user_id" => "required",
              "appraisal_cycle_id" => "required",
-             "asssessee_user_ids" => "required|array",
-             "asssessee_user_ids.*"=>"required|string",
+             "assessee_user_ids" => "required|array",
+             "assessee_user_ids.*"=>"required|string",
              "ass_form_cat_ids" => "required|array",
              "ass_form_cat_ids.*"=>"required|string",
 
         ],[
-            'asssessee_user_ids.required' => 'Please select assessee users.',
-            'ass_form_cat_ids.required' => "Assessee users has no Assessment Form Category",
+            "assessor_user_id.required" =>  __('appraisalcycle.assessor_user_id'),
+            "appraisal_cycle_id.required" =>  __('appraisalcycle.appraisal_cycle_id'),
+            "assessee_user_ids.required" => __('appraisalcycle.assessee_user_ids'),
+            'assessee_user_ids.*.required' => __('appraisalcycle.assessee_user_ids'),
+            'ass_form_cat_ids.required' => __('appraisalcycle.ass_form_cat_ids'),
+            "ass_form_cat_ids.*.required"=> __('appraisalcycle.ass_form_cat_ids'),
         ]);
 
 
@@ -99,7 +103,7 @@ class PeerToPeersController extends Controller
 
         try {
             $assessor_user_id = $request->assessor_user_id;
-            $asssessee_user_ids = $request->asssessee_user_ids;
+            $assessee_user_ids = $request->assessee_user_ids;
             $ass_form_cat_ids = $request->ass_form_cat_ids;
             $appraisal_cycle_id = $request->appraisal_cycle_id;
 
@@ -109,10 +113,12 @@ class PeerToPeersController extends Controller
             //     return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('error',"Peer to Peer can only be attached before action start.");
             // }
 
-            foreach($asssessee_user_ids as $idx=>$asssessee_user_id){
-                $peertopeer = PeerToPeer::create([
+            // Checking Existing peer to peer
+
+            foreach($assessee_user_ids as $idx=>$asssessee_user_id){
+                $peertopeer = PeerToPeer::firstOrCreate([
                     "assessor_user_id" => $assessor_user_id,
-                    "assessee_user_id" => $asssessee_user_ids[$idx],
+                    "assessee_user_id" => $assessee_user_ids[$idx],
                     "ass_form_cat_id" => $ass_form_cat_ids[$idx],
                     "appraisal_cycle_id" => $appraisal_cycle_id
                 ]);
@@ -229,5 +235,15 @@ class PeerToPeersController extends Controller
 
             $form->delete();
         }
+    }
+
+    public function getPeerToPeers($assessor_user_id,$assessee_user_ids,$ass_form_cat_id,$appraisal_cycle_id){
+        $peertopeers = PeerToPeer::where("assessor_user_id",$assessor_user_id)
+                        ->whereIn("asssessee_user_id",$asssessee_user_ids)
+                        ->where("ass_form_cat_id",$ass_form_cat_id)
+                        ->where("appraisal_cycle_id",$appraisal_cycle_id)
+                        ->get();
+
+        return $peertopeers;
     }
 }
