@@ -102,7 +102,10 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <label for="assessees" class="form-label"><strong>Assessees (အမှတ်ပေးခံရမည့်သူ) </strong></label>
+                            <label for="assessees" class="form-label"><strong>Assessees (အမှတ်ပေးခံရမည့်သူ) </strong>
+                            <span class="delimiter">-</span>
+                            <span><a href="#assesseemodal" data-toggle="modal">{{ $assesseeusers->count()  }} persons</span></a>
+                            </label>
                             <select class="form-control" id="current_assessees">
                                 @foreach($assesseeusers as $assesseeuser)
                                     <option value="{{$assesseeuser->id}}">{{ $assesseeuser->employee->employee_name }}</option>
@@ -224,20 +227,106 @@
    <!-- start edit modal -->
     <div id="assesseemodal" class="modal fade">
         <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-0">
+                <div class="modal-content rounded-0 mycontent">
                     <div class="modal-header">
                         <h6 class="modal-title">Select an Assessee</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    {{-- <div class="modal-body "> --}}
 
-                    <div class="modal-body">
+                        <div class="form-groups assesseesearch">
+                            <input type="text" id="modalSearchInput" class="form-control modal-search-input" placeholder="Search by name or role...">
+                        </div>
 
-                        {{-- <ul class="assessee-list">
-                            <li></li>
-                        </ul> --}}
-                    </div>
+                        <div class="assessee-list" id="assesseeList">
+
+                            @foreach($assesseeusers as $assesseeuser)
+                            <div id="assessee-list-item{{$assesseeuser->id}}" class="assessee-list-item" data-assessee="{{ $assesseeuser->id }}">
+                                <div class="assessee-item-details">
+                                    <div class="name">{{ $assesseeuser->name }}</div>
+                                    <div class="role">{{ $assesseeuser->employee->position->name }}</div>
+                                </div>
+                                <div class="assessee-total">
+                                    <span class="total_results_{{ $assesseeuser->id }}">{{ $appraisalform->getTotalResult($assesseeuser->id) != 0 ? $appraisalform->getTotalResult($assesseeuser->id) : '0' }}</span>
+                                </div>
+                                <span class="status-badge status-completed">completed</span>
+                            </div>
+                            @endforeach
+
+                            {{-- <div class="assessee-list-item selected" data-assessee-id="a001">
+                                <div class="assessee-item-details">
+                                    <div class="name">Alice Smith</div>
+                                    <div class="role">Software Engineer</div>
+                                </div>
+                                <span class="status-badge status-in-progress">in progress</span>
+                            </div>
+                            <div class="assessee-list-item" data-assessee-id="a002">
+                                <div class="assessee-item-details">
+                                    <div class="name">Bob Johnson</div>
+                                    <div class="role">UX Designer</div>
+                                </div>
+                                <span class="status-badge status-pending">pending</span>
+                            </div>
+                            <div class="assessee-list-item" data-assessee-id="a003">
+                                <div class="assessee-item-details">
+                                    <div class="name">Carol White</div>
+                                    <div class="role">Project Manager</div>
+                                </div>
+                                <span class="status-badge status-completed">completed</span>
+                            </div>
+                            <div class="assessee-list-item" data-assessee-id="a004">
+                                <div class="assessee-item-details">
+                                    <div class="name">David Lee</div>
+                                    <div class="role">Data Analyst</div>
+                                </div>
+                                <span class="status-badge status-pending">pending</span>
+                            </div>
+                            <div class="assessee-list-item" data-assessee-id="a005">
+                                <div class="assessee-item-details">
+                                    <div class="name">Eve Brown</div>
+                                    <div class="role">Marketing Specialist</div>
+                                </div>
+                                <span class="status-badge status-in-progress">in progress</span>
+                            </div>
+                            <div class="assessee-list-item" data-assessee-id="a006">
+                                <div class="assessee-item-details">
+                                    <div class="name">Frank Green</div>
+                                    <div class="role">HR Business Partner</div>
+                                </div>
+                                <span class="status-badge status-pending">pending</span>
+                            </div>
+                            <div class="assessee-list-item" data-assessee-id="a007">
+                                <div class="assessee-item-details">
+                                    <div class="name">Grace Hall</div>
+                                    <div class="role">Product Owner</div>
+                                </div>
+                                <span class="status-badge status-completed">completed</span>
+                            </div>
+                            <div class="assessee-list-item" data-assessee-id="a008">
+                                <div class="assessee-item-details">
+                                    <div class="name">Henry King</div>
+                                    <div class="role">Quality Assurance</div>
+                                </div>
+                                <span class="status-badge status-in-progress">in progress</span>
+                            </div>
+                            <div class="assessee-list-item" data-assessee-id="a009">
+                                <div class="assessee-item-details">
+                                    <div class="name">Ivy Chen</div>
+                                    <div class="role">Customer Support</div>
+                                </div>
+                                <span class="status-badge status-pending">pending</span>
+                            </div>
+                            <div class="assessee-list-item" data-assessee-id="a010">
+                                <div class="assessee-item-details">
+                                    <div class="name">Jack Taylor</div>
+                                    <div class="role">Software Engineer</div>
+                                </div>
+                                <span class="status-badge status-in-progress">in progress</span>
+                            </div> --}}
+                        </div>
+                    {{-- </div> --}}
 
                     <div class="modal-footer">
 
@@ -397,9 +486,105 @@
         }
 
 
-    .assessee-list{
-        background: green;
-    }
+
+
+
+
+
+
+    /* Start Assessee Modal */
+        .mycontent {
+            background-color: #fff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px !important;
+            max-height: 90vh !important;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .assessee-list {
+            flex-grow: 1 !important;
+            overflow-y: auto;
+            padding: 0 20px 10px;
+        }
+
+        .assessee-list-item {
+            display: flex;
+            /* justify-content: space-between; */
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .assessee-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .assessee-list-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .assessee-list-item.selected {
+            background-color: #e6f2ff;
+            border-color: #007bff;
+            font-weight: 600;
+        }
+
+        .assessee-item-details {
+            flex-grow: 1;
+            font-size: 1.05em;
+        }
+        .assessee-item-details .name {
+            font-weight: 600;
+            color: #333;
+        }
+        .assessee-item-details .role {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .status-badge {
+            font-size: 0.75em;
+            padding: 0px 8px;
+            border-radius: 12px;
+            margin-left: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-in-progress { background-color: #cfe2ff; color: #084298; }
+        .status-completed { background-color: #d1e7dd; color: #0f5132; }
+
+
+        .assesseesearch{
+            padding: 0 20px 10px;
+        }
+
+        .assessee-total{
+            width: 35px;
+            height: 35px;
+            background-color: #e6f2ff;
+            border-radius: 50%;
+            border: 2px solid #f0f0f0;
+            border-color: #007bff;
+            color: #007bff;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    /* End Assessee Modal */
 </style>
 @endsection
 
@@ -455,6 +640,9 @@
                 if (span) {
                     span.textContent = totals[id];
                 }
+
+                $(`.total_results_${id}`).text(totals[id]);
+
             }
 
             console.log(totals);
@@ -595,6 +783,9 @@
             $(`#assessee_${val}_criterias`).css('display', 'block');
 
             $('#fabAssesseeName').text($(this).find("option:selected").text());
+
+            $('.assessee-list-item').removeClass('selected');
+            $('#assessee-list-item'+val).addClass('selected');
         });
         $('#current_assessees').trigger('change')
 
@@ -606,6 +797,40 @@
         });
         $('.form-check-input').trigger('change')
 
+
+        $(document).on("click",'.assessee-list-item',function(){
+            let assessee = $(this).data('assessee');
+            {{-- console.log(assessee); --}}
+
+            $('#current_assessees').val(assessee);
+            $('#current_assessees').trigger('change')
+            $('#assesseemodal').modal('hide');
+
+        });
+
+
+
+        const searchInput = document.getElementById("modalSearchInput");
+        const listItems = document.querySelectorAll(".assessee-list-item");
+
+        searchInput.addEventListener("input", function () {
+            const searchText = this.value.toLowerCase();
+
+            listItems.forEach(item => {
+                const name = item.querySelector(".name").textContent.toLowerCase();
+                const role = item.querySelector(".role").textContent.toLowerCase();
+
+                if (name.includes(searchText) || role.includes(searchText)) {
+                    item.style.display = "flex";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        });
+
+        function updateAssesseeStatus(){
+            
+        }
         {{-- End Target Each Assessee --}}
 
 
