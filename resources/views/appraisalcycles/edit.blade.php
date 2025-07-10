@@ -764,8 +764,9 @@
                 "pageLength": 10,
                 "autoWidth": true,
                 "responsive": false,
+                ordering: true,
                 "order": [
-                [1, 'des']
+                    [1, 'asc']
                 ],
                 'ajax': {
                     url: `/${appraisalCycleId}/participantusers/`, // <-- include the ID here

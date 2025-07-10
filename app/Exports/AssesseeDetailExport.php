@@ -36,7 +36,11 @@ class AssesseeDetailExport implements FromView, WithTitle, ShouldAutoSize, WithE
         $appraisalcycle = AppraisalCycle::find($this->appraisal_cycle_id);
         $assesseedetail = new AssesseeDetail();
 
-        return view('assesseesdetail.detail')->with("assesseeusers",$this->assesseeusers)->with('appraisal_cycle_id',$this->appraisal_cycle_id)->with('assesseedetail',$assesseedetail)->with('appraisalcycle',$appraisalcycle);
+        return view('assesseesdetail.detail')
+        ->with("assesseeusers",$this->assesseeusers)
+        ->with('appraisal_cycle_id',$this->appraisal_cycle_id)
+        ->with('assesseedetail',$assesseedetail)
+        ->with('appraisalcycle',$appraisalcycle);
     }
 
     public function registerEvents(): array

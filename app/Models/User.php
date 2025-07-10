@@ -109,10 +109,20 @@ class User extends Authenticatable
         ->when($location_id != '7', function ($query) {
             $query->where('location_id','0');
         })
-        ->where('status_id',1)
+        // ->where('status_id',1)
         ->get();
 
         return $assformcat;
+    }
+
+    public function getAppraisalAssFormCats($appraisal_cycle_id){
+        $assformcat_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
+                                    ->whereHas('assesseeusers',function($query){
+                                        $query->where('assessee_user_id',$this->id);
+                                    })->pluck('ass_form_cat_id');
+        $assformcats = AssFormCat::whereIn("id",$assformcat_ids)->get();
+        // dd($assformcats);
+        return $assformcats;
     }
 
     public function getAppraisalFormCount($appraisal_cycle_id){
@@ -147,13 +157,16 @@ class User extends Authenticatable
 
 
     public function getCriteriaTotalArrs($appraisal_cycle_id){
-        $ass_form_cat_id = $this->getAssFormCat()->id;
-        $criterias = Criteria::where("ass_form_cat_id",$ass_form_cat_id)->get();
+        $appraisalassformcats = $this->getAppraisalAssFormCats($appraisal_cycle_id);
 
-        foreach($criterias as $criteria){
-            $criteria_totals[$criteria->id] = $this->getCriteriaTotal($this->id,$criteria->id,$appraisal_cycle_id);
+        foreach($appraisalassformcats as $assformcat){
+            $criterias = Criteria::where("ass_form_cat_id",$assformcat->id)->orderBy('id')->get();
+
+            foreach($criterias as $criteria){
+                $criteria_totals[$criteria->id] = $this->getCriteriaTotal($this->id,$criteria->id,$appraisal_cycle_id);
+            }
+
         }
-
         return $criteria_totals;
 
     }

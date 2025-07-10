@@ -24,12 +24,14 @@ class AssesseeSummaryController extends Controller
         $assesseeuser = User::where('id',$assessee_user_id)->first();
         // dd($assesseeuser);
 
-        $ass_form_cat_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
+        $appraisal_form_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
                             ->whereHas('assesseeusers',function($query) use($assesseeuser){
                                 $query->where('assessee_user_id',$assesseeuser->id);
-                            })->pluck('ass_form_cat_id');
-        $criterias = Criteria::whereIn("ass_form_cat_id",$ass_form_cat_ids)->get();
-        // dd($ass_form_cat_ids);
+                            })->pluck('id');
+        $criteria_ids = FormResult::whereIn("appraisal_form_id",$appraisal_form_ids)->pluck("criteria_id");
+        $criterias = Criteria::whereIn("id",$criteria_ids)->orderBy("id")->get();
+
+
         foreach($criterias as $criteria){
             $criteria_totals[$criteria->id] = $this->getCriteriaTotal($assessee_user_id,$criteria->id,$appraisal_cycle_id);
         }

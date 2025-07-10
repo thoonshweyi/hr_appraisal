@@ -117,6 +117,7 @@
                         <div class="col-md-3">
                             <label for="branch_id">Branch</label>
                             <select name="branch_id" id="branch_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Branch</option>
                                 @foreach($branches as $branch)
                                     <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == old('branch_id') ? "selected" : "" }}>{{$branch['branch_name']}}</option>
                                 @endforeach
@@ -182,7 +183,7 @@
                             <select name="attach_form_type_id" id="attach_form_type_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Attach Form Type</option>
                                 @foreach($attachformtypes as $attachformtype)
-                                    <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id') ? "selected" : "" }}>{{$attachformtype['name']}}</option>
+                                    <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id',0) ? "selected" : "" }}>{{$attachformtype['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -218,17 +219,17 @@
                 @if ($message = Session::get('error'))
                 <div class="alert alert-danger alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @endif
                 @if ($message = Session::get('success'))
                 <div class="alert alert-success alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @endif
 
@@ -272,97 +273,24 @@
 <!-- START MODAL AREA -->
 
 
-
-    <!-- start edit modal -->
-    {{-- <div id="editmodal" class="modal fade">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title">Edit Form</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <form id="formaction" action="" method="POST">
-                        {{ csrf_field() }}
-                        {{ method_field('PUT') }}
-                        <div class="row align-items-end">
-                                <div class="col-md-6">
-                                    <label for="edit_name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="edit_name" id="edit_name" class="form-control form-control-sm rounded-0" placeholder="Enter Status Name" value="{{ old('name') }}"/>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_division_id">Division</label>
-                                    <select name="edit_division_id" id="edit_division_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($divisions as $division)
-                                            <option value="{{$division['id']}}">{{$division['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_department_id">Departments</label>
-                                    <select name="edit_department_id" id="edit_department_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Department</option>
-                                        @foreach($departments as $department)
-                                            <option value="{{$department['id']}}">{{$department['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_sub_department_id">Sub Departments</label>
-                                    <select name="edit_sub_department_id" id="edit_sub_department_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Sub Department</option>
-                                        @foreach($subdepartments as $subdepartment)
-                                            <option value="{{$subdepartment['id']}}">{{$subdepartment['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_section_id">Sections</label>
-                                    <select name="edit_section_id" id="edit_section_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Section</option>
-                                        @foreach($sections as $section)
-                                            <option value="{{$section['id']}}">{{$section['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-
-                                <div class="col-md-6">
-                                    <label for="edit_status_id">Status</label>
-                                    <select name="edit_status_id" id="edit_status_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($statuses as $status)
-                                            <option value="{{$status['id']}}">{{$status['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-12 mt-2">
-                                    <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
-                                </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-
-                </div>
-            </div>
-    </div>
-    </div> --}}
-      <!-- end edit modal -->
-
 <!-- End MODAL AREA -->
 @endsection
 @section('js')
 <script>
     $(document).ready(function() {
+
+
+        $("#branch_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Branch',
+            searchField: ["value", "label"]
+        });
+
         $("#division_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
@@ -438,11 +366,31 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Status',
+            placeholder: 'Choose Gender',
             searchField: ["value", "label"]
         });
 
         $("#position_level_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Position Level',
+            searchField: ["value", "label"]
+        });
+
+
+
+        $("#beginning_date,#enddate").flatpickr({
+            dateFormat: "Y-m-d",
+            {{-- minDate: "today", --}}
+            {{-- maxDate: new Date().fp_incr(30) --}}
+       });
+
+
+        $("#attach_form_type_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
@@ -454,12 +402,6 @@
         });
 
 
-
-        $("#beginning_date,#enddate").flatpickr({
-            dateFormat: "Y-m-d",
-            {{-- minDate: "today", --}}
-            {{-- maxDate: new Date().fp_incr(30) --}}
-       });
 
 
         // Start Delete Item

@@ -31,6 +31,8 @@ class AssesseeSummary extends Model
         ->whereHas('assesseeusers',function($query) use($assessee_user_id){
             $query->where('assessee_user_id',$assessee_user_id);
         })->pluck('ass_form_cat_id');
+
+        
         $assformcats = AssFormCat::whereIn("id",$ass_form_cat_ids)->get();
         // dd($assformcats);
 

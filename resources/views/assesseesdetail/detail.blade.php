@@ -33,7 +33,8 @@
 
             {{-- {{ dd($assesseeusers) }} --}}
             @foreach($assesseeusers as $assesseeuser)
-                @foreach($assesseeuser->getAssFormCats() as $assformcatidx=>$assformcat)
+
+                @foreach($assesseeuser->getAppraisalAssFormCats($appraisalcycle->id) as $assformcatidx=>$assformcat)
                     <tr style="{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">
                         @if($assformcatidx <= 0)
                         <th style="text-align:center;vertical-align: middle;{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}" rowspan="2" >Assessee</th>
@@ -76,7 +77,7 @@
 
                                 $totalgivenmark = 0;
                             @endphp
-                            @foreach($assformcat->criterias as $idx => $criteria)
+                            @foreach($assformcat->criterias()->orderBy('id')->get() as $idx => $criteria)
                                 <td style="width:60px;text-align:center;vertical-align: middle;">{{ $getassessorgivenmark = $assesseedetail->getAssessorGivenMark($assessoruser->id,$assesseeuser->id,$criteria->id,  $appraisal_cycle_id ) }}</td>
                                 @php
                                     $totalgivenmark += (int) $getassessorgivenmark;

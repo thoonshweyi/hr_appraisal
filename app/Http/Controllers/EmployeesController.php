@@ -23,13 +23,14 @@ use App\Imports\EmployeeImport;
 use App\Imports\PositionImport;
 use App\Models\AgileDepartment;
 use App\Imports\DepartmentImport;
+use App\Imports\MultipleSheetImport;
 use App\Imports\SubDepartmentImport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AgileDepartmentImport;
+use App\Models\EmployeeAttachFormType;
 use App\Exceptions\ExcelImportValidationException;
-use App\Imports\MultipleSheetImport;
 
 
 class EmployeesController extends Controller
@@ -165,8 +166,6 @@ class EmployeesController extends Controller
        $employee->nrc = $request["nrc"];
        $employee->father_name = $request["father_name"];
        $employee->attach_form_type_id = $request["attach_form_type_id"];
-
-
        $employee->save();
 
        $empuser = User::firstOrCreate([
@@ -177,6 +176,12 @@ class EmployeesController extends Controller
         $userBranch['user_id'] = $empuser->id;
         $userBranch['branch_id'] = $request["branch_id"];
         BranchUser::firstOrCreate($userBranch);
+
+
+        // $employeeatachformtype = EmployeeAttachFormType::create([
+        //     "employee_code" => $employee->employee_code,
+        //     // "attach_form_type_id",
+        // ]);
 
 
        return redirect(route("employees.index"))->with('success',"Employee created successfully");;

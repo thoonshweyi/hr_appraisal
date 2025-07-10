@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\AssFormCat;
 use Illuminate\Http\Request;
+use App\Models\AppraisalForm;
 use App\Models\AppraisalCycle;
 use App\Models\AssesseeDetail;
 use App\Models\AppraisalFormAssesseeUser;
@@ -57,10 +59,24 @@ class AssesseeDetailController extends Controller
         $assesseeusers = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
         ->get();
 
+        foreach($assesseeusers as $assesseeuser){
+            $assformcat_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
+                                            ->whereHas('assesseeusers',function($query) use($assesseeuser){
+                                                $query->where('assessee_user_id',$assesseeuser->id);
+                                            })->pluck('ass_form_cat_id');
+            $assformcats = AssFormCat::whereIn("id",$assformcat_ids)->get();
+            $assesseeuser["assformcats"] = $assformcats;
+        }
+
         $appraisalcycle = AppraisalCycle::find($appraisal_cycle_id);
         $assesseedetail = new AssesseeDetail();
 
-        return view('assesseesdetail.detail')->with('assesseeusers',$assesseeusers)->with('appraisal_cycle_id',$appraisal_cycle_id)->with('assesseedetail',$assesseedetail)->with('appraisalcycle',$appraisalcycle);
+
+        return view('assesseesdetail.detail')
+        ->with('assesseeusers',$assesseeusers)
+        ->with('appraisal_cycle_id',$appraisal_cycle_id)
+        ->with('assesseedetail',$assesseedetail)
+        ->with('appraisalcycle',$appraisalcycle);
 
     }
 }
