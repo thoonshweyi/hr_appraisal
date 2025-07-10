@@ -352,14 +352,6 @@ class AppraisalCyclesController extends Controller
                             </form>
 
 
-                            <form id='sendnotiform' action='".route('appraisalcycles.sendnotifications')."' method='GET'>
-                                <input type='hidden' name='assessor_user_id' value='$participantuser->id'>
-                                <input type='hidden' name='appraisal_cycle_id' value='$id'/>
-                                    <button type='button' class='btn btn-link p-0 m-0 notify-btns' title='Notify'>
-                                        <i class='fas fa-bullhorn'></i>
-                                    </button>
-                            </form>
-
                             <a href='javascript:void(0);' class='show-forms' data-user='$participantuser->id' title='Open'><i class='fas fa-chevron-down'></i></a>
                         </div>
                     ";

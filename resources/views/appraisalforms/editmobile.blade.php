@@ -121,7 +121,7 @@
                         @method('PUT')
 
                     @foreach($assesseeusers as $assesseeuser)
-                        <div id="assessee_{{ $assesseeuser->id }}_criterias" class="assessee_criterias" style="display: none;">
+                        <div id="assessee_{{ $assesseeuser->id }}_criterias" class="assessee_criterias" style="display: none;" data-assessee="{{ $assesseeuser->id }}">
                         @foreach ($criterias as $idx=>$criteria)
 
                             <div class="form-card">
@@ -251,7 +251,7 @@
                                 <div class="assessee-total">
                                     <span class="total_results_{{ $assesseeuser->id }}">{{ $appraisalform->getTotalResult($assesseeuser->id) != 0 ? $appraisalform->getTotalResult($assesseeuser->id) : '0' }}</span>
                                 </div>
-                                <span class="status-badge status-completed">completed</span>
+                                <span id="assesseestatuses{{$assesseeuser->id}}" class="status-badge status-completed assesseestatuses">completed</span>
                             </div>
                             @endforeach
 
@@ -344,16 +344,16 @@
 
 @section('css')
 <style type="text/css">
-      .form-header {
+    .form-header {
         background-color: #ffffff;
         padding: 10px;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
         border-top: 8px solid orange;
-        }
+    }
 
-       .navigation-bar {
+    .navigation-bar {
       background: #fff;
       padding: 0.75rem 1rem;
       border-bottom: 1px solid #ddd;
@@ -415,7 +415,7 @@
 
 
 
-    .fab {
+        .fab {
 
 
             background-color: #007bff;
@@ -462,14 +462,14 @@
 
         .fab-icon {
             flex-shrink: 0;
-            font-size: 2em; /* Ensure icon stays large */
+            font-size: 2em;
             margin-right: 0;
             transition: margin-right 0.3s ease;
         }
 
         .fab.expanded .fab-icon {
-            margin-right: 10px; /* Add space when expanded */
-            font-size: 1.2em; /* Shrink icon slightly when text is present */
+            margin-right: 10px;
+            font-size: 1.2em;
         }
 
         .fab-text {
@@ -484,13 +484,6 @@
         .fab.expanded .fab-text {
             opacity: 1; /* Fade in text when expanded */
         }
-
-
-
-
-
-
-
 
     /* Start Assessee Modal */
         .mycontent {
@@ -609,6 +602,7 @@
 
             updateTotals();
             autofocusNextInput($input);
+            updateAssesseeStatus();
         });
 
         function updateTotals() {
@@ -829,8 +823,63 @@
         });
 
         function updateAssesseeStatus(){
-            
+            {{-- console.log(allresults); --}}
+
+            $(".assessee_criterias").each(function(idx,ele){
+                const allresults = $(this).find(".form-check-input.custom-input");
+                const names = Array.from(allresults).map(input => input.name);
+                const uniqueNames = new Set(names);
+                {{-- console.log(uniqueNames.size); --}}
+                const allresultscount = uniqueNames.size;
+
+
+
+                const checkedresults = $(this).find('.form-check-input.custom-input:checked');
+                const checkedresultscount = checkedresults.length;
+                {{-- console.log(checkedresultscount) --}}
+
+                let statusname = "";
+                let status_id = "";
+                if(allresultscount == checkedresultscount){
+                    console.log("Finished")
+                    status_id = 19;
+                    statusname = "Finished";
+                }else if(allresultscount >= checkedresultscount && checkedresultscount > 0){
+                    console.log("In Progress");
+                    status_id = 20;
+                    statusname = "In Progress";
+                }else if(allresultscount >= checkedresultscount && checkedresultscount == 0){
+                    console.log("Pending");
+                    status_id = 21;
+                    statusname = "On Hold";
+                }
+
+
+
+                let assessee = $(this).data('assessee');
+                console.log(assessee);
+                const assesseestatus = $(`#assesseestatuses${assessee}`);
+                $(`#assesseestatuses${assessee}`).text(statusname)
+
+                switch(status_id){
+                    case 19:
+                        assesseestatus.attr('class', 'status-badge status-completed');
+                        break;
+                    case 20:
+                        assesseestatus.attr('class', 'status-badge status-in-progress');
+                        break;
+                    case 21:
+                        assesseestatus.attr('class', 'status-badge status-pending');
+                        break;
+                }
+
+
+
+                {{-- console.log(checkedresults); --}}
+            });
+
         }
+        updateAssesseeStatus();
         {{-- End Target Each Assessee --}}
 
 

@@ -407,8 +407,9 @@
                                                     <th>Employee Name</th>
                                                     <th>Employee Code</th>
                                                     <th>Branch</th>
+                                                    <th>Position Level</th>
                                                     <th>Sent / All Forms</th>
-                                                    <th>Progress</th>
+                                                    <th>Send Progress</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -790,9 +791,9 @@
                     { data: 'employee.employee_name', name: 'employee.employee_name' },
                     { data: 'employee.employee_code', name: 'employee.employee_code' },
                     { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
-                    {{-- { data: 'employee.department.name', name: 'employee.department.name' },
-                    { data: 'employee.position.name', name: 'employee.position.name' },
-                    { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' } --}}
+                    {{-- { data: 'employee.department.name', name: 'employee.department.name' }, --}}
+                    {{-- { data: 'employee.position.name', name: 'employee.position.name' }, --}}
+                    { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' },
 
                     {
                         data: 'form_count',
@@ -945,7 +946,7 @@
                                 </tr>`;
                             });
                             html += '</table>';
-                            tr.after(`<tr class="child-row"><td claass="m-0" colspan="7">${html}</td></tr>`);
+                            tr.after(`<tr class="child-row"><td claass="m-0" colspan="8">${html}</td></tr>`);
                         }
                     });
                 }
