@@ -125,7 +125,7 @@ class EmployeesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            "employee_name" => "required|max:50|unique:employees",
+            "employee_name" => "required|max:50",
             "division_id" => "required",
             "department_id" => "required",
             "sub_department_id" => "required",
@@ -133,7 +133,7 @@ class EmployeesController extends Controller
             "status_id" => "required|in:1,2",
 
             'beginning_date'=> "required",
-            "employee_code"=> "required",
+            "employee_code"=> "required|unique:employees",
             "branch_id"=> "required",
             "age"=> "required",
             "gender_id"=> "required",
@@ -142,51 +142,67 @@ class EmployeesController extends Controller
             "father_name"=> "required",
             "attach_form_type_id"=> "required",
         ]);
-
-       $user = Auth::user();
-       $user_id = $user->id;
-
-       $employee = new Employee();
-       $employee->employee_name = $request["employee_name"];
-       $employee->nickname = $request["nickname"];
-       $employee->division_id = $request["division_id"];
-       $employee->department_id = $request["department_id"];
-       $employee->sub_department_id = $request["sub_department_id"];
-       $employee->section_id = $request["section_id"];
-       $employee->position_id = $request["position_id"];
-       $employee->status_id = $request["status_id"];
-       $employee->user_id = $user_id;
-
-       $employee->beginning_date = $request["beginning_date"];
-       $employee->employee_code = $request["employee_code"];
-       $employee->branch_id = $request["branch_id"];
-       $employee->age = $request["age"];
-       $employee->gender_id = $request["gender_id"];
-       $employee->position_level_id = $request["position_level_id"];
-       $employee->nrc = $request["nrc"];
-       $employee->father_name = $request["father_name"];
-       $employee->attach_form_type_id = $request["attach_form_type_id"];
-       $employee->save();
-
-       $empuser = User::firstOrCreate([
-            "name"=> $request["employee_name"],
-            "employee_id"=> $request["employee_code"],
-            "password"=> Hash::make($request["employee_code"])
-        ]);
-        $userBranch['user_id'] = $empuser->id;
-        $userBranch['branch_id'] = $request["branch_id"];
-        BranchUser::firstOrCreate($userBranch);
+        // dd($request->attach_form_type_ids);
+        $user = Auth::user();
+        $user_id = $user->id;
 
 
-        // $employeeatachformtype = EmployeeAttachFormType::create([
-        //     "employee_code" => $employee->employee_code,
-        //     // "attach_form_type_id",
-        // ]);
+        \DB::beginTransaction();
+        try{
+            $employee = new Employee();
+            $employee->employee_name = $request["employee_name"];
+            $employee->nickname = $request["nickname"];
+            $employee->division_id = $request["division_id"];
+            $employee->department_id = $request["department_id"];
+            $employee->sub_department_id = $request["sub_department_id"];
+            $employee->section_id = $request["section_id"];
+            $employee->position_id = $request["position_id"];
+            $employee->status_id = $request["status_id"];
+            $employee->user_id = $user_id;
 
+            $employee->beginning_date = $request["beginning_date"];
+            $employee->employee_code = $request["employee_code"];
+            $employee->branch_id = $request["branch_id"];
+            $employee->age = $request["age"];
+            $employee->gender_id = $request["gender_id"];
+            $employee->position_level_id = $request["position_level_id"];
+            $employee->nrc = $request["nrc"];
+            $employee->father_name = $request["father_name"];
+            $employee->attach_form_type_id = $request["attach_form_type_id"];
+            $employee->save();
 
-       return redirect(route("employees.index"))->with('success',"Employee created successfully");;
+            $empuser = User::firstOrCreate([
+                "name"=> $request["employee_name"],
+                "employee_id"=> $request["employee_code"],
+                "password"=> Hash::make($request["employee_code"])
+            ]);
+            $userBranch['user_id'] = $empuser->id;
+            $userBranch['branch_id'] = $request["branch_id"];
+            BranchUser::firstOrCreate($userBranch);
+
+            $attachformtypes = $request["attach_form_type_ids"];
+            foreach($attachformtypes as $attachformtype){
+                $employeeatachformtype = EmployeeAttachFormType::create([
+                    "employee_code" => $employee->employee_code,
+                    "attach_form_type_id" => $attachformtype
+                ]);
+
+            }
+
+            \DB::commit();
+            return redirect(route("employees.index"))->with('success',"Employee created successfully");
+
+        } catch (\Exception $e) {
+            \DB::rollback();
+            // Handle the exception and notify the user
+            return redirect(route("employees.index"))->with('error', "System Error:".$e->getMessage());
+        }
     }
 
+    public function show(Request $request, string $id){
+        $employee = Employee::find($id);
+        return view("employees.show",compact("employee"));
+    }
 
     public function edit(Request $request, string $id){
         $employee = Employee::find($id);
@@ -215,7 +231,7 @@ class EmployeesController extends Controller
     {
 
         $this->validate($request,[
-            "employee_name" => ["required","max:50","unique:employees,employee_name,".$id],
+            "employee_name" => ["required","max:50"],
             "division_id" => "required",
             "department_id" => "required",
             "sub_department_id" => "required",
@@ -236,36 +252,82 @@ class EmployeesController extends Controller
         $user = Auth::user();
         $user_id = $user["id"];
 
-        $employee = Employee::findOrFail($id);
-        $employee->employee_name = $request["employee_name"];
-        $employee->nickname = $request["nickname"];
-        $employee->division_id = $request["division_id"];
-        $employee->department_id = $request["department_id"];
-        $employee->sub_department_id = $request["sub_department_id"];
-        $employee->section_id = $request["section_id"];
-        $employee->position_id = $request["position_id"];
-        $employee->status_id = $request["status_id"];
-        $employee->user_id = $user_id;
+        \DB::beginTransaction();
+        try{
 
-        $employee->beginning_date = $request["beginning_date"];
-        $employee->employee_code = $request["employee_code"];
-        $employee->branch_id = $request["branch_id"];
-        $employee->age = $request["age"];
-        $employee->gender_id = $request["gender_id"];
-        $employee->position_level_id = $request["position_level_id"];
-        $employee->nrc = $request["nrc"];
-        $employee->father_name = $request["father_name"];
-        $employee->attach_form_type_id = $request["attach_form_type_id"];
+            $employee = Employee::findOrFail($id);
+
+            // Store old employee_code before update
+            $old_employee_code = $employee->employee_code;
+
+            $employee->employee_name = $request["employee_name"];
+            $employee->nickname = $request["nickname"];
+            $employee->division_id = $request["division_id"];
+            $employee->department_id = $request["department_id"];
+            $employee->sub_department_id = $request["sub_department_id"];
+            $employee->section_id = $request["section_id"];
+            $employee->position_id = $request["position_id"];
+            $employee->status_id = $request["status_id"];
+            $employee->user_id = $user_id;
+
+            $employee->beginning_date = $request["beginning_date"];
+            $employee->employee_code = $request["employee_code"];
+            $employee->branch_id = $request["branch_id"];
+            $employee->age = $request["age"];
+            $employee->gender_id = $request["gender_id"];
+            $employee->position_level_id = $request["position_level_id"];
+            $employee->nrc = $request["nrc"];
+            $employee->father_name = $request["father_name"];
+            $employee->attach_form_type_id = $request["attach_form_type_id"];
+            $employee->save();
+
+            $users  = User::where('employee_id',$old_employee_code)->get();
+            foreach($users as $user){
+                $user->update([
+                    "employee_id" => $request["employee_code"]
+                ]);
+
+                BranchUser::where('user_id',$user->id)->delete();
+
+                $userBranch['user_id'] = $user->id;
+                $userBranch['branch_id'] = $request["branch_id"];
+                BranchUser::firstOrCreate($userBranch);
+            }
 
 
-        $employee->save();
-        return redirect(route("employees.index"))->with('success',"Employee updated successfully");
+            // Delete old attach form type links
+            EmployeeAttachFormType::where("employee_code", $old_employee_code)->delete();
+            if ($request->has("attach_form_type_ids")){
+                $attachformtypes = $request["attach_form_type_ids"];
+                foreach($attachformtypes as $attachformtype){
+                    $employeeatachformtype = EmployeeAttachFormType::create([
+                        "employee_code" => $employee->employee_code,
+                        "attach_form_type_id" => $attachformtype
+                    ]);
+                }
+            }
+
+            \DB::commit();
+            return redirect(route("employees.index"))->with('success',"Employee updated successfully");
+
+        } catch (\Exception $e) {
+            \DB::rollback();
+            // Handle the exception and notify the user
+            return redirect(route("employees.index"))->with('error', "System Error:".$e->getMessage());
+        }
     }
 
     public function destroy(string $id)
     {
         $employee = Employee::findOrFail($id);
         $employee->delete();
+
+        $users  = User::where('employee_id',$employee->employee_code)->get();
+        foreach($users as $user){
+            $user->delete();
+            // $branchusers = BranchUser::where('user_id',$user->id)->delete();
+        }
+
         return redirect()->back()->with('success',"Employee deleted successfully");
     }
 
@@ -307,37 +369,37 @@ class EmployeesController extends Controller
 
 
    public function updateprofilepicture(Request $request,$id){
-    $request->validate([
-        'image'=>"required|image|mimes:jpeg,png,jpg,gif|max:10485760"
-    ]);
-    $employee = Employee::findOrFail($id);
+        $request->validate([
+            'image'=>"required|image|mimes:jpeg,png,jpg,gif|max:10485760"
+        ]);
+        $employee = Employee::findOrFail($id);
 
 
-    $user = Auth::user();
-    $user_id = $user['id'];
-    if($request->hasFile('image')){
-        // Single Image Update
-        $file = $request->file("image");
-        $fname = $file->getClientOriginalName();
-        $imagenewname = uniqid($user_id)."-".$employee['id'].$fname;
-        $file->move(public_path("assets/img/employees/"),$imagenewname);
-        $filepath = "assets/img/employees/".$imagenewname;
+        $user = Auth::user();
+        $user_id = $user['id'];
+        if($request->hasFile('image')){
+            // Single Image Update
+            $file = $request->file("image");
+            $fname = $file->getClientOriginalName();
+            $imagenewname = uniqid($user_id)."-".$employee['id'].$fname;
+            $file->move(public_path("assets/img/employees/"),$imagenewname);
+            $filepath = "assets/img/employees/".$imagenewname;
 
 
-        // Remove Old Image
-        if($employee->image){
-            $oldfilepath = public_path($employee->image);
-            if(file_exists($oldfilepath)){
-                unlink($oldfilepath);
+            // Remove Old Image
+            if($employee->image){
+                $oldfilepath = public_path($employee->image);
+                if(file_exists($oldfilepath)){
+                    unlink($oldfilepath);
+                }
             }
+            $employee->image = $filepath;
+            $employee->save();
         }
-        $employee->image = $filepath;
-        $employee->save();
+
+        // Recalculate profile Score
+
+        return redirect()->back()->with('success','Upload Successfully');
     }
-
-    // Recalculate profile Score
-
-    return redirect()->back()->with('success','Upload Successfully');
-}
 
 }

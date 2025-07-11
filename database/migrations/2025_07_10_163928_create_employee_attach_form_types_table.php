@@ -15,7 +15,7 @@ class CreateEmployeeAttachFormTypesTable extends Migration
     {
         Schema::create('employee_attach_form_types', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('employee_code');
+            $table->string('employee_code');
             $table->unsignedBigInteger('attach_form_type_id');
             $table->timestamps();
         });

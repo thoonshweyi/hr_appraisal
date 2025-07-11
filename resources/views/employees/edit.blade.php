@@ -38,7 +38,7 @@
 
 
                         <div class="col-md-3">
-                            <label for="division_id">Division</label>
+                            <label for="division_id">Division <span class="text-danger">*</span></label>
                             <select name="division_id" id="division_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Division</option>
                                 @foreach($divisions as $division)
@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="department_id">Departments</label>
+                            <label for="department_id">Departments <span class="text-danger">*</span></label>
                             <select name="department_id" id="department_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Department</option>
                                 @foreach($departments as $department)
@@ -58,7 +58,7 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="sub_department_id">Sub Departments</label>
+                            <label for="sub_department_id">Sub Departments <span class="text-danger">*</span></label>
                             <select name="sub_department_id" id="sub_department_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Sub Department</option>
                                 @foreach($subdepartments as $subdepartment)
@@ -69,7 +69,7 @@
 
 
                         <div class="col-md-3">
-                            <label for="section_id">Sections</label>
+                            <label for="section_id">Sections <span class="text-danger">*</span></label>
                             <select name="section_id" id="section_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Section</option>
                                 @foreach($sections as $section)
@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="position_id">Positions</label>
+                            <label for="position_id">Positions <span class="text-danger">*</span></label>
                             <select name="position_id" id="position_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Position</option>
                                 @foreach($positions as $position)
@@ -90,7 +90,7 @@
 
 
                         <div class="col-md-3">
-                            <label for="status_id">Status</label>
+                            <label for="status_id">Status <span class="text-danger">*</span></label>
                             <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
                                 @foreach($statuses as $status)
                                     <option value="{{$status['id']}}" {{ $status['id'] == old('status_id',$employee->status_id) ? "selected" : "" }}>{{$status['name']}}</option>
@@ -116,7 +116,7 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="branch_id">Branch</label>
+                            <label for="branch_id">Branch <span class="text-danger">*</span></label>
                             <select name="branch_id" id="branch_id" class="form-control form-control-sm rounded-0">
                                 @foreach($branches as $branch)
                                     <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == old('branch_id',$employee->branch_id) ? "selected" : "" }}>{{$branch['branch_name']}}</option>
@@ -133,7 +133,7 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="gender_id">Gender</label>
+                            <label for="gender_id">Gender <span class="text-danger">*</span></label>
                             <select name="gender_id" id="gender_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Gender</option>
 
@@ -144,7 +144,7 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="position_level_id">Position Level</label>
+                            <label for="position_level_id">Position Level <span class="text-danger">*</span></label>
                             <select name="position_level_id" id="position_level_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Position Level</option>
 
@@ -191,11 +191,21 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="attach_form_type_id">Attach Form Type</label>
+                            <label for="attach_form_type_id">Main Attach Form Type</label>
                             <select name="attach_form_type_id" id="attach_form_type_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Attach Form Type</option>
                                 @foreach($attachformtypes as $attachformtype)
                                     <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id',$employee->attach_form_type_id) ? "selected" : "" }}>{{$attachformtype['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="attach_form_type_ids">Multi Attach Form Type</label>
+                            <select name="attach_form_type_ids[]" id="attach_form_type_ids" class="form-control form-control-sm rounded-0" multiple>
+                                <option value="" selected disabled>Choose Multi Attach Form Type</option>
+                                @foreach($attachformtypes as $attachformtype)
+                                    <option value="{{$attachformtype['id']}}" {{  in_array($attachformtype['id'],( old("attach_form_type_ids",$employee->attachformtypes->pluck('attach_form_type_id')->toArray()))) ? "selected" : "" }}>{{$attachformtype['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -232,17 +242,17 @@
                 @if ($message = Session::get('error'))
                 <div class="alert alert-danger alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @endif
                 @if ($message = Session::get('success'))
                 <div class="alert alert-success alert-dismissible fade show">
                     <p>{{ $message }}</p>
-  <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @endif
 
@@ -452,7 +462,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Status',
+            placeholder: 'Choose Gender',
             searchField: ["value", "label"]
         });
 
@@ -463,7 +473,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Status',
+            placeholder: 'Choose Position Level',
             searchField: ["value", "label"]
         });
 
@@ -474,6 +484,33 @@
             {{-- minDate: "today", --}}
             {{-- maxDate: new Date().fp_incr(30) --}}
        });
+
+        $("#attach_form_type_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Attach Form Group',
+            searchField: ["value", "label"]
+        });
+
+
+        $("#attach_form_type_ids").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 5,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Attach Form Group',
+            searchField: ["value", "label"]
+        });
+
+
+
+
 
 
         // Start Delete Item

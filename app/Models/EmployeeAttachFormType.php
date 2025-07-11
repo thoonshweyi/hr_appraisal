@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeeAttachFormType extends Model
 {
     use HasFactory;
-    protected $table = "employee_criteria_sets";
+    protected $table = "employee_attach_form_types";
     protected $primaryKey = "id";
     protected $fillable = [
         "employee_code",

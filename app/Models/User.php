@@ -99,7 +99,13 @@ class User extends Authenticatable
         $position_level_id = $employee->position_level_id;
         $location_id = $employee->branch_id;
 
-        $assformcat = AssFormCat::where('attach_form_type_id',$attach_form_type_id)
+        $empattach_form_type_ids = $employee->attachformtypes()->pluck('attach_form_type_id');
+        $attach_form_type_ids = collect([$employee->attach_form_type_id])
+        ->merge($empattach_form_type_ids)
+        ->unique();
+        // Log::info("Employee $employee->employee_code, AttachFormTypes $attach_form_type_ids");
+
+        $assformcat = AssFormCat::whereIn("attach_form_type_id",$attach_form_type_ids)
         ->whereHas('positionlevels',function($query) use($position_level_id){
             $query->where('position_levels.id',$position_level_id);
         })
@@ -109,7 +115,7 @@ class User extends Authenticatable
         ->when($location_id != '7', function ($query) {
             $query->where('location_id','0');
         })
-        // ->where('status_id',1)
+        ->where('status_id',1)
         ->get();
 
         return $assformcat;

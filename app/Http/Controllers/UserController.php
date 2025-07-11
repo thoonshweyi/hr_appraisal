@@ -353,20 +353,18 @@ class UserController extends Controller
         ->get();
 
         // dd($users[0]->getAssFormCat());
-        // dd($users);
         $dulusers = [];
         foreach($users as $user){
             $assformcats = $user->getAssFormCats();
             foreach($assformcats as $assformcat){
                 if (!empty($filter_ass_form_cat_id)) {
                     if($assformcat->id == $filter_ass_form_cat_id){
-                        $userCopy = clone $user; // Clone user to avoid reference issues
+                        $userCopy = clone $user;
                         $userCopy['assformcat'] = $assformcat;
                         $dulusers[] = $userCopy;
                     }
-
                 }else{
-                    $userCopy = clone $user; // Clone user to avoid reference issues
+                    $userCopy = clone $user;
                     $userCopy['assformcat'] = $assformcat;
                     $dulusers[] = $userCopy;
                 }

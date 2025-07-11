@@ -195,11 +195,12 @@
                                 <!-- Optional label text next to the switch -->
                             </div>
                         </td>
-                        <td>{{ $employee["user"]["name"] }}</td>
+                        <td>{{ $employee->employee_name }}</td>
                         <td>{{ $employee->created_at->format('d M Y') }}</td>
                         <td>{{ $employee->updated_at->format('d M Y') }}</td>
                         <td class="text-center">
                             @can('edit-add-on')
+                                <a href="{{ route('employees.show',$employee->id) }}" class="text-warning mr-2"><i class="fas fa-eye"></i></a>
                                 <a href="{{ route('employees.edit',$employee->id) }}" class="text-info mr-2"><i class="fas fa-pen"></i></a>
                             @endcan
                             @can('delete-add-on')
