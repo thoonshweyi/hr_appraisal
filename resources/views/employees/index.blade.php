@@ -30,23 +30,25 @@
                         </div>
 
 
-                        <button type="submit" class="btn btn-light" class=""><i class="ri-file-download-line"></i> Import</a>
-                    </div>
+                        <button type="submit" class="btn btn-light" class=""><i class="ri-file-download-line"></i> Import</button>
 
+                    </div>
                 </form>
+
+
             </div>
 
 
 
             <div class="col-lg-12 my-2 ">
-                <form class="d-inline" action="{{ route('employees.index') }}" method="GET">
+                <form id="employeeform" class="d-inline" action="{{ route('employees.index') }}" method="GET">
                     @csrf
                     <div class="row align-items-end justify-content-start ">
 
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <label for="filter_employee_name">Enployee Name <span class="text-danger">*</span></label>
                             <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ request()->filter_employee_name }}"/>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-2">
                             <label for="filter_employee_code">Enployee Code <span class="text-danger">*</span></label>
@@ -83,10 +85,11 @@
                             </select>
                         </div>
 
-                        <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</a>
+                        <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</button>
                         @if(count(request()->query()) > 0)
                             <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
                         @endif
+                        <a href="javascript:void(0);" id="export-btn" class="btn cus_btn ml-2">Export</a>
 
                     </div>
 
@@ -402,6 +405,14 @@
            });
         });
         {{-- End Import --}}
+
+
+        {{-- Start Export --}}
+        $("#export-btn").click(function(){
+            $("#employeeform").attr("action", "{{ route('employees.export') }}");
+            $("#employeeform").submit();
+        });
+        {{-- End Export --}}
 
     });
 </script>

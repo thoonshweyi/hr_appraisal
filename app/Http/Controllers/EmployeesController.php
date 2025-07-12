@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Branch;
 use App\Models\Gender;
@@ -22,6 +23,7 @@ use App\Imports\DivisionImport;
 use App\Imports\EmployeeImport;
 use App\Imports\PositionImport;
 use App\Models\AgileDepartment;
+use App\Exports\EmployeesExport;
 use App\Imports\DepartmentImport;
 use App\Imports\MultipleSheetImport;
 use App\Imports\SubDepartmentImport;
@@ -400,6 +402,58 @@ class EmployeesController extends Controller
         // Recalculate profile Score
 
         return redirect()->back()->with('success','Upload Successfully');
+    }
+
+
+    public function export(Request $request){
+        // dd("hay");
+
+        $filter_employee_name = $request->filter_employee_name;
+        $filter_employee_code = $request->filter_employee_code;
+        $filter_branch_id = $request->filter_branch_id;
+        $filter_position_level_id = $request->filter_position_level_id;
+
+        $results = Employee::query();
+
+
+        if (!empty($filter_employee_name)) {
+            $results = $results->whereHas('employee',function($query) use($filter_employee_name){
+                $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
+            });
+        }
+
+        if (!empty($filter_employee_code)) {
+            $results = $results->whereHas('employee',function($query) use($filter_employee_code){
+                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%');
+            });
+        }
+
+        if (!empty($filter_branch_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_branch_id){
+                $query->where('branch_id', $filter_branch_id);
+            });
+        }
+
+
+        if (!empty($filter_position_level_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
+                $query->where('position_level_id', $filter_position_level_id);
+            });
+        }
+
+        $employees = $results->get();
+        $response = Excel::download(new EmployeesExport($employees), "EmployeesList".Carbon::now()->format('Y-m-d').".xlsx");
+
+        return $response;
+
+    }
+
+    public function exportview(Request $request){
+        $results = Employee::query();
+
+        $employees = $results->get();
+        return view("employees.export",compact("employees"));
+
     }
 
 }

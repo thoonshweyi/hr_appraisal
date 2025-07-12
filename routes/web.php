@@ -186,6 +186,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post("/employees_excel_import",[EmployeesController::class,"excel_import"])->name("employees.excel_import");
     Route::post("/employeesstatus",[EmployeesController::class,"changestatus"])->name("employees.changestatus");
     Route::put("/employees/{id}/profilepicture",[EmployeesController::class,"updateprofilepicture"])->name("employees.updateprofilepicture");
+    Route::get("/employeesexport",[EmployeesController::class,"export"])->name("employees.export");
+    Route::get("/employeesexportview",[EmployeesController::class,"exportview"])->name("employees.exportview");
 
 
     Route::get("/assformcats",[AssFormCatsController::class,"index"])->name("assformcats.index");
@@ -268,6 +270,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/{appraisal_cycle_id}/participantusers",[AppraisalCyclesController::class,"participantusers"])->name("participantusers.index");
     Route::get("/{appraisal_cycle_id}/assesseeusers",[AppraisalCyclesController::class,"assesseeusers"])->name("assesseeusers.index");
     Route::get("/{appraisal_cycle_id}/assessorusers",[AppraisalCyclesController::class,"assessorusers"])->name("assessorusers.index");
+
 
 
 

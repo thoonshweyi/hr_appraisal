@@ -197,7 +197,24 @@
                      </div> --}}
 
 
-                    <h4>Criteria Set</h4>
+                    <h4>Criteria Set List</h4>
+                    <table class="table mb-0" id="branch_list">
+                        <thead class="bg-white text-uppercase">
+                            <tr class="ligth ligth-data">
+                                <th>No</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody class="ligth-body">
+                            @foreach($employee->emppuser?->getAssFormCats() as $idx=>$assformcat)
+                            <tr>
+                                <td>{{ ++$idx }}</td>
+                                <td>{{$assformcat->name}}</td>
+
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
            </div>
 
