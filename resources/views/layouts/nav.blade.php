@@ -15,7 +15,7 @@
 
             <li class=" ">
                 <a href="#fixed" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                    <i class="ri-pie-chart-line"></i>
+                    <i class="ri-pie-chart-line m-0"></i>
                     <span class="ml-4">{{__('nav.fixed')}}</span>
                     <svg class="svg-icon iq-arrow-right arrow-active" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="10 15 15 20 20 15"></polyline><path d="M4 4h7a4 4 0 0 1 4 4v12"></path>
@@ -116,15 +116,20 @@
                         </a>
                     </li>
 
+                    <li class="{{ (request()->routeIs('appraisalforms.index')) ? 'active' : '' }}">
+                        <a href="{{route('appraisalforms.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.appraisalform_list')}}</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endcan
 
 
-            <li class="{{ (strpos(Route::currentRouteName(), 'appraisalforms.index') === 0) ? 'active' : ''}}">
-                <a href="{{ route('appraisalforms.index') }}" class="svg-icon">
-                    <i class="far fa-folder-open"></i>
-                    <span class="ml-4">  {{__('nav.appraisalform_list')}}</span>
+            <li class="{{ (strpos(Route::currentRouteName(), 'appraisalforms.notification') === 0) ? 'active' : ''}}">
+                <a href="{{ route('appraisalforms.notification') }}" class="svg-icon">
+                    <i class="far fa-folder-open m-0"></i>
+                    <span class="ml-4">  {{__('nav.appraisalform_notification')}}</span>
                 </a>
             </li>
 
@@ -295,7 +300,7 @@
             </li>
             @endcan
 
-
+            @can('view-add-on')
             <li class=" ">
                 <a  href="#excelformats" class="collapsed" data-toggle="collapse" aria-expanded="false">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M1 14.5C1 12.1716 2.22429 10.1291 4.06426 8.9812C4.56469 5.044 7.92686 2 12 2C16.0731 2 19.4353 5.044 19.9357 8.9812C21.7757 10.1291 23 12.1716 23 14.5C23 17.9216 20.3562 20.7257 17 20.9811L7 21C3.64378 20.7257 1 17.9216 1 14.5ZM16.8483 18.9868C19.1817 18.8093 21 16.8561 21 14.5C21 12.927 20.1884 11.4962 18.8771 10.6781L18.0714 10.1754L17.9517 9.23338C17.5735 6.25803 15.0288 4 12 4C8.97116 4 6.42647 6.25803 6.0483 9.23338L5.92856 10.1754L5.12288 10.6781C3.81156 11.4962 3 12.927 3 14.5C3 16.8561 4.81833 18.8093 7.1517 18.9868L7.325 19H16.675L16.8483 18.9868ZM13 12H16L12 17L8 12H11V8H13V12Z"></path></svg>
@@ -336,6 +341,7 @@
                     <span class="ml-4">HR Appraisal User Guide</span>
                 </a>
             </li>
+            @endcan
         </ul>
     </nav>
     <div class="p-3"></div>

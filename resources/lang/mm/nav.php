@@ -42,6 +42,7 @@ return [
     'appraisalcycle_list'             => 'Appraisal Cycle List',
     'attachformtype_list'             => 'Attach Form Type List',
     'appraisalform_list'             => 'Appraisal Form List',
+    'appraisalform_notification'             => 'Appraisal Form Notification',
 
     'excelformats'                     => "Excel Formats",
     'assformcat_format'                     => "Criteria Set Format",

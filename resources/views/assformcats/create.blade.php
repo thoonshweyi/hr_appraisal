@@ -51,7 +51,7 @@
                             </select>
                         </div>
 
-                        
+
                         <div class="col-md-3">
                             <label for="lang">Language</label>
 
@@ -418,7 +418,7 @@
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
-            maxItems: 2,
+            maxItems: 9,
             valueField: "value",
             labelField: "label",
             placeholder: 'Choose Status',

@@ -323,7 +323,7 @@
                                             <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
                                             <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>
                                             {{-- @if($appraisalcycle->isBeforeActionStart()) --}}
-                                                <button type="submit" class="btn new_btn mr-2">New</button>
+                                                <button type="button" class="btn new_btn mr-2">New</button>
                                             {{-- @endif --}}
                                         </form>
                                             {{-- <input type="hidden" id="empuser_ids" name="empuser_ids[]" value={{ $appraisalcycle->id }}> --}}
@@ -1741,6 +1741,7 @@
 
         return [year, month, day].join('-');
     }
+
     {{-- Start Assessor Assessee Tab --}}
     function showTab(tabId) {
         document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -1751,5 +1752,23 @@
     }
     {{-- End Assessor Assessee Tab --}}
 
+
+    {{-- Start New Btn --}}
+    $(".new_btn").click(function(){
+
+        if ($('.user-info li.active').length > 0) {
+            $("#peer_to_peer_form").submit();
+        }else{
+            Swal.fire({
+                icon: 'warning',
+                title: "အကဲဖြတ်အမှတ်ပေးမည့်သူရွေးပေးပါ",
+                text: "Please choose Assessor",
+                confirmButtonText: "{{ __('message.ok') }}",
+            }).then(function() {
+                
+            });
+        }
+    });
+    {{-- End New Btn --}}
 </script>
 @stop

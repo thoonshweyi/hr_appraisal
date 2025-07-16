@@ -21,6 +21,8 @@ use App\Models\AppraisalCycle;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AppraisalFormAssesseeUser;
+use App\Notifications\AppraisalFormsNotify;
+use Illuminate\Support\Facades\Notification;
 
 class AppraisalFormsController extends Controller
 {
@@ -201,18 +203,26 @@ class AppraisalFormsController extends Controller
                 ]);
             }
 
-
-            // dd($assessor_user_id);
             $assessor = User::find($assessor_user_id);
-            // {$assessor->employee->employee_name}
             $assformcat = AssFormCat::where('id',$ass_form_cat_id)->first();
-            // $title = "Action Required: Appraisal Form Received";
-            $title = "ရာထူးတိုးဖောင်တစ်ခု လက်ခံရရှိခြင်း";
+            // Start FCM Push Notification
+            // dd($assessor_user_id);
+                // // {$assessor->employee->employee_name}
+                // // $title = "Action Required: Appraisal Form Received";
+                // $title = "ရာထူးတိုးဖောင်တစ်ခု လက်ခံရရှိခြင်း";
 
-            // dd($title);
-            // $message = "You have received a new appraisal form for assessment. Kindly review and submit your feedback within the given timeframe.";
-            $message = "သင်အကဲဖြတ်ပေးရန် ရာထူးတိုးဖောင်တစ်ခုရရှိပါသည်။ သတ်မှတ်အချိန်ကာလအတွင်း အကဲဖြတ်၍ဖောင်ကိုပြန်လည်၍ပေးပို့ပေးရန်ဖြစ်ပါသည်။";
-            $response = FCMHelper::sendFCMNotification($assessor_user_id,$title,$message,$appraisalform->id);
+                // // dd($title);
+                // // $message = "You have received a new appraisal form for assessment. Kindly review and submit your feedback within the given timeframe.";
+                // $message = "သင်အကဲဖြတ်ပေးရန် ရာထူးတိုးဖောင်တစ်ခုရရှိပါသည်။ သတ်မှတ်အချိန်ကာလအတွင်း အကဲဖြတ်၍ဖောင်ကိုပြန်လည်၍ပေးပို့ပေးရန်ဖြစ်ပါသည်။";
+                // $response = FCMHelper::sendFCMNotification($assessor_user_id,$title,$message,$appraisalform->id);
+            // End FCM Push Notification
+
+
+
+            // Start Laravel Database Notification
+            $title = "You received new Appraisal Form $assformcat->name";
+            Notification::send($assessor,new AppraisalFormsNotify($appraisalform->id,$assformcat->id,$title));
+            // End Laravel Database Notification
 
             \DB::commit();
 
@@ -247,8 +257,14 @@ class AppraisalFormsController extends Controller
         $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
 
 
-        return view("appraisalforms.show",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
-
+         $roles = Auth::user()->roles->pluck('name');
+        $adminauthorize = $roles->contains('Admin') || $roles->contains('HR Authorized');
+        // dd($adminauthorize);
+        if($adminauthorize){
+            return view("appraisalforms.show",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+        }else{
+            return view("appraisalforms.showmobile",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+        }
     }
 
 
@@ -335,10 +351,28 @@ class AppraisalFormsController extends Controller
                 }
             }
 
+            $type = "App\Notifications\AppraisalFormsNotify";
+            // $getnoti = \DB::table("notifications")->where("notifiable_id",$user_id)->where("type",$type)->where('data->appraisalform_id',$id)->pluck('id');
+            $getnotis = $user->unreadNotifications;
+
+            foreach($getnotis as $getnoti){
+                if($getnoti->type == $type && $getnoti->data['appraisalform_id'] == $id){
+                    $getnoti->markAsRead();
+                }
+            }
+
             \DB::commit();
-            return redirect(route("appraisalforms.index"))->with('success',"Appraisal Form updated successfully");
+
+
+            $adminauthorize = adminHRAuthorize();
+            if($adminauthorize){
+                 return redirect(route("appraisalforms.index"))->with('success',"Appraisal Form updated successfully");
+            }else{
+                return redirect(route("appraisalforms.notification"))->with('success',"Appraisal Form updated successfully");
+            }
         }catch(Exception $err){
             \DB::rollback();
+            Log::info($err);
 
             return redirect()->back()->with("error","There is an error in submitting Appraisal Form.");
         }
@@ -559,5 +593,17 @@ class AppraisalFormsController extends Controller
 
 
         return response()->json(['formgroups' => $formgroups,'assessoruser'=>$assessoruser]);
+    }
+
+    public function notification(Request $request){
+        $notis = Auth::guard()->user()->unreadNotifications;
+        $noti_datas = $notis->pluck('data');
+
+        $appraisalform_ids = $noti_datas->pluck('appraisalform_id');
+        // dd($appraisalform_ids);
+
+        $appraisalforms = AppraisalForm::whereIn("id",$appraisalform_ids)->paginate(10);
+
+        return view("appraisalforms.notification", ['appraisalforms' => $appraisalforms]);
     }
 }

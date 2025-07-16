@@ -60,7 +60,7 @@ Route::get('/user_login/{employee_id}/{password}', [LoginController::class, 'use
 
 Auth::routes();
 
-Route::group(['middleware' => ['auth']], function () {
+Route::middleware('auth')->group(function () {
 // Route::group(['middleware' => ['auth','otp']], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/make_as_read/{notification_id}/{document_id}', [HomeController::class, 'make_as_read'])->name('home.make_as_read');
@@ -259,6 +259,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/appraisalformsshowprintframe/{id}",[AppraisalFormsController::class,"showprintframe"])->name("appraisalforms.showprintframe");
     Route::get("/appraisalformsbyuser/{id}",[AppraisalFormsController::class,"userforms"])->name("appraisalforms.userforms");
     Route::get("/appraisalformsuserdashboard/{id}",[AppraisalFormsController::class,"userdashboard"])->name("appraisalforms.userdashboard");
+    Route::get("/appraisalformsnotification",[AppraisalFormsController::class,"notification"])->name("appraisalforms.notification");
+
 
 
 
@@ -347,4 +349,9 @@ Route::post('/save-fcm-token', function (Illuminate\Http\Request $request) {
     );
 
     return response()->json(['success' => true]);
+});
+
+
+Route::get('/check-session-lifetime', function () {
+    return config('session.lifetime'); // Should return 1
 });

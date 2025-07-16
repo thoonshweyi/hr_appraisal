@@ -71,7 +71,7 @@
                                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                                 </svg>
                                 @if (number_convert(count(Auth::user()->unreadNotifications) > 0))
-                                {{-- <span class="bg-secondary badge-card p-2" id="notification_count">{{number_convert(count(Auth::user()->unreadNotifications))}}</span> --}}
+                                <span class="bg-secondary badge-card p-2" id="notification_count">{{number_convert(count(Auth::user()->unreadNotifications))}}</span>
                                 @endif
                             </a>
                             <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -80,11 +80,33 @@
                                         <div class="cust-title p-3">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <h5 class="mb-0">Notifications</h5>
-                                                <a class="badge badge-secondary badge-card" href="#">{{-- number_convert(count(Auth::user()->unreadNotifications)) --}}</a>
+                                                <a class="badge badge-secondary badge-card" href="#">{{ number_convert(count(Auth::user()->unreadNotifications)) }}</a>
                                             </div>
                                         </div>
                                         <div class="px-3 pt-0 pb-0 sub-card">
+                                            @forelse (Auth::user()->unreadNotifications as $notification)
+                                                @php
+                                                    switch ($notification->type) {
+                                                        case 'App\Notifications\AppraisalFormsNotify':
+                                                            $notiurl = "appraisalforms.show";
+                                                            break;
 
+                                                        default:
+                                                            # code...
+                                                            break;
+                                                    }
+                                                @endphp
+                                                <a href="{{ route($notiurl,$notification->data['appraisalform_id']) }}" class="iq-sub-card">
+                                                    <div class="media align-items-center cust-card py-3 border-bottom">
+                                                            <div class="media-body ml-4">
+                                                                <div class="d-flex align-items-left justify-content-left flex-column">
+                                                                    <h6 class="mb-0">{{ $notification->data['title'] }}</h6>
+                                                                    <small class="text-dark"><b>{{ $notification->created_at->diffForHumans() }}</b></small>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                </a>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>

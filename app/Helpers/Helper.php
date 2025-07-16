@@ -1183,3 +1183,13 @@ function get_DB_doc($id)
 {
     return CNDBDocument::where(['document_id'=>$id,'type'=>'db'])->orderBy('id')->pluck('cn_db_no');
 }
+
+
+
+
+function adminHRAuthorize(){
+    $roles = Auth::user()->roles->pluck('name');
+    $adminauthorize = $roles->contains('Admin') || $roles->contains('HR Authorized');
+
+    return $adminauthorize;
+}
