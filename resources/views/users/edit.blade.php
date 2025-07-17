@@ -73,7 +73,8 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>{{__('user.role')}}:</strong>
-                            {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control')) !!}
+                            {{-- {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control')) !!} --}}
+                            {!! Form::select('roles[]', $roles, !empty($userRole) ? $userRole : null, ['class' => 'form-control', 'placeholder' => 'Select role']) !!}
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 text-left">

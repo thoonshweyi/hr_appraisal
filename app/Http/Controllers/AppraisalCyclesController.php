@@ -345,6 +345,7 @@ class AppraisalCyclesController extends Controller
                     ";
                 })
                 ->addColumn('action', function ($participantuser) use ($id) {
+                    
                     return "
                         <div class='d-flex justify-content-center align-items-center'>
                             <form id='appraisalform' action='".route('appraisalforms.create')."' method='GET'>
@@ -357,6 +358,9 @@ class AppraisalCyclesController extends Controller
 
 
                             <a href='javascript:void(0);' class='show-forms' data-user='$participantuser->id' title='Open'><i class='fas fa-chevron-down'></i></a>
+
+                            $participantuser->position_level < 5
+                            <a href='javascript:void(0);' class='ml-2' title='Print'><i class='fas fa-print'></i></a>
                         </div>
                     ";
                 })

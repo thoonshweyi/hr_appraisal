@@ -25,6 +25,7 @@ use App\Imports\PositionImport;
 use App\Models\AgileDepartment;
 use App\Exports\EmployeesExport;
 use App\Imports\DepartmentImport;
+use Illuminate\Support\Facades\Log;
 use App\Imports\MultipleSheetImport;
 use App\Imports\SubDepartmentImport;
 use Illuminate\Support\Facades\Auth;
@@ -360,9 +361,11 @@ class EmployeesController extends Controller
 
         }catch (ExcelImportValidationException $e) {
             // If validation fails, show the error message to the user
+            Log::info($e);
             \DB::rollback();
             return redirect(route("employees.index"))->with('validation_errors', $e->getMessage());
         } catch (\Exception $e) {
+            Log::info($e);
             \DB::rollback();
             // Handle the exception and notify the user
             return redirect(route("employees.index"))->with('error', "System Error:".$e->getMessage());

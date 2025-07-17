@@ -17,6 +17,7 @@ use App\Models\SubDepartment;
 use App\Models\AttachFormType;
 use App\Models\AgileDepartment;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -31,6 +32,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
 
     public function model(array $row)
     {
+        Log::info($this->rowNumber);
         $row['beginning_date'] = is_numeric($row['beginning_date'])
         ? Carbon::instance(Date::excelToDateTimeObject($row['beginning_date']))
         : Carbon::parse($row['beginning_date']); // Handles cases where date is already formatted correctly
@@ -45,7 +47,6 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
         $validator = Validator::make($row, [
             'employee_name'      => 'required|string|max:255',
             'division' => 'required|exists:divisions,name',
-            // 'department' => 'required|exists:agile_departments,name',
             'department' => ['required',"exists:agile_departments,name"],
             'sub_department' => 'required|exists:sub_departments,name',
             'section' => 'required|exists:sections,name',
@@ -53,14 +54,15 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
 
             'beginning_date'=> "required|date",
             "employee_code"=> "required",
-            "branch_code"=> "required|exists:branches,branch_code",
+            // "branch_code"=> "required|exists:branches,branch_code",
+            "branch"=> "required|exists:branches,branch_name",
             "age"=> "required",
             "gender"=> "required|exists:genders,name",
             'position_level'=> "required|exists:position_levels,name",
             // "nrc"=> "required",
             // "father_name"=> "required",
-            'attach_form_type' => '',
-            'phone' => 'required'
+            'attach_form_type' => 'required',
+            // 'phone' => 'required'
         ]);
         // If validation fails, throw an exception with the row number
         if ($validator->fails()) {
@@ -86,8 +88,8 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
         );
         // $userBranch['user_id'] = $empuser->id;
         // $userBranch['branch_id'] = Branch::where('branch_name',$row['branch'])->first()->branch_id;
-        BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>Branch::where('branch_code',$row['branch_code'])->first()->branch_id]);
-
+        // BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>Branch::where('branch_code',$row['branch_code'])->first()->branch_id]);
+        BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>Branch::where('branch_name',$row['branch'])->first()->branch_id]);
 
         return Employee::updateOrCreate(
             ['employee_code' => $row['employee_code']], // Check for existing record
@@ -102,7 +104,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
                 'status_id'          => 1, // Default status_id (change as needed)
                 'user_id'            => $user_id,
                 'beginning_date'     => $row['beginning_date'],
-                "branch_id"          => Branch::where('branch_code', $row['branch_code'])->first()?->branch_id,
+                "branch_id"          => Branch::where('branch_name', $row['branch'])->first()?->branch_id,
                 "age"                => $row['age'],
                 "gender_id"          => Gender::where('name', $row['gender'])->first()?->id,
                 "position_level_id"  => PositionLevel::where('name', $row['position_level'])->first()?->id,
