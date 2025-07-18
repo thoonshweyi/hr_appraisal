@@ -616,6 +616,13 @@
     </div>
 
 <!-- End MODAL AREA -->
+
+
+{{-- START PRINT AREA --}}
+<div id="printforms">
+
+</div>
+{{-- END PRINT AREA --}}
 @endsection
 
 @section('css')
@@ -1765,10 +1772,63 @@
                 text: "Please choose Assessor",
                 confirmButtonText: "{{ __('message.ok') }}",
             }).then(function() {
-                
+
             });
         }
     });
     {{-- End New Btn --}}
+
+
+
+    {{-- Start Print Forms Btn --}}
+
+    $(document).on("click",".print_btn",function(){
+        let userId = $(this).data('user');
+
+        {{-- Method 1 --}}
+        {{-- by creating new iframe element and get src from route --}}
+
+        let getprintforms = document.getElementById('printforms');
+        console.log(getprintforms);
+        $.ajax({
+            url: `{{ url('appraisalformsshowprintframe/'."9") }}`,
+            type: "GET",
+            dataType: "html",
+            data: $('#searchnfilterform').serialize(),
+            beforeSend : function(){
+                $("#myloading-container").removeClass('d-none');
+            },
+            success: function (response) {
+                console.log(response);
+
+                $('#printforms').html(response);
+
+                // Now print that content
+                printDiv('printforms');
+
+
+            },
+            complete: function(){
+                $("#myloading-container").addClass('d-none');
+            },
+            error: function (response) {
+                console.log("Error:", response);
+            }
+        });
+
+    });
+
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+   }
+
+    {{-- End Print Forms Btn --}}
 </script>
 @stop

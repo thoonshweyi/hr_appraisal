@@ -273,8 +273,6 @@ class UserController extends Controller
     }
 
 
-
-
     public function getFilteredAssessees(Request $request){
         // dd($request);
         $filter_ass_form_cat_id = $request->filter_ass_form_cat_id;
@@ -384,4 +382,5 @@ class UserController extends Controller
 
         return response()->json($dulusers);
     }
+
 }

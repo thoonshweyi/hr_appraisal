@@ -346,7 +346,7 @@ class AppraisalCyclesController extends Controller
                 })
                 ->addColumn('action', function ($participantuser) use ($id) {
 
-                    $printbtn = ($participantuser->employee->positionlevel->id < 5 ) ? "<a href='javascript:void(0);' class='text-warning mx-2' title='Print'><i class='fas fa-print'></i></a>" : '';
+                    $printbtn = ($participantuser->employee->positionlevel->id < 5 ) ? "<a href='javascript:void(0);' data-user='$participantuser->id' class='text-warning mx-2 print_btn' title='Print'><i class='fas fa-print'></i></a>" : '';
                     return "
                         <div class='d-flex justify-content-center align-items-center'>
                             <form id='appraisalform' action='".route('appraisalforms.create')."' method='GET'>
