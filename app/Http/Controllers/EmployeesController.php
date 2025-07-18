@@ -348,7 +348,7 @@ class EmployeesController extends Controller
         $request->validate([
             'file' => 'required|mimes:xls,xlsx|max:2048',
         ]);
-        // ini_set('max_execution_time', 300);
+        ini_set('max_execution_time', 600);
 
         \DB::beginTransaction();
 

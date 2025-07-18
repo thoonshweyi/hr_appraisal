@@ -111,7 +111,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
                 "nrc"                => $row['nrc'],
                 "father_name"        => $row['father_name'],
                 "attach_form_type_id"=> AttachFormType::where('name', $row['attach_form_type'])->first()?->id,
-                "phone"                => $row['phone'] ? $row['phone'] : null,
+                // "phone"                => $row['phone'] ? $row['phone'] : null,
             ]
         );
     }

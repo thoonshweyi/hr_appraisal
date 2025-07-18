@@ -116,13 +116,25 @@
                                 </div> --}}
 
 
-                                <div class="col-md-4">
+                                {{-- <div class="col-md-4">
                                     <div class="form-group d-flex" style="white-space: nowrap">
                                            <label for="filter_subdepartment_id">Sub Department: </label>
                                             <select name="filter_subdepartment_id" id="filter_subdepartment_id" class="form-control form-control-sm rounded-0 ml-2">
                                             <option value="" selected disabled>Choose Sub Department</option>
                                             @foreach($subdepartments as $subdepartment)
                                                         <option value="{{$subdepartment['id']}}" {{ $subdepartment['id'] == request()->filter_subdepartment_id ? 'selected' : '' }}>{{$subdepartment['name']}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div> --}}
+
+                                <div class="col-md-4">
+                                    <div class="form-group d-flex" style="white-space: nowrap">
+                                           <label for="filter_section_id">Section: </label>
+                                            <select name="filter_section_id" id="filter_section_id" class="form-control form-control-sm rounded-0 ml-2">
+                                            <option value="" selected disabled>Choose Section</option>
+                                            @foreach($sections as $section)
+                                                        <option value="{{$section['id']}}" {{ $section['id'] == request()->filter_section_id ? 'selected' : '' }}>{{$section['name']}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -253,6 +265,18 @@
             placeholder: 'Choose Sub Department',
             searchField: ["value", "label"]
         });
+
+        $("#filter_section_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Section',
+            searchField: ["value", "label"]
+        });
+
 
         $("#beginning_date,#enddate").flatpickr({
             dateFormat: "Y-m-d",

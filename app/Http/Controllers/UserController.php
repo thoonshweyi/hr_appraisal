@@ -281,6 +281,7 @@ class UserController extends Controller
         $filter_branch_id = $request->filter_branch_id;
         $filter_department_id =  $request->filter_department_id;
         $filter_subdepartment_id =  $request->filter_subdepartment_id;
+        $filter_section_id =  $request->filter_section_id;
 
 
         $assessor_user_id = $request->assessor_user_id;
@@ -330,6 +331,15 @@ class UserController extends Controller
                                 ->pluck('employee_code');
             $results = $results->whereIn('employee_id', $employee_codes);
         }
+
+
+        if (!empty($filter_section_id)) {
+
+            $employee_codes = Employee::where('section_id',$filter_section_id)
+                                ->pluck('employee_code');
+            $results = $results->whereIn('employee_id', $employee_codes);
+        }
+
 
         // Preventing Self peer to peer
         $results = $results->where("id","!=",$assessor_user_id);

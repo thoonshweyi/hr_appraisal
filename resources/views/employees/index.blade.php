@@ -45,13 +45,13 @@
                     @csrf
                     <div class="row align-items-end justify-content-start ">
 
-                        {{-- <div class="col-md-2">
-                            <label for="filter_employee_name">Enployee Name <span class="text-danger">*</span></label>
+                        <div class="col-md-2">
+                            <label for="filter_employee_name">Employee Name <span class="text-danger">*</span></label>
                             <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ request()->filter_employee_name }}"/>
-                        </div> --}}
+                        </div>
 
                         <div class="col-md-2">
-                            <label for="filter_employee_code">Enployee Code <span class="text-danger">*</span></label>
+                            <label for="filter_employee_code">Employee Code <span class="text-danger">*</span></label>
                             <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
                         </div>
 
