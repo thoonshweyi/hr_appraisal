@@ -918,6 +918,9 @@
                     $.ajax({
                         url: `/appraisalformsbyuser/${userId}/`,
                         type: 'GET',
+                        data: {
+                            filter_appraisal_cycle_id: $("#appraisal_cycle_id").val()
+                        },
                         success: function (forms) {
                             var html =`
                             <div class="d-flex justify-content-between mt-2">
@@ -1784,50 +1787,33 @@
 
     $(document).on("click",".print_btn",function(){
         let userId = $(this).data('user');
+        let appraisal_cycle_id = $("#appraisal_cycle_id").val();
 
-        {{-- Method 1 --}}
-        {{-- by creating new iframe element and get src from route --}}
+        let printFrame = document.createElement('iframe');
+        printFrame.style.position = 'absolute';
+        printFrame.style.width = 'auto';
+        printFrame.style.height = 'auto';
+        printFrame.style.border = '0';
+        printFrame.style.display = 'none';
+        printFrame.src = `/appraisalformsprintuserforms/${userId}/${appraisal_cycle_id}`;
 
-        let getprintforms = document.getElementById('printforms');
-        console.log(getprintforms);
-        $.ajax({
-            url: `{{ url('appraisalformsshowprintframe/'."9") }}`,
-            type: "GET",
-            dataType: "html",
-            data: $('#searchnfilterform').serialize(),
-            beforeSend : function(){
-                $("#myloading-container").removeClass('d-none');
-            },
-            success: function (response) {
-                console.log(response);
+          {{-- data: {
+                filter_appraisal_cycle_id: $("#appraisal_cycle_id").val()
+            }, --}}
+        document.body.appendChild(printFrame);
 
-                $('#printforms').html(response);
+        // Wait for iframe to load, then print
+        printFrame.onload = function () {
+            printFrame.contentWindow.focus();
+            printFrame.contentWindow.print();
 
-                // Now print that content
-                printDiv('printforms');
-
-
-            },
-            complete: function(){
-                $("#myloading-container").addClass('d-none');
-            },
-            error: function (response) {
-                console.log("Error:", response);
-            }
-        });
-
+            // Optional: Remove iframe after printing
+            setTimeout(() => {
+                document.body.removeChild(printFrame);
+            }, 1000);
+        };
     });
 
-    function printDiv(divName) {
-        var printContents = document.getElementById(divName).innerHTML;
-        var originalContents = document.body.innerHTML;
-
-        document.body.innerHTML = printContents;
-
-        window.print();
-
-        document.body.innerHTML = originalContents;
-   }
 
     {{-- End Print Forms Btn --}}
 </script>

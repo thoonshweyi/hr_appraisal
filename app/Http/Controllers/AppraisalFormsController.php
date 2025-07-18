@@ -257,7 +257,7 @@ class AppraisalFormsController extends Controller
         $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
 
 
-         $roles = Auth::user()->roles->pluck('name');
+        $roles = Auth::user()->roles->pluck('name');
         $adminauthorize = $roles->contains('Admin') || $roles->contains('HR Authorized');
         // dd($adminauthorize);
         if($adminauthorize){
@@ -605,5 +605,28 @@ class AppraisalFormsController extends Controller
         $appraisalforms = AppraisalForm::whereIn("id",$appraisalform_ids)->paginate(10);
 
         return view("appraisalforms.notification", ['appraisalforms' => $appraisalforms]);
+    }
+
+    public function printuserforms($user_id,$appraisal_cycle_id){
+        $appraisal_cycle_id = $appraisal_cycle_id;
+
+        $appraisalforms = AppraisalForm::where('assessor_user_id', $user_id)
+        ->orderBy('created_at', 'desc')
+        ->with(['assformcat','appraisalcycle','status'])->get();
+
+        if (!empty($appraisal_cycle_id)) {
+            $appraisalforms = $appraisalforms->where('appraisal_cycle_id', $appraisal_cycle_id);
+        }
+
+        // $assesseeusers = $appraisalform->assesseeusers;
+        // $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
+
+        // $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
+        // $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');
+        // $total_meet_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('meet_standard');
+        // $total_below_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('below_standard');
+        // $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
+
+        return view('appraisalforms.printuserforms', compact('appraisalforms'));
     }
 }

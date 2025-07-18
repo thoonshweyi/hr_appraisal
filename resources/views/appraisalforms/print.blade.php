@@ -138,6 +138,10 @@
             width: 100%;
             height: 100%;
         }
+
+        .text-justify {
+            text-align: justify;
+        }
     </style>
 </head>
 <body>
@@ -204,7 +208,7 @@
             <!-- Criteria Rows -->
             @foreach ($criterias as $criteria)
                 <tr>
-                    <td class="text-left">{{ $criteria->name }}</td>
+                    <td class="text-justify">{{ $criteria->name }}</td>
                     <td>{{ $criteria->excellent }}</td>
                     <td>{{ $criteria->good }}</td>
                     <td>{{ $criteria->meet_standard }}</td>
