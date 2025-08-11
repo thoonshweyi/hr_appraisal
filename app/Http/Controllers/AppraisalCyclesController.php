@@ -150,6 +150,7 @@ class AppraisalCyclesController extends Controller
         $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
         $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
+        $sections = Section::where('status_id',1)->orderBy('id')->get();
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
 
         // $users = User::where('status',1)
@@ -173,7 +174,7 @@ class AppraisalCyclesController extends Controller
         // $assesseeusers = User::whereIn("id",$assessee_user_ids)->get();
 
 
-        return view("appraisalcycles.edit",compact("appraisalcycle","branches","positionlevels","statuses","subdepartments"));
+        return view("appraisalcycles.edit",compact("appraisalcycle","branches","positionlevels","statuses","subdepartments","sections"));
     }
 
 
@@ -284,6 +285,8 @@ class AppraisalCyclesController extends Controller
         $filter_branch_id = $request->filter_branch_id;
         $filter_position_level_id = $request->filter_position_level_id;
         $filter_subdepartment_id = $request->filter_subdepartment_id;
+        $filter_section_id = $request->filter_section_id;
+
 
         // $results = PeerToPeer::query();
         $results = $participantusers;
@@ -317,6 +320,12 @@ class AppraisalCyclesController extends Controller
         if (!empty($filter_subdepartment_id)) {
             $results = $results->whereHas('employee',function($query) use($filter_subdepartment_id){
                 $query->where('sub_department_id', $filter_subdepartment_id);
+            });
+        }
+
+        if (!empty($filter_section_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_section_id){
+                $query->where('section_id', $filter_section_id);
             });
         }
 
@@ -383,6 +392,7 @@ class AppraisalCyclesController extends Controller
         $filter_branch_id = $request->filter_branch_id;
         $filter_position_level_id = $request->filter_position_level_id;
         $filter_subdepartment_id = $request->filter_subdepartment_id;
+        $filter_section_id = $request->filter_section_id;
 
         // $results = PeerToPeer::query();
         $results = $assesseeusers;
@@ -419,6 +429,12 @@ class AppraisalCyclesController extends Controller
             });
         }
 
+        if (!empty($filter_section_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_section_id){
+                $query->where('section_id', $filter_section_id);
+            });
+        }
+
         $assesseeusers = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
         ->get();
         // ->paginate(10);
@@ -447,6 +463,7 @@ class AppraisalCyclesController extends Controller
         $filter_position_level_id = $request->filter_position_level_id;
         $filter_subdepartment_id = $request->filter_subdepartment_id;
         $filter_user_id = $request->filter_user_id;
+        $filter_section_id = $request->filter_section_id;
 
         // $results = PeerToPeer::query();
         $results = $users;
@@ -504,6 +521,15 @@ class AppraisalCyclesController extends Controller
             });
             $request->session()->put('filter_subdepartment_id', $filter_subdepartment_id);
         }
+
+        if (!empty($filter_section_id)) {
+            $results = $results->whereHas('employee',function($query) use($filter_section_id){
+                $query->where('section_id', $filter_section_id);
+            });
+            $request->session()->put('filter_section_id', $filter_section_id);
+        }
+
+
         $results = $results->doesntHave('roles');
 
             $users = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])

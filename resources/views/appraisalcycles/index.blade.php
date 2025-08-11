@@ -134,6 +134,7 @@
             <table class="table mb-0" id="branch_list">
                 <thead class="bg-white text-uppercase">
                     <tr class="ligth ligth-data">
+                        <th>Action</th>
                         <th>No</th>
                         <th>Name</th>
                         <th>Status</th>
@@ -144,12 +145,23 @@
                         <th>By</th>
                         <th>Created At</th>
                         {{-- <th>Updated At</th> --}}
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody class="ligth-body">
                     @foreach($appraisalcycles as $idx=>$appraisalcycle)
                     <tr>
+                        <td class="text-center">
+                            @can('edit-add-on')
+                            <a href="{{ route('appraisalcycles.edit',$appraisalcycle->id) }}" class="text-info mr-2"><i class="fas fa-pen"></i></a>
+                            @endcan
+                            @can('delete-add-on')
+                            <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
+                            @endcan
+                        </td>
+                        <form id="formdelete-{{ $idx }}" class="" action="{{route('appraisalcycles.destroy',$appraisalcycle->id)}}" method="POST">
+                             @csrf
+                             @method("DELETE")
+                        </form>
                         <td>{{$idx + $appraisalcycles->firstItem()}}</td>
                         <td>{{$appraisalcycle["name"]}}</td>
                         <td>
@@ -171,18 +183,7 @@
 
                         <td>{{ $appraisalcycle->created_at->format('d M Y') }}</td>
                         {{-- <td>{{ $appraisalcycle->updated_at->format('d M Y') }}</td> --}}
-                        <td class="text-center">
-                            @can('edit-add-on')
-                            <a href="{{ route('appraisalcycles.edit',$appraisalcycle->id) }}" class="text-info mr-2"><i class="fas fa-pen"></i></a>
-                            @endcan
-                            @can('delete-add-on')
-                            <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
-                            @endcan
-                        </td>
-                        <form id="formdelete-{{ $idx }}" class="" action="{{route('appraisalcycles.destroy',$appraisalcycle->id)}}" method="POST">
-                             @csrf
-                             @method("DELETE")
-                        </form>
+
                    </tr>
                     @endforeach
                 </tbody>

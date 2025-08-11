@@ -57,6 +57,7 @@ class EmployeesController extends Controller
         $filter_branch_id = $request->filter_branch_id;
         $filter_position_level_id = $request->filter_position_level_id;
         $filter_subdepartment_id = $request->filter_subdepartment_id;
+        $filter_section_id = $request->filter_section_id;
 
         $results = Employee::query();
 
@@ -71,10 +72,6 @@ class EmployeesController extends Controller
         $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
         $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
-
-        $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
-
-
 
         // dd($divisions);
 
@@ -93,12 +90,16 @@ class EmployeesController extends Controller
 
 
         if (!empty($filter_position_level_id)) {
-            $results = $results->where('position_level_id', $filter_position_level_id);
+            $results = $results->whereIn('position_level_id', $filter_position_level_id);
         }
 
 
         if (!empty($filter_subdepartment_id)) {
             $results = $results->where('sub_department_id', $filter_subdepartment_id);
+        }
+
+        if (!empty($filter_section_id)) {
+            $results = $results->where('section_id', $filter_section_id);
         }
         $employees = $results->orderBy('id','asc')->paginate(10);
 
@@ -415,33 +416,30 @@ class EmployeesController extends Controller
         $filter_employee_code = $request->filter_employee_code;
         $filter_branch_id = $request->filter_branch_id;
         $filter_position_level_id = $request->filter_position_level_id;
+        $filter_subdepartment_id = $request->filter_subdepartment_id;
 
         $results = Employee::query();
 
 
         if (!empty($filter_employee_name)) {
-            $results = $results->whereHas('employee',function($query) use($filter_employee_name){
-                $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
-            });
+           $results = $results->where('employee_name', 'like', '%'.$filter_employee_name.'%');
         }
 
         if (!empty($filter_employee_code)) {
-            $results = $results->whereHas('employee',function($query) use($filter_employee_code){
-                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%');
-            });
+            $results = $results->where('employee_code', 'like' , '%'.$filter_employee_code.'%');
         }
 
         if (!empty($filter_branch_id)) {
-            $results = $results->whereHas('employee',function($query) use($filter_branch_id){
-                $query->where('branch_id', $filter_branch_id);
-            });
+            $results = $results->where('branch_id', $filter_branch_id);
         }
 
 
         if (!empty($filter_position_level_id)) {
-            $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
-                $query->where('position_level_id', $filter_position_level_id);
-            });
+           $results = $results->where('position_level_id', $filter_position_level_id);
+        }
+
+        if (!empty($filter_subdepartment_id)) {
+            $results = $results->where('sub_department_id', $filter_subdepartment_id);
         }
 
         $employees = $results->get();
@@ -456,7 +454,6 @@ class EmployeesController extends Controller
 
         $employees = $results->get();
         return view("employees.export",compact("employees"));
-
     }
 
 }

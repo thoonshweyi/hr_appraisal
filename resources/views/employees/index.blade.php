@@ -45,10 +45,10 @@
                     @csrf
                     <div class="row align-items-end justify-content-start ">
 
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <label for="filter_employee_name">Employee Name <span class="text-danger">*</span></label>
                             <input type="text" name="filter_employee_name" id="filter_employee_name" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Name" value="{{ request()->filter_employee_name }}"/>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-2">
                             <label for="filter_employee_code">Employee Code <span class="text-danger">*</span></label>
@@ -67,15 +67,25 @@
 
                         <div class="col-md-2">
                             <label for="filter_position_level_id">Position Level</label>
-                            <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0">
+                            <select name="filter_position_level_id[]" id="filter_position_level_id" class="form-control form-control-sm rounded-0" multiple>
                                 <option value="" selected disabled>Choose Position Level</option>
                                 @foreach($positionlevels as $positionlevel)
-                                    <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                    <option value="{{$positionlevel['id']}}" {{  in_array($positionlevel['id'],request()->filter_position_level_id ?? []) ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="col-md-2">
+                            <label for="filter_section_id">Section</label>
+                            <select name="filter_section_id" id="filter_section_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Sub Section</option>
+                                @foreach($sections as $section)
+                                            <option value="{{$section['id']}}" {{ $section['id'] == request()->filter_section_id ? 'selected' : '' }}>{{$section['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- <div class="col-md-2">
                             <label for="filter_subdepartment_id">Sub Department</label>
                             <select name="filter_subdepartment_id" id="filter_subdepartment_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Sub Department</option>
@@ -83,7 +93,7 @@
                                             <option value="{{$subdepartment['id']}}" {{ $subdepartment['id'] == request()->filter_subdepartment_id ? 'selected' : '' }}>{{$subdepartment['name']}}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
                         <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</button>
                         @if(count(request()->query()) > 0)
@@ -238,6 +248,41 @@
 @section('js')
 <script>
     $(document).ready(function() {
+        $("#filter_branch_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Branch',
+            searchField: ["value", "label"]
+        });
+
+          $("#filter_section_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Section',
+            searchField: ["value", "label"]
+        });
+
+        $("#filter_position_level_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 4,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Position Level',
+            searchField: ["value", "label"]
+        });
+
+
+
 
         // Start Delete Item
         $(".delete-btns").click(function(){

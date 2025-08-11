@@ -107,19 +107,8 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="col-md-2 px-1">
-                                <div class="form-group d-flex">
-                                    <label for="filter_position_level_id"><i class="fas fa-briefcase text-primary mx-2"></i></label>
-                                    <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0 ">
-                                        <option value="" selected disabled>Choose Position Level</option>
-                                        @foreach($positionlevels as $positionlevel)
-                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == session('filter_position_level_id') ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
 
-                            <div class="col-md-2 px-1">
+                            {{-- <div class="col-md-2 px-1">
                                 <div class="form-group d-flex">
                                     <label for="filter_subdepartment_id"><i class="fas fa-building text-primary mx-2"></i></label>
                                     <select name="filter_subdepartment_id" id="filter_subdepartment_id" class="form-control form-control-sm rounded-0 ">
@@ -129,7 +118,20 @@
                                         @endforeach
                                     </select>
                                 </div>
+                            </div> --}}
+
+                            <div class="col-md-2">
+                                <div class="form-group d-flex">
+                                    <label for="filter_subdepartment_id"><i class="fas fa-building text-primary mx-2"></i></label>
+                                    <select name="filter_section_id" id="filter_section_id" class="form-control form-control-sm rounded-0">
+                                        <option value="" selected disabled>Choose  Section</option>
+                                        @foreach($sections as $section)
+                                                    <option value="{{$section['id']}}" {{ $section['id'] == session('filter_section_id') ? 'selected' : '' }}>{{$section['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
+
 
 
                             <div class="col-md-2 px-1">
@@ -737,6 +739,18 @@
             searchField: ["value", "label"]
         });
 
+        $("#filter_section_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Section',
+            searchField: ["value", "label"]
+        });
+
+
 
         $("#start_date,#end_date").flatpickr({
             dateFormat: "Y-m-d",
@@ -776,7 +790,7 @@
                     [1, 'asc']
                 ],
                 'ajax': {
-                    url: `/${appraisalCycleId}/participantusers/`, // <-- include the ID here
+                    url: `/${appraisalCycleId}/participantusers/`,
                 'type': 'GET',
                 'data': function(d) {
                     d.filter_employee_name = $('#filter_employee_name').val();
@@ -784,6 +798,7 @@
                     d.filter_branch_id = $('#filter_branch_id').val();
                     d.filter_position_level_id = $('#filter_position_level_id').val();
                     d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
+                    d.filter_section_id = $('#filter_section_id').val();
                 }
                 },
                 columns: [
@@ -858,6 +873,7 @@
                         d.filter_branch_id = $('#filter_branch_id').val();
                         d.filter_position_level_id = $('#filter_position_level_id').val();
                         d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
+                        d.filter_section_id = $('#filter_section_id').val();
                     }
                 },
                 columns: [
@@ -1388,7 +1404,9 @@
                     $('#filter_employee_code').val('');
                     $('#filter_branch_id').val('');
                     $('#filter_position_level_id').val('');
-                    $('#filter_subdepartment_id').val('');
+                    {{-- $('#filter_subdepartment_id').val(''); --}}
+                    $('#filter_section_id').val('');
+
 
 
                     // Redraw DataTables

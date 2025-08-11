@@ -284,7 +284,8 @@ Route::middleware('auth')->group(function () {
             'filter_employee_code',
             'filter_branch_id',
             'filter_position_level_id',
-            'filter_subdepartment_id'
+            'filter_subdepartment_id',
+            'filter_section_id'
         ]);
         return response()->json(['status' => 'success']);
     })->name('clear.filter.sessions');
