@@ -401,7 +401,7 @@
                         <div id="appraisal" class="tab-pane">
                             <div class="row">
                                <div class="col-lg-12">
-                                    {{-- <div class="table-responsive rounded mb-3">
+                                    <div class="table-responsive rounded mb-3">
                                         <table id="participantusertable"  class="table mb-0 w-100" >
                                             <thead class="bg-white text-uppercase">
                                                 <tr class="ligth ligth-data">
@@ -419,9 +419,9 @@
 
                                             </tbody>
                                         </table>
-                                    </div> --}}
+                                    </div>
 
-                                    <div class="card">
+                                    {{-- <div class="card">
                                         <h4 class="card-title p-2">Assessors & Their Forms</h4>
                                         <div class="card-body">
                                             <div class="assessor-card">
@@ -448,7 +448,6 @@
                                                             <svg width="12" height="12" fill="white" viewBox="0 0 20 20">
                                                                 <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
                                                             </svg>
-                                                            {{-- <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span> --}}
                                                             </div>
                                                             1 Ready
                                                         </div>
@@ -466,23 +465,16 @@
 
                                                     <div class="col-auto d-flex justify-content-end gap-2" style="gap:10px">
                                                         <button onclick="event.stopPropagation(); viewAssessorForms(1)" class="btn btn-outline-light btn-sm" title="View Details">
-                                                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                            <circle cx="12" cy="12" r="3"></circle>
-                                                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                                            </svg> --}}
                                                             <span class="mr-1 text-dark">👁️ View Forms</span>
                                                         </button>
                                                         <button onclick="event.stopPropagation(); distributeToSingleAssessor(1)" class="btn btn-success btn-sm" title="Send 1 Forms">
-                                                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                            <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                                                            </svg> --}}
                                                             <span class="mr-1 text-white">⚡ Quick Send</span>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                </div>
                             </div>
                         </div>
