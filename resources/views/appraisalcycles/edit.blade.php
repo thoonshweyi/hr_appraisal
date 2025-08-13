@@ -425,51 +425,62 @@
                                         <h4 class="card-title p-2">Assessors & Their Forms</h4>
                                         <div class="card-body">
                                             <div class="assessor-card">
-                                                <div class="d-flex justify-content-between align-items-start">
-                                                    <div class="d-flex flex-grow-1 align-items-center">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" checked onchange="toggleAssessorSelection(1)" class="form-check-input me-3">
-                                                        </div>
-                                                        <div class="avatar-circle">AJ</div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="mb-1 fw-semibold text-dark">Alice Johnson</h5>
-                                                            <p class="mb-0 text-muted small">Senior Software Engineer</p>
-                                                            <p class="mb-0 text-secondary small">Engineering</p>
-                                                        </div>
+                                                <div class="row align-items-center py-3 px-4 assessor-table-row">
+                                                    <div class="col-md-1 d-flex align-items-center gap-3">
+                                                        <input type="checkbox" class="m-0" onclick="event.stopPropagation()">
+                                                        <div class="avatar-box mr-2" >AJ</div>
                                                     </div>
-                                                    <div class="text-end">
-                                                        <div class="fw-semibold small text-dark">3 forms</div>
-                                                        <div class="small text-warning">Has Pending</div>
-                                                    </div>
-                                                </div>
 
-                                                <div class="mt-3 row g-2 text-center">
-                                                    <div class="col-4">
-                                                        <div class="status-box status-ready">
-                                                            <div class="fw-semibold">0</div>
-                                                            <div>Ready</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <div class="status-box status-pending">
-                                                            <div class="fw-semibold">3</div>
-                                                            <div>Pending</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <div class="status-box status-missing">
-                                                            <div class="fw-semibold">0</div>
-                                                            <div>Missing</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
 
-                                                <div class="mt-3 d-flex gap-2">
-                                                    <button onclick="viewAssessorForms(1)" class="btn btn-link p-0 text-primary btn-sm">View Forms</button>
-                                                    <button onclick="distributeToSingleAssessor(1)" class="btn btn-link p-0 text-success btn-sm">Quick Distribute</button>
+                                                    <div class="col-md-3">
+                                                        <div class="fw-semibold text-dark small">Alice Johnson</div>
+                                                        <div class="text-muted small">Senior Software Engineer</div>
+                                                        <span class="badge bg-light text-secondary mt-1">Engineering</span>
+                                                    </div>
+
+                                                    <div class="col-md-4 d-flex gap-3 flex-wrap" style="gap: 10px;">
+                                                        <div class="pill">
+                                                            <div class="icon-circle">1</div>
+                                                            Total
+                                                        </div>
+                                                        <div class="pill" style="background: linear-gradient(90deg, #dbeafe, #e0e7ff); border-color: #93c5fd;">
+                                                            <div class="icon-circle position-relative" style="background: #2563EB;">
+                                                            <svg width="12" height="12" fill="white" viewBox="0 0 20 20">
+                                                                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                                            </svg>
+                                                            {{-- <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span> --}}
+                                                            </div>
+                                                            1 Ready
+                                                        </div>
+
+                                                        <div class="pill" style="background: linear-gradient(90deg, #bbf7d0, #86efac); border-color: #4ade80;">
+                                                        <div class="icon-circle position-relative" style="background: #16A34A;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                                    <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                                                                </svg>
+                                                            </div>
+                                                            1 Sent
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-auto d-flex justify-content-end gap-2" style="gap:10px">
+                                                        <button onclick="event.stopPropagation(); viewAssessorForms(1)" class="btn btn-outline-light btn-sm" title="View Details">
+                                                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                            <circle cx="12" cy="12" r="3"></circle>
+                                                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                            </svg> --}}
+                                                            <span class="mr-1 text-dark">👁️ View Forms</span>
+                                                        </button>
+                                                        <button onclick="event.stopPropagation(); distributeToSingleAssessor(1)" class="btn btn-success btn-sm" title="Send 1 Forms">
+                                                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                            <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                                            </svg> --}}
+                                                            <span class="mr-1 text-white">⚡ Quick Send</span>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                </div>

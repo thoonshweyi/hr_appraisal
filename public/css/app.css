@@ -886,45 +886,61 @@ input.lang:checked + label .badge {
 
 /* End Tag */
 /* Start Assessors & Their Forms */
-   .assessor-card {
-        border: 1px solid #93c5fd; /* Bootstrap default border overridden */
-        background-color: #eff6ff; /* Light blue */
-        border-radius: 0.5rem;
-        padding: 1rem;
-        transition: background-color 0.2s;
-    }
-    .assessor-card:hover {
-        background-color: #f8fafc; /* Light hover */
-    }
-    .avatar-circle {
-        width: 40px;
-        height: 40px;
-        background-color: #3b82f6; /* Bootstrap's primary can also be used */
-        border-radius: 50%;
-        color: white;
-        font-weight: bold;
-        font-size: 0.875rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 0.75rem;
-    }
-    .status-box {
-        border-radius: 0.25rem;
-        padding: 0.5rem;
-        font-size: 0.75rem;
-        text-align: center;
-    }
-    .status-ready {
-        background-color: #ecfdf5;
-        color: #047857;
-    }
-    .status-pending {
-        background-color: #fefce8;
-        color: #b45309;
-    }
-    .status-missing {
-        background-color: #fef2f2;
-        color: #b91c1c;
-    }
+
+.assessor-table-row {
+    border-bottom: 1px solid #f3f4f6; /* border-gray-100 */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.assessor-table-row:hover {
+    background-color: #f9fafb; /* hover:bg-gray-50 */
+}
+
+/* Selected state */
+.assessor-table-row.selected {
+    background-color: #eff6ff; /* bg-blue-50 */
+    border-left: 4px solid #3b82f6; /* border-l-blue-500 */
+}
+.avatar-box {
+    width: 40px !important;
+    height: 40px;
+    background: linear-gradient(135deg, #475569, #1e293b);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+
+    margin-left: 10px;
+}
+
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #f1f5f9, #e2e8f0);
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.pill .icon-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: white;
+    background: #4B5563;
+}
 /* End Assessors & Their Forms */
