@@ -401,7 +401,7 @@
                         <div id="appraisal" class="tab-pane">
                             <div class="row">
                                <div class="col-lg-12">
-                                    <div class="table-responsive rounded mb-3">
+                                    {{-- <div class="table-responsive rounded mb-3">
                                         <table id="participantusertable"  class="table mb-0 w-100" >
                                             <thead class="bg-white text-uppercase">
                                                 <tr class="ligth ligth-data">
@@ -419,6 +419,58 @@
 
                                             </tbody>
                                         </table>
+                                    </div> --}}
+
+                                    <div class="card">
+                                        <h4 class="card-title p-2">Assessors & Their Forms</h4>
+                                        <div class="card-body">
+                                            <div class="assessor-card">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="d-flex flex-grow-1 align-items-center">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" checked onchange="toggleAssessorSelection(1)" class="form-check-input me-3">
+                                                        </div>
+                                                        <div class="avatar-circle">AJ</div>
+                                                        <div class="flex-grow-1">
+                                                            <h5 class="mb-1 fw-semibold text-dark">Alice Johnson</h5>
+                                                            <p class="mb-0 text-muted small">Senior Software Engineer</p>
+                                                            <p class="mb-0 text-secondary small">Engineering</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <div class="fw-semibold small text-dark">3 forms</div>
+                                                        <div class="small text-warning">Has Pending</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-3 row g-2 text-center">
+                                                    <div class="col-4">
+                                                        <div class="status-box status-ready">
+                                                            <div class="fw-semibold">0</div>
+                                                            <div>Ready</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="status-box status-pending">
+                                                            <div class="fw-semibold">3</div>
+                                                            <div>Pending</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="status-box status-missing">
+                                                            <div class="fw-semibold">0</div>
+                                                            <div>Missing</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-3 d-flex gap-2">
+                                                    <button onclick="viewAssessorForms(1)" class="btn btn-link p-0 text-primary btn-sm">View Forms</button>
+                                                    <button onclick="distributeToSingleAssessor(1)" class="btn btn-link p-0 text-success btn-sm">Quick Distribute</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
                                     </div>
                                </div>
                             </div>

@@ -885,3 +885,46 @@ input.lang:checked + label .badge {
 }
 
 /* End Tag */
+/* Start Assessors & Their Forms */
+   .assessor-card {
+        border: 1px solid #93c5fd; /* Bootstrap default border overridden */
+        background-color: #eff6ff; /* Light blue */
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: background-color 0.2s;
+    }
+    .assessor-card:hover {
+        background-color: #f8fafc; /* Light hover */
+    }
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        background-color: #3b82f6; /* Bootstrap's primary can also be used */
+        border-radius: 50%;
+        color: white;
+        font-weight: bold;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.75rem;
+    }
+    .status-box {
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+        text-align: center;
+    }
+    .status-ready {
+        background-color: #ecfdf5;
+        color: #047857;
+    }
+    .status-pending {
+        background-color: #fefce8;
+        color: #b45309;
+    }
+    .status-missing {
+        background-color: #fef2f2;
+        color: #b91c1c;
+    }
+/* End Assessors & Their Forms */
