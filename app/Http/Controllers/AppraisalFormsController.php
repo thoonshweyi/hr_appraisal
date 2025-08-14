@@ -602,7 +602,13 @@ class AppraisalFormsController extends Controller
         $appraisalform_ids = $noti_datas->pluck('appraisalform_id');
         // dd($appraisalform_ids);
 
-        $appraisalforms = AppraisalForm::whereIn("id",$appraisalform_ids)->paginate(10);
+        $appraisalforms = AppraisalForm::whereIn("id",$appraisalform_ids)
+        ->whereHas('appraisalcycle',function($query){
+                $todayStr = Carbon::now()->toDateString(); // Get only 'YYYY-MM-DD'
+                $query->whereDate('action_start_date', "<=", $todayStr)
+                      ->whereDate('action_end_date', ">=", $todayStr);
+        })
+        ->paginate(10);
 
         return view("appraisalforms.notification", ['appraisalforms' => $appraisalforms]);
     }

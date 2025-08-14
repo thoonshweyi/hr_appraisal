@@ -31,8 +31,8 @@ class AssesseeSummaryController extends Controller
         $criteria_ids = FormResult::whereIn("appraisal_form_id",$appraisal_form_ids)->pluck("criteria_id");
         $criterias = Criteria::whereIn("id",$criteria_ids)->orderBy("id")->get();
 
-
-        foreach($criterias as $criteria){
+        $criteria_totals = [];
+        foreach($criterias ?? [] as $criteria){
             $criteria_totals[$criteria->id] = $this->getCriteriaTotal($assessee_user_id,$criteria->id,$appraisal_cycle_id);
         }
 
