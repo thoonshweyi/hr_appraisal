@@ -44,6 +44,7 @@ return [
     'division_list'             => 'Division List',
     'sub_department_list'             => 'Sub Department List',
     'section_list'             => 'Section List',
+    'subsection_list'             => 'Sub Section List',
     'position_list'             => 'Position List',
     'gender_list'             => 'Gender List',
     'positionlevel_list'             => 'Position Level List',

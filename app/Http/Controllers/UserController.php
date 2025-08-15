@@ -280,6 +280,8 @@ class UserController extends Controller
         $filter_department_id =  $request->filter_department_id;
         $filter_subdepartment_id =  $request->filter_subdepartment_id;
         $filter_section_id =  $request->filter_section_id;
+        $filter_sub_section_id =  $request->filter_sub_section_id;
+
 
 
         $assessor_user_id = $request->assessor_user_id;
@@ -338,6 +340,13 @@ class UserController extends Controller
             $results = $results->whereIn('employee_id', $employee_codes);
         }
 
+        if (!empty($filter_sub_section_id)) {
+
+            $employee_codes = Employee::where('sub_section_id',$filter_sub_section_id)
+                                ->pluck('employee_code');
+            $results = $results->whereIn('employee_id', $employee_codes);
+        }
+
 
         // Preventing Self peer to peer
         $results = $results->where("id","!=",$assessor_user_id);
@@ -357,7 +366,13 @@ class UserController extends Controller
 
 
         $users = $results->orderBy('id','asc')
-        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel","employee.subdepartment"])
+        ->with(['employee.branch',
+        "employee.department",
+        "employee.position",
+        "employee.positionlevel",
+        // "employee.subdepartment",
+        "employee.subsection",
+        ])
         ->get();
 
         // dd($users[0]->getAssFormCat());

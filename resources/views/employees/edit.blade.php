@@ -79,6 +79,16 @@
                         </div>
 
                         <div class="col-md-3">
+                            <label for="sub_section_id">Sub Sections <span class="text-danger">*</span></label>
+                            <select name="sub_section_id" id="sub_section_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Section</option>
+                                @foreach($subsections as $subsection)
+                                    <option value="{{$subsection['id']}}" {{ $subsection['id'] == old('sub_section_id',$employee->sub_section_id) ? "selected" : "" }}>{{$subsection['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
                             <label for="position_id">Positions <span class="text-danger">*</span></label>
                             <select name="position_id" id="position_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Position</option>
@@ -293,96 +303,7 @@
 
 </div>
 
-<!-- START MODAL AREA -->
 
-
-
-    <!-- start edit modal -->
-    {{-- <div id="editmodal" class="modal fade">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title">Edit Form</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <form id="formaction" action="" method="POST">
-                        {{ csrf_field() }}
-                        {{ method_field('PUT') }}
-                        <div class="row align-items-end">
-                                <div class="col-md-6">
-                                    <label for="edit_name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="edit_name" id="edit_name" class="form-control form-control-sm rounded-0" placeholder="Enter Status Name" value="{{ old('name') }}"/>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_division_id">Division</label>
-                                    <select name="edit_division_id" id="edit_division_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($divisions as $division)
-                                            <option value="{{$division['id']}}">{{$division['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_department_id">Departments</label>
-                                    <select name="edit_department_id" id="edit_department_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Department</option>
-                                        @foreach($departments as $department)
-                                            <option value="{{$department['id']}}">{{$department['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_sub_department_id">Sub Departments</label>
-                                    <select name="edit_sub_department_id" id="edit_sub_department_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Sub Department</option>
-                                        @foreach($subdepartments as $subdepartment)
-                                            <option value="{{$subdepartment['id']}}">{{$subdepartment['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="edit_section_id">Sections</label>
-                                    <select name="edit_section_id" id="edit_section_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Section</option>
-                                        @foreach($sections as $section)
-                                            <option value="{{$section['id']}}">{{$section['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-
-                                <div class="col-md-6">
-                                    <label for="edit_status_id">Status</label>
-                                    <select name="edit_status_id" id="edit_status_id" class="form-control form-control-sm rounded-0">
-                                        @foreach($statuses as $status)
-                                            <option value="{{$status['id']}}">{{$status['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-12 mt-2">
-                                    <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
-                                </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-
-                </div>
-            </div>
-    </div>
-    </div> --}}
-      <!-- end edit modal -->
-
-<!-- End MODAL AREA -->
 @endsection
 @section('js')
 <script>
@@ -421,6 +342,17 @@
         });
 
         $("#section_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Section',
+            searchField: ["value", "label"]
+        });
+
+        $("#sub_section_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,

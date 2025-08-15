@@ -147,7 +147,7 @@
             toastr.options.preventDuplicates = true;
     </script>
 
-        @if(Session::has("success"))
+        {{-- @if(Session::has("success"))
             <script>toastr.success('{{ session()->get("success") }}', 'Successful')</script>
         @endif
 
@@ -163,7 +163,7 @@
             @foreach($errors->all() as $error)
                 <script></script>
             @endforeach
-        @endif
+        @endif --}}
 
 
 

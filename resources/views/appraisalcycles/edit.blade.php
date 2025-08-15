@@ -120,13 +120,25 @@
                                 </div>
                             </div> --}}
 
-                            <div class="col-md-2">
+                            {{-- <div class="col-md-2">
                                 <div class="form-group d-flex">
-                                    <label for="filter_subdepartment_id"><i class="fas fa-building text-primary mx-2"></i></label>
+                                    <label for="filter_section_id"><i class="fas fa-building text-primary mx-2"></i></label>
                                     <select name="filter_section_id" id="filter_section_id" class="form-control form-control-sm rounded-0">
                                         <option value="" selected disabled>Choose  Section</option>
                                         @foreach($sections as $section)
                                                     <option value="{{$section['id']}}" {{ $section['id'] == session('filter_section_id') ? 'selected' : '' }}>{{$section['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div> --}}
+
+                            <div class="col-md-2">
+                                <div class="form-group d-flex">
+                                    <label for="filter_sub_section_id"><i class="fas fa-building text-primary mx-2"></i></label>
+                                    <select name="filter_sub_section_id" id="filter_sub_section_id" class="form-control form-control-sm rounded-0">
+                                        <option value="" selected disabled>Choose Sub Section</option>
+                                        @foreach($subsections as $subsection)
+                                                    <option value="{{$subsection['id']}}" {{ $subsection['id'] == session('filter_sub_section_id') ? 'selected' : '' }}>{{$subsection['name']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -805,6 +817,17 @@
             searchField: ["value", "label"]
         });
 
+        $("#filter_sub_section_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Sub Section',
+            searchField: ["value", "label"]
+        });
+
 
 
         $("#start_date,#end_date").flatpickr({
@@ -854,6 +877,7 @@
                     d.filter_position_level_id = $('#filter_position_level_id').val();
                     d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
                     d.filter_section_id = $('#filter_section_id').val();
+                    d.filter_sub_section_id = $('#filter_sub_section_id').val();
                 }
                 },
                 columns: [
@@ -929,6 +953,7 @@
                         d.filter_position_level_id = $('#filter_position_level_id').val();
                         d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
                         d.filter_section_id = $('#filter_section_id').val();
+                        d.filter_sub_section_id = $('#filter_sub_section_id').val();
                     }
                 },
                 columns: [

@@ -75,12 +75,22 @@
                             </select>
                         </div>
 
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <label for="filter_section_id">Section</label>
                             <select name="filter_section_id" id="filter_section_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Sub Section</option>
                                 @foreach($sections as $section)
                                             <option value="{{$section['id']}}" {{ $section['id'] == request()->filter_section_id ? 'selected' : '' }}>{{$section['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+
+                        <div class="col-md-2">
+                            <label for="filter_sub_section_id">Sub Section</label>
+                            <select name="filter_sub_section_id" id="filter_sub_section_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Sub Section</option>
+                                @foreach($subsections as $subsection)
+                                            <option value="{{$subsection['id']}}" {{ $subsection['id'] == request()->filter_sub_section_id ? 'selected' : '' }}>{{$subsection['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -208,7 +218,7 @@
                                 <!-- Optional label text next to the switch -->
                             </div>
                         </td>
-                        <td>{{ $employee->employee_name }}</td>
+                        <td>{{ $employee->user->name }}</td>
                         <td>{{ $employee->created_at->format('d M Y') }}</td>
                         <td>{{ $employee->updated_at->format('d M Y') }}</td>
                         <td class="text-center">
@@ -259,7 +269,18 @@
             searchField: ["value", "label"]
         });
 
-          $("#filter_section_id").selectize({
+        $("#filter_section_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Section',
+            searchField: ["value", "label"]
+        });
+
+         $("#filter_sub_section_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,

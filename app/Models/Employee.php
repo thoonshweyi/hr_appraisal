@@ -43,7 +43,8 @@ class Employee extends Model
        "phone",
        "address",
        "dob",
-       "image"
+       "image",
+       "sub_section_id"
     ];
     public function user(){
         return $this->belongsTo(User::class);
@@ -69,6 +70,10 @@ class Employee extends Model
 
     public function section(){
         return $this->belongsTo(Section::class,'section_id','id');
+    }
+
+    public function subsection(){
+        return $this->belongsTo(SubSection::class,'sub_section_id','id');
     }
 
     public function position(){

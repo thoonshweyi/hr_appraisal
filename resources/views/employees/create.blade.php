@@ -125,6 +125,17 @@
                             </select>
                         </div>
 
+
+                        <div class="col-md-3">
+                            <label for="sub_section_id">Sub Sections <span class="text-danger">*</span></label>
+                            <select name="sub_section_id" id="sub_section_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Section</option>
+                                @foreach($subsections as $subsection)
+                                    <option value="{{$subsection['id']}}" {{ $subsection['id'] == old('sub_section_id') ? "selected" : "" }}>{{$subsection['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="col-md-3">
                             <label for="position_id">Positions <span class="text-danger">*</span></label>
                             <select name="position_id" id="position_id" class="form-control form-control-sm rounded-0">
@@ -331,6 +342,16 @@
             searchField: ["value", "label"]
         });
 
+        $("#sub_section_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Section',
+            searchField: ["value", "label"]
+        });
 
         $("#status_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],

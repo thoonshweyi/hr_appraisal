@@ -11,6 +11,7 @@ use App\Models\Division;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\BranchUser;
+use App\Models\SubSection;
 use Illuminate\Support\Str;
 use App\Models\PositionLevel;
 use App\Models\SubDepartment;
@@ -23,12 +24,15 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Events\AfterImport;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use App\Exceptions\ExcelImportValidationException;
 
-class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
+class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
     protected $rowNumber = 1;  // Initialize row number
+    protected $importedEmployeeCodes = [];
 
     public function model(array $row)
     {
@@ -50,6 +54,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
             'department' => ['required',"exists:agile_departments,name"],
             'sub_department' => 'required|exists:sub_departments,name',
             'section' => 'required|exists:sections,name',
+            'sub_section' => 'required|exists:sub_sections,name',
             'position' => 'required|exists:positions,name',
 
             'beginning_date'=> "required|date",
@@ -78,6 +83,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
         $user_id = $user["id"];
 
         $this->rowNumber += 1;
+        $this->importedEmployeeCodes[] = $row['employee_code'];
 
         $empuser = User::firstOrCreate(
             ['employee_id' => $row['employee_code']], // Ensure user is linked by employee_code
@@ -100,6 +106,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
                 "department_id"      => AgileDepartment::where('name', $row['department'])->first()?->id,
                 "sub_department_id"  => SubDepartment::where('name', $row['sub_department'])->first()?->id,
                 "section_id"         => Section::where('name', 'like' , "%".$row['section'].'%')->first()?->id,
+                "sub_section_id"     => SubSection::where('name', 'like' , "%".$row['sub_section'].'%')->first()?->id,
                 "position_id"        => Position::where('name', $row['position'])->first()?->id,
                 'status_id'          => 1, // Default status_id (change as needed)
                 'user_id'            => $user_id,
@@ -120,6 +127,23 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow{
     {
         // Increment the row number with each row
         $this->rowNumber += 1;
+    }
+
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterImport::class => function(AfterImport $event) {
+                $existingCodes = Employee::pluck('employee_code')->toArray();
+                $codesToDelete = array_diff($existingCodes, $this->importedEmployeeCodes);
+                Employee::whereIn('employee_code', $codesToDelete)
+                ->update(['status_id' => 2]);
+
+                // Employee::whereNotIn('employee_code',$importedEmployeeCodes)->delete();
+
+                Log::info("Soft Deleted Employees: ",$codesToDelete);
+            },
+        ];
     }
 
 }

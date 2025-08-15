@@ -59,6 +59,12 @@
                         </a>
                     </li>
 
+                    <li class="{{ (request()->routeIs('subsections.index')) ? 'active' : '' }}">
+                        <a href="{{route('subsections.index')}}">
+                            <i class="las la-minus"></i><span>{{ __('nav.subsection_list')}}</span>
+                        </a>
+                    </li>
+
                     <li class="{{ (request()->routeIs('positions.index')) ? 'active' : '' }}">
                         <a href="{{route('positions.index')}}">
                             <i class="las la-minus"></i><span>{{ __('nav.position_list')}}</span>

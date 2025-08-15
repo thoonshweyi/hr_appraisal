@@ -26,6 +26,7 @@ use App\Http\Controllers\DeptGroupsController;
 use App\Http\Controllers\AssFormCatsController;
 use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\PeerToPeersController;
+use App\Http\Controllers\SubSectionsController;
 use Pusher\PushNotifications\PushNotifications;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\RatingScalesController;
@@ -151,6 +152,14 @@ Route::middleware('auth')->group(function () {
     Route::delete("/sections/{id}",[SectionsController::class,"destroy"])->name("sections.destroy");
     Route::post("/sectionsstatus",[SectionsController::class,"changestatus"])->name("sections.changestatus");
     Route::post("/sections_excel_import",[SectionsController::class,"excel_import"])->name("sections.excel_import");
+
+
+    Route::get("/subsections",[SubSectionsController::class,"index"])->name("subsections.index");
+    Route::post("/subsections",[SubSectionsController::class,"store"])->name("subsections.store");
+    Route::put("/subsections/{id}",[SubSectionsController::class,"update"])->name("subsections.update");
+    Route::delete("/subsections/{id}",[SubSectionsController::class,"destroy"])->name("subsections.destroy");
+    Route::post("/subsectionsstatus",[SubSectionsController::class,"changestatus"])->name("subsections.changestatus");
+    Route::post("/subsections_excel_import",[SubSectionsController::class,"excel_import"])->name("subsections.excel_import");
 
 
     Route::get("/positions",[PositionsController::class,"index"])->name("positions.index");
@@ -285,7 +294,8 @@ Route::middleware('auth')->group(function () {
             'filter_branch_id',
             'filter_position_level_id',
             'filter_subdepartment_id',
-            'filter_section_id'
+            'filter_section_id',
+            'filter_sub_section_id',
         ]);
         return response()->json(['status' => 'success']);
     })->name('clear.filter.sessions');

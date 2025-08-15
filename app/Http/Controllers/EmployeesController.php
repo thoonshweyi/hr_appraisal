@@ -13,6 +13,7 @@ use App\Models\Division;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\BranchUser;
+use App\Models\SubSection;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PositionLevel;
@@ -58,6 +59,7 @@ class EmployeesController extends Controller
         $filter_position_level_id = $request->filter_position_level_id;
         $filter_subdepartment_id = $request->filter_subdepartment_id;
         $filter_section_id = $request->filter_section_id;
+        $filter_sub_section_id = $request->filter_sub_section_id;
 
         $results = Employee::query();
 
@@ -68,6 +70,7 @@ class EmployeesController extends Controller
         $departments = AgileDepartment::where('status_id',1)->orderBy('id')->get();
         $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
         $sections = Section::where('status_id',1)->orderBy('id')->get();
+        $subsections = SubSection::where('status_id',1)->orderBy('id')->get();
         $positions = Position::where('status_id',1)->orderBy('id')->get();
         $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
@@ -101,9 +104,13 @@ class EmployeesController extends Controller
         if (!empty($filter_section_id)) {
             $results = $results->where('section_id', $filter_section_id);
         }
+
+        if (!empty($filter_sub_section_id)) {
+            $results = $results->where('sub_section_id', $filter_sub_section_id);
+        }
         $employees = $results->orderBy('id','asc')->paginate(10);
 
-        return view("employees.index",compact("employees","statuses","divisions","departments","subdepartments","sections","positions","branches","positionlevels","attachformtypes","subdepartments"));
+        return view("employees.index",compact("employees","statuses","divisions","departments","subdepartments","sections", "subsections","positions","branches","positionlevels","attachformtypes","subdepartments"));
     }
 
     public function create(Request $request){
@@ -112,6 +119,7 @@ class EmployeesController extends Controller
         $departments = AgileDepartment::where('status_id',1)->orderBy('id')->get();
         $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
         $sections = Section::where('status_id',1)->orderBy('id')->get();
+        $subsections = SubSection::where('status_id',1)->orderBy('id')->get();
         $positions = Position::where('status_id',1)->orderBy('id')->get();
         $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
 
@@ -123,7 +131,7 @@ class EmployeesController extends Controller
         // dd($branches);
 
 
-        return view("employees.create",compact("statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","attachformtypes"));
+        return view("employees.create",compact("statuses","divisions","departments","subdepartments","sections", "subsections","positions","branches","genders","positionlevels","attachformtypes"));
     }
 
     public function store(Request $request)
@@ -217,6 +225,7 @@ class EmployeesController extends Controller
         $departments = AgileDepartment::where('status_id',1)->orderBy('id')->get();
         $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
         $sections = Section::where('status_id',1)->orderBy('id')->get();
+        $subsections = SubSection::where('status_id',1)->orderBy('id')->get();
         $positions = Position::where('status_id',1)->orderBy('id')->get();
         $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
 
@@ -227,7 +236,7 @@ class EmployeesController extends Controller
         // dd($branches);
 
 
-        return view("employees.edit",compact("employee","statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","attachformtypes"));
+        return view("employees.edit",compact("employee","statuses","divisions","departments","subdepartments","sections","subsections","positions","branches","genders","positionlevels","attachformtypes"));
     }
 
 
@@ -240,6 +249,7 @@ class EmployeesController extends Controller
             "department_id" => "required",
             "sub_department_id" => "required",
             "section_id" => "required",
+            "sub_section_id" => "required",
             "status_id" => "required|in:1,2",
 
             'beginning_date'=> "required",
@@ -270,6 +280,7 @@ class EmployeesController extends Controller
             $employee->department_id = $request["department_id"];
             $employee->sub_department_id = $request["sub_department_id"];
             $employee->section_id = $request["section_id"];
+            $employee->sub_section_id = $request["sub_section_id"];
             $employee->position_id = $request["position_id"];
             $employee->status_id = $request["status_id"];
             $employee->user_id = $user_id;

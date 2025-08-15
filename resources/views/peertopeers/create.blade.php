@@ -128,13 +128,25 @@
                                     </div>
                                 </div> --}}
 
-                                <div class="col-md-4">
+                                {{-- <div class="col-md-4">
                                     <div class="form-group d-flex" style="white-space: nowrap">
                                            <label for="filter_section_id">Section: </label>
                                             <select name="filter_section_id" id="filter_section_id" class="form-control form-control-sm rounded-0 ml-2">
                                             <option value="" selected disabled>Choose Section</option>
                                             @foreach($sections as $section)
                                                         <option value="{{$section['id']}}" {{ $section['id'] == request()->filter_section_id ? 'selected' : '' }}>{{$section['name']}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div> --}}
+
+                                <div class="col-md-4">
+                                    <div class="form-group d-flex" style="white-space: nowrap">
+                                           <label for="filter_sub_section_id">Sub Section: </label>
+                                            <select name="filter_sub_section_id" id="filter_sub_section_id" class="form-control form-control-sm rounded-0 ml-2">
+                                            <option value="" selected disabled>Choose Section</option>
+                                            @foreach($subsections as $subsection)
+                                                        <option value="{{$subsection['id']}}" {{ $subsection['id'] == request()->filter_sub_section_id ? 'selected' : '' }}>{{$subsection['name']}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -164,7 +176,7 @@
                                                    <th>Assessee Code</th>
                                                    <th>Assessee</th>
                                                    {{-- <th>Department</th> --}}
-                                                   <th>Sub Department</th>
+                                                   <th>Sub Section</th>
                                                    <th>Branch</th>
                                                    <th>Position Level</th>
                                                    <th>Position</th>
@@ -255,7 +267,7 @@
             searchField: ["value", "label"]
         });
 
-        $("#filter_subdepartment_id").selectize({
+        {{-- $("#filter_subdepartment_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
@@ -267,6 +279,17 @@
         });
 
         $("#filter_section_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Section',
+            searchField: ["value", "label"]
+        }); --}}
+
+        $("#filter_sub_section_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
@@ -352,7 +375,8 @@
                     <td>${assesseeuser.employee.employee_code}</td>
                     <td>${assesseeuser.employee.employee_name}</td>
                     {{-- <td>${assesseeuser.employee.department.name}</td> --}}
-                    <td>${assesseeuser.employee.subdepartment.name}</td>
+                    {{-- <td>${assesseeuser.employee.subdepartment.name}</td> --}}
+                    <td>${assesseeuser.employee.subsection.name}</td>
                     <td>${assesseeuser.employee.branch.branch_name}</td>
                     <td>${assesseeuser.employee.positionlevel.name}</td>
                     <td>${assesseeuser.employee.position.name}</td>

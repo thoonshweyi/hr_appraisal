@@ -14,6 +14,7 @@ use App\Models\AssFormCat;
 use App\Models\BranchUser;
 use App\Models\FormResult;
 use App\Models\PeerToPeer;
+use App\Models\SubSection;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\AppraisalForm;
@@ -54,6 +55,7 @@ class PeerToPeersController extends Controller
         $departments = AgileDepartment::where('status_id',1)->orderBy('id')->get();
         $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
         $sections = Section::where('status_id',1)->orderBy('id')->get();
+        $subsections = SubSection::where('status_id',1)->orderBy('id')->get();
         $positions = Position::where('status_id',1)->orderBy('id')->get();
         $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
 
@@ -74,7 +76,7 @@ class PeerToPeersController extends Controller
 
 
 
-        return view("peertopeers.create",compact("statuses","divisions","departments","subdepartments","sections","positions","branches","genders","positionlevels","users","appraisalcycles",'attachformtypes',"assformcats","subdepartments"));
+        return view("peertopeers.create",compact("statuses","divisions","departments","subdepartments","sections", "subsections" ,"positions","branches","genders","positionlevels","users","appraisalcycles",'attachformtypes',"assformcats","subdepartments"));
     }
 
 

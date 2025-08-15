@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddStatusIdToAppraisalFormsTable extends Migration
+class AddSubSectionIdToEmployeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddStatusIdToAppraisalFormsTable extends Migration
      */
     public function up()
     {
-        Schema::table('appraisal_forms', function (Blueprint $table) {
-            $table->unsignedBigInteger("status_id")->default(21);
+        Schema::table('employees', function (Blueprint $table) {
+            $table->unsignedBigInteger("sub_section_id")->default(0);
         });
     }
 
@@ -25,8 +25,8 @@ class AddStatusIdToAppraisalFormsTable extends Migration
      */
     public function down()
     {
-        Schema::table('appraisal_forms', function (Blueprint $table) {
-           $table->dropColumn("status_id");
+        Schema::table('employees', function (Blueprint $table) {
+            $table->dropColumn("sub_section_id");
         });
     }
 }

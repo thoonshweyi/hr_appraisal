@@ -1193,3 +1193,17 @@ function adminHRAuthorize(){
 
     return $adminauthorize;
 }
+
+
+
+function clearFilterSection(){
+    session()->forget([
+        'filter_employee_name',
+        'filter_employee_code',
+        'filter_branch_id',
+        'filter_position_level_id',
+        'filter_subdepartment_id',
+        'filter_section_id',
+        'filter_sub_section_id',
+    ]);
+}
