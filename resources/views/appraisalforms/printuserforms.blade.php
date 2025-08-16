@@ -285,5 +285,12 @@
         </div>
     @endforeach
 
+    {{-- <script>
+    window.onafterprint = function () {
+        console.log("printed");
+     }
+    </script> --}}
 </body>
 </html>
+
+

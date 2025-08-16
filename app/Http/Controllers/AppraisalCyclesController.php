@@ -340,7 +340,8 @@ class AppraisalCyclesController extends Controller
 
         $participantusers = $results
         ->orderBy("id", "desc")
-        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel",
+        'printhistory'])
         ->get();
 
 
@@ -364,7 +365,7 @@ class AppraisalCyclesController extends Controller
                 })
                 ->addColumn('action', function ($participantuser) use ($id) {
 
-                    $printbtn = ($participantuser->employee->positionlevel->id < 5 ) ? "<a href='javascript:void(0);' data-user='$participantuser->id' class='text-warning mx-2 print_btn' title='Print'><i class='fas fa-print'></i></a>" : '';
+                    $printbtn = ($participantuser->employee->positionlevel->id < 5 && !$participantuser->printhistory) ? "<a href='javascript:void(0);' data-user='$participantuser->id' class='text-warning mx-2 print_btn' title='Print'><i class='fas fa-print'></i></a>" : '';
                     return "
                         <div class='d-flex justify-content-center align-items-center'>
                             <form id='appraisalform' action='".route('appraisalforms.create')."' method='GET'>

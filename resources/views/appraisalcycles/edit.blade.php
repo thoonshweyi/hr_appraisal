@@ -890,12 +890,44 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: 'employee.employee_name', name: 'employee.employee_name' },
+                    {   data: 'employee.employee_name',
+                        name: 'employee.employee_name',
+                        render: function(data,type,row){
+                                {{-- const positionLevel = row.employee.positionlevel;
+                                const hasPrintHistory = row.printhistory ? true : false;
+                                const allformSent = true;
+                                if (positionLevel < 5) {
+                                    return hasPrintHistory && allformSent;
+                                } else {
+                                    return allformSent;
+                                } --}}
+
+                            return `
+                            <div class="d-flex align-items-center">
+                                {{-- ${complete ? `
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="9" />
+                                    <path d="M9 12l2 2l4 -4" />
+                                    </svg>
+                                ` : '' } --}}
+
+                                <span>${data}</span>
+                            </div>
+                            `
+                        }
+                    },
                     { data: 'employee.employee_code', name: 'employee.employee_code' },
                     { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
                     {{-- { data: 'employee.department.name', name: 'employee.department.name' }, --}}
                     {{-- { data: 'employee.position.name', name: 'employee.position.name' }, --}}
-                    { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' },
+                    {
+                        data: 'employee.positionlevel.name',
+                        name: 'employee.positionlevel.name',
+                        render: function (data, type, row) {
+                            {{-- console.log(row); --}}
+                            return `${data} ${row.employee.position_level_id < 5 ? "<i class='fas fa-file-export text-success ml-2'></i>" : ''}`; // Render raw value
+                        }
+                    },
 
                     {
                         data: 'form_count',
@@ -1017,10 +1049,12 @@
                         data: {
                             filter_appraisal_cycle_id: $("#appraisal_cycle_id").val()
                         },
-                        success: function (forms) {
+                        success: function ({forms,printed_at}) {
                             var html =`
                             <div class="d-flex justify-content-between mt-2">
-                                <h4 class="card-title">Form Lists</h4>
+                                <h4 class="card-title">Form Lists
+                                </h4>
+                                ${ printed_at ? `<span>Printed At: ${printed_at}</span>` : '' }
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
                                     <div class="dropdown-menu shadow">
@@ -1900,17 +1934,40 @@
             }, --}}
         document.body.appendChild(printFrame);
 
-        // Wait for iframe to load, then print
         printFrame.onload = function () {
             printFrame.contentWindow.focus();
             printFrame.contentWindow.print();
 
-            // Optional: Remove iframe after printing
             setTimeout(() => {
                 document.body.removeChild(printFrame);
             }, 1000);
+
+
+            $.ajax({
+                url:"{{url('/api/printhistories')}}",
+                method:"POST",
+                data: {
+                    assessor_user_id: userId,
+                    appraisal_cycle_id: appraisal_cycle_id,
+                    user_id: {{ Auth::id() }}
+                },
+                dataType:"json",
+                success:function(response){
+                    console.log(response);
+
+                    if(response.status == 'success'){
+                        $('#participantusertable').DataTable().draw(true);
+                        Swal.fire({
+                            title: "Printed!",
+                            text: "User Appraisal Form Printed Successfully",
+                            icon: "success"
+                        });
+                    }
+                }
+            });
         };
     });
+
 
 
     {{-- End Print Forms Btn --}}

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PeerToPeersController;
+use App\Http\Controllers\Api\PrintHistoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +24,5 @@ Route::get('/getrecentassessees', [PeerToPeersController::class, 'employeesRecen
 Route::get('/getrecentassessors', [PeerToPeersController::class, 'employeesRecentAssessors'])->name('peertopeers.employeesRecentAssessors');
 
 Route::get("/assessmentnetwork/{assessor_user_id}/{appraisal_cycle_id}/",[PeerToPeersController::class,"assessmentnetwork"])->name('assessmentnetwork');
+
+Route::apiResource("printhistories",PrintHistoriesController::class,["as"=>"api"]);

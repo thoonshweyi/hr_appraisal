@@ -222,4 +222,11 @@ class User extends Authenticatable
         ->first();
     }
 
+
+
+    public function printhistory(){
+        return $this->hasOne(PrintHistory::class,'assessor_user_id');
+    }
+
+    
 }
