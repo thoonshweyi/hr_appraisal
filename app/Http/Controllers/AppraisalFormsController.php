@@ -480,7 +480,7 @@ class AppraisalFormsController extends Controller
                 ]);
             }
 
-            $assesseeusers = $appraisalform->assesseeusers;
+            $assesseeusers = $appraisalform->assesseeusers()->orderBy('id')->get();
 
             $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
 
@@ -534,7 +534,7 @@ class AppraisalFormsController extends Controller
     {
 
         $appraisalform = AppraisalForm::findOrFail($id);
-        $assesseeusers = $appraisalform->assesseeusers;
+        $assesseeusers = $appraisalform->assesseeusers()->orderBy('id','asc')->get();
         $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
 
         $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');

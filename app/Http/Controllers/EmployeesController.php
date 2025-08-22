@@ -142,6 +142,7 @@ class EmployeesController extends Controller
             "department_id" => "required",
             "sub_department_id" => "required",
             "section_id" => "required",
+            "sub_section_id" => "required",
             "status_id" => "required|in:1,2",
 
             'beginning_date'=> "required",

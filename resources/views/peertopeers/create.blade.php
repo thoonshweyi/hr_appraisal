@@ -330,7 +330,7 @@
                     $("#myloading-container").removeClass('d-none');
                 },
                 success: function (response) {
-                    {{-- console.log(response); --}}
+                    console.log(response);
                     renderTable(response);
                 },
                 complete: function(){
@@ -376,7 +376,7 @@
                     <td>${assesseeuser.employee.employee_name}</td>
                     {{-- <td>${assesseeuser.employee.department.name}</td> --}}
                     {{-- <td>${assesseeuser.employee.subdepartment.name}</td> --}}
-                    <td>${assesseeuser.employee.subsection.name}</td>
+                    <td>${assesseeuser.employee.subsection ? assesseeuser.employee.subsection.name : ''}</td>
                     <td>${assesseeuser.employee.branch.branch_name}</td>
                     <td>${assesseeuser.employee.positionlevel.name}</td>
                     <td>${assesseeuser.employee.position.name}</td>
