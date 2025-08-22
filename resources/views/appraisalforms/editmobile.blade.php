@@ -104,11 +104,13 @@
                         <div class="col-sm-6">
                             <label for="assessees" class="form-label"><strong>Assessees (အမှတ်ပေးခံရမည့်သူ) </strong>
                             <span class="delimiter">-</span>
-                            <span><a href="#assesseemodal" data-toggle="modal">{{ $assesseeusers->count()  }} persons</span></a>
+                            <span><a href="#assesseemodal" data-toggle="modal">{{ $assesseeusers->flatten()->count();  }} persons</span></a>
                             </label>
                             <select class="form-control" id="current_assessees">
-                                @foreach($assesseeusers as $assesseeuser)
+                                @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
+                                @foreach($assesseeuserbybranch as $assesseeuser)
                                     <option value="{{$assesseeuser->id}}">{{ $assesseeuser->employee->employee_name }}</option>
+                                @endforeach
                                 @endforeach
                             </select>
                         </div>
@@ -120,7 +122,9 @@
                         @csrf
                         @method('PUT')
 
-                    @foreach($assesseeusers as $assesseeuser)
+
+                    @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
+                    @foreach($assesseeuserbybranch as $assesseeuser)
                         <div id="assessee_{{ $assesseeuser->id }}_criterias" class="assessee_criterias" style="display: none;" data-assessee="{{ $assesseeuser->id }}">
                         @foreach ($criterias as $idx=>$criteria)
 
@@ -194,6 +198,7 @@
                             </div>
                         </div>
                     @endforeach
+                    @endforeach
                     </form>
 
 
@@ -242,7 +247,9 @@
 
                         <div class="assessee-list" id="assesseeList">
 
-                            @foreach($assesseeusers as $assesseeuser)
+                            @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
+                            <h5>{{ $branch }} </h5>
+                            @foreach($assesseeuserbybranch as $assesseeuser)
                             <div id="assessee-list-item{{$assesseeuser->id}}" class="assessee-list-item" data-assessee="{{ $assesseeuser->id }}">
                                 <div class="assessee-item-details">
                                     <div class="name">{{ $assesseeuser->name }}</div>
@@ -254,6 +261,8 @@
                                 <span id="assesseestatuses{{$assesseeuser->id}}" class="status-badge status-completed assesseestatuses">completed</span>
                             </div>
                             @endforeach
+                            @endforeach
+
 
                             {{-- <div class="assessee-list-item selected" data-assessee-id="a001">
                                 <div class="assessee-item-details">

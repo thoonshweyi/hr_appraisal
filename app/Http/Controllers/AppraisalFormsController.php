@@ -278,8 +278,11 @@ class AppraisalFormsController extends Controller
 
         $assessee_ids = $appraisalform->assesseeusers->pluck('id');
         $assesseeusers = User::whereIn("id",$assessee_ids)
-        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
-        ->get();
+        ->with(['employee.branch',"employee.department","employee.subdepartment","employee.position","employee.positionlevel"])
+        ->get()
+        ->groupBy(function ($user) {
+            return $user->employee->branch->branch_name ?? 'No Branch';
+        });
         // dd($assessee_ids);
 
         $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->orderBy("id")->get();
@@ -480,7 +483,13 @@ class AppraisalFormsController extends Controller
                 ]);
             }
 
-            $assesseeusers = $appraisalform->assesseeusers()->orderBy('id')->get();
+            $assesseeusers = $appraisalform->assesseeusers()
+            ->with('employee.branch') // eager load employee and branch
+            ->orderBy('id','asc')
+            ->get()
+            ->groupBy(function ($user) {
+                return $user->employee->branch->branch_name ?? 'No Branch';
+            });
 
             $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
 
@@ -534,7 +543,13 @@ class AppraisalFormsController extends Controller
     {
 
         $appraisalform = AppraisalForm::findOrFail($id);
-        $assesseeusers = $appraisalform->assesseeusers()->orderBy('id','asc')->get();
+        $assesseeusers = $appraisalform->assesseeusers()
+        ->with('employee.branch') // eager load employee and branch
+        ->orderBy('id','asc')
+        ->get()
+        ->groupBy(function ($user) {
+            return $user->employee->branch->branch_name ?? 'No Branch';
+        });
         $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
 
         $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
