@@ -248,19 +248,24 @@
                         <div class="assessee-list" id="assesseeList">
 
                             @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
-                            <h5>{{ $branch }} </h5>
-                            @foreach($assesseeuserbybranch as $assesseeuser)
-                            <div id="assessee-list-item{{$assesseeuser->id}}" class="assessee-list-item" data-assessee="{{ $assesseeuser->id }}">
-                                <div class="assessee-item-details">
-                                    <div class="name">{{ $assesseeuser->name }}</div>
-                                    <div class="role">{{ $assesseeuser->employee->position->name }}</div>
+                                <div class="card branch-card">
+                                    <div class="branch-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">{{ $branch }}</h5>
+                                        <span class="badge bg-light text-dark">{{ count($assesseeuserbybranch) }} Assessees</span>
+                                    </div>
+                                @foreach($assesseeuserbybranch as $assesseeuser)
+                                <div id="assessee-list-item{{$assesseeuser->id}}" class="assessee-list-item" data-assessee="{{ $assesseeuser->id }}">
+                                    <div class="assessee-item-details">
+                                        <div class="name">{{ $assesseeuser->name }}</div>
+                                        <div class="role">{{ $assesseeuser->employee->position->name }}</div>
+                                    </div>
+                                    <div class="assessee-total">
+                                        <span class="total_results_{{ $assesseeuser->id }}">{{ $appraisalform->getTotalResult($assesseeuser->id) != 0 ? $appraisalform->getTotalResult($assesseeuser->id) : '0' }}</span>
+                                    </div>
+                                    <span id="assesseestatuses{{$assesseeuser->id}}" class="status-badge status-completed assesseestatuses">completed</span>
                                 </div>
-                                <div class="assessee-total">
-                                    <span class="total_results_{{ $assesseeuser->id }}">{{ $appraisalform->getTotalResult($assesseeuser->id) != 0 ? $appraisalform->getTotalResult($assesseeuser->id) : '0' }}</span>
+                                @endforeach
                                 </div>
-                                <span id="assesseestatuses{{$assesseeuser->id}}" class="status-badge status-completed assesseestatuses">completed</span>
-                            </div>
-                            @endforeach
                             @endforeach
 
 
@@ -586,7 +591,19 @@
             justify-content: center;
             align-items: center;
         }
+
+        .branch-card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .branch-header {
+            background: linear-gradient(135deg, #4e73df, #224abe);
+            color: white;
+            padding: 12px 16px;
+        }
     /* End Assessee Modal */
+
+
 </style>
 @endsection
 
