@@ -867,6 +867,8 @@
                 "order": [
                     [1, 'asc']
                 ],
+                stateSave: true, // <-- this saves page, filter, search, sorting in localStorage
+                stateDuration: -1, // keep it forever until browser closed
                 'ajax': {
                     url: `/${appraisalCycleId}/participantusers/`,
                 'type': 'GET',
@@ -878,7 +880,7 @@
                     d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
                     d.filter_section_id = $('#filter_section_id').val();
                     d.filter_sub_section_id = $('#filter_sub_section_id').val();
-                }
+                },
                 },
                 columns: [
                     {

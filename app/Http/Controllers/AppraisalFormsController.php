@@ -430,7 +430,13 @@ class AppraisalFormsController extends Controller
             }
 
             \DB::commit();
-            return redirect(route("appraisalforms.index"))->with('success',"Appraisal Form Saved successfully");
+
+            $adminauthorize = adminHRAuthorize();
+            if($adminauthorize){
+                 return redirect()->back()->with('success',"Appraisal Form Saved successfully")->with("js",true);
+            }else{
+                return redirect(route("appraisalforms.notification"))->with('success',"Appraisal Form Saved successfully");
+            }
         }catch(Exception $err){
             \DB::rollback();
 
