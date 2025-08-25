@@ -221,8 +221,8 @@ class AppraisalFormsController extends Controller
 
 
             // Start Laravel Database Notification
-            $title = "You received new Appraisal Form $assformcat->name";
-            Notification::send($assessor,new AppraisalFormsNotify($appraisalform->id,$assformcat->id,$title));
+            $title = "You received new Appraisal Form \"$assformcat->name\"";
+            Notification::send($assessor,new AppraisalFormsNotify($appraisalform->id,$assformcat->id,$title,$appraisal_cycle_id));
             // End Laravel Database Notification
 
             \DB::commit();
@@ -433,7 +433,7 @@ class AppraisalFormsController extends Controller
 
             $adminauthorize = adminHRAuthorize();
             if($adminauthorize){
-                 return redirect()->back()->with('success',"Appraisal Form Saved successfully")->with("js",true);
+                 return redirect()->route("appraisalcycles.edit",$appraisalform->appraisal_cycle_id)->with('success',"Appraisal Form Saved successfully")->with("js",true);
             }else{
                 return redirect(route("appraisalforms.notification"))->with('success',"Appraisal Form Saved successfully");
             }

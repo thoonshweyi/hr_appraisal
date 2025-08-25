@@ -69,16 +69,16 @@
             <div class="card border-0 rounded-0 shadow mb-4">
                 <ul class="nav">
                     <li class="nav-item">
-                        <button type="button" class="tablinks" onclick="gettab(event,'appraisalcycle')">Peroid</button>
+                        <button type="button" id="appraisalcycle-btn" class="tablinks" onclick="gettab(event,'appraisalcycle')">Peroid</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" id="autoclick" class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
+                        <button type="button" id="peer_to_peer-btn" class="tablinks" onclick="gettab(event,'peer_to_peer')">Peer-to-Peer</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button"  class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
+                        <button type="button" id="appraisal-btn" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button"  class="tablinks" onclick="gettab(event,'assesseesummary')">Assessee Summary</button>
+                        <button type="button" id="assesseesummary-btn"  class="tablinks" onclick="gettab(event,'assesseesummary')">Assessee Summary</button>
                     </li>
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
@@ -867,8 +867,14 @@
                 "order": [
                     [1, 'asc']
                 ],
-                stateSave: true, // <-- this saves page, filter, search, sorting in localStorage
-                stateDuration: -1, // keep it forever until browser closed
+                stateSave: true,
+                stateDuration: -1,
+                stateSaveCallback: function(settings, data) {
+                    localStorage.setItem('DataTables_participantusertable', JSON.stringify(data));
+                },
+                stateLoadCallback: function(settings) {
+                    return JSON.parse(localStorage.getItem('DataTables_participantusertable'));
+                },
                 'ajax': {
                     url: `/${appraisalCycleId}/participantusers/`,
                 'type': 'GET',
@@ -977,6 +983,14 @@
                 "order": [
                 [1, 'asc']
                 ],
+                stateSave: true,
+                stateDuration: -1,
+                stateSaveCallback: function(settings, data) {
+                    localStorage.setItem('DataTables_assesseeusertable', JSON.stringify(data));
+                },
+                stateLoadCallback: function(settings) {
+                    return JSON.parse(localStorage.getItem('DataTables_assesseeusertable'));
+                },
                 'ajax': {
                     url: `/${appraisalCycleId}/assesseeusers/`, // <-- include the ID here
                     'type': 'GET',
@@ -1444,6 +1458,11 @@
             });
         {{-- End assessorusers, participantusers, assesseeusers, peertopeer --}}
 
+        {{-- window.addEventListener('storage', function(e) {
+            if (e.key === 'DataTables_participantusertable') {
+                location.reload(); // or table.ajax.reload()
+            }
+        }); --}}
 
         {{-- Start Assessment Network --}}
         let assessmentNetworkChart = null;
@@ -1583,9 +1602,14 @@
         }else{
             document.getElementById('tab-tilter').classList.remove('d-none');
         }
+
+        localStorage.setItem('autoclick', linkid);
     }
 
-    document.getElementById('autoclick').click();
+
+
+    var autotab = localStorage.getItem("autoclick") || 'peer_to_peer';
+    document.getElementById(`${autotab}-btn`).click();
     // End Tag Box
 
 

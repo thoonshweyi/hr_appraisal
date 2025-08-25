@@ -35,7 +35,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AgileDepartmentImport;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\AppraisalFormAssesseeUser;
+use Illuminate\Support\Facades\Notification;
 use App\Exceptions\ExcelImportValidationException;
+use Illuminate\Notifications\DatabaseNotification;
 
 class PeerToPeersController extends Controller
 {
@@ -129,6 +131,14 @@ class PeerToPeersController extends Controller
 
             // Revoking Appraisal Form
             $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,$ass_form_cat_ids);
+            // Unsend Apprasial Notification
+
+            $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
+            foreach($notifications as $notification){
+                if(in_array($notification->data['assformcat_id'],$ass_form_cat_ids) && ($notification->data['appraisal_cycle_id'] ?? '' == $appraisal_cycle_id)){
+                    $notification->delete();
+                }
+            }
 
             \DB::commit();
             return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('success',"Peer To Peer created successfully");;

@@ -16,11 +16,12 @@ class AppraisalFormsNotify extends Notification
      *
      * @return void
      */
-    public function __construct($id,$assformcat_id,$title)
+    public function __construct($id,$assformcat_id,$title,$appraisal_cycle_id)
     {
         $this->appraisalform_id = $id;
         $this->assformcat_id = $assformcat_id;
         $this->title = $title;
+        $this->appraisal_cycle_id = $appraisal_cycle_id;
     }
 
     /**
@@ -60,6 +61,7 @@ class AppraisalFormsNotify extends Notification
             "appraisalform_id"=>$this->appraisalform_id,
             "assformcat_id"=>$this->assformcat_id,
             "title"=>$this->title,
+            "appraisal_cycle_id"=>$this->appraisal_cycle_id,
         ];
     }
 }
