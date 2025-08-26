@@ -488,8 +488,86 @@
                                         </div>
                                     </div> --}}
                                </div>
+                               <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-6 mb-2">
+                                            <div class="card shadow py-2 border-left-primarys">
+                                                <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                        <div class="col">
+                                                            <h6 class="text-xs fw-bold text-primary text-uppercase mb-1">Total Assessors</h6>
+                                                            <p class="h5 text-muted mb-0">1900</p>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <i class="fas fa-user-tie fa-2x text-secondary"></i>
+                                                        </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 mb-2">
+                                            <div class="card shadow py-2 border-left-successes">
+                                                <div class="card-body">
+                                                    <div class="row align-items-center">
+                                                        <div class="col">
+                                                            <h6 class="text-xs fw-bold text-primary text-uppercase mb-1">Assessment Forms</h6>
+                                                            <p class="h5 text-muted mb-0">4000</p>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <i class="fas fa-clipboard-list fa-2x text-secondary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 mb-2">
+                                            <div class="card shadow py-2 border-left-infos">
+                                                <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col">
+                                                                <h6 class="text-xs fw-bold text-primary text-uppercase mb-1">Ready Forms</h6>
+                                                                <div class="row">
+                                                                    <div class="col-auto">
+                                                                        <p class="h5 text-muted mb-0">3500</p>
+                                                                    </div>
+                                                                    {{-- <div class="col">
+                                                                        <div class="progress progress-sm">
+                                                                                <div class="progress-bar bg-info" style="width: 60%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </div> --}}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-auto">
+                                                                <i class="fas fa-clipboard-list fa-2x text-success"></i>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-6 mb-2">
+                                            <div class="card shadow py-2 border-left-warnings">
+                                                <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                        <div class="col">
+                                                            <h6 class="text-xs fw-bold text-danger text-uppercase mb-1">Pending Forms</h6>
+                                                            <p class="h5 text-muted mb-0">80</p>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <i class="fas fa-calendar fa-2x text-danger"></i>
+                                                        </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+
+
 
                         <div id="assesseesummary" class="tab-pane">
                             <div class="row">
@@ -1997,5 +2075,32 @@
 
 
     {{-- End Print Forms Btn --}}
+
+
+    // Start User Chart
+    var appraisal_cycle_id = $("#appraisal_cycle_id").val();
+	$.ajax({
+		url: `/api/appraisalcycles/${appraisal_cycle_id}/assessorformsdashboard`,
+		method: 'GET',
+		success:function(data){
+			console.log(data)
+
+			{{-- $('#usercount').text(data.totalusers);
+			var gaugeurs = new JustGage({
+				id: "userchart", // the id of the html element
+				width : 200,
+				height: 200,
+				value: data.onlineusers,
+				min: 0,
+				max: data.totalusers,
+				gaugeWidthScale: 0.6
+			 }); --}}
+		},
+		error: function(){
+			$('#usercount').text("Error loading data");
+		}
+	});
+	//  End User Chart
+
 </script>
 @stop

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PeerToPeersController;
 use App\Http\Controllers\Api\PrintHistoriesController;
+use App\Http\Controllers\Api\AppraisalCyclesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,6 @@ Route::get('/getrecentassessors', [PeerToPeersController::class, 'employeesRecen
 Route::get("/assessmentnetwork/{assessor_user_id}/{appraisal_cycle_id}/",[PeerToPeersController::class,"assessmentnetwork"])->name('assessmentnetwork');
 
 Route::apiResource("printhistories",PrintHistoriesController::class,["as"=>"api"]);
+
+Route::apiResource("appraisalcycles",AppraisalCyclesController::class,["as"=>"api"]);
+Route::get('/appraisalcycles/{id}/assessorformsdashboard', [AppraisalCyclesController::class, 'assessorformsdashboard'])->name('appraisalcycles.assessorformsdashboard');
