@@ -496,7 +496,7 @@
                                                         <div class="row align-items-center">
                                                         <div class="col">
                                                             <h6 class="text-xs fw-bold text-primary text-uppercase mb-1">Total Assessors</h6>
-                                                            <p class="h5 text-muted mb-0">1900</p>
+                                                            <p id="totalassessorscount" class="h5 text-muted mb-0">Loading....</p>
                                                         </div>
                                                         <div class="col-auto">
                                                             <i class="fas fa-user-tie fa-2x text-secondary"></i>
@@ -511,7 +511,7 @@
                                                     <div class="row align-items-center">
                                                         <div class="col">
                                                             <h6 class="text-xs fw-bold text-primary text-uppercase mb-1">Assessment Forms</h6>
-                                                            <p class="h5 text-muted mb-0">4000</p>
+                                                            <p id="assessmentformscount" class="h5 text-muted mb-0">Loading....</p>
                                                         </div>
                                                         <div class="col-auto">
                                                             <i class="fas fa-clipboard-list fa-2x text-secondary"></i>
@@ -528,7 +528,7 @@
                                                                 <h6 class="text-xs fw-bold text-primary text-uppercase mb-1">Ready Forms</h6>
                                                                 <div class="row">
                                                                     <div class="col-auto">
-                                                                        <p class="h5 text-muted mb-0">3500</p>
+                                                                        <p id="readyscount" class="h5 text-muted mb-0">Loading....</p>
                                                                     </div>
                                                                     {{-- <div class="col">
                                                                         <div class="progress progress-sm">
@@ -552,7 +552,7 @@
                                                         <div class="row align-items-center">
                                                         <div class="col">
                                                             <h6 class="text-xs fw-bold text-danger text-uppercase mb-1">Pending Forms</h6>
-                                                            <p class="h5 text-muted mb-0">80</p>
+                                                            <p id="pendingscount" class="h5 text-muted mb-0">Loading....</p>
                                                         </div>
                                                         <div class="col-auto">
                                                             <i class="fas fa-calendar fa-2x text-danger"></i>
@@ -2085,16 +2085,11 @@
 		success:function(data){
 			console.log(data)
 
-			{{-- $('#usercount').text(data.totalusers);
-			var gaugeurs = new JustGage({
-				id: "userchart", // the id of the html element
-				width : 200,
-				height: 200,
-				value: data.onlineusers,
-				min: 0,
-				max: data.totalusers,
-				gaugeWidthScale: 0.6
-			 }); --}}
+			$('#totalassessorscount').text(data.totalassessors);
+			$('#assessmentformscount').text(data.assessmentforms);
+			$('#readyscount').text(data.readys);
+			$('#pendingscount').text(data.pendings);
+
 		},
 		error: function(){
 			$('#usercount').text("Error loading data");
