@@ -338,6 +338,7 @@ class AppraisalCyclesController extends Controller
             });
         }
 
+
         $participantusers = $results
         ->orderBy("id", "desc")
         ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel",
@@ -351,9 +352,6 @@ class AppraisalCyclesController extends Controller
 
 
         return DataTables::of($participantusers)
-                ->addColumn('form_count', function ($user) use ($id) {
-                    return $user->getAppraisalFormCount($id) . ' / ' . $user->getAllFormCount($id);
-                })
                 ->addColumn('progress', function ($participantuser) use ($id) {
                     return "
                         <div class='d-flex justify-content-center align-items-center'>
@@ -381,7 +379,13 @@ class AppraisalCyclesController extends Controller
                         </div>
                     ";
                 })
-                ->rawColumns(['form_count', 'progress', 'action']) // <-- Allow raw HTML
+                ->addColumn("appraisalformcount", function($user) use($id){
+                    return $user->getAppraisalFormCount($id);
+                })
+                ->addColumn("allformcount", function($user) use($id){
+                    return $user->getAllFormCount($id);
+                })
+                ->rawColumns(['progress', 'action']) // <-- Allow raw HTML
                 ->make(true);
    }
 

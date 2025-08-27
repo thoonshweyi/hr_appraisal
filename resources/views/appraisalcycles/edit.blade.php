@@ -78,8 +78,12 @@
                         <button type="button" id="appraisal-btn" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
                     <li class="nav-item">
+                        <button type="button" id="dashboard-btn"  class="tablinks" onclick="gettab(event,'dashboard')">Dashboard</button>
+                    </li>
+                    <li class="nav-item">
                         <button type="button" id="assesseesummary-btn"  class="tablinks" onclick="gettab(event,'assesseesummary')">Assessee Summary</button>
                     </li>
+
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
                 <div id="tab-tilter" class="col-lg-12 tab-filter">
@@ -596,6 +600,10 @@
                                 </div>
                              </div>
                         </div>
+
+                        <div id="dashboard" class="tab-pane">
+
+                        </div>
                 </div>
             </div>
             </div>
@@ -988,16 +996,22 @@
                                     return allformSent;
                                 } --}}
 
+                                const positionLevel = row.employee.positionlevel.id;
+                                const hasPrintHistory = row.printhistory ? true : false;
+                                const allformSent = row.allformcount == row.appraisalformcount;
+                                const printDoc = positionLevel < 5;
+                                const printed = printDoc ? hasPrintHistory : true;
+
                             return `
                             <div class="d-flex align-items-center">
-                                {{-- ${complete ? `
+                                <span class="mr-2">${data}</span>
+                                ${allformSent && printed ? `
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="9" />
                                     <path d="M9 12l2 2l4 -4" />
                                     </svg>
-                                ` : '' } --}}
+                                ` : '' }
 
-                                <span>${data}</span>
                             </div>
                             `
                         }
@@ -1021,7 +1035,7 @@
                         orderable: false,
                         searchable: false,
                         render: function (data, type, row) {
-                            return data ?? ''; // Render raw value
+                            return `${row.appraisalformcount}/${row.allformcount}`;
                         }
                     },
                     {
@@ -1030,7 +1044,7 @@
                         orderable: false,
                         searchable: false,
                         render: function (data, type, row) {
-                            return data ?? '';
+                            return data ?? ''; // Render raw value
                         }
                     },
                     {
@@ -2047,7 +2061,7 @@
             }, 1000);
 
 
-            {{-- $.ajax({
+            $.ajax({
                 url:"{{url('/api/printhistories')}}",
                 method:"POST",
                 data: {
@@ -2068,7 +2082,7 @@
                         });
                     }
                 }
-            }); --}}
+            });
         };
     });
 
