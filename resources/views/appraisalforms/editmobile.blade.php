@@ -127,7 +127,6 @@
                     @foreach($assesseeuserbybranch as $assesseeuser)
                         <div id="assessee_{{ $assesseeuser->id }}_criterias" class="assessee_criterias" style="display: none;" data-assessee="{{ $assesseeuser->id }}">
                         @foreach ($criterias as $idx=>$criteria)
-
                             <div class="form-card">
                                 <div class="section-title">{{ $criteria->name }}</div>
                                 <div class="score-radio d-flex flex-wrap">
@@ -135,7 +134,7 @@
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1" value="{{ $criteria->excellent }}"
                                             {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->excellent)
                                                 ? 'checked'
-                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->excellent ? 'checked' : '')
+                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->excellent ? 'checked' : '')
                                             }}
 
                                             data-assessee="{{ $assesseeuser->id }}"
@@ -147,7 +146,7 @@
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2" value="{{ $criteria->good }}"
                                           {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->good)
                                                 ? 'checked'
-                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->good ? 'checked' : '') }}
+                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->good ? 'checked' : '') }}
                                             data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2">{{ $criteria->good }}</label>
@@ -157,7 +156,7 @@
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3" value="{{ $criteria->meet_standard }}"
                                             {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->meet_standard)
                                                 ? 'checked'
-                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->meet_standard ? 'checked' : '') }}
+                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->meet_standard ? 'checked' : '') }}
                                             data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3">{{ $criteria->meet_standard }}</label>
@@ -167,7 +166,7 @@
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4" value="{{ $criteria->below_standard }}"
                                          {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->below_standard)
                                                 ? 'checked'
-                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->below_standard ? 'checked' : '') }}
+                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->below_standard ? 'checked' : '') }}
                                             data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4">{{ $criteria->below_standard }}</label>
@@ -177,7 +176,7 @@
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5" value="{{ $criteria->weak }}"
                                         {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->weak)
                                                 ? 'checked'
-                                                : ($appraisalform->getResult($assesseeuser->id, $criteria->id) == $criteria->weak ? 'checked' : '') }}
+                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->weak ? 'checked' : '') }}
                                             data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5">{{ $criteria->weak }}</label>

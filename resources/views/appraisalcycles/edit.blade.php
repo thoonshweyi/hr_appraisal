@@ -602,7 +602,68 @@
                         </div>
 
                         <div id="dashboard" class="tab-pane">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-3">
+                                    <div class="card kpi-card rounded-4 p-3 h-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                        <div class="kpi-label">Total Employees</div>
+                                        <div id="kpiTotal" class="kpi-value">84</div>
+                                        </div>
+                                        <i class="fas fa-users text-info icon"></i>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card kpi-card rounded-4 p-3 h-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                        <div class="kpi-label">Completed</div>
+                                        <div id="kpiCompleted" class="kpi-value text-success">17</div>
+                                        </div>
+                                        <i class="fas fa-check-circle icon" style="color: var(--success)"></i>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card kpi-card rounded-4 p-3 h-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                        <div class="kpi-label">In Progress</div>
+                                        <div id="kpiProgress" class="kpi-value" style="color:var(--warning)">47</div>
+                                        </div>
+                                        <i class="fas fa-tasks icon" style="color: var(--warning)"></i>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card kpi-card rounded-4 p-3 h-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                        <div class="kpi-label">Not Started</div>
+                                        <div id="kpiNotStarted" class="kpi-value" style="color:var(--danger)">20</div>
+                                        </div>
+                                        <i class="fas fa-exclamation-triangle icon" style="color: var(--danger)"></i>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card bg-dark">
+                                        <div class="card-body">
+                                            <h2>Appraisal Completion by Sub-Department</h2>
+                                            <div class="sub">Horizontal bars show % Completed (target: 100%).</div>
+
+                                            <canvas id="subdeptChart" height="360"></canvas>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                 </div>
             </div>
@@ -844,6 +905,18 @@
             color: white;
         }
     /* End Assessor Assessee Tab */
+
+    .card{background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.08); backdrop-filter: blur(6px); box-shadow: 0 8px 24px rgba(0,0,0,0.25)}
+    .kpi-card .icon{font-size: 28px; opacity:.9}
+    .kpi-value{font-weight: 800; font-size: 2rem; letter-spacing:.5px}
+    .kpi-label{color: var(--muted); font-size: .9rem}
+
+
+    #subdeptChart {
+        width: 100%;
+        height: auto;
+        min-height: 350px;
+    }
   </style>
 @endsection
 @section('js')
@@ -2110,6 +2183,47 @@
 		}
 	});
 	//  End User Chart
+
+
+ const subdeptData = {
+        "Sales — North": 86,
+        "IT — Applications": 74,
+        "IT — Infrastructure": 62,
+        "HR — Talent": 55,
+        "Marketing — Digital": 91
+    };
+
+    const agectx = document.getElementById('subdeptChart');
+    new Chart(agectx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(subdeptData),
+            datasets: [{
+                label: 'Sub Department Analysis',
+                data: Object.values(subdeptData),
+                backgroundColor: "steelblue",
+                borderWidth: 1,
+                borderRadius: 8,
+                barThickness: 20,
+            }]
+        },
+        options: {
+            indexAxis: 'y',   // makes it horizontal
+            responsive: true,
+            maintainAspectRatio: true, //lets  control height via CSS
+            scales: {
+                x: {
+                    min: 0, max: 100,
+                    ticks: { color: '#cfe2ff', callback: v => v + '%' },
+                    grid: { color: 'rgba(255,255,255,.08)' },
+                },
+                y: {
+                    ticks: { color: '#cfe2ff' },
+                    grid: { display: false },
+                }
+            }
+        }
+    });
 
 </script>
 @stop

@@ -271,6 +271,8 @@ class AppraisalFormsController extends Controller
 
     public function edit(Request $request,$id){
 
+
+
         $appraisalform = AppraisalForm::find($id);
         // dd($appraisalform);
             $this->authorize('edit', $appraisalform);
@@ -296,11 +298,14 @@ class AppraisalFormsController extends Controller
         $roles = Auth::user()->roles->pluck('name');
         $adminauthorize = $roles->contains('Admin') || $roles->contains('HR Authorized');
         // dd($adminauthorize);
+
+        $preloadresults = $appraisalform->getPreloadResult($appraisalform->id);
+
         if($adminauthorize){
-            return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+            return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","preloadresults"));
         }else{
             // return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
-            return view("appraisalforms.editmobile",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
+            return view("appraisalforms.editmobile",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","preloadresults"));
         }
 
     }

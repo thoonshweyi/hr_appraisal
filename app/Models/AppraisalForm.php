@@ -68,5 +68,16 @@ class AppraisalForm extends Model
         return $totalresult;
     }
 
+    public function getPreloadResult($appraisal_form_id){
+
+        $formResults = FormResult::where('appraisal_form_id', $appraisal_form_id)
+        ->get()
+        ->groupBy('assessee_user_id')
+        ->map(function ($results) {
+            return $results->keyBy('criteria_id');
+        });
+
+        return $formResults;
+    }
 
 }
