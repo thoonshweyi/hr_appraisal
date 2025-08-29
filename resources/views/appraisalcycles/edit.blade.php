@@ -914,7 +914,6 @@
 
     #subdeptChart {
         width: 100%;
-        height: auto;
         min-height: 350px;
     }
   </style>
@@ -2185,13 +2184,46 @@
 	//  End User Chart
 
 
- const subdeptData = {
+     const subdeptData = {
         "Sales — North": 86,
         "IT — Applications": 74,
         "IT — Infrastructure": 62,
         "HR — Talent": 55,
-        "Marketing — Digital": 91
+        "Marketing — Digital": 91,
+        "Sales — North": 86,
+        "ITfqwef — Applications": 74,
+        "ITaf — Infrastructure": 62,
+        "HR — Talent": 55,
+        "Marketing — Digital": 91,
+        "Sales — North": 86,
+        "IT qwef— Applications": 74,
+        "IT — Infrastructure": 62,
+        "HR — Talent": 55,
+        "Marketingdf — Digital": 91,
+        "Sales dasf— North": 86,
+        "ITfda — Applications": 74,
+        "ITdaf — Infrastructure": 62,
+        "HR f2r— Talent": 55,
+        "Marketingfwe — Digital": 91
     };
+
+    const valueLabelPlugin = {
+      id: 'valueLabel',
+      afterDatasetsDraw(chart, args, pluginOptions) {
+        const {ctx} = chart;
+        ctx.save();
+        ctx.font = '12px system-ui, -apple-system, Segoe UI, Roboto, Arial';
+        ctx.fillStyle = '#eaf0ff';
+        chart.getDatasetMeta(0).data.forEach((bar, i) => {
+          const val = Object.values(subdeptData)[i];
+          const x = bar.x + 8;               // a bit to the right of bar
+          const y = bar.y + 4;               // vertically centered
+          ctx.fillText(val + '%', x, y);
+        });
+        ctx.restore();
+      }
+    };
+
 
     const agectx = document.getElementById('subdeptChart');
     new Chart(agectx, {
@@ -2222,7 +2254,9 @@
                     grid: { display: false },
                 }
             }
-        }
+        },
+        plugins: [valueLabelPlugin]
+
     });
 
 </script>
