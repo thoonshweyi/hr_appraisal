@@ -658,8 +658,8 @@
                                             </div>
                                             {{-- <div class="sub">Horizontal bars show % Completed (target: 100%).</div> --}}
 
-                                            <div class="row">
-                                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                            <div id="byBranchChart" class="row">
+                                                {{-- <div class="col-xl-3 col-lg-4 col-md-6">
                                                     <div class="card p-3 branch-card" data-branch="Branch 19">
                                                         <div class="d-flex justify-content-between align-items-start">
                                                         <div>
@@ -734,7 +734,7 @@
                                                         </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
                                         </div>
@@ -2244,7 +2244,7 @@
 		url: `/api/appraisalcycles/${appraisal_cycle_id}/assessorformsdashboard`,
 		method: 'GET',
 		success:function(data){
-			console.log(data)
+			{{-- console.log(data) --}}
 
 			$('#totalassessorscount').text(data.totalassessors);
 			$('#assessmentformscount').text(data.assessmentforms);
@@ -2258,6 +2258,89 @@
 	});
 	//  End User Chart
 
+    {{-- Start By Branch Dashboard --}}
+    $.ajax({
+		url: `/api/appraisalcycles/${appraisal_cycle_id}/bybranchesdashboard`,
+		method: 'GET',
+		success:function(data){
+			console.log(data)
+
+				{{-- $('#enrollcount').text(data.totalenrolls);
+			let $percentages = data;
+
+			let html = '';
+			$.each($percentages,function(stage,data){
+				let percent = data.percentage;
+				let progresscolor = '';
+				if(percent <= 20){
+					progresscolor = 'bg-danger'
+				}else if(percent <= 40){
+					progresscolor = 'bg-warning'
+				}else if(percent <= 60){
+					progresscolor = 'bg-primary'
+				}else if(percent <= 80){
+					progresscolor = 'bg-info'
+				}else{
+					progresscolor = 'bg-success'
+				}
+				html += `
+				<h4 class="small">${stage} <span>${percent}%</span></h4>
+				<div class="progress mb-2">
+					<div class="progress-bar ${progresscolor}" style="width: ${percent}%;" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
+				`;
+
+			});
+
+			$('#enrollchart').html(html); --}}
+
+            let html = '';
+            $.each(data,function(branch,databybranch){
+                console.log(data.statuses);
+                {{-- let percent = data.statuses["19"].percentage; --}}
+                {{-- let progresscolor = '';
+				if(percent <= 20){
+					progresscolor = 'bg-danger'
+				}else if(percent <= 40){
+					progresscolor = 'bg-warning'
+				}else if(percent <= 60){
+					progresscolor = 'bg-primary'
+				}else if(percent <= 80){
+					progresscolor = 'bg-info'
+				}else{
+					progresscolor = 'bg-success'
+				} --}}
+                html += `
+				<div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card p-3 branch-card" data-branch="Branch 19">
+                        <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div style="font-weight:700">${branch}</div>
+                            <div class="small-muted">${databybranch.assessors} employees</div>
+                        </div>
+                        <div class="text-end">
+                            <div style="font-weight:800; font-size:1.1rem">56%</div>
+                            <div class="small-muted">Completed</div>
+                        </div>
+                        </div>
+                        <div class="mt-3">
+                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)">56%</div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+				`;
+                $('#byBranchChart').html(html);
+
+            });
+
+		},
+		error: function(){
+			$('#usercount').text("Error loading data");
+		}
+	});
+    {{-- End By Branch Dashboard --}}
 
 
 </script>

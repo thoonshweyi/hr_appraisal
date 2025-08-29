@@ -30,3 +30,4 @@ Route::apiResource("printhistories",PrintHistoriesController::class,["as"=>"api"
 
 Route::apiResource("appraisalcycles",AppraisalCyclesController::class,["as"=>"api"]);
 Route::get('/appraisalcycles/{id}/assessorformsdashboard', [AppraisalCyclesController::class, 'assessorformsdashboard'])->name('appraisalcycles.assessorformsdashboard');
+Route::get('/appraisalcycles/{id}/bybranchesdashboard', [AppraisalCyclesController::class, 'bybranchesdashboard'])->name('appraisalcycles.bybranchesdashboard');

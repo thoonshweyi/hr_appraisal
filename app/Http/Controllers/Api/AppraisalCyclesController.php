@@ -90,4 +90,53 @@ class AppraisalCyclesController extends Controller
 
         return response()->json($datas);
     }
+
+    public function bybranchesdashboard($id){
+        // $appraisalforms = AppraisalForm::where("appraisal_cycle_id",$id)
+        // ->with('assessoruser.employee.branch')
+        // ->get()
+        // ->groupBy("status_id","branch_id");
+
+        // dd($appraisalforms);
+
+
+        $appraisalforms = AppraisalForm::where("appraisal_cycle_id", $id)
+            ->with("assessoruser.employee.branch")
+            ->get();
+
+        $report = $appraisalforms->groupBy(function($form){
+            return $form->assessoruser->employee->branch->branch_name ?? 'Unknown';
+        })->map(function($formsByBranch){
+            $total = $formsByBranch->count();
+            $assessorCount = $formsByBranch->pluck('assessor_user_id')->unique()->count();
+
+            $statuses = $formsByBranch->groupBy("status_id")->map(function($formsByStatus) use ($total) {
+                return [
+                    "count" => $formsByStatus->count(),
+                    "percentage" => $total > 0
+                        ? round(($formsByStatus->count() / $total) * 100, 2)
+                        : 0
+                ];
+            });
+
+            return [
+                "assessors" => $assessorCount,
+                "statuses"  => $statuses
+            ];
+        });
+
+        return response()->json($report, 200, [], JSON_PRETTY_PRINT);
+
+    }
 }
+
+
+
+// {
+//     "Lanthit": {
+//         "Completed":{
+//             count:
+//             percentage;
+//         }
+//     }
+// }
