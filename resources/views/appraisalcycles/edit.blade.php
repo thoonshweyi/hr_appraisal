@@ -653,10 +653,89 @@
                                 <div class="col-md-12">
                                     <div class="card bg-dark">
                                         <div class="card-body">
-                                            <h2>Appraisal Completion by Sub-Department</h2>
-                                            <div class="sub">Horizontal bars show % Completed (target: 100%).</div>
+                                            <div class="d-flex justify-content-between">
+                                                <h2>Branches (click to drill down)</h2>
+                                            </div>
+                                            {{-- <div class="sub">Horizontal bars show % Completed (target: 100%).</div> --}}
 
-                                            <canvas id="subdeptChart" height="360"></canvas>
+                                            <div class="row">
+                                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                                    <div class="card p-3 branch-card" data-branch="Branch 19">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <div style="font-weight:700">Branch 19</div>
+                                                            <div class="small-muted">831 employees</div>
+                                                        </div>
+                                                        <div class="text-end">
+                                                            <div style="font-weight:800; font-size:1.1rem">56%</div>
+                                                            <div class="small-muted">Completed</div>
+                                                        </div>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
+                                                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)"></div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                                    <div class="card p-3 branch-card" data-branch="Branch 19">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <div style="font-weight:700">Branch 19</div>
+                                                            <div class="small-muted">831 employees</div>
+                                                        </div>
+                                                        <div class="text-end">
+                                                            <div style="font-weight:800; font-size:1.1rem">56%</div>
+                                                            <div class="small-muted">Completed</div>
+                                                        </div>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
+                                                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)"></div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                                    <div class="card p-3 branch-card" data-branch="Branch 19">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <div style="font-weight:700">Branch 19</div>
+                                                            <div class="small-muted">831 employees</div>
+                                                        </div>
+                                                        <div class="text-end">
+                                                            <div style="font-weight:800; font-size:1.1rem">56%</div>
+                                                            <div class="small-muted">Completed</div>
+                                                        </div>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
+                                                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)"></div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                                    <div class="card p-3 branch-card" data-branch="Branch 19">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <div style="font-weight:700">Branch 19</div>
+                                                            <div class="small-muted">831 employees</div>
+                                                        </div>
+                                                        <div class="text-end">
+                                                            <div style="font-weight:800; font-size:1.1rem">56%</div>
+                                                            <div class="small-muted">Completed</div>
+                                                        </div>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
+                                                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)"></div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         </div>
 
@@ -912,10 +991,6 @@
     .kpi-label{color: var(--muted); font-size: .9rem}
 
 
-    #subdeptChart {
-        width: 100%;
-        min-height: 350px;
-    }
   </style>
 @endsection
 @section('js')
@@ -2184,80 +2259,6 @@
 	//  End User Chart
 
 
-     const subdeptData = {
-        "Sales — North": 86,
-        "IT — Applications": 74,
-        "IT — Infrastructure": 62,
-        "HR — Talent": 55,
-        "Marketing — Digital": 91,
-        "Sales — North": 86,
-        "ITfqwef — Applications": 74,
-        "ITaf — Infrastructure": 62,
-        "HR — Talent": 55,
-        "Marketing — Digital": 91,
-        "Sales — North": 86,
-        "IT qwef— Applications": 74,
-        "IT — Infrastructure": 62,
-        "HR — Talent": 55,
-        "Marketingdf — Digital": 91,
-        "Sales dasf— North": 86,
-        "ITfda — Applications": 74,
-        "ITdaf — Infrastructure": 62,
-        "HR f2r— Talent": 55,
-        "Marketingfwe — Digital": 91
-    };
-
-    const valueLabelPlugin = {
-      id: 'valueLabel',
-      afterDatasetsDraw(chart, args, pluginOptions) {
-        const {ctx} = chart;
-        ctx.save();
-        ctx.font = '12px system-ui, -apple-system, Segoe UI, Roboto, Arial';
-        ctx.fillStyle = '#eaf0ff';
-        chart.getDatasetMeta(0).data.forEach((bar, i) => {
-          const val = Object.values(subdeptData)[i];
-          const x = bar.x + 8;               // a bit to the right of bar
-          const y = bar.y + 4;               // vertically centered
-          ctx.fillText(val + '%', x, y);
-        });
-        ctx.restore();
-      }
-    };
-
-
-    const agectx = document.getElementById('subdeptChart');
-    new Chart(agectx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(subdeptData),
-            datasets: [{
-                label: 'Sub Department Analysis',
-                data: Object.values(subdeptData),
-                backgroundColor: "steelblue",
-                borderWidth: 1,
-                borderRadius: 8,
-                barThickness: 20,
-            }]
-        },
-        options: {
-            indexAxis: 'y',   // makes it horizontal
-            responsive: true,
-            maintainAspectRatio: true, //lets  control height via CSS
-            scales: {
-                x: {
-                    min: 0, max: 100,
-                    ticks: { color: '#cfe2ff', callback: v => v + '%' },
-                    grid: { color: 'rgba(255,255,255,.08)' },
-                },
-                y: {
-                    ticks: { color: '#cfe2ff' },
-                    grid: { display: false },
-                }
-            }
-        },
-        plugins: [valueLabelPlugin]
-
-    });
 
 </script>
 @stop
