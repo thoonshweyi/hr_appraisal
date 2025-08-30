@@ -1,13 +1,32 @@
 @extends('layouts.app')
 
+
 @section('content')
+
 <div class="content-page">
     <div class="container-fluid">
         <div class="row">
-            {{-- <span id="testing">hello world</span> --}}
+
+            <div class="col-lg-10 mx-auto">
+                <div class="card" style="overflow: hidden">
+                     <div class="header-section">
+                        <h1 class="display-4 fw-bold mb-3">
+                            <i class="fas fa-clipboard-check me-2"></i>
+                            Assessment Portal
+                        </h1>
+                        <h3 class="mb-0 opacity-90">Welcome back, <b>{{Auth::user()->name}}</b>.Let's make this appraisal cycle impactful!</h3>
+                    </div>
+                    <!-- HAS TASKS STATE -->
+                    <div id="hasTasksState">
+
+                    </div>
+                </div>
+            </div>
+
+
 
             {{-- @if (Auth::guard()->user()->can('view-dashboard-return-total') || Auth::guard()->user()->can('view-dashboard-return-finish') || Auth::guard()->user()->can('view-dashboard-return-pending') || Auth::guard()->user()->can('view-dashboard-exchange-total') || Auth::guard()->user()->can('view-dashboard-exchange-finish') || Auth::guard()->user()->can('view-dashboard-exchange-pending') || Auth::guard()->user()->can('view-dashboard-overdue-exchange-document') ) --}}
-            <div class="col-lg-4">
+            {{-- <div class="col-lg-4">
                 <div class="card card-transparent card-block card-stretch card-height border-none">
                     <div class="card-body p-0 mt-lg-2 mt-0">
                         <h3 class="mb-3">Hello , {{Auth::user()->name}}</h3>
@@ -18,7 +37,7 @@
                             </strong></p>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- @endif --}}
 
 

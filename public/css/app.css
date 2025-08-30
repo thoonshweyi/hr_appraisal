@@ -944,3 +944,16 @@ input.lang:checked + label .badge {
     background: #4B5563;
 }
 /* End Assessors & Their Forms */
+
+.selectalls, .singlechecks{
+    position: relative !important;
+}
+
+/* Start User Welcome */
+       .header-section {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.9) 0%, rgba(102, 126, 234, 0.8) 50%, rgba(13, 110, 253, 0.7) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+/* End User Welcome */

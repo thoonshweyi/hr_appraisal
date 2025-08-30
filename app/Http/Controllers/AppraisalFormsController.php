@@ -666,4 +666,5 @@ class AppraisalFormsController extends Controller
 
         return view('appraisalforms.printuserforms', compact('appraisalforms'));
     }
+
 }

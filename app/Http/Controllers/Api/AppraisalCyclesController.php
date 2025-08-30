@@ -110,14 +110,20 @@ class AppraisalCyclesController extends Controller
             $total = $formsByBranch->count();
             $assessorCount = $formsByBranch->pluck('assessor_user_id')->unique()->count();
 
-            $statuses = $formsByBranch->groupBy("status_id")->map(function($formsByStatus) use ($total) {
-                return [
-                    "count" => $formsByStatus->count(),
-                    "percentage" => $total > 0
-                        ? round(($formsByStatus->count() / $total) * 100, 2)
-                        : 0
-                ];
-            });
+
+            $allStatuses = [19,20,21];
+            $statuses = [];
+            foreach ($allStatuses as $statusId) {
+                $statuses[$statusId] = ["count" => 0, "percentage" => 0];
+            }
+
+            // Fill actual counts
+            foreach ($formsByBranch->groupBy("status_id") as $statusId => $formsByStatus) {
+                $statuses[$statusId]["count"] = $formsByStatus->count();
+                $statuses[$statusId]["percentage"] = $total > 0
+                    ? round(($formsByStatus->count() / $total) * 100, 2)
+                    : 0;
+            }
 
             return [
                 "assessors" => $assessorCount,
@@ -128,15 +134,25 @@ class AppraisalCyclesController extends Controller
         return response()->json($report, 200, [], JSON_PRETTY_PRINT);
 
     }
+
+    public function appraisalformdashboard($id)
+    {
+        $appraisalforms = AppraisalForm::where("appraisal_cycle_id", $id)->get();
+
+        $total = $appraisalforms->groupBy("assessor_user_id")->count();
+
+        $completed   = $appraisalforms->where("status_id", 19)->count();
+        $inprogress  = $appraisalforms->where("status_id", 20)->count();
+        $notstarted  = $appraisalforms->where("status_id", 21)->count();
+
+        $datas = [
+            "totalemployees" => $total,
+            "completed"      => $completed,
+            "inprogress"     => $inprogress,
+            "notstarted"     => $notstarted,
+        ];
+
+        return response()->json($datas, 200, [], JSON_PRETTY_PRINT);
+    }
 }
 
-
-
-// {
-//     "Lanthit": {
-//         "Completed":{
-//             count:
-//             percentage;
-//         }
-//     }
-// }

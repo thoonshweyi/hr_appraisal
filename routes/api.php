@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PeerToPeersController;
+use App\Http\Controllers\Api\AppraisalFormsController;
 use App\Http\Controllers\Api\PrintHistoriesController;
 use App\Http\Controllers\Api\AppraisalCyclesController;
 
@@ -31,3 +32,6 @@ Route::apiResource("printhistories",PrintHistoriesController::class,["as"=>"api"
 Route::apiResource("appraisalcycles",AppraisalCyclesController::class,["as"=>"api"]);
 Route::get('/appraisalcycles/{id}/assessorformsdashboard', [AppraisalCyclesController::class, 'assessorformsdashboard'])->name('appraisalcycles.assessorformsdashboard');
 Route::get('/appraisalcycles/{id}/bybranchesdashboard', [AppraisalCyclesController::class, 'bybranchesdashboard'])->name('appraisalcycles.bybranchesdashboard');
+Route::get('/appraisalcycles/{id}/appraisalformdashboard', [AppraisalCyclesController::class, 'appraisalformdashboard'])->name('appraisalcycles.appraisalformdashboard');
+
+Route::get('/appraisalformssendnotis', [AppraisalFormsController::class, 'sendnotis'])->name('appraisalforms.sendnotis');

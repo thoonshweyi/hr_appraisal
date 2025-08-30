@@ -608,7 +608,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                         <div class="kpi-label">Total Employees</div>
-                                        <div id="kpiTotal" class="kpi-value">84</div>
+                                        <div id="kpiTotal" class="kpi-value">Loading....</div>
                                         </div>
                                         <i class="fas fa-users text-info icon"></i>
                                     </div>
@@ -619,7 +619,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                         <div class="kpi-label">Completed</div>
-                                        <div id="kpiCompleted" class="kpi-value text-success">17</div>
+                                        <div id="kpiCompleted" class="kpi-value text-success">Loading....</div>
                                         </div>
                                         <i class="fas fa-check-circle icon" style="color: var(--success)"></i>
                                     </div>
@@ -630,7 +630,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                         <div class="kpi-label">In Progress</div>
-                                        <div id="kpiProgress" class="kpi-value" style="color:var(--warning)">47</div>
+                                        <div id="kpiProgress" class="kpi-value" style="color:var(--warning)">Loading....</div>
                                         </div>
                                         <i class="fas fa-tasks icon" style="color: var(--warning)"></i>
                                     </div>
@@ -641,7 +641,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                         <div class="kpi-label">Not Started</div>
-                                        <div id="kpiNotStarted" class="kpi-value" style="color:var(--danger)">20</div>
+                                        <div id="kpiNotStarted" class="kpi-value" style="color:var(--danger)">Loading....</div>
                                         </div>
                                         <i class="fas fa-exclamation-triangle icon" style="color: var(--danger)"></i>
                                     </div>
@@ -1317,8 +1317,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <button type="button" class="btn mr-2 cus_btn sendnoti-btns">Send Notification</button>
+
+
                             <table class="table table-sm userforms">
                                 <tr>
+                                    <th>
+                                        <input type="checkbox" name="selectalls" id="selectalls" class="form-check-input selectalls m-0" />
+                                    </th>
                                     <th>Form ID</th>
                                     <th>Title</th>
                                     <th>Appraisal Cycle</th>
@@ -1335,6 +1341,7 @@
                                 }
                                 html += `
                                 <tr>
+                                    <td><input type="checkbox" name="singlechecks" class="form-check-input m-0 singlechecks" value="${form.id}" /></td>
                                     <td>#${form.id}</td>
                                     <td><a href="/appraisalforms/${form.id}/edit">${form.assformcat.name}</a></td>
                                     <td>${form.appraisalcycle.name}</td>
@@ -2265,13 +2272,12 @@
 		success:function(data){
 			console.log(data)
 
-				{{-- $('#enrollcount').text(data.totalenrolls);
-			let $percentages = data;
 
-			let html = '';
-			$.each($percentages,function(stage,data){
-				let percent = data.percentage;
-				let progresscolor = '';
+            let html = '';
+            $.each(data,function(branch,databybranch){
+                console.log(databybranch.statuses["19"]["percentage"]);
+                let percent = databybranch.statuses["19"]["percentage"];
+                let progresscolor = '';
 				if(percent <= 20){
 					progresscolor = 'bg-danger'
 				}else if(percent <= 40){
@@ -2283,33 +2289,6 @@
 				}else{
 					progresscolor = 'bg-success'
 				}
-				html += `
-				<h4 class="small">${stage} <span>${percent}%</span></h4>
-				<div class="progress mb-2">
-					<div class="progress-bar ${progresscolor}" style="width: ${percent}%;" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
-				</div>
-				`;
-
-			});
-
-			$('#enrollchart').html(html); --}}
-
-            let html = '';
-            $.each(data,function(branch,databybranch){
-                console.log(data.statuses);
-                {{-- let percent = data.statuses["19"].percentage; --}}
-                {{-- let progresscolor = '';
-				if(percent <= 20){
-					progresscolor = 'bg-danger'
-				}else if(percent <= 40){
-					progresscolor = 'bg-warning'
-				}else if(percent <= 60){
-					progresscolor = 'bg-primary'
-				}else if(percent <= 80){
-					progresscolor = 'bg-info'
-				}else{
-					progresscolor = 'bg-success'
-				} --}}
                 html += `
 				<div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="card p-3 branch-card" data-branch="Branch 19">
@@ -2319,21 +2298,21 @@
                             <div class="small-muted">${databybranch.assessors} employees</div>
                         </div>
                         <div class="text-end">
-                            <div style="font-weight:800; font-size:1.1rem">56%</div>
+                            <div style="font-weight:800; font-size:1.1rem">${percent}%</div>
                             <div class="small-muted">Completed</div>
                         </div>
                         </div>
                         <div class="mt-3">
-                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)">56%</div>
+                        <div class="progress" role="progressbar" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width:${percent}%; background:rgb(112,134,80)">${percent}%</div>
                         </div>
                         </div>
                     </div>
                 </div>
 				`;
-                $('#byBranchChart').html(html);
-
             });
+            $('#byBranchChart').html(html);
+
 
 		},
 		error: function(){
@@ -2341,6 +2320,87 @@
 		}
 	});
     {{-- End By Branch Dashboard --}}
+
+
+    {{-- Start Appraisal Form Chart --}}
+	$.ajax({
+		url: `/api/appraisalcycles/${appraisal_cycle_id}/appraisalformdashboard`,
+		method: 'GET',
+		success:function(data){
+			console.log(data)
+
+			$('#kpiTotal').text(data.totalemployees);
+			$('#kpiCompleted').text(data.completed);
+			$('#kpiProgress').text(data.inprogress);
+			$('#kpiNotStarted').text(data.notstarted);
+
+		},
+		error: function(){
+			$('#usercount').text("Error loading data");
+		}
+	});
+    {{-- End Appraisal  --}}
+
+
+    {{-- Start Bulk Send Noti --}}
+
+    $(document).on("click",".selectalls",function(){
+        $(this).closest("table").find(".singlechecks").prop("checked",$(this).prop("checked"));;
+
+        {{-- $(".singlechecks").prop("checked",$(this).prop("checked")); --}}
+    });
+
+    $(document).on("click",".sendnoti-btns",function(){
+        let getselectedids = [];
+
+
+        $("input:checkbox[name='singlechecks']:checked").each(function(){
+            getselectedids.push($(this).val());
+        });
+
+        console.log(getselectedids);
+
+
+        Swal.fire({
+                title: "Are you sure?",
+                text: `All selected form's notification will send to assessors.`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, send it!"
+        }).then((result) => {
+                if (result.isConfirmed) {
+                    // data remove
+                    $.ajax({
+                        url:"{{ url('api/appraisalformssendnotis') }}",
+                        type:"GET",
+                        dataType:"json",
+                        data:{
+                            selectedids:getselectedids,
+                            _token:"{{ csrf_token() }}"
+                        },
+                        success:function(response){
+                            console.log(response);   // 1
+
+                            if(response.success){
+
+                                    Swal.fire({
+                                        title: "Notification Successfully send.",
+                                        text: `${response.success}`,
+                                        icon: "success"
+                                    });
+                            }
+                        },
+                        error:function(response){
+                            console.log("Error: ",response)
+                        }
+                    });
+
+                }
+        });
+    });
+    {{-- End Bulk Send Noti --}}
 
 
 </script>
