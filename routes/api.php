@@ -33,5 +33,7 @@ Route::apiResource("appraisalcycles",AppraisalCyclesController::class,["as"=>"ap
 Route::get('/appraisalcycles/{id}/assessorformsdashboard', [AppraisalCyclesController::class, 'assessorformsdashboard'])->name('appraisalcycles.assessorformsdashboard');
 Route::get('/appraisalcycles/{id}/bybranchesdashboard', [AppraisalCyclesController::class, 'bybranchesdashboard'])->name('appraisalcycles.bybranchesdashboard');
 Route::get('/appraisalcycles/{id}/appraisalformdashboard', [AppraisalCyclesController::class, 'appraisalformdashboard'])->name('appraisalcycles.appraisalformdashboard');
+Route::get('/appraisalcyclesactivecycles', [AppraisalCyclesController::class, 'activecycle'])->name('appraisalcycles.activecycle');
+
 
 Route::get('/appraisalformssendnotis', [AppraisalFormsController::class, 'sendnotis'])->name('appraisalforms.sendnotis');

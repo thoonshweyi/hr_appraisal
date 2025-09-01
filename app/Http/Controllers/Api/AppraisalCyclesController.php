@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\PeerToPeer;
 use Illuminate\Http\Request;
 use App\Models\AppraisalForm;
+use App\Models\AppraisalCycle;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AppraisalCyclesResource;
 
 class AppraisalCyclesController extends Controller
 {
@@ -153,6 +156,21 @@ class AppraisalCyclesController extends Controller
         ];
 
         return response()->json($datas, 200, [], JSON_PRETTY_PRINT);
+    }
+
+    public function activecycle(){
+        $todayStr = Carbon::now()->toDateString(); // Get only 'YYYY-MM-DD'
+
+        $appraisalcycle = AppraisalCycle::whereDate('action_start_date', "<=", $todayStr)
+                            ->whereDate('action_end_date', ">=", $todayStr)->first();
+
+        // dd($appraisalcycle);
+        if($appraisalcycle){
+            return new AppraisalCyclesResource($appraisalcycle);
+        }else{
+            return null;
+        }
+
     }
 }
 

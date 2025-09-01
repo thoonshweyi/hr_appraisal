@@ -578,9 +578,9 @@ class AppraisalCyclesController extends Controller
         $startdate = Carbon::parse($appraisalcycle->action_start_date)->startOfDay()->format('M d Y 00:00:00');
         // dd($startdate);
 
-        if(!$appraisalcycle->isBeforeActionStart()){
-            return redirect(route("appraisalforms.index"))->with('error',"AppraisalCycle can only be counted before action start.");
-        }
+        // if(!$appraisalcycle->isBeforeActionStart()){
+        //     return redirect(route("appraisalforms.index"))->with('error',"AppraisalCycle can only be counted before action start.");
+        // }
         return view("appraisalcycles.countdown",compact('appraisalcycle','startdate'));
     }
 
@@ -692,7 +692,7 @@ class AppraisalCyclesController extends Controller
 
         return view("appraisalcycles.compare",compact("users"));
 
-   }
+    }
 
 }
 
