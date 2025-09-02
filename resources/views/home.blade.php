@@ -19,14 +19,39 @@
                     <!-- HAS TASKS STATE -->
                     <div id="activecycleinfo">
 
-                        {{-- <section class="nothingtodo">
-                            <img src="{{ asset("images/nothingtodo1.jpg") }}" alt="">
+                        <section class="nothingtodo">
 
-                            <div class="bg-opacity-50 rounded " style="background-color: rgba(0, 123, 255, 0.1);">
+                            <div class="row">
+
+
+                                <div class="col-md-6 image-container"
+                                    style="background-image: url('{{ asset('images/nothingtodo1.jpg') }}');
+                                            background-position: center;
+                                            background-repeat: no-repeat;
+                                            object-fit:cover;">
+                                </div>
+
+                                <div class="col-md-6 text-center py-4">
+                                     <h1 class="main-title">Nothing To Do</h1>
+
+                                    <div class="decorative-line"></div>
+
+                                    <p class="subtitle-text">
+                                        You're completely free! No tasks are currently assigned to you.<br>
+                                        This is your time to breathe, relax, and enjoy the moment.
+                                    </p>
+
+                                    <div class="status-indicator">
+                                        All Tasks Completed Successfully
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- <div class="bg-opacity-50 rounded " style="background-color: rgba(0, 123, 255, 0.1);">
                                 <h1 class="display-6">Furniture Collection</h1>
                                 <p class="lead">Discover modern, stylish, and comfortable furniture for your home.</p>
-                            </div>
-                        </section> --}}
+                            </div> --}}
+                        </section>
 
                     </div>
                 </div>
@@ -101,7 +126,7 @@
 
 <script>
 	$.ajax({
-		url: `/api/appraisalcyclesactivecycles`,
+		url: `/api/appraisalcyclesactivecycle`,
 		method: 'GET',
 		success:function(data){
 
