@@ -4,13 +4,13 @@
 <div class="content-page">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
+            {{-- <div class="col-lg-12">
+                <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-2">
                     <div>
                         <h4 class="mb-3">Appraisal Forms Notification</h4>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
             <div class="col-md-12">
@@ -60,7 +60,7 @@
                         </ul>
                     </div>
                 @endif
-           </div>
+            </div>
             {{-- <div class="col-lg-12 d-flex mb-4">
                 <div class="form-row col-md-2">
                     <label> {{__('branch.branch_name')}} </label>
@@ -75,9 +75,76 @@
         </div>
     </div>
 
+    {{-- <div class="col-lg-12">
+        <div class="my-3">
+            <div class="progress" role="progressbar" aria-valuenow="45.95" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width:45.95%; background:rgb(112,134,80)">45.95%</div>
+            </div>
+            <small class="text-muted">5 of 12 appraisals completed</small>
+        </div>
+    </div> --}}
+
+
+    {{-- <div class="container-fluid">
+        <div>
+
+            <div class="row my-2">
+
+                <div class="col-lg-12 mb-2">
+                    <div class="noti-container d-flex align-items-start mb-1">
+                        <div class="">
+                            <div class="noti-icon mr-3 " style="flex: none;">
+                                <span class="fw-bold" style="color: white">5</span>
+                            </div>
+                            <div class="smart-label mb-1">Total</div>
+                        </div>
+
+
+                        <div class="flex-grow-1">
+                            <h3 class="text-danger mb-2">
+                                <i class="fas fa-clipboard-list me-2"></i>
+                                Assessment Forms Awaiting Your Review
+                            </h3>
+                            <p class="text-muted mb-0">Your insights are crucial for employee development. Let's complete these assessments together!</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-4 text-center">
+                    <div class="done">
+                        <div class="smart-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="smart-label mb-1">Done</div>
+                        <div class="smart-value text-success">5</div>
+                    </div>
+                </div>
+                <div class="col-4 text-center">
+                    <div class="in-progress">
+                        <div class="smart-icon bg-warning bg-opacity-10 text-warning">
+                                <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="smart-label mb-1">In Progress</div>
+                        <div class="smart-value text-warning">4</div>
+                    </div>
+                </div>
+                <div class="col-4 text-center">
+                    <div class="not-started">
+                    <div class="smart-icon bg-danger bg-opacity-10 text-danger">
+                            <i class="fas fa-pause-circle"></i>
+                        </div>
+                        <div class="smart-label mb-1">Not Started</div>
+                        <div class="smart-value text-danger">3</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
 
     <div class="col-lg-12">
-        <div class="table-responsive rounded mb-3">
+        <div class="table-responsive rounded mb-1">
             <table class="table mb-0" id="branch_list">
                 <thead class="bg-white text-uppercase">
                     <tr class="ligth ligth-data">
@@ -86,7 +153,7 @@
                         <th>Criteria Set</th>
                         <th>Status</th>
                         <th>Appraisal Cycle</th>
-                        <th>Assessor</th>
+                        {{-- <th>Assessor</th> --}}
                     </tr>
                 </thead>
                 <tbody class="ligth-body">
@@ -103,7 +170,7 @@
                         <td><a href="{{ ($appraisalform->assessed || !$appraisalform->appraisalcycle->isActioned()) ? route('appraisalforms.show',$appraisalform->id) : route('appraisalforms.edit',$appraisalform->id) }}">{{$appraisalform->assformcat["name"]}}</a></td>
                         <td> <span class="badge {{  $appraisalform->status_id == 19 ? 'bg-success' : ($appraisalform->status_id == 21 ? 'bg-primary' : ($appraisalform->status_id == 20 ? 'bg-warning' : '')) }}"> {{ $appraisalform->status->name }} </span></td>
                         <td>{{$appraisalform->appraisalcycle["name"]}}</td>
-                        <td>{{ $appraisalform->assessoruser->employee->employee_name }}</td>
+                        {{-- <td>{{ $appraisalform->assessoruser->employee->employee_name }}</td> --}}
                    </tr>
                     @endforeach
                 </tbody>
@@ -115,6 +182,55 @@
 
         </div>
     </div>
+
+    {{-- <div class="row g-3 mb-3">
+        <div class="col-md-3 mb-2">
+            <div class="card kpi-card rounded-4 p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                <div class="kpi-label">Total Appraisals</div>
+                <div id="kpiTotal" class="kpi-value">Loading....</div>
+                </div>
+                <i class="fas fa-users text-info icon"></i>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="card kpi-card rounded-4 p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                <div class="kpi-label">Completed</div>
+                <div id="kpiCompleted" class="kpi-value text-success">Loading....</div>
+                </div>
+                <i class="fas fa-check-circle icon" style="color: var(--success)"></i>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="card kpi-card rounded-4 p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                <div class="kpi-label">In Progress</div>
+                <div id="kpiProgress" class="kpi-value" style="color:var(--warning)">Loading....</div>
+                </div>
+                <i class="fas fa-tasks icon" style="color: var(--warning)"></i>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="card kpi-card rounded-4 p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                <div class="kpi-label">Not Started</div>
+                <div id="kpiNotStarted" class="kpi-value" style="color:var(--danger)">Loading....</div>
+                </div>
+                <i class="fas fa-exclamation-triangle icon" style="color: var(--danger)"></i>
+            </div>
+            </div>
+        </div>
+    </div> --}}
+
+
 </div>
 
 </div>

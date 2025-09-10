@@ -985,11 +985,6 @@
         }
     /* End Assessor Assessee Tab */
 
-    .card{background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.08); backdrop-filter: blur(6px); box-shadow: 0 8px 24px rgba(0,0,0,0.25)}
-    .kpi-card .icon{font-size: 28px; opacity:.9}
-    .kpi-value{font-weight: 800; font-size: 2rem; letter-spacing:.5px}
-    .kpi-label{color: var(--muted); font-size: .9rem}
-
 
   </style>
 @endsection
