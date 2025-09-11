@@ -75,21 +75,11 @@
         </div>
     </div>
 
-    {{-- <div class="col-lg-12">
-        <div class="my-3">
-            <div class="progress" role="progressbar" aria-valuenow="45.95" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar" style="width:45.95%; background:rgb(112,134,80)">45.95%</div>
-            </div>
-            <small class="text-muted">5 of 12 appraisals completed</small>
-        </div>
-    </div> --}}
 
 
     {{-- <div class="container-fluid">
-        <div>
-
-            <div class="row my-2">
-
+        <div class="card">
+            <div class="card-header p-2" >
                 <div class="col-lg-12 mb-2">
                     <div class="noti-container d-flex align-items-start mb-1">
                         <div class="">
@@ -109,38 +99,114 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="card-body">
+                <div class="row my-2">
 
 
-                <div class="col-4 text-center">
-                    <div class="done">
-                        <div class="smart-icon bg-success bg-opacity-10 text-success">
-                            <i class="fas fa-check-circle"></i>
+
+
+                    <div class="col-4 text-center">
+                        <div class="done">
+                            <div class="smart-icon bg-success bg-opacity-10 text-success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="smart-label mb-1">Done</div>
+                            <div class="smart-value text-success">5</div>
                         </div>
-                        <div class="smart-label mb-1">Done</div>
-                        <div class="smart-value text-success">5</div>
                     </div>
-                </div>
-                <div class="col-4 text-center">
-                    <div class="in-progress">
-                        <div class="smart-icon bg-warning bg-opacity-10 text-warning">
-                                <i class="fas fa-clock"></i>
+                    <div class="col-4 text-center">
+                        <div class="in-progress">
+                            <div class="smart-icon bg-warning bg-opacity-10 text-warning">
+                                    <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="smart-label mb-1">In Progress</div>
+                            <div class="smart-value text-warning">4</div>
                         </div>
-                        <div class="smart-label mb-1">In Progress</div>
-                        <div class="smart-value text-warning">4</div>
                     </div>
-                </div>
-                <div class="col-4 text-center">
-                    <div class="not-started">
-                    <div class="smart-icon bg-danger bg-opacity-10 text-danger">
-                            <i class="fas fa-pause-circle"></i>
+                    <div class="col-4 text-center">
+                        <div class="not-started">
+                        <div class="smart-icon bg-danger bg-opacity-10 text-danger">
+                                <i class="fas fa-pause-circle"></i>
+                            </div>
+                            <div class="smart-label mb-1">Not Started</div>
+                            <div class="smart-value text-danger">3</div>
                         </div>
-                        <div class="smart-label mb-1">Not Started</div>
-                        <div class="smart-value text-danger">3</div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div> --}}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="dashboard-card">
+                    <div class="dashboard-label">
+                        <i class="fas fa-clipboard-list me-2"></i>
+                        Appraisal Form Notification
+                    </div>
+                    <div class="notis-style p-3">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <div class="d-flex align-items-center">
+                                <div class="notis-icon mr-3" style="width: 45px; height: 45px; font-size: 1rem; flex:none;">
+                                    <span class="fw-bold">{{ count($appraisalforms) }}</span>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">Appraisal Forms Total !</h5>
+                                    {{-- <small class="text-muted">7 forms pending your review</small> --}}
+                                    <p class="mb-0">ယခုနှစ်အတွက် သင်အကဲဖြတ်အမှတ်ပေးရန် လက်ခံရရှိထားသော စာစောင် <strong>{{ count($appraisalforms) }}</strong> ခုရှိပါသည်</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- <div class="row">
+                            <div class="col-lg-12">
+                                <div class="my-3">
+                                    <div  class="progress" role="progressbar" aria-valuenow="45.95" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar" style="width:45.95%; background:rgb(112,134,80)">45.95%</div>
+                                    </div>
+                                    <small class="text-muted" style="float:left;">5 of 12 appraisals completed</small>
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <a href="javascript:void(0);" data-toggle="collapse" data-target="#dashboard-more">View More</a>
+                        <div id="dashboard-more" class="collapse">
+                            <div class="row g-2">
+                                <div class="col-3">
+                                    <div class="text-center p-2 bg-light rounded">
+                                        <div class="h6 text-danger mb-0">2</div>
+                                        <small class="text-muted">Urgent</small>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="text-center p-2 bg-light rounded">
+                                        <div class="h6 text-warning mb-0">2</div>
+                                        <small class="text-muted">High</small>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="text-center p-2 bg-light rounded">
+                                        <div class="h6 text-primary mb-0">3</div>
+                                        <small class="text-muted">Normal</small>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="text-center p-2 bg-light rounded">
+                                        <div class="h6 text-success mb-0">5</div>
+                                        <small class="text-muted">Done</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 
     <div class="col-lg-12">
@@ -149,8 +215,8 @@
                 <thead class="bg-white text-uppercase">
                     <tr class="ligth ligth-data">
                         <th>No</th>
-                        <th>Action</th>
-                        <th>Criteria Set</th>
+                        {{-- <th>Action</th> --}}
+                        <th style="min-width:250px !important;">Criteria Set</th>
                         <th>Status</th>
                         <th>Appraisal Cycle</th>
                         {{-- <th>Assessor</th> --}}
@@ -160,15 +226,15 @@
                     @foreach($appraisalforms as $idx=>$appraisalform)
                     <tr>
                         <td>{{$idx + $appraisalforms->firstItem()}}</td>
-                        <td class="text-center">
+                        {{-- <td class="text-center">
                             @if($appraisalform->assessed || !$appraisalform->appraisalcycle->isActioned())
                             <a href="{{ route('appraisalforms.show',$appraisalform->id) }}" class="text-info mr-2" title="Open"><i class="fas fa-eye"></i></a>
                             @else
                             <a href="{{ route('appraisalforms.edit',$appraisalform->id) }}" class="text-primary mr-2" title="Open"><i class="fas fa-edit"></i></a>
                             @endif
-                       </td>
+                       </td> --}}
                         <td><a href="{{ ($appraisalform->assessed || !$appraisalform->appraisalcycle->isActioned()) ? route('appraisalforms.show',$appraisalform->id) : route('appraisalforms.edit',$appraisalform->id) }}">{{$appraisalform->assformcat["name"]}}</a></td>
-                        <td> <span class="badge {{  $appraisalform->status_id == 19 ? 'bg-success' : ($appraisalform->status_id == 21 ? 'bg-primary' : ($appraisalform->status_id == 20 ? 'bg-warning' : '')) }}"> {{ $appraisalform->status->name }} </span></td>
+                        <td > <span class="badge {{  $appraisalform->status_id == 19 ? 'bg-success' : ($appraisalform->status_id == 21 ? 'bg-primary' : ($appraisalform->status_id == 20 ? 'bg-warning' : '')) }}"> {{ $appraisalform->status->name }} </span></td>
                         <td>{{$appraisalform->appraisalcycle["name"]}}</td>
                         {{-- <td>{{ $appraisalform->assessoruser->employee->employee_name }}</td> --}}
                    </tr>
@@ -183,52 +249,6 @@
         </div>
     </div>
 
-    {{-- <div class="row g-3 mb-3">
-        <div class="col-md-3 mb-2">
-            <div class="card kpi-card rounded-4 p-3 h-100">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                <div class="kpi-label">Total Appraisals</div>
-                <div id="kpiTotal" class="kpi-value">Loading....</div>
-                </div>
-                <i class="fas fa-users text-info icon"></i>
-            </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-2">
-            <div class="card kpi-card rounded-4 p-3 h-100">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                <div class="kpi-label">Completed</div>
-                <div id="kpiCompleted" class="kpi-value text-success">Loading....</div>
-                </div>
-                <i class="fas fa-check-circle icon" style="color: var(--success)"></i>
-            </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-2">
-            <div class="card kpi-card rounded-4 p-3 h-100">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                <div class="kpi-label">In Progress</div>
-                <div id="kpiProgress" class="kpi-value" style="color:var(--warning)">Loading....</div>
-                </div>
-                <i class="fas fa-tasks icon" style="color: var(--warning)"></i>
-            </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-2">
-            <div class="card kpi-card rounded-4 p-3 h-100">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                <div class="kpi-label">Not Started</div>
-                <div id="kpiNotStarted" class="kpi-value" style="color:var(--danger)">Loading....</div>
-                </div>
-                <i class="fas fa-exclamation-triangle icon" style="color: var(--danger)"></i>
-            </div>
-            </div>
-        </div>
-    </div> --}}
 
 
 </div>

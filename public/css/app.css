@@ -1402,7 +1402,7 @@ input.lang:checked + label .badge {
 .noti-icon {
     width: 40px;
     height: 40px;
-    background: #dc3545;
+    /* background: #dc3545; */
     color: white !important;
     border-radius: 50%;
     border-radius: 8px;
@@ -1413,41 +1413,121 @@ input.lang:checked + label .badge {
 .noti-container h3{
     color: #dc3545 !important;
 }
-        .smart-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            margin: 0 auto 0.5rem;
-        }
+.smart-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin: 0 auto 0.5rem;
+}
 
-        .smart-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            line-height: 1;
-        }
+.smart-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
 
-        .smart-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
+.smart-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
 
-        .done .smart-icon{
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1)) !important;
-            color: #28a745 !important;
-        }
-        .in-progress .smart-icon{
-            background: rgba(255, 193, 7, 0.1) !important;
-            color: #ffc107 !important;
-        }
-        .not-started .smart-icon{
-            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(253, 126, 20, 0.1)) !important;
-            color: #dc3545 !important;
-        }
+.done .smart-icon{
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1)) !important;
+    color: #28a745 !important;
+}
+.in-progress .smart-icon{
+    background: rgba(255, 193, 7, 0.1) !important;
+    color: #ffc107 !important;
+}
+.not-started .smart-icon{
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(253, 126, 20, 0.1)) !important;
+    color: #dc3545 !important;
+}
+
+
+
+
+
+.dashboard-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.dashboard-label {
+    /* background: linear-gradient(135deg, #6c757d, #495057); */
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+.notis-style {
+    background: linear-gradient(135deg, #fff, #f8f9fa);
+    border: 1px solid #dee2e6;
+    border-left: 6px solid #dc3545;
+    position: relative;
+}
+
+.notis-style::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #dc3545, #fd7e14, #ffc107);
+}
+
+.notis-icon {
+    width: 60px;
+    height: 60px;
+    /* background: linear-gradient(135deg, #dc3545, #c82333); */
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    position: relative;
+}
+
+.notis-icon::after {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border: 2px solid rgba(220, 53, 69, 0.2);
+    border-radius: 50%;
+    animation: notis-pulse 2s infinite;
+}
+
+.notis-style h5{
+    color: #007bff;
+    color: #000;
+}
+@keyframes notis-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
 /* End Assessor Dashboard */
