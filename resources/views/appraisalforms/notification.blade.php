@@ -76,69 +76,6 @@
     </div>
 
 
-
-    {{-- <div class="container-fluid">
-        <div class="card">
-            <div class="card-header p-2" >
-                <div class="col-lg-12 mb-2">
-                    <div class="noti-container d-flex align-items-start mb-1">
-                        <div class="">
-                            <div class="noti-icon mr-3 " style="flex: none;">
-                                <span class="fw-bold" style="color: white">5</span>
-                            </div>
-                            <div class="smart-label mb-1">Total</div>
-                        </div>
-
-
-                        <div class="flex-grow-1">
-                            <h3 class="text-danger mb-2">
-                                <i class="fas fa-clipboard-list me-2"></i>
-                                Assessment Forms Awaiting Your Review
-                            </h3>
-                            <p class="text-muted mb-0">Your insights are crucial for employee development. Let's complete these assessments together!</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row my-2">
-
-
-
-
-                    <div class="col-4 text-center">
-                        <div class="done">
-                            <div class="smart-icon bg-success bg-opacity-10 text-success">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="smart-label mb-1">Done</div>
-                            <div class="smart-value text-success">5</div>
-                        </div>
-                    </div>
-                    <div class="col-4 text-center">
-                        <div class="in-progress">
-                            <div class="smart-icon bg-warning bg-opacity-10 text-warning">
-                                    <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="smart-label mb-1">In Progress</div>
-                            <div class="smart-value text-warning">4</div>
-                        </div>
-                    </div>
-                    <div class="col-4 text-center">
-                        <div class="not-started">
-                        <div class="smart-icon bg-danger bg-opacity-10 text-danger">
-                                <i class="fas fa-pause-circle"></i>
-                            </div>
-                            <div class="smart-label mb-1">Not Started</div>
-                            <div class="smart-value text-danger">3</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div> --}}
-
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
@@ -147,7 +84,7 @@
                         <i class="fas fa-clipboard-list me-2"></i>
                         Appraisal Form Notification
                     </div>
-                    <div class="notis-style p-3">
+                    {{-- <div class="notis-style p-3">
                         <div class="d-flex align-items-center justify-content-between mb-1">
                             <div class="d-flex align-items-center">
                                 <div class="notis-icon mr-3" style="width: 45px; height: 45px; font-size: 1rem; flex:none;">
@@ -155,53 +92,73 @@
                                 </div>
                                 <div>
                                     <h5 class="mb-1">Appraisal Forms Total !</h5>
-                                    {{-- <small class="text-muted">7 forms pending your review</small> --}}
                                     <p class="mb-0">ယခုနှစ်အတွက် သင်အကဲဖြတ်အမှတ်ပေးရန် လက်ခံရရှိထားသော စာစောင် <strong>{{ count($appraisalforms) }}</strong> ခုရှိပါသည်</p>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- <div class="row">
+                        <div class="row">
                             <div class="col-lg-12">
                                 <div class="my-3">
                                     <div  class="progress" role="progressbar" aria-valuenow="45.95" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-bar" style="width:45.95%; background:rgb(112,134,80)">45.95%</div>
+                                        <div class="progress-bar" style="width:45.95%; background: linear-gradient(135deg, #007bff, #0056b3);">45.95%</div>
                                     </div>
                                     <small class="text-muted" style="float:left;">5 of 12 appraisals completed</small>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
 
                         <a href="javascript:void(0);" data-toggle="collapse" data-target="#dashboard-more">View More</a>
                         <div id="dashboard-more" class="collapse">
-                            <div class="row g-2">
-                                <div class="col-3">
-                                    <div class="text-center p-2 bg-light rounded">
-                                        <div class="h6 text-danger mb-0">2</div>
-                                        <small class="text-muted">Urgent</small>
+                            <div class="row g-1">
+                                <div class="col-3 p-2">
+                                    <div class="text-center p-md-3 p-1 rounded minicards info">
+                                        <div class="h4 mb-0">2</div>
+                                        <small class="text-muted">Total</small>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="text-center p-2 bg-light rounded">
-                                        <div class="h6 text-warning mb-0">2</div>
-                                        <small class="text-muted">High</small>
+                                <div class="col-3 p-2">
+                                    <div class="text-center p-md-3 p-1 rounded minicards not-started">
+                                        <div class="h4 mb-0">3</div>
+                                        <small class="text-muted">Not Started</small>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="text-center p-2 bg-light rounded">
-                                        <div class="h6 text-primary mb-0">3</div>
-                                        <small class="text-muted">Normal</small>
+                                <div class="col-3 p-2">
+                                    <div class="text-center p-md-3 p-1 rounded minicards in-progress">
+                                        <div class="h4 mb-0">2</div>
+                                        <small class="text-muted">In Progress</small>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="text-center p-2 bg-light rounded">
-                                        <div class="h6 text-success mb-0">5</div>
+
+                                <div class="col-3 p-2">
+                                    <div class="text-center p-md-3 p-1 rounded minicards done">
+                                        <div class="h4 mb-0">5</div>
                                         <small class="text-muted">Done</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div> --}}
+
+                    {{-- No Appraisal Form Task --}}
+                    {{-- <div class="notis-style p-3">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <div class="d-flex align-items-center">
+
+                                <div class="timeline-icon completed" style="flex:none;">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">Appraisal Forms Total !</h5>
+                                    <p class="mb-0">ယခုနှစ်အတွက် သင်အကဲဖြတ်အမှတ်ပေးရန် လက်ခံရရှိထားသော စာစောင် <strong>{{ count($appraisalforms) }}</strong> ခုရှိပါသည်</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div id="assessor-chart">
+
                     </div>
+
                 </div>
 
             </div>
@@ -309,6 +266,102 @@
             searchField: ["value", "label"]
         });
 
+        $.ajax({
+            url:"{{ url('api/appraisalformsassessordashboard') }}",
+            type:"GET",
+            dataType:"json",
+            data:{
+                assessor_user_id: {{ Auth::id() }}
+            },
+            success:function(response){
+                console.log(response);   // 1
+                let data = response;
+                {{-- const datas = [
+                    {icon:'fas fa-users',label: "Total Leaves",value:data.totalleaves},
+                    {icon:'fas fa-check-circle',label: "Approved Leaves",value:data.approved},
+                    {icon:'fas fa-hourglass-half',label: "Pending Leaves",value:data.pending},
+                    {icon:'fas fa-times-circle',label: "Rejected Leaves",value:data.rejeted},
+
+                ];
+
+                let html = '';
+                $.each(datas,function(idx,data){
+                    html += `
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <i class="${data.icon} fa-2x text-primary me-4"></i>
+                                <div class="text-center">
+                                    <p class="text-dark mb-0">${data.label}</p>
+                                    <h5 class="fw-bold text-dark mb-0">${data.value}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+
+                    $('#leavechart').html(html);
+                }) --}}
+
+                const datas = [
+                    {icon:'fas fa-users',label: "Total",value:data.totalappraisalforms,style:"info"},
+                    {icon:'fas fa-check-circle',label: "In Progress",value:data.inprogress,style:"in-progress"},
+                    {icon:'fas fa-hourglass-half',label: "Not Started",value:data.notstarted,style:"not-started"},
+                    {icon:'fas fa-times-circle',label: "Done",value:data.done,style:"done"},
+                ];
+                let html = `
+                    <div class="notis-style p-3">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <div class="d-flex align-items-center">
+                                <div class="notis-icon mr-3" style="width: 45px; height: 45px; font-size: 1rem; flex:none;">
+                                    <span class="fw-bold">${datas[0].value}</span>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">Appraisal Forms Total !</h5>
+                                    <p class="mb-0">ယခုနှစ်အတွက် သင်အကဲဖြတ်အမှတ်ပေးရန် လက်ခံရရှိထားသော စာစောင် <strong>${datas[0].value}</strong> ခုရှိပါသည်</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="my-3">
+                                    <div  class="progress" role="progressbar" aria-valuenow="45.95" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar" style="width:45.95%; background: linear-gradient(135deg, #007bff, #0056b3);">45.95%</div>
+                                    </div>
+                                    <small class="text-muted" style="float:left;">5 of 12 appraisals completed</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="javascript:void(0);" data-toggle="collapse" data-target="#dashboard-more">View More</a>
+                        <div id="dashboard-more" class="collapse">
+                            <div class="row g-1">
+
+                                ${
+
+                                    datas.map((data) =>
+                                        `<div class="col-3 p-2">
+                                            <div class="text-center p-md-3 p-1 rounded minicards ${data.style}">
+                                                <div class="h4 mb-0">${data.value}</div>
+                                                <small class="text-muted">${data.label}</small>
+                                            </div>
+                                        </div>`
+                                    ).join('')
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                $('#assessor-chart').html(html);
+
+
+            },
+            error:function(response){
+                console.log("Error: ",response)
+            }
+        });
 
 
 

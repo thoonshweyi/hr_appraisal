@@ -158,7 +158,7 @@ class AppraisalCyclesController extends Controller
         return response()->json($datas, 200, [], JSON_PRETTY_PRINT);
     }
 
-    public function activecycle(){
+    public static function activecycle(){
         $todayStr = Carbon::now()->toDateString(); // Get only 'YYYY-MM-DD'
 
         $appraisalcycle = AppraisalCycle::whereDate('action_start_date', "<=", $todayStr)

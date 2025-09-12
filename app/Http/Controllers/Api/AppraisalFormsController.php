@@ -7,6 +7,7 @@ use App\Models\AppraisalForm;
 use App\Http\Controllers\Controller;
 use App\Notifications\AppraisalFormsNotify;
 use Illuminate\Support\Facades\Notification;
+use App\Http\Controllers\Api\AppraisalFormsController;
 
 class AppraisalFormsController extends Controller
 {
@@ -91,5 +92,35 @@ class AppraisalFormsController extends Controller
             Log::error($e->getMEssage());
             return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
         }
+    }
+
+    public function assessordashboard(Request $request){
+        // $leaves = Leave::all();
+        // $datas = [
+        //     "totalleaves" => $leaves->count(),
+        //     "approved" => $leaves->where("stage_id",1)->count(),
+        //     "pending" => $leaves->where("stage_id",2)->count(),
+        //     "rejeted" => $leaves->where("stage_id",3)->count(),
+        // ];
+        // return response()->json($datas);
+        // dd($request->assessor_user_id);
+        $activecycle = AppraisalCyclesController::activecycle();
+        $datas = [];
+        $assessor_user_id = $request->assessor_user_id;
+
+        if($activecycle){
+            $appraisalforms = AppraisalForm::where('assessor_user_id',$assessor_user_id)
+                                ->where("appraisal_cycle_id",$activecycle->id)
+                                ->get();
+            // dd($appraisalforms);
+
+            $datas = [
+                "totalappraisalforms" => $appraisalforms->count(),
+                "inprogress" => $appraisalforms->where("status_id",20)->count(),
+                "notstarted" => $appraisalforms->where("status_id",21)->count(),
+                "done" => $appraisalforms->where("status_id",19)->count()
+            ];
+        }
+        return response()->json($datas);
     }
 }

@@ -37,3 +37,4 @@ Route::get('/appraisalcyclesactivecycles', [AppraisalCyclesController::class, 'a
 
 
 Route::get('/appraisalformssendnotis', [AppraisalFormsController::class, 'sendnotis'])->name('appraisalforms.sendnotis');
+Route::get('/appraisalformsassessordashboard', [AppraisalFormsController::class, 'assessordashboard'])->name('appraisalforms.assessordashboard');
