@@ -39,6 +39,7 @@ class AppraisalCycle extends Model
 
     public function isBeforeActionStart()
     {
+        return true;
         $now = Carbon::today(); // Get today's date without time
 
         return $now->lessThan($this->action_start_date);

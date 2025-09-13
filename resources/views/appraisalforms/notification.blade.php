@@ -276,37 +276,11 @@
             success:function(response){
                 console.log(response);   // 1
                 let data = response;
-                {{-- const datas = [
-                    {icon:'fas fa-users',label: "Total Leaves",value:data.totalleaves},
-                    {icon:'fas fa-check-circle',label: "Approved Leaves",value:data.approved},
-                    {icon:'fas fa-hourglass-half',label: "Pending Leaves",value:data.pending},
-                    {icon:'fas fa-times-circle',label: "Rejected Leaves",value:data.rejeted},
-
-                ];
-
-                let html = '';
-                $.each(datas,function(idx,data){
-                    html += `
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-center align-items-center">
-                                <i class="${data.icon} fa-2x text-primary me-4"></i>
-                                <div class="text-center">
-                                    <p class="text-dark mb-0">${data.label}</p>
-                                    <h5 class="fw-bold text-dark mb-0">${data.value}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    `;
-
-                    $('#leavechart').html(html);
-                }) --}}
 
                 const datas = [
                     {icon:'fas fa-users',label: "Total",value:data.totalappraisalforms,style:"info"},
-                    {icon:'fas fa-check-circle',label: "In Progress",value:data.inprogress,style:"in-progress"},
                     {icon:'fas fa-hourglass-half',label: "Not Started",value:data.notstarted,style:"not-started"},
+                    {icon:'fas fa-check-circle',label: "In Progress",value:data.inprogress,style:"in-progress"},
                     {icon:'fas fa-times-circle',label: "Done",value:data.done,style:"done"},
                 ];
                 let html = `
@@ -329,7 +303,7 @@
                                     <div  class="progress" role="progressbar" aria-valuenow="45.95" aria-valuemin="0" aria-valuemax="100">
                                         <div class="progress-bar" style="width:45.95%; background: linear-gradient(135deg, #007bff, #0056b3);">45.95%</div>
                                     </div>
-                                    <small class="text-muted" style="float:left;">5 of 12 appraisals completed</small>
+                                    <small class="text-muted" style="float:left;">${datas[3].value} of ${datas[0].value} appraisals completed</small>
                                 </div>
                             </div>
                         </div>
