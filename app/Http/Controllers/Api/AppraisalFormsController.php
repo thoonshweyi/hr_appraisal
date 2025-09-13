@@ -120,6 +120,8 @@ class AppraisalFormsController extends Controller
                 "notstarted" => $appraisalforms->where("status_id",21)->count(),
                 "done" => $appraisalforms->where("status_id",19)->count()
             ];
+
+            
         }
         return response()->json($datas);
     }

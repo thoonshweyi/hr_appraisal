@@ -84,7 +84,7 @@ class EmployeesController extends Controller
         }
 
         if (!empty($filter_employee_code)) {
-            $results = $results->where('employee_code', 'like' , '%'.$filter_employee_code.'%');
+            $results = $results->where('employee_code', 'like' , '%'.$filter_employee_code.'%')->orWhere('employee_name', 'like', '%'.$filter_employee_code.'%');
         }
 
         if (!empty($filter_branch_id)) {

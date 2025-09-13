@@ -52,7 +52,7 @@
 
                         <div class="col-md-2">
                             <label for="filter_employee_code">Employee Code <span class="text-danger">*</span></label>
-                            <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Code" value="{{ request()->filter_employee_code }}"/>
+                            <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0" placeholder="Enter Employee Code/Name" value="{{ request()->filter_employee_code }}"/>
                         </div>
 
                         <div class="col-md-2">
@@ -101,6 +101,16 @@
                                 <option value="" selected disabled>Choose Sub Department</option>
                                 @foreach($subdepartments as $subdepartment)
                                             <option value="{{$subdepartment['id']}}" {{ $subdepartment['id'] == request()->filter_subdepartment_id ? 'selected' : '' }}>{{$subdepartment['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+
+                        {{-- <div class="col-md-4">
+                            <label for="filter_criteria_set_id">Criteria Set</label>
+                            <select name="filter_criteria_set_id" id="filter_criteria_set_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Sub Section</option>
+                                @foreach($subsections as $subsection)
+                                            <option value="{{$subsection['id']}}" {{ $subsection['id'] == request()->filter_criteria_set_id ? 'selected' : '' }}>{{$subsection['name']}}</option>
                                 @endforeach
                             </select>
                         </div> --}}
@@ -295,7 +305,7 @@
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
-            maxItems: 4,
+            maxItems: 25,
             valueField: "value",
             labelField: "label",
             placeholder: 'Choose Position Level',

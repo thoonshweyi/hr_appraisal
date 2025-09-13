@@ -46,7 +46,7 @@
                     <div class="row align-items-end justify-content-start ">
 
                         <div class="col-md-2">
-                            <label for="filter_name">Enployee Name <span class="text-danger">*</span></label>
+                            <label for="filter_name">Form Type Name <span class="text-danger">*</span></label>
                             <input type="text" name="filter_name" id="filter_name" class="form-control form-control-sm rounded-0" placeholder="Enter Form Type Name" value="{{ request()->filter_name }}"/>
                         </div>
 
