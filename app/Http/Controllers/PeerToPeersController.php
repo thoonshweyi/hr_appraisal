@@ -191,6 +191,7 @@ class PeerToPeersController extends Controller
         ->where('appraisal_cycle_id',$appraisal_cycle_id)
         ->with(["assesseeuser.employee"])
         ->with(["assessoruser.employee.branch","assessoruser.employee.department","assessoruser.employee.position","assessoruser.employee.positionlevel"])
+        ->with(["assformcat"])
         ->get();
 
         return DataTables::of($peertopeers)

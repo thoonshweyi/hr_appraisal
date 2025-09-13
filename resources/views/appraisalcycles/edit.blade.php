@@ -888,6 +888,7 @@
                                         {{-- <th>Branch</th>
                                         <th>Position Level</th>
                                         <th>Position</th> --}}
+                                        <th style="width: 40% !important;">Criteria Set</th>
                                         <th>
                                             Action
                                         </th>
@@ -1644,6 +1645,7 @@
                     {{-- { data: 'assessoruser.employee.branch.branch_name', name: 'assessoruser.employee.branch.branch_name', orderable: false },
                     { data: 'assessoruser.employee.positionlevel.name', name: 'assessoruser.employee.positionlevel.name', orderable: false },
                     { data: 'assessoruser.employee.position.name', name: 'assessoruser.employee.position.name', orderable: false }, --}}
+                    { data: 'assformcat.name', name: 'assformcat.name', orderable: false },
                     {
                         data: 'action',
                         name: 'action',
