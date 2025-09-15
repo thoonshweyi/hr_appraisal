@@ -96,6 +96,10 @@ class Employee extends Model
         return $this->hasMany(EmployeeAttachFormType::class,"employee_code","employee_code");
     }
 
+    public function attachformtypes(){
+        return $this->belongsToMany(AttachFormType::class,"employee_attach_form_types","employee_code","attach_form_type_id",'employee_code', "id");
+    }
+
     public function emppuser(){
         return $this->belongsTo(User::class,'employee_code',"employee_id");
     }

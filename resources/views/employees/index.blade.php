@@ -270,8 +270,7 @@
                                 $attach_form_type = optional($employee->attachformtype)->name;
                                 // dd($attach_form_type);
 
-                                $empattachformtypes = $employee->empattachformtypes->pluck('attachformtype.name')->toArray();
-                                // dd($empattachformtypes);
+                                $empattachformtypes = $employee->attachformtypes->pluck("name")->toArray();
 
                                 $allformtypenames = array_filter(array_merge(
                                     $attach_form_type ? [$attach_form_type] : [],
@@ -281,7 +280,7 @@
                                 // $joinedNames = implode(', ', $allTypeNames);
 
                                 // dd($allformtypenames);
-                                $allformtypenamestr = collect($allformtypenames)->join(',');
+                                $allformtypenamestr = collect($allformtypenames)->join(', ');
                                 // dd($allformtypenamestr);
                             @endphp
                             {{ $allformtypenamestr }}
