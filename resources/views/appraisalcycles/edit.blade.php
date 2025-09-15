@@ -2212,7 +2212,7 @@
             }, 1000);
 
 
-            $.ajax({
+            {{-- $.ajax({
                 url:"{{url('/api/printhistories')}}",
                 method:"POST",
                 data: {
@@ -2233,7 +2233,7 @@
                         });
                     }
                 }
-            });
+            }); --}}
         };
     });
 
