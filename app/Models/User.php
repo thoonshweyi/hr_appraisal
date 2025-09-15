@@ -99,7 +99,7 @@ class User extends Authenticatable
         $position_level_id = $employee->position_level_id;
         $location_id = $employee->branch_id;
 
-        $empattach_form_type_ids = $employee->attachformtypes()->pluck('attach_form_type_id');
+        $empattach_form_type_ids = $employee->empattachformtypes()->pluck('attach_form_type_id');
         $attach_form_type_ids = collect([$employee->attach_form_type_id])
         ->merge($empattach_form_type_ids)
         ->unique();
@@ -228,5 +228,5 @@ class User extends Authenticatable
         return $this->hasOne(PrintHistory::class,'assessor_user_id');
     }
 
-    
+
 }

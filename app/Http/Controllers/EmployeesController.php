@@ -56,10 +56,15 @@ class EmployeesController extends Controller
         $filter_employee_name = $request->filter_employee_name;
         $filter_employee_code = $request->filter_employee_code;
         $filter_branch_id = $request->filter_branch_id;
-        $filter_position_level_id = $request->filter_position_level_id;
+        $filter_position_level_ids = $request->filter_position_level_id;
         $filter_subdepartment_id = $request->filter_subdepartment_id;
         $filter_section_id = $request->filter_section_id;
         $filter_sub_section_id = $request->filter_sub_section_id;
+
+        // Advance Search & Filter
+        $filter_attach_form_type_ids = $request->filter_attach_form_type_id;
+        $filter_location_id = $request->filter_location_id;
+
 
         $results = Employee::query();
 
@@ -92,8 +97,8 @@ class EmployeesController extends Controller
         }
 
 
-        if (!empty($filter_position_level_id)) {
-            $results = $results->whereIn('position_level_id', $filter_position_level_id);
+        if (!empty($filter_position_level_ids)) {
+            $results = $results->whereIn('position_level_id', $filter_position_level_ids);
         }
 
 
@@ -107,6 +112,30 @@ class EmployeesController extends Controller
 
         if (!empty($filter_sub_section_id)) {
             $results = $results->where('sub_section_id', $filter_sub_section_id);
+        }
+
+
+        if (!empty($filter_attach_form_type_ids)) {
+            // $results = $results->whereIn('attach_form_type_id', $filter_attach_form_type_ids);
+
+            $results = $results->where(function($query) use($filter_attach_form_type_ids){
+                $query->whereIn('attach_form_type_id',$filter_attach_form_type_ids)
+                        ->orWhereHas("empattachformtypes",function($q) use($filter_attach_form_type_ids){
+                            $q->whereIn("attach_form_type_id",$filter_attach_form_type_ids);
+                        });
+            });
+        }
+
+
+        if(!empty($filter_location_id) || $filter_location_id == 0){
+            if($filter_location_id == 7){
+                $results = $results->where('branch_id', $filter_branch_id);
+            }else{
+                // $otherbranch_ids = $branches->where("branch_id","!=",7)->pluck("branch_id");
+                // dd($otherbranch_ids);
+
+                $results = $results->where('branch_id', "!=" ,7);
+            }
         }
         $employees = $results->orderBy('id','asc')->paginate(10);
 
