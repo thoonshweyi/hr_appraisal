@@ -198,6 +198,7 @@ class EmployeesController extends Controller
             $employee->department_id = $request["department_id"];
             $employee->sub_department_id = $request["sub_department_id"];
             $employee->section_id = $request["section_id"];
+            $employee->sub_section_id = $request["sub_section_id"];
             $employee->position_id = $request["position_id"];
             $employee->status_id = $request["status_id"];
             $employee->user_id = $user_id;

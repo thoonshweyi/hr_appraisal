@@ -261,11 +261,6 @@
                         <td>{{ $employee->subsection->name }}</td>
                         <td>
                             @php
-                                // $attach_form_type_id = $employee->attachformtype->id;
-                                // // dd($attach_form_type_id);
-
-                                // $empattachformtypes_ids = $employee->empattachformtypes->pluck("attach_form_type_id");
-                                // dd($empattachformtypes_ids);
 
                                 $attach_form_type = optional($employee->attachformtype)->name;
                                 // dd($attach_form_type);
