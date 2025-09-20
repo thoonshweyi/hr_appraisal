@@ -215,7 +215,7 @@
                             <select name="attach_form_type_ids[]" id="attach_form_type_ids" class="form-control form-control-sm rounded-0" multiple>
                                 <option value="" selected disabled>Choose Multi Attach Form Type</option>
                                 @foreach($attachformtypes as $attachformtype)
-                                    <option value="{{$attachformtype['id']}}" {{  in_array($attachformtype['id'],( old("attach_form_type_ids",$employee->attachformtypes->pluck('attach_form_type_id')->toArray()))) ? "selected" : "" }}>{{$attachformtype['name']}}</option>
+                                    <option value="{{$attachformtype['id']}}" {{  in_array($attachformtype['id'],( old("attach_form_type_ids",$employee->empattachformtypes->pluck('attach_form_type_id')->toArray()))) ? "selected" : "" }}>{{$attachformtype['name']}}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -105,23 +105,48 @@
                             </select>
                         </div> --}}
 
-                        {{-- <div class="col-md-4">
-                            <label for="filter_criteria_set_id">Criteria Set</label>
-                            <select name="filter_criteria_set_id" id="filter_criteria_set_id" class="form-control form-control-sm rounded-0">
-                                <option value="" selected disabled>Choose Sub Section</option>
-                                @foreach($subsections as $subsection)
-                                            <option value="{{$subsection['id']}}" {{ $subsection['id'] == request()->filter_criteria_set_id ? 'selected' : '' }}>{{$subsection['name']}}</option>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</button>
+                                @if(count(request()->query()) > 0)
+                                    <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
+                                @endif
+                                <a href="javascript:void(0);" id="export-btn" class="btn cus_btn ml-2">Export</a>
+                                <a href="javascript:void(0)" class="ml-2" data-toggle="collapse" data-target="#advfilter">Advanced Filter & Search</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1" style="align-self: center;">
+                        </div>
+                    </div>
+
+                    <div id="advfilter" class="row collapse">
+                        <div class="col-md-2">
+                            <label for="filter_attach_form_type_id">Attach Form Type</label>
+                            <select name="filter_attach_form_type_id[]" id="filter_attach_form_type_id" class="form-control form-control-sm rounded-0" multiple>
+                                <option value="" selected disabled>Choose Form Type</option>
+                                @foreach($attachformtypes as $attachformtype)
+                                        <option value="{{$attachformtype['id']}}"  {{  in_array($attachformtype['id'],request()->filter_attach_form_type_id ?? []) ? 'selected' : '' }}>{{$attachformtype['name']}}</option>
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>
 
-                        <button type="submit" class="btn btn-success" class=""><i class="ri-search-line"></i> Search</button>
-                        @if(count(request()->query()) > 0)
-                            <button type="button" id="btn-clear" class="btn btn-light btn-clear ml-2" title="Refresh" onclick="window.location.href = window.location.href.split('?')[0];"><i class="ri-refresh-line"></i> Reset</button>
-                        @endif
-                        <a href="javascript:void(0);" id="export-btn" class="btn cus_btn ml-2">Export</a>
+                         <div class="col-md-2">
+                            <label for="filter_location_id">Location</label>
+                            <select name="filter_location_id" id="filter_location_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Location</option>
+                                {{-- @foreach($branches as $branch)
+                                    <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_location_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
+                                @endforeach --}}
+                                <option value="" selected disabled>Choose Location</option>
+                                <option value="7" {{ request()->filter_location_id == '7' ? 'selected' : '' }}>HO</option>
+                                <option value="0" {{ request()->filter_location_id == '0' ? 'selected' : '' }}>Branches</option>
+
+                            </select>
+                        </div>
 
                     </div>
+
 
                 </form>
             </div>
@@ -199,14 +224,16 @@
                     <tr class="ligth ligth-data">
                         <th>No</th>
                         <th>Name</th>
-                        <th>Employee Code</th>
+                        {{-- <th>Employee Code</th> --}}
                         <th>Branch</th>
                         <th>Position</th>
                         <th>Level</th>
                         <th>Status</th>
-                        <th>By</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
+                        {{-- <th>By</th> --}}
+                        {{-- <th>Created At</th> --}}
+                        {{-- <th>Updated At</th> --}}
+                        <th>Sub Section</th>
+                        <th>Attach Form Type</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -214,8 +241,8 @@
                     @foreach($employees as $idx=>$employee)
                     <tr>
                         <td>{{$idx + $employees->firstItem()}}</td>
-                        <td>{{$employee["employee_name"]}}</td>
-                        <td>{{$employee["employee_code"]}}</td>
+                        <td>{{$employee["employee_name"]}} ( {{ $employee["employee_code"] }} )</td>
+                        {{-- <td>{{$employee["employee_code"]}}</td> --}}
                         <td>{{$employee["branch"]["branch_name"]}}</td>
                         <td>{{ $employee->position->name}}</td>
                         <td>{{ $employee->positionlevel->name}}</td>
@@ -228,9 +255,36 @@
                                 <!-- Optional label text next to the switch -->
                             </div>
                         </td>
-                        <td>{{ $employee->user->name }}</td>
+                        {{-- <td>{{ $employee->user->name }}</td>
                         <td>{{ $employee->created_at->format('d M Y') }}</td>
-                        <td>{{ $employee->updated_at->format('d M Y') }}</td>
+                        <td>{{ $employee->updated_at->format('d M Y') }}</td> --}}
+                        <td>{{ $employee->subsection->name }}</td>
+                        <td>
+                            @php
+                                // $attach_form_type_id = $employee->attachformtype->id;
+                                // // dd($attach_form_type_id);
+
+                                // $empattachformtypes_ids = $employee->empattachformtypes->pluck("attach_form_type_id");
+                                // dd($empattachformtypes_ids);
+
+                                $attach_form_type = optional($employee->attachformtype)->name;
+                                // dd($attach_form_type);
+
+                                $empattachformtypes = $employee->attachformtypes->pluck("name")->toArray();
+
+                                $allformtypenames = array_filter(array_merge(
+                                    $attach_form_type ? [$attach_form_type] : [],
+                                    $empattachformtypes
+                                ));
+
+                                // $joinedNames = implode(', ', $allTypeNames);
+
+                                // dd($allformtypenames);
+                                $allformtypenamestr = collect($allformtypenames)->join(', ');
+                                // dd($allformtypenamestr);
+                            @endphp
+                            {{ $allformtypenamestr }}
+                        </td>
                         <td class="text-center">
                             @can('edit-add-on')
                                 <a href="{{ route('employees.show',$employee->id) }}" class="text-warning mr-2"><i class="fas fa-eye"></i></a>
@@ -312,6 +366,27 @@
             searchField: ["value", "label"]
         });
 
+         $("#filter_attach_form_type_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 25,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Form Type',
+            searchField: ["value", "label"]
+        });
+
+          $("#filter_location_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Location',
+            searchField: ["value", "label"]
+        });
 
 
 
@@ -493,3 +568,4 @@
     });
 </script>
 @stop
+
