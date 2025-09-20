@@ -193,7 +193,7 @@ class EmployeesController extends Controller
             $userBranch['branch_id'] = $request["branch_id"];
             BranchUser::firstOrCreate($userBranch);
 
-            $attachformtypes = $request["attach_form_type_ids"];
+            $attachformtypes = $request["attach_form_type_ids"] ?? [];
             foreach($attachformtypes as $attachformtype){
                 $employeeatachformtype = EmployeeAttachFormType::create([
                     "employee_code" => $employee->employee_code,
