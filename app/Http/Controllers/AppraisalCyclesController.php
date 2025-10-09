@@ -490,6 +490,11 @@ class AppraisalCyclesController extends Controller
         // $results = PeerToPeer::query();
         $results = $users;
 
+        $results = $results->whereHas('employee',function($query){
+            $query->where('status_id',1);
+        });
+
+
         clearFilterSection();
           // for getting employee info
         if(!empty($filter_user_id)){

@@ -89,7 +89,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group d-flex" style="white-space: nowrap">
 
                                         <label for="filter_branch_id">Assessee(s) Branch: </label>
@@ -140,13 +140,25 @@
                                     </div>
                                 </div> --}}
 
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group d-flex" style="white-space: nowrap">
                                            <label for="filter_sub_section_id">Sub Section: </label>
                                             <select name="filter_sub_section_id" id="filter_sub_section_id" class="form-control form-control-sm rounded-0 ml-2">
                                             <option value="" selected disabled>Choose Section</option>
                                             @foreach($subsections as $subsection)
                                                         <option value="{{$subsection['id']}}" {{ $subsection['id'] == request()->filter_sub_section_id ? 'selected' : '' }}>{{$subsection['name']}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group d-flex" style="white-space: nowrap">
+                                           <label for="filter_position_level_id">Position Level: </label>
+                                            <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0 ml-2">
+                                            <option value="" selected disabled>Choose Section</option>
+                                            @foreach($positionlevels as $positionlevel)
+                                                        <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == request()->filter_position_level_id ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -267,6 +279,7 @@
             searchField: ["value", "label"]
         });
 
+
         {{-- $("#filter_subdepartment_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
@@ -300,6 +313,16 @@
             searchField: ["value", "label"]
         });
 
+        $("#filter_position_level_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 4,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Position Level',
+            searchField: ["value", "label"]
+        });
 
         $("#beginning_date,#enddate").flatpickr({
             dateFormat: "Y-m-d",

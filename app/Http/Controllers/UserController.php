@@ -281,6 +281,8 @@ class UserController extends Controller
         $filter_subdepartment_id =  $request->filter_subdepartment_id;
         $filter_section_id =  $request->filter_section_id;
         $filter_sub_section_id =  $request->filter_sub_section_id;
+        $filter_position_level_id =  $request->filter_position_level_id;
+
 
 
 
@@ -288,6 +290,10 @@ class UserController extends Controller
         $appraisal_cycle_id = $request->appraisal_cycle_id;
 
         $results = User::query();
+
+        $results = $results->whereHas('employee',function($query){
+                $query->where('status_id',1);
+        });
 
         // dd(!empty($filter_ass_form_cat_id));
         if (!empty($filter_ass_form_cat_id)) {
@@ -347,6 +353,13 @@ class UserController extends Controller
             $results = $results->whereIn('employee_id', $employee_codes);
         }
 
+
+        if (!empty($filter_position_level_id)) {
+
+            $employee_codes = Employee::where('position_level_id',$filter_position_level_id)
+                                ->pluck('employee_code');
+            $results = $results->whereIn('employee_id', $employee_codes);
+        }
 
         // Preventing Self peer to peer
         $results = $results->where("id","!=",$assessor_user_id);
