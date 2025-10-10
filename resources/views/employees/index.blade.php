@@ -135,13 +135,20 @@
                             <label for="filter_location_id">Location</label>
                             <select name="filter_location_id" id="filter_location_id" class="form-control form-control-sm rounded-0">
                                 <option value="" selected disabled>Choose Location</option>
-                                {{-- @foreach($branches as $branch)
-                                    <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == request()->filter_location_id ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
-                                @endforeach --}}
-                                <option value="" selected disabled>Choose Location</option>
                                 <option value="7" {{ request()->filter_location_id == '7' ? 'selected' : '' }}>HO</option>
                                 <option value="0" {{ request()->filter_location_id == '0' ? 'selected' : '' }}>Branches</option>
 
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="filter_status_id">Status</label>
+                            <select name="filter_status_id" id="filter_status_id" class="form-control form-control-sm rounded-0">
+                                <option value="" selected disabled>Choose Status</option>
+
+                                @foreach($statuses as $status)
+                                    <option value="{{$status['id']}}" {{ $status['id'] == request()->filter_status_id ? 'selected' : '' }}>{{$status['name']}}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -204,17 +211,7 @@
                     </div>
                 @endif
            </div>
-            {{-- <div class="col-lg-12 d-flex mb-4">
-                <div class="form-row col-md-2">
-                    <label> {{__('branch.branch_name')}} </label>
-                    <input type="input" class="form-control" id="branch_name" value="">
-                </div>
-                <div class="form-row col-md-2">
-                    <label> {{__('branch.branch_short_name')}}</label>
-                    <input type="input" class="form-control" id="branch_short_name" value="">
-                </div>
-                <button id="branch_search" class="btn btn-primary document_search ml-2 mr-2 mt-4">{{__('button.search')}}</button>
-            </div> --}}
+
         </div>
     </div>
     <div class="col-lg-12">
@@ -325,6 +322,17 @@
             valueField: "value",
             labelField: "label",
             placeholder: 'Choose Branch',
+            searchField: ["value", "label"]
+        });
+
+         $("#filter_status_id").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Status',
             searchField: ["value", "label"]
         });
 

@@ -109,7 +109,7 @@
                             <select class="form-control" id="current_assessees">
                                 @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
                                 @foreach($assesseeuserbybranch as $assesseeuser)
-                                    <option value="{{$assesseeuser->id}}">{{ $assesseeuser->employee->employee_name }}</option>
+                                    <option value="{{$assesseeuser->id}}" {{ $assesseeuser->id == $tar_assessee ? "selected" : '' }}>{{ $assesseeuser->employee->employee_name }}</option>
                                 @endforeach
                                 @endforeach
                             </select>

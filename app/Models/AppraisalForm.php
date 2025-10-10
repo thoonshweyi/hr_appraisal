@@ -49,6 +49,10 @@ class AppraisalForm extends Model
         return $this->hasMany(FormResult::class,'appraisal_form_id','id');
     }
 
+    public function assessees(){
+        return $this->hasMany(AppraisalFormAssesseeUser::class,'appraisal_form_id','id');
+    }
+
 
     public function getResult($assessee_user_id,$criteria_id){
         $formresult = FormResult::where('appraisal_form_id',$this->id)

@@ -14,6 +14,7 @@ class AppraisalFormAssesseeUser extends Model
     protected $fillable = [
         "appraisal_form_id",
         "assessee_user_id",
+        "status_id"
     ];
 
     public function appraisalform(){

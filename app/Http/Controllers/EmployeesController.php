@@ -64,6 +64,7 @@ class EmployeesController extends Controller
         // Advance Search & Filter
         $filter_attach_form_type_ids = $request->filter_attach_form_type_id;
         $filter_location_id = $request->filter_location_id;
+        $filter_status_id = $request->filter_status_id;
 
 
         $results = Employee::query();
@@ -127,16 +128,22 @@ class EmployeesController extends Controller
         }
 
 
-        if(!empty($filter_location_id) || $filter_location_id == 0){
+        // dd($filter_location_id === "0");
+        if(!empty($filter_location_id)){
             if($filter_location_id == 7){
                 $results = $results->where('branch_id', $filter_branch_id);
-            }else{
-                // $otherbranch_ids = $branches->where("branch_id","!=",7)->pluck("branch_id");
-                // dd($otherbranch_ids);
-
-                $results = $results->where('branch_id', "!=" ,7);
             }
+        }else if($filter_location_id === "0"){
+            $results = $results->where('branch_id', "!=" ,7);
         }
+
+
+        if(!empty($filter_status_id)){
+            $results = $results->where("status_id",$filter_status_id);
+        }else{
+            $results = $results->where("status_id",1);
+        }
+
         $employees = $results->orderBy('id','asc')->paginate(10);
 
         return view("employees.index",compact("employees","statuses","divisions","departments","subdepartments","sections", "subsections","positions","branches","positionlevels","attachformtypes","subdepartments"));

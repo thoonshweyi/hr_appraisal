@@ -301,11 +301,13 @@ class AppraisalFormsController extends Controller
 
         $preloadresults = $appraisalform->getPreloadResult($appraisalform->id);
 
+        $tar_assessee = $appraisalform->assessees()->where("status_id",2)?->first()?->assessee_user_id;
+
         if($adminauthorize){
             return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","preloadresults"));
         }else{
             // return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
-            return view("appraisalforms.editmobile",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","preloadresults"));
+            return view("appraisalforms.editmobile",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","preloadresults","tar_assessee"));
         }
 
     }
@@ -405,6 +407,7 @@ class AppraisalFormsController extends Controller
             $appraisalformresults = array_filter(
                 array_map('array_filter', $appraisalformresults)
             );
+            // dd($appraisalformresults);
             $appraisalform->update([
                 "modify_user_id" => $user_id,
                 "status_id" => empty($appraisalformresults) ? 21 : 20 ,
@@ -433,6 +436,28 @@ class AppraisalFormsController extends Controller
                     ]);
                 }
             }
+
+
+            // Start Next Target Assessee
+            $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->orderBy("id")->get();
+            $criteriaCount = $criterias->count();
+            $completedAssessees = $appraisalform->formresults
+            ->groupBy('assessee_user_id')
+            ->filter(function ($results) use ($criteriaCount) {
+                return $results->count() === $criteriaCount;
+            })
+            ->keys()
+            ->toArray();
+            // dd($completedAssessees);
+
+
+            $appraisalform->assessees()->whereIn("assessee_user_id",$completedAssessees)->update([
+                'status_id' => 1
+            ]);
+            $appraisalform->assessees()->whereNotIn("assessee_user_id",$completedAssessees)->update([
+                'status_id' => 2
+            ]);
+            // End Next Target Assessee
 
             \DB::commit();
 
