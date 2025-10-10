@@ -95,15 +95,7 @@ class AppraisalFormsController extends Controller
     }
 
     public function assessordashboard(Request $request){
-        // $leaves = Leave::all();
-        // $datas = [
-        //     "totalleaves" => $leaves->count(),
-        //     "approved" => $leaves->where("stage_id",1)->count(),
-        //     "pending" => $leaves->where("stage_id",2)->count(),
-        //     "rejeted" => $leaves->where("stage_id",3)->count(),
-        // ];
-        // return response()->json($datas);
-        // dd($request->assessor_user_id);
+
         $activecycle = AppraisalCyclesController::activecycle();
         $datas = [];
         $assessor_user_id = $request->assessor_user_id;
@@ -114,14 +106,24 @@ class AppraisalFormsController extends Controller
                                 ->get();
             // dd($appraisalforms);
 
+            $totalAppraisalForms = $appraisalforms->count();
+            $inProgressCount     = $appraisalforms->where("status_id", 20)->count();
+            $notStartedCount     = $appraisalforms->where("status_id", 21)->count();
+            $doneCount           = $appraisalforms->where("status_id", 19)->count();
+
+            $perInProgress = $totalAppraisalForms > 0
+                ? round(($inProgressCount / $totalAppraisalForms) * 100, 2)
+                : 0;
+
             $datas = [
-                "totalappraisalforms" => $appraisalforms->count(),
-                "inprogress" => $appraisalforms->where("status_id",20)->count(),
-                "notstarted" => $appraisalforms->where("status_id",21)->count(),
-                "done" => $appraisalforms->where("status_id",19)->count()
+                "totalappraisalforms" => $totalAppraisalForms,
+                "inprogress" => $inProgressCount,
+                "notstarted" => $notStartedCount,
+                "done" => $doneCount,
+                "per_inprogress" => $perInProgress,
             ];
 
-            
+
         }
         return response()->json($datas);
     }
