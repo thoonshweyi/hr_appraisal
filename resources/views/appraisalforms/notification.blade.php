@@ -300,11 +300,11 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="my-3">
-                                    <div  class="progress" role="progressbar" aria-valuenow="${data.per_inprogress}" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-bar" style="width:45.95%; background: linear-gradient(135deg, #007bff, #0056b3);">${data.per_inprogress}%</div>
+                                    <div  class="progress" role="progressbar" aria-valuenow="${data.per_done}" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar" style="width:${data.per_done}%; background: linear-gradient(135deg, #007bff, #0056b3);">${data.per_done}%</div>
                                     </div>
                                     <small class="text-muted" style="float:left;">
-                                    ${data.inprogress} of ${data.totalappraisalforms} appraisals completed
+                                    ${data.done} of ${data.totalappraisalforms} appraisals completed
                                     </small>
                                 </div>
                             </div>

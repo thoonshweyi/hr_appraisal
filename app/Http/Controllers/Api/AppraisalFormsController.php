@@ -111,8 +111,8 @@ class AppraisalFormsController extends Controller
             $notStartedCount     = $appraisalforms->where("status_id", 21)->count();
             $doneCount           = $appraisalforms->where("status_id", 19)->count();
 
-            $perInProgress = $totalAppraisalForms > 0
-                ? round(($inProgressCount / $totalAppraisalForms) * 100, 2)
+            $perDone = $totalAppraisalForms > 0
+                ? round(($doneCount / $totalAppraisalForms) * 100, 2)
                 : 0;
 
             $datas = [
@@ -120,7 +120,7 @@ class AppraisalFormsController extends Controller
                 "inprogress" => $inProgressCount,
                 "notstarted" => $notStartedCount,
                 "done" => $doneCount,
-                "per_inprogress" => $perInProgress,
+                "per_done" => $perDone,
             ];
 
 
