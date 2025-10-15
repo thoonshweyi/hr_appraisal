@@ -80,9 +80,12 @@
                     <li class="nav-item">
                         <button type="button" id="dashboard-btn"  class="tablinks" onclick="gettab(event,'dashboard')">Dashboard</button>
                     </li>
+
+                    @if(!branchHR())
                     <li class="nav-item">
                         <button type="button" id="assesseesummary-btn"  class="tablinks" onclick="gettab(event,'assesseesummary')">Assessee Summary</button>
                     </li>
+                    @endif
 
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
@@ -572,7 +575,7 @@
 
 
 
-
+                        @if(!branchHR())
                         <div id="assesseesummary" class="tab-pane">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -600,6 +603,7 @@
                                 </div>
                              </div>
                         </div>
+                        @endif
 
                         <div id="dashboard" class="tab-pane">
                             <div class="row g-3 mb-3">
@@ -1339,7 +1343,7 @@
                                 <tr>
                                     <td><input type="checkbox" name="singlechecks" class="form-check-input m-0 singlechecks" value="${form.id}" /></td>
                                     <td>#${form.id}</td>
-                                    <td><a href="/appraisalforms/${form.id}/edit">${form.assformcat.name}</a></td>
+                                    <td><a class="{{ branchHR() ? 'text-dark' : ''  }}" href="{{ branchHR() ? 'javascript:void(0)' : '/appraisalforms/${form.id}/edit'}} ">${form.assformcat.name}</a></td>
                                     <td>${form.appraisalcycle.name}</td>
                                     <td><span class="badge ${statusClass}">${form.status.name}</span></td>
                                 </tr>`;

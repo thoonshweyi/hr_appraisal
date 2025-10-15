@@ -21,8 +21,8 @@
     <!-- toastr css1 js1 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
-      <!-- Favicon -->
-      <link rel="shortcut icon" href="{{ asset('images/hrlogo-rounded.png') }}" />
+    <!-- Favicon -->
+    <link href="{{ asset('images/hrlogo-rounded.png') }}" rel="icon" type="image/png" sizes="16x16"/>
 
 
       {{--  --}}

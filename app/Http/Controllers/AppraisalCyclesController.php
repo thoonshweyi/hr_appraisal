@@ -294,6 +294,12 @@ class AppraisalCyclesController extends Controller
         // $results = PeerToPeer::query();
         $results = $participantusers;
 
+        if(branchHR()){
+            $results = $results->whereHas("branches",function($query){
+                $query->whereIn("branches.branch_id",Auth::user()->branches->pluck('branch_id'));
+            });
+        }
+
 
         if (!empty($filter_employee_name)) {
             $results = $results->whereHas('employee',function($query) use($filter_employee_name){
@@ -490,6 +496,14 @@ class AppraisalCyclesController extends Controller
         // $results = PeerToPeer::query();
         $results = $users;
 
+        if(branchHR()){
+            $results = $results->whereHas("branches",function($query){
+                $query->whereIn("branches.branch_id",Auth::user()->branches->pluck('branch_id'));
+            });
+        }
+
+
+
         $results = $results->whereHas('employee',function($query){
             $query->where('status_id',1);
         });
@@ -568,7 +582,7 @@ class AppraisalCyclesController extends Controller
 
         $results = $results->doesntHave('roles');
 
-            $users = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+            $users = $results->orderBy('id','asc')->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
             ->get();
 
 

@@ -36,7 +36,6 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        // dd('hay');
         // Auth::guard('web')->logout();
         // $request->session()->invalidate();
         // $request->session()->regenerateToken();
@@ -44,8 +43,9 @@ class LoginController extends Controller
 
         $this->validate($request, [
             'login_value' => 'required',
-            'password' => 'required|min:6',
+            'password' => 'required|min:4',
         ]);
+
         $remember_me = $request->has('remember_me') ? true : false;
         if (method_exists($this, 'hasTooManyLoginAttempts') &&
             $this->hasTooManyLoginAttempts($request)) {

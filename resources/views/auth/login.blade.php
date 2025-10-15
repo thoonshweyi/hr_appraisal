@@ -6,7 +6,8 @@
       <title>{{ config('app.name', 'Laravel') }}</title>
 
       <!-- Favicon -->
-      <link rel="shortcut icon" href="{{ asset('images/hrlogo-rounded.png') }}" />
+      <link href="{{ asset('images/hrlogo-rounded.png') }}" rel="icon" type="image/png" sizes="16x16"/>
+
       <link rel="stylesheet" href="{{ asset('css/backend-plugin.min.css') }}">
       <link rel="stylesheet" href="{{ asset('css/backend.css?v=1.0.0') }}">
       <link rel="stylesheet" href="{{ asset('vendor/@fortawesome/fontawesome-free/css/all.min.css') }}">

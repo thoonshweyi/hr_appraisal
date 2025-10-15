@@ -122,11 +122,13 @@
                         </a>
                     </li>
 
+                    @if(!branchHR())
                     <li class="{{ (request()->routeIs('appraisalforms.index')) ? 'active' : '' }}">
                         <a href="{{route('appraisalforms.index')}}">
                             <i class="las la-minus"></i><span>{{ __('nav.appraisalform_list')}}</span>
                         </a>
                     </li>
+                    @endif
                 </ul>
             </li>
             @endcan

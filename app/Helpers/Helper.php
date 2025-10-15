@@ -76,6 +76,16 @@ function adminHRAuthorize(){
     return $adminauthorize;
 }
 
+function branchHR(){
+    $authuser = Auth::user();
+    $branch_ids = $authuser->branches->pluck('branch_id');
+    
+    if ($authuser->hasRole('HR Authorized') && ($branch_ids && !$branch_ids->contains('7'))) {
+        return true;
+    }
+    return false;
+}
+
 
 
 function clearFilterSection(){
