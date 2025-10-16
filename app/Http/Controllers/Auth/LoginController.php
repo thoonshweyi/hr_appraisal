@@ -45,7 +45,6 @@ class LoginController extends Controller
             'login_value' => 'required',
             'password' => 'required|min:4',
         ]);
-
         $remember_me = $request->has('remember_me') ? true : false;
         if (method_exists($this, 'hasTooManyLoginAttempts') &&
             $this->hasTooManyLoginAttempts($request)) {
