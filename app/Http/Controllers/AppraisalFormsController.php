@@ -248,7 +248,7 @@ class AppraisalFormsController extends Controller
         ->get();
         // dd($assessee_ids);
 
-        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
+        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->orderBy("id",'asc')->get();
 
 
         $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
@@ -287,7 +287,7 @@ class AppraisalFormsController extends Controller
         });
         // dd($assessee_ids);
 
-        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->orderBy("id")->get();
+        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->orderBy("id",'asc')->get();
 
         $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
         $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');
@@ -586,7 +586,7 @@ class AppraisalFormsController extends Controller
         ->groupBy(function ($user) {
             return $user->employee->branch->branch_name ?? 'No Branch';
         });
-        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->get();
+        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->orderBy('id','asc')->get();
 
         $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
         $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');

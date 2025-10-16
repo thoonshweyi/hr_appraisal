@@ -221,7 +221,7 @@
                         </tr>
 
                         <!-- Criteria Rows -->
-                        @foreach ($appraisalform->assformcat->criterias as $criteria)
+                        @foreach ($appraisalform->assformcat->criterias()->orderBy('id','asc')->get() as $criteria)
                             <tr>
                                 <td class="text-justify">{{ $criteria->name }}</td>
                                 <td>{{ $criteria->excellent }}</td>
