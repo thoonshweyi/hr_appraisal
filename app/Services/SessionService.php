@@ -15,6 +15,7 @@ class SessionService{
     }
 
     public function getCurrentDevice(){
+        // dd($this->currentSessionId);
         $currentDevice = UserSession::where('user_id', auth()->id())
                         ->where('session_id', $this->currentSessionId)
                         ->first();
