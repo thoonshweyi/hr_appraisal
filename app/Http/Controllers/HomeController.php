@@ -641,5 +641,5 @@ class HomeController extends Controller
         //PDF file is stored under project/public/download/info.pdf
         $file="../public/download/Imported Claim System (Operation User Guide).pdf";
         return response()->download($file);
-}
+    }
 }

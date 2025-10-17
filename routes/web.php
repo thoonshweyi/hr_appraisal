@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/make_as_read/{notification_id}/{document_id}', [HomeController::class, 'make_as_read'])->name('home.make_as_read');
     Route::get('/see_document/{document_id}/{type}/{notification_id}', [HomeController::class, 'see_document'])->name('home.see_document');
-    Route::get('/notifications', [HomeController::class, 'notifications'])->name('notification');
+    // Route::get('/notifications', [HomeController::class, 'notifications'])->name('notification'); // cuz it was called by backend.bundle.min.js frequently.
     Route::get('lang/{locale}', [LocalizationController::class, 'index'])->name('lang');
 
     Route::resource('roles', RoleController::class);

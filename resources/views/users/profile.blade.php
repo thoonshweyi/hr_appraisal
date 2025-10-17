@@ -146,6 +146,11 @@
                                <button type="button" id="autoclick" class="tablinks" onclick="gettab(event,'signintab')">Sign In</button>
                           </li>
 
+
+                         <li class="nav-item">
+                              <button type="button" class="tablinks" onclick="gettab(event,'sessiontab')">Active Sessions</button>
+                         </li>
+
                      </ul>
 
                      <div class="tab-content">
@@ -192,7 +197,74 @@
 
                           </div>
 
+                          <div id="sessiontab" class="tab-pane">
+                                <!-- This Device -->
+                              <div class="session-card">
+                                   <div class="session-header d-flex justify-content-between align-items-center">
+                                   <span>This Device</span>
+                                   </div>
+                                   <div class="session-item d-flex justify-content-between align-items-center">
+                                   <div>
+                                        <div class="device-name">Chrome 141</div>
+                                        <div class="device-info">Telegram Web 12.0.4 A, Linux</div>
+                                        <div class="device-location text-muted">Yangon, Myanmar</div>
+                                   </div>
+                                   </div>
+                                   <div class="text-center mt-3">
+                                   <span class="terminate-btn">Terminate All Other Sessions</span>
+                                   </div>
+                              </div>
 
+                              <!-- Active Sessions -->
+                              <div class="session-card">
+                                   <div class="session-header">Active Sessions</div>
+
+                                   <div class="session-item">
+                                   <div class="d-flex justify-content-between">
+                                        <div>
+                                        <div class="device-name">Redmi Redmi Note 14</div>
+                                        <div class="device-info">Telegram Android 12.1.1, Android 14 (34)</div>
+                                        <div class="device-location">Sydney, Australia</div>
+                                        </div>
+                                        <div class="text-muted small">09:11</div>
+                                   </div>
+                                   </div>
+
+                                   <div class="session-item">
+                                   <div class="d-flex justify-content-between">
+                                        <div>
+                                        <div class="device-name">Samsung Galaxy A20s</div>
+                                        <div class="device-info">Telegram Android 12.1.1, Android 11 (30)</div>
+                                        <div class="device-location">Myanmar</div>
+                                        </div>
+                                        <div class="text-muted small">06:04</div>
+                                   </div>
+                                   </div>
+
+                                   <div class="session-item">
+                                   <div class="d-flex justify-content-between">
+                                        <div>
+                                        <div class="device-name">Chrome 141</div>
+                                        <div class="device-info">Telegram Web 2.2 K, Windows</div>
+                                        <div class="device-location">Yangon, Myanmar</div>
+                                        </div>
+                                        <div class="text-muted small">Wed</div>
+                                   </div>
+                                   </div>
+
+                                   <div class="session-item">
+                                   <div class="d-flex justify-content-between">
+                                        <div>
+                                        <div class="device-name">Chrome 140</div>
+                                        <div class="device-info">Telegram Web 2.2 K, Windows</div>
+                                        <div class="device-location">Yangon, Myanmar</div>
+                                        </div>
+                                        <div class="text-muted small">Mon</div>
+                                   </div>
+                                   </div>
+                              </div>
+                          </div>
+                          
 
                      </div>
                 </div>
@@ -205,6 +277,50 @@
    </div>
 </div>
 
+@endsection
+
+@section('css')
+<style>
+.session-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+    .session-header {
+      font-weight: 600;
+      color: #212529;
+      margin-bottom: 15px;
+    }
+    .session-item {
+      border-bottom: 1px solid #e9ecef;
+      padding: 12px 0;
+    }
+    .session-item:last-child {
+      border-bottom: none;
+    }
+    .device-name {
+      font-weight: 500;
+      color: #000;
+    }
+    .device-info {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    .device-location {
+      font-size: 0.85rem;
+      color: #495057;
+    }
+    .terminate-btn {
+      color: #dc3545;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .terminate-btn:hover {
+      text-decoration: underline;
+    }
+  </style>
 @endsection
 
 <script src="https://cdn.jsdelivr.net/npm/@pusher/push-notifications-web@1.1.0/dist/push-notifications-cdn.js"></script>
