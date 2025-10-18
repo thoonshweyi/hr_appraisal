@@ -21,14 +21,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
-    public function __construct(SessionService $sessionservice)
+    public function __construct()
     {
         // $this->middleware('auth');
         // $this->middleware('permission:view-users', ['only' => ['index']]);
         // $this->middleware('permission:create-user', ['only' => ['create', 'store']]);
         // $this->middleware('permission:edit-user', ['only' => ['edit', 'update']]);
         // $this->middleware('permission:delete-user', ['only' => ['destroy']]);
-        $this->sessionservice = $sessionservice;
     }
 
     public function index(Request $request)
@@ -242,9 +241,9 @@ class UserController extends Controller
         try {
             $user = User::where('id', auth()->user()->id)->first();
 
-
-            $currentDevice = $this->sessionservice->getCurrentDevice();
-            $otherSessions = $this->sessionservice->getOtherSessions();
+            $sessionService = new SessionService();
+            $currentDevice = $sessionService->getCurrentDevice();
+            $otherSessions = $sessionService->getOtherSessions();
 
 
             return view('users.profile', compact('user','currentDevice','otherSessions'));

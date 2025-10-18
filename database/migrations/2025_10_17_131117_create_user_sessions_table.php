@@ -22,6 +22,10 @@ class CreateUserSessionsTable extends Migration
             $table->string('country')->nullable();
             $table->string('region')->nullable();
             $table->string('city')->nullable();
+            $table->string('device_type')->nullable();
+            $table->string('device_name')->nullable();
+            $table->string('browser')->nullable();
+            $table->string('platform')->nullable();
             $table->timestamp('last_activity')->nullable();
             $table->timestamps();
         });

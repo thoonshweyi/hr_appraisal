@@ -11,7 +11,7 @@ class SessionService{
 
     public function __construct()
     {
-        $this->currentSessionId = Session::getId(); 
+        $this->currentSessionId = session()->getId(); 
     }
 
     public function getCurrentDevice(){

@@ -205,8 +205,8 @@
                                    </div>
                                    <div class="session-item d-flex justify-content-between align-items-center">
                                    <div>
-                                        <div class="device-name">Chrome 141</div>
-                                        <div class="device-info">Telegram Web 12.0.4 A, Linux</div>
+                                        <div class="device-name">{{ $currentDevice->device_type }}, {{ $currentDevice->device_name }}, {{ $currentDevice->browser }}, ({{ $currentDevice->platform }})</div>
+                                        <div class="device-info">{{ $currentDevice->user_agent }}</div>
                                         <div class="device-location text-muted">Yangon, Myanmar</div>
                                    </div>
                                    </div>
@@ -219,49 +219,20 @@
                               <div class="session-card">
                                    <div class="session-header">Active Sessions</div>
 
+                                   @foreach($otherSessions as $otherSession)
                                    <div class="session-item">
                                    <div class="d-flex justify-content-between">
                                         <div>
-                                        <div class="device-name">Redmi Redmi Note 14</div>
-                                        <div class="device-info">Telegram Android 12.1.1, Android 14 (34)</div>
-                                        <div class="device-location">Sydney, Australia</div>
-                                        </div>
-                                        <div class="text-muted small">09:11</div>
-                                   </div>
-                                   </div>
-
-                                   <div class="session-item">
-                                   <div class="d-flex justify-content-between">
-                                        <div>
-                                        <div class="device-name">Samsung Galaxy A20s</div>
-                                        <div class="device-info">Telegram Android 12.1.1, Android 11 (30)</div>
-                                        <div class="device-location">Myanmar</div>
-                                        </div>
-                                        <div class="text-muted small">06:04</div>
-                                   </div>
-                                   </div>
-
-                                   <div class="session-item">
-                                   <div class="d-flex justify-content-between">
-                                        <div>
-                                        <div class="device-name">Chrome 141</div>
-                                        <div class="device-info">Telegram Web 2.2 K, Windows</div>
+                                        <div class="device-name">{{ $otherSession->device_type }}, {{ $otherSession->device_name }}, {{ $otherSession->browser }}, ({{ $otherSession->platform }})</div>
+                                        <div class="device-info">{{ $otherSession->user_agent }}</div>
                                         <div class="device-location">Yangon, Myanmar</div>
                                         </div>
-                                        <div class="text-muted small">Wed</div>
+                                        <div class="text-muted small">{{ Carbon::parse() }}</div>
                                    </div>
                                    </div>
+                                   @endforeach
 
-                                   <div class="session-item">
-                                   <div class="d-flex justify-content-between">
-                                        <div>
-                                        <div class="device-name">Chrome 140</div>
-                                        <div class="device-info">Telegram Web 2.2 K, Windows</div>
-                                        <div class="device-location">Yangon, Myanmar</div>
-                                        </div>
-                                        <div class="text-muted small">Mon</div>
-                                   </div>
-                                   </div>
+                                   
                               </div>
                           </div>
                           
