@@ -333,7 +333,7 @@
 
 
             <li>
-            <a download href="{{ asset('/download/Imported Claim System (Operation User Guide).pdf') }}" class="btn btn-large pull-right" target="_blank">
+            <a download href="{{ asset('/download/HR Appraisal System User Guide.pdf') }}" class="btn btn-large pull-right" target="_blank">
                     <?xml version="1.0" encoding="iso-8859-1"?>
                     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
                     <svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

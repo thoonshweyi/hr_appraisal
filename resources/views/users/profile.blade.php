@@ -227,7 +227,7 @@
                                         <div class="device-info">{{ $otherSession->user_agent }}</div>
                                         <div class="device-location">Yangon, Myanmar</div>
                                         </div>
-                                        <div class="text-muted small">{{ Carbon::parse() }}</div>
+                                        <div class="text-muted small">{{ \Carbon\Carbon::parse($otherSession->last_activity)->format("d-M-Y h:i:s A") }}</div>
                                    </div>
                                    </div>
                                    @endforeach

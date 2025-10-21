@@ -611,7 +611,7 @@
                                     <div class="card kpi-card rounded-4 p-3 h-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                        <div class="kpi-label">Total Employees</div>
+                                        <div class="kpi-label">Total Assessors</div>
                                         <div id="kpiTotal" class="kpi-value">Loading....</div>
                                         </div>
                                         <i class="fas fa-users text-info icon"></i>
@@ -622,7 +622,7 @@
                                     <div class="card kpi-card rounded-4 p-3 h-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                        <div class="kpi-label">Completed</div>
+                                        <div class="kpi-label">Completed Forms</div>
                                         <div id="kpiCompleted" class="kpi-value text-success">Loading....</div>
                                         </div>
                                         <i class="fas fa-check-circle icon" style="color: var(--success)"></i>
@@ -633,7 +633,7 @@
                                     <div class="card kpi-card rounded-4 p-3 h-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                        <div class="kpi-label">In Progress</div>
+                                        <div class="kpi-label">In Progress Forms</div>
                                         <div id="kpiProgress" class="kpi-value" style="color:var(--warning)">Loading....</div>
                                         </div>
                                         <i class="fas fa-tasks icon" style="color: var(--warning)"></i>
@@ -644,7 +644,7 @@
                                     <div class="card kpi-card rounded-4 p-3 h-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                        <div class="kpi-label">Not Started</div>
+                                        <div class="kpi-label">Not Started Forms</div>
                                         <div id="kpiNotStarted" class="kpi-value" style="color:var(--danger)">Loading....</div>
                                         </div>
                                         <i class="fas fa-exclamation-triangle icon" style="color: var(--danger)"></i>
@@ -655,90 +655,15 @@
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="card bg-dark">
+                                    <div class="card">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between">
                                                 <h2>Branches (click to drill down)</h2>
                                             </div>
                                             {{-- <div class="sub">Horizontal bars show % Completed (target: 100%).</div> --}}
 
-                                            <div id="byBranchChart" class="row">
-                                                {{-- <div class="col-xl-3 col-lg-4 col-md-6">
-                                                    <div class="card p-3 branch-card" data-branch="Branch 19">
-                                                        <div class="d-flex justify-content-between align-items-start">
-                                                        <div>
-                                                            <div style="font-weight:700">Branch 19</div>
-                                                            <div class="small-muted">831 employees</div>
-                                                        </div>
-                                                        <div class="text-end">
-                                                            <div style="font-weight:800; font-size:1.1rem">56%</div>
-                                                            <div class="small-muted">Completed</div>
-                                                        </div>
-                                                        </div>
-                                                        <div class="mt-3">
-                                                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
-                                                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)"></div>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                                    <div class="card p-3 branch-card" data-branch="Branch 19">
-                                                        <div class="d-flex justify-content-between align-items-start">
-                                                        <div>
-                                                            <div style="font-weight:700">Branch 19</div>
-                                                            <div class="small-muted">831 employees</div>
-                                                        </div>
-                                                        <div class="text-end">
-                                                            <div style="font-weight:800; font-size:1.1rem">56%</div>
-                                                            <div class="small-muted">Completed</div>
-                                                        </div>
-                                                        </div>
-                                                        <div class="mt-3">
-                                                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
-                                                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)"></div>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                                    <div class="card p-3 branch-card" data-branch="Branch 19">
-                                                        <div class="d-flex justify-content-between align-items-start">
-                                                        <div>
-                                                            <div style="font-weight:700">Branch 19</div>
-                                                            <div class="small-muted">831 employees</div>
-                                                        </div>
-                                                        <div class="text-end">
-                                                            <div style="font-weight:800; font-size:1.1rem">56%</div>
-                                                            <div class="small-muted">Completed</div>
-                                                        </div>
-                                                        </div>
-                                                        <div class="mt-3">
-                                                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
-                                                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)"></div>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                                    <div class="card p-3 branch-card" data-branch="Branch 19">
-                                                        <div class="d-flex justify-content-between align-items-start">
-                                                        <div>
-                                                            <div style="font-weight:700">Branch 19</div>
-                                                            <div class="small-muted">831 employees</div>
-                                                        </div>
-                                                        <div class="text-end">
-                                                            <div style="font-weight:800; font-size:1.1rem">56%</div>
-                                                            <div class="small-muted">Completed</div>
-                                                        </div>
-                                                        </div>
-                                                        <div class="mt-3">
-                                                        <div class="progress" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">
-                                                            <div class="progress-bar" style="width:56%; background:rgb(112,134,80)"></div>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                </div> --}}
+                                            <div id="byBranchChart" class="row " >
+                                               
                                             </div>
 
                                         </div>

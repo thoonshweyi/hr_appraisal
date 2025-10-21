@@ -376,6 +376,9 @@ padding: 0px 15px;
 
 display: none;
 }
+.branch-card{
+    background-color: #e0f2fe !important;
+}
 .tab-title{
     background-color: #007bff;
     padding: 5px;
