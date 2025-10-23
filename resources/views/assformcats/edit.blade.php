@@ -95,6 +95,7 @@
                                 <option value="" selected disabled>Choose Location</option>
                                 <option value="7" {{ old('location_id',$assformcat->location_id) == '7' ? 'selected' : '' }}>HO</option>
                                 <option value="0" {{ old('location_id',$assformcat->location_id) == '0' ? 'selected' : '' }}>Branch</option>
+                                <option value="70" {{ old('location_id',$assformcat->location_id) == '70' ? 'selected' : '' }}>HO - Branch</option>
                                 {{-- @foreach($attachformtypes as $attachformtype)
                                     <option value="{{$attachformtype['id']}}" {{ $attachformtype['id'] == old('attach_form_type_id') ? "selected" : "" }}>{{$attachformtype['name']}}</option>
                                 @endforeach --}}

@@ -110,10 +110,10 @@ class User extends Authenticatable
             $query->where('position_levels.id',$position_level_id);
         })
         ->when($location_id == '7', function ($query) {
-            $query->where('location_id','7');
+            $query->whereIn('location_id',['7','70']);
         })
         ->when($location_id != '7', function ($query) {
-            $query->where('location_id','0');
+            $query->whereIn('location_id',['0','70']);
         })
         ->where('status_id',1)
         ->get();
