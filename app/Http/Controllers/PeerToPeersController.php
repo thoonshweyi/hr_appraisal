@@ -28,6 +28,7 @@ use App\Imports\EmployeeImport;
 use App\Imports\PositionImport;
 use App\Models\AgileDepartment;
 use App\Imports\DepartmentImport;
+use Illuminate\Support\Facades\Log;
 use App\Imports\SubDepartmentImport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -236,8 +237,9 @@ class PeerToPeersController extends Controller
         ->where('assessor_user_id', $assessor_user_id)
         ->whereIn('ass_form_cat_id', $ass_form_cat_ids)
         ->get();
-        
 
+        $formIds = $appraisalforms->pluck('id')->toArray();
+        Log::info("Forms:",$formIds);
         foreach ($appraisalforms as $form) {
             AppraisalFormAssesseeUser::where('appraisal_form_id', $form->id)->delete();
             FormResult::where('appraisal_form_id', $form->id)->delete();
@@ -247,7 +249,7 @@ class PeerToPeersController extends Controller
 
         $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
         foreach($notifications as $notification){
-            if(in_array($notification->data['assformcat_id'],$ass_form_cat_ids) && ($notification->data['appraisal_cycle_id'] ?? '' == $appraisal_cycle_id)){
+            if (isset($notification->data['appraisalform_id']) && in_array($notification->data['appraisalform_id'], $formIds)) {
                 $notification->delete();
             }
         }
