@@ -314,7 +314,7 @@ class UserController extends Controller
             $employee_codes = Employee::where('attach_form_type_id',$attach_form_type_id)
                                 ->whereIn('position_level_id',$position_level_ids)
                                 ->when($location_id == '7', function ($query) {
-                                    $query->whereIn('branch_id','7');
+                                    $query->where('branch_id','7');
                                 })
                                 ->when($location_id == '0', function ($query) {
                                     $query->where('branch_id',"!=",'7');

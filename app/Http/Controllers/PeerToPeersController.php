@@ -133,12 +133,7 @@ class PeerToPeersController extends Controller
             $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,$ass_form_cat_ids);
             // Unsend Apprasial Notification
 
-            $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
-            foreach($notifications as $notification){
-                if(in_array($notification->data['assformcat_id'],$ass_form_cat_ids) && ($notification->data['appraisal_cycle_id'] ?? '' == $appraisal_cycle_id)){
-                    $notification->delete();
-                }
-            }
+       
 
             \DB::commit();
             return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('success',"Peer To Peer created successfully");;
@@ -241,12 +236,20 @@ class PeerToPeersController extends Controller
         ->where('assessor_user_id', $assessor_user_id)
         ->whereIn('ass_form_cat_id', $ass_form_cat_ids)
         ->get();
+        
 
         foreach ($appraisalforms as $form) {
             AppraisalFormAssesseeUser::where('appraisal_form_id', $form->id)->delete();
             FormResult::where('appraisal_form_id', $form->id)->delete();
 
             $form->delete();
+        }
+
+        $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
+        foreach($notifications as $notification){
+            if(in_array($notification->data['assformcat_id'],$ass_form_cat_ids) && ($notification->data['appraisal_cycle_id'] ?? '' == $appraisal_cycle_id)){
+                $notification->delete();
+            }
         }
     }
 
