@@ -464,8 +464,14 @@ class EmployeesController extends Controller
         $filter_employee_name = $request->filter_employee_name;
         $filter_employee_code = $request->filter_employee_code;
         $filter_branch_id = $request->filter_branch_id;
-        $filter_position_level_id = $request->filter_position_level_id;
+        $filter_position_level_ids = $request->filter_position_level_id;
         $filter_subdepartment_id = $request->filter_subdepartment_id;
+
+        // Advance Search & Filter
+        $filter_attach_form_type_ids = $request->filter_attach_form_type_id;
+        $filter_location_id = $request->filter_location_id;
+        $filter_status_id = $request->filter_status_id;
+
 
         $results = Employee::query();
 
@@ -483,15 +489,23 @@ class EmployeesController extends Controller
         }
 
 
-        if (!empty($filter_position_level_id)) {
-           $results = $results->where('position_level_id', $filter_position_level_id);
+        if (!empty($filter_position_level_ids)) {
+           $results = $results->whereIn('position_level_id', $filter_position_level_ids);
         }
 
         if (!empty($filter_subdepartment_id)) {
             $results = $results->where('sub_department_id', $filter_subdepartment_id);
         }
 
-        $employees = $results->get();
+
+        if(!empty($filter_status_id)){
+            $results = $results->where("status_id",$filter_status_id);
+        }else{
+            $results = $results->where("status_id",1);
+        }
+
+        $employees = $results->orderBy('id','asc')->get();
+
         $response = Excel::download(new EmployeesExport($employees), "EmployeesList".Carbon::now()->format('Y-m-d').".xlsx");
 
         return $response;

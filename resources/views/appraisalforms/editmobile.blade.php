@@ -12,10 +12,6 @@
 </a>
 
 
-
-
-
-
 <div class="content-page">
 
     <div class="container-fluid">
@@ -774,22 +770,20 @@
 
         $('.submitbtns').click(function(e){
             Swal.fire({
-                title: "Are you sure you want to submit Appraisal Form",
+                title: "{{ __('apprasialform.result_submit')}}",
                 text: "",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, submit it!"
+                confirmButtonText: "{{ __('message.ok')}}",
+                cancelButtonText: "{{ __('message.cancel')}}",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('#appraisalformf').attr('action','{{ route('appraisalforms.update',$appraisalform->id) }}');
                     $('#appraisalformf').submit();
                 }
             });
-
-
-
         });
         $('.savedraftbtns').click(function(e){
             $('#appraisalformf').attr('action','{{ route('appraisalforms.savedraft',$appraisalform->id) }}');
@@ -928,18 +922,17 @@
         {{-- Start Back Btn --}}
         $(".back-btn").click(function(){
             Swal.fire({
-                title: "Do you want to save your rating marks?",
+                title: "{{ __('apprasialform.result_save')}}",
                 text: "",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, save it!"
+                confirmButtonText: "{{ __('button.save')}}",
+                cancelButtonText: "{{ __('message.cancel')}}",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('.savedraftbtns').click();
-                }else{
-                    window.history.back();
                 }
             });
 

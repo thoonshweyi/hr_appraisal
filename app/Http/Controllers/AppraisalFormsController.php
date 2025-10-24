@@ -344,7 +344,7 @@ class AppraisalFormsController extends Controller
             "appraisalformresults.*" => "required|array",
             "appraisalformresults.*.*" => "required", // Ensure all values inside each assessee are filled
         ], [
-            'appraisalformresults.*.*.required' => __('appraisalform.appraisalformresults'),
+            'appraisalformresults.*.*.required' => __('apprasialform.appraisalformresults'),
         ]);
 
         \DB::beginTransaction();

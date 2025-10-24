@@ -284,7 +284,7 @@
 
                             <div class="col-md-12 mt-2">
 
-                                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">{{ __('button.back')}}</button>
+                                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0 back-btn">{{ __('button.back')}}</button>
                                 <input type="button" name="savedraft" class="btn btn-warning btn-sm rounded-0 savedraftbtns" value="{{ __('button.savedraft')}}" />
 
 
@@ -543,13 +543,14 @@
 
         $('.submitbtns').click(function(e){
             Swal.fire({
-                title: "Are you sure you want to submit Appraisal Form",
+                title: "{{ __('apprasialform.result_submit')}}",
                 text: "",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, submit it!"
+                confirmButtonText: "{{ __('message.ok')}}",
+                cancelButtonText: "{{ __('message.cancel')}}",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('#appraisalformf').attr('action','{{ route('appraisalforms.update',$appraisalform->id) }}');
@@ -643,5 +644,27 @@
 
     updatePagination();
     {{-- End Pages --}}
+
+
+
+    {{-- Start Back Btn --}}
+    $(".back-btn").click(function(){
+        Swal.fire({
+            title: "{{ __('apprasialform.result_save')}}",
+            text: "",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "{{ __('button.save')}}",
+            cancelButtonText: "{{ __('message.cancel')}}",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('.savedraftbtns').click();
+            }
+        });
+
+    })
+    {{-- End Back Btn --}}
 </script>
 @stop

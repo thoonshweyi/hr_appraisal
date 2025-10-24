@@ -8,6 +8,5 @@ return [
     "assessee_user_ids" => "Please Choose Assessee Users.",
     "ass_form_cat_id" => "Please Select Criteria Set",
 
-    'appraisalformresults' => 'Please enter a rating value for each assessee.',
 ];
 ?>
