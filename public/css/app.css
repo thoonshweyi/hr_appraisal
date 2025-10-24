@@ -784,6 +784,9 @@ height: auto !important;
     left: 50%;
     z-index: 1;
     transform: translate(-50%,-100%);
+
+    opacity: 1;
+    transition: all 2s ease-in-out;
 }
 .critooltips h6{
     display: flex;
@@ -824,6 +827,7 @@ height: auto !important;
   .critooltips.invisible {
     visibility: hidden;
     opacity: 0;
+    transition: all 2s ease-in-out;
 }
 /* End Tooltip */
 

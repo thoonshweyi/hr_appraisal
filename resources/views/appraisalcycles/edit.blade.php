@@ -1268,7 +1268,7 @@
                                 <tr>
                                     <td><input type="checkbox" name="singlechecks" class="form-check-input m-0 singlechecks" value="${form.id}" /></td>
                                     <td>#${form.id}</td>
-                                    <td><a class="{{ branchHR() ? 'text-dark' : ''  }}" href="{{ branchHR() ? 'javascript:void(0)' : '/appraisalforms/${form.id}/edit'}} ">${form.assformcat.name}</a></td>
+                                    <td><a class="" href="{{ branchHR() ? '/appraisalforms/${form.id}/' : '/appraisalforms/${form.id}/edit'}} ">${form.assformcat.name}</a></td>
                                     <td>${form.appraisalcycle.name}</td>
                                     <td><span class="badge ${statusClass}">${form.status.name}</span></td>
                                 </tr>`;

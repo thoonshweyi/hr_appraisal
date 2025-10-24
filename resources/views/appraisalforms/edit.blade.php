@@ -64,6 +64,22 @@
                 @endif
            </div>
 
+           @php
+                $isMobileView = session('view_mode') == 'mobile';
+            @endphp
+
+            <div class="col-md-12 mb-2 text-start">
+                @if ($isMobileView)
+                    <a href="{{ request()->fullUrlWithQuery(['view' => 'desktop']) }}" class="btn btn-primary">
+                        Switch to Desktop View
+                    </a>
+                @else
+                    <a href="{{ request()->fullUrlWithQuery(['view' => 'mobile']) }}" class="btn btn-primary">
+                        Switch to Mobile View
+                    </a>
+                @endif
+            </div>
+
            <div class="col-md-12 mb-2">
                 <div class="row">
 
@@ -78,7 +94,7 @@
                     @endcan
                     <div class="col-md-12">
                         <nav aria-label="Pagination" class="mt-2">
-                            <ul class="pagination justify-content-center">
+                            <ul class="pagination justify-content-center" >
                                 <li class="page-item" id="prevPage">
                                     <a class="page-link" href="#" aria-label="Previous">
                                     ‹
@@ -86,7 +102,7 @@
                                 </li>
 
                                 <!-- Page buttons will be inserted here -->
-                                <li id="pageNumbers" class="d-flex"></li>
+                                <li id="pageNumbers" class="d-flex" style="flex-wrap:wrap;"></li>
 
                                 <li class="page-item" id="nextPage">
                                     <a class="page-link" href="#" aria-label="Next">

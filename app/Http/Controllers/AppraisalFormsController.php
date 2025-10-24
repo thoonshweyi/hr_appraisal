@@ -303,14 +303,37 @@ class AppraisalFormsController extends Controller
 
         $tar_assessee = $appraisalform->assessees()->where("status_id",2)?->first()?->assessee_user_id;
 
-        if($adminauthorize){
-            return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","preloadresults"));
-        }else{
-            // return view("appraisalforms.edit",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"));
-            return view("appraisalforms.editmobile",compact('appraisalform','assesseeusers',"criterias","total_excellent","total_good","total_meet_standard","total_below_standard","total_weak","preloadresults","tar_assessee"));
+        $viewMode = request()->get('view', session('view_mode', $adminauthorize ? 'desktop' : 'mobile'));
+        session(['view_mode' => $viewMode]);
+        if ($viewMode === 'desktop') {
+            return view('appraisalforms.edit', compact(
+                'appraisalform',
+                'assesseeusers',
+                'criterias',
+                'total_excellent',
+                'total_good',
+                'total_meet_standard',
+                'total_below_standard',
+                'total_weak',
+                'preloadresults'
+            ));
         }
 
+        return view('appraisalforms.editmobile', compact(
+            'appraisalform',
+            'assesseeusers',
+            'criterias',
+            'total_excellent',
+            'total_good',
+            'total_meet_standard',
+            'total_below_standard',
+            'total_weak',
+            'preloadresults',
+            'tar_assessee'
+        ));
+
     }
+    
     public function update(Request $request,$id){
 
         // dd('submitted');

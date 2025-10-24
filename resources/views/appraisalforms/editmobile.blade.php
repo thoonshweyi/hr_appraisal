@@ -79,6 +79,22 @@
                 @endif
            </div>
 
+            @php
+                $isMobileView = session('view_mode') == 'mobile';
+            @endphp
+
+            <div class="col-md-12 mb-2 text-start">
+                @if ($isMobileView)
+                    <a href="{{ request()->fullUrlWithQuery(['view' => 'desktop']) }}" class="btn btn-primary">
+                        Switch to Desktop View
+                    </a>
+                @else
+                    <a href="{{ request()->fullUrlWithQuery(['view' => 'mobile']) }}" class="btn btn-primary">
+                        Switch to Mobile View
+                    </a>
+                @endif
+            </div>
+
            <div class="col-md-12 mb-2">
                 <div class="form-header mb-2" style="position: sticky;">
                         {{-- <h4 class="text-center">PRO1 Global Company Co.,Ltd</h4> --}}

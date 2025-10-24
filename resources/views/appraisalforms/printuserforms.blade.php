@@ -210,7 +210,7 @@
                             @for($i = 0; $i < 5; $i++)
                                 <th class="vertical-header">
                                     <span class="employees">
-                                    @if(isset($chunkArray[$i]))
+                                    @if(isset($chunkArray[$i]) )
                                         {{ $chunkArray[$i]->employee->employee_name }}
                                     @else
                                         &nbsp;
@@ -232,7 +232,7 @@
 
                                 @for($i = 0; $i < 5; $i++)
                                     <td>
-                                        @if(isset($chunkArray[$i]))
+                                        @if(isset($chunkArray[$i]) && false)
                                             {{ $appraisalform->getResult($chunkArray[$i]->id, $criteria->id) }}
                                         @else
                                             &nbsp;
@@ -253,7 +253,7 @@
 
                             @for($i = 0; $i < 5; $i++)
                                 <td>
-                                    @if(isset($chunk[$i]))
+                                    @if(isset($chunk[$i]) && false)
                                         {{ $appraisalform->getTotalResult($chunk[$i]->id) != 0 ? $appraisalform->getTotalResult($chunk[$i]->id) : '' }}
                                     @else
                                         &nbsp;

@@ -65,7 +65,13 @@
 
            <div class="col-md-12 mb-2">
                 <div class="row">
+                    @can('print-appraisal-form')
+                    <div class="col-auto mb-2">
+                        {{-- <a href="{{ route('appraisalforms.printpdf',$appraisalform->id) }}" class="btn  cus_btn">Print</a> --}}
+                        <a href="javascript:void(0);" class="btn cus_btn">{{ __('button.print_document')}}</a>
 
+                    </div>
+                    @endcan
 
                     <div class="col-md-12">
                         <nav aria-label="Pagination" class="mt-2">
@@ -160,7 +166,7 @@
 
                                             @for($i = 0; $i < 5; $i++)
                                                 <td>
-                                                    @if(isset($chunkArray[$i]))
+                                                    @if(isset($chunkArray[$i]) && !branchHR())
                                                         {{ $appraisalform->getResult($chunkArray[$i]->id, $criteria->id) }}
                                                     @else
                                                         &nbsp;
@@ -181,7 +187,7 @@
 
                                         @for($i = 0; $i < 5; $i++)
                                             <td>
-                                                @if(isset($chunk[$i]))
+                                                @if(isset($chunk[$i]) && !branchHR())
                                                     {{ $appraisalform->getTotalResult($chunk[$i]->id) != 0 ? $appraisalform->getTotalResult($chunk[$i]->id) : '' }}
                                                 @else
                                                     &nbsp;
@@ -253,6 +259,7 @@
 
 <!-- End MODAL AREA -->
 
+<iframe id="reprint_frame" name="reprint_frame" src="{{ url('appraisalformsshowprintframe/'.$appraisalform->id) }}" style="position: absolute;width:auto;height:auto;border:0;display: none;"  class=""></iframe>
 
 @endsection
 @section('js')
@@ -329,5 +336,15 @@
     updatePagination();
     {{-- End Pages --}}
 
+
+    {{-- Start Print Area --}}
+    document.querySelector('.cus_btn').addEventListener('click', function () {
+        var pdfFrame1 = window.frames["reprint_frame"];
+                        {{-- pdfFrame1.focus(); --}}
+                        pdfFrame1.print();
+    });
+    {{-- End Print Arera --}}
+
 </script>
 @stop
+
