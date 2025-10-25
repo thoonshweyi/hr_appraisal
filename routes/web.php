@@ -37,6 +37,7 @@ use App\Http\Controllers\SubDepartmentsController;
 use App\Http\Controllers\AppraisalCyclesController;
 use App\Http\Controllers\AssesseeSummaryController;
 use App\Http\Controllers\AttachFormTypesController;
+use App\Http\Controllers\PasswordEncodesController;
 use App\Http\Controllers\AgileDepartmentsController;
 use App\Http\Controllers\PushNotificationController;
 use App\Http\Controllers\FirebaseNotificationController;
@@ -286,6 +287,8 @@ Route::middleware('auth')->group(function () {
 
 
 
+    Route::get("/passwordencodes",[PasswordEncodesController::class,"index"])->name("passwordencodes.index");
+    Route::post("/passwordencodes",[PasswordEncodesController::class,"store"])->name("passwordencodes.store");
 
     Route::post('/clear-filter-sessions', function () {
         session()->forget([

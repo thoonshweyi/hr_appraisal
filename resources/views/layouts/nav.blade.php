@@ -89,6 +89,12 @@
                             <i class="las la-minus"></i><span>{{ __('nav.attachformtype_list')}}</span>
                         </a>
                     </li>
+
+                     <li class="{{ (request()->routeIs('passwordencodes.index')) ? 'active' : '' }}">
+                        <a href="{{route('passwordencodes.index')}}">
+                            <i class="las la-minus"></i><span>Password Encode</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endcan
@@ -109,6 +115,7 @@
                             <i class="las la-minus"></i><span>{{ __('nav.employee_list')}}</span>
                         </a>
                     </li>
+
 
                     <li class="{{ (request()->routeIs('assformcats.index')) ? 'active' : '' }}">
                         <a href="{{route('assformcats.index')}}">
