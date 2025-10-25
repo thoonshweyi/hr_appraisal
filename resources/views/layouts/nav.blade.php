@@ -90,11 +90,13 @@
                         </a>
                     </li>
 
+                    @can('create-fixed-analysis')
                      <li class="{{ (request()->routeIs('passwordencodes.index')) ? 'active' : '' }}">
                         <a href="{{route('passwordencodes.index')}}">
                             <i class="las la-minus"></i><span>Password Encode</span>
                         </a>
                     </li>
+                    @endcan
                 </ul>
             </li>
             @endcan
