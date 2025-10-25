@@ -26,7 +26,7 @@ class PasswordEncodesController extends Controller
             "remark" => "required",
             'file' => 'required|mimes:xls,xlsx',
         ]);
-
+        ini_set('max_execution_time', 600);
         \DB::beginTransaction();
 
         try {
