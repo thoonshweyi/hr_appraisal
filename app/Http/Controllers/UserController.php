@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -260,7 +261,7 @@ class UserController extends Controller
         // try {
             $request->validate([
                 'cpass' => ['required', new MatchOldPassword],
-                'npass' => ['required'],
+                'npass' => ['required','min:4'],
                 'vpass' => ['required','same:npass'],
             ],
             [
@@ -270,7 +271,10 @@ class UserController extends Controller
                 'vpass.same' => 'Verfiy Password is not same with New Password!'
             ]);
             User::find(auth()->user()->id)->update(['password' => Hash::make($request->npass)]);
-            return redirect()->route('user.profile')->with('success', 'Password Changed successfully');
+            
+            Auth::logout();
+            session()->flash("success","Password changed successfully. Please log in again.");
+            return redirect()->route('login');
         // } catch (\Exception $e) {
         //     Log::debug($e->getMessage());
         //     return redirect()

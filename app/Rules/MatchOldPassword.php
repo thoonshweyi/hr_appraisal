@@ -36,6 +36,6 @@ class MatchOldPassword implements Rule
      */
     public function message()
     {
-        return 'The new password is match with old password.';
+        return 'Sorry, the current password doesn’t match our records. Please try again.';
     }
 }

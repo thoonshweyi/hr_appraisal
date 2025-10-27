@@ -715,6 +715,7 @@ height: auto !important;
 }
 .vertical-header {
     writing-mode: vertical-rl;
+    -webkit-writing-mode: vertical-rl;
     transform: rotate(180deg);
     padding: 5px 2px;
     font-size: 10px;

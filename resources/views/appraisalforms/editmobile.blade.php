@@ -267,7 +267,7 @@
                                 @foreach($assesseeuserbybranch as $assesseeuser)
                                 <div id="assessee-list-item{{$assesseeuser->id}}" class="assessee-list-item" data-assessee="{{ $assesseeuser->id }}">
                                     <div class="assessee-item-details">
-                                        <div class="name">{{ $assesseeuser->name }}</div>
+                                        <div class="name">{{ $assesseeuser->employee->employee_name }}</div>
                                         <div class="role">{{ $assesseeuser->employee->position->name }}</div>
                                     </div>
                                     <div class="assessee-total">

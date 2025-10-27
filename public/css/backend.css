@@ -1751,7 +1751,7 @@ textarea.form-control {
   box-shadow: 0 0 0 0.2rem rgba(120, 192, 145, 0.25); }
 
 .invalid-feedback {
-  display: none;
+  display: block;
   width: 100%;
   margin-top: 0.25rem;
   font-size: 80%;

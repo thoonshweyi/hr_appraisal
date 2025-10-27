@@ -31,6 +31,13 @@
                         <div class="d-flex align-items-center auth-content">
                            <div class="col-lg-7 align-self-center">
                               <div class="p-3">
+
+                                 @if(session("success"))
+                                    <div class="alert alert-success rounded-0">{{ session("success") }}</div>
+                                 @endif
+                                 <div class="text-center">
+                                    <img src="{{ asset('/images/appraisal_girl.png') }}" alt="appraisal_girl"  class="mx-auto" width="100px">
+                                 </div>
                                  <h2 class="mb-2">Sign In</h2>
                                  <p>Login to stay connected.</p>
                                  <form action="{{ route('login') }}" method="POST">
@@ -50,15 +57,16 @@
                                        </div>
 
                                        <div class="col-lg-12">
-                                            <div class="floating-label form-group">
-                                                <input class="floating-input form-control" name="password" type="password" placeholder="" required>
-                                                <label>Password</label>
-                                                @if($errors->has('password'))
-                                                    <div class="invalid-feedback">
-                                                        <strong>{{ $errors->first('password') }}</strong>
-                                                    </div>
-                                                @endif
-                                            </div>
+                                          <div class="floating-label form-group">
+                                             <input class="floating-input form-control" name="password" type="password" placeholder="" required>
+                                             <label>Password</label>
+                                          </div>
+                                          @error('password')
+                                             <div class="invalid-feedback">
+                                                <strong>{{ $message }}</strong>
+                                             </div>
+                                          @enderror
+                                             
                                        </div>
 
                                        <div class="col-lg-6">
