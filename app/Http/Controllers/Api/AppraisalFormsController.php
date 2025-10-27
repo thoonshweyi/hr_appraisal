@@ -81,7 +81,7 @@ class AppraisalFormsController extends Controller
 
 
                 if (! $alreadySent) {
-                    $title = "You received new Appraisal Form \"$appraisalform->assformcat->name\"";
+                    $title = 'You received a new Appraisal Form "' . $appraisalform->assformcat->name . '"';
                     Notification::send($appraisalform->assessoruser,new AppraisalFormsNotify($appraisalform->id,$appraisalform->assformcat->id,$title,$appraisalform->appraisal_cycle_id));
                 }
             }

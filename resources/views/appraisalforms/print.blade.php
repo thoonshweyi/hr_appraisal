@@ -142,6 +142,7 @@
         .text-justify {
             text-align: justify;
         }
+
     </style>
 </head>
 <body>
