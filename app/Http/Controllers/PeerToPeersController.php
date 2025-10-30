@@ -264,6 +264,29 @@ class PeerToPeersController extends Controller
 
         return $peertopeers;
     }
+
+    public function dctohocriterias(Request $request){
+        $row =  PeerToPeer::whereHas("assesseeuser",function($query){
+            $query->whereHas("branches",function($q){
+                $q->whereIn("branches.branch_id",[13,17]);
+            });
+        })
+        // ->whereHas("assformcat",function($query){
+        //     $query->where("attach_form_type_id",17);
+        // });
+        ->where("appraisal_cycle_id",4)
+        ->where('ass_form_cat_id',143)
+        ->update(['ass_form_cat_id' => 141]);
+        // dd($peertopeers);
+
+        // 145,140
+        // 144, 142
+        // 143, 141
+      
+        dd($row);
+
+
+    }
 }
 
 
