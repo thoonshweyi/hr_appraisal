@@ -36,10 +36,10 @@
                                     <div class="alert alert-success rounded-0">{{ session("success") }}</div>
                                  @endif
                                  <div class="text-center">
-                                    <img src="{{ asset('/images/appraisal_girl.png') }}" alt="appraisal_girl"  class="mx-auto" width="100px">
+                                    <img src="{{ asset('/images/appraisal_girl.png') }}" alt="appraisal_girl"  class="mx-auto" width="80px">
+                                    <h1>HR Apprasial</h1>
                                  </div>
-                                 <h2 class="mb-2">Sign In</h2>
-                                 <p>Login to stay connected.</p>
+                                 <h4 class="my-4">Login</h4>
                                  <form action="{{ route('login') }}" method="POST">
                                     {{ csrf_field() }}
                                     <div class="row">

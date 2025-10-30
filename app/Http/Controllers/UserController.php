@@ -389,7 +389,7 @@ class UserController extends Controller
         $results = $results->doesntHave('roles');
 
 
-        $users = $results->orderBy('id','asc')
+        $users = $results->orderBy('name','asc')
         ->with(['employee.branch',
         "employee.department",
         "employee.position",
