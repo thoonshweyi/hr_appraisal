@@ -265,3 +265,19 @@ class PeerToPeersController extends Controller
         return $peertopeers;
     }
 }
+
+
+// => Finding Duplidate Peer To Peer
+// SELECT 
+//     assessor_user_id,
+//     assessee_user_id,
+//     ass_form_cat_id,
+//     appraisal_cycle_id,
+//     COUNT(*) AS duplicate_count
+// FROM peer_to_peers
+// GROUP BY 
+//     assessor_user_id,
+//     assessee_user_id,
+//     ass_form_cat_id,
+//     appraisal_cycle_id
+// HAVING COUNT(*) > 1;
