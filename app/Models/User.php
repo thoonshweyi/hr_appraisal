@@ -105,21 +105,16 @@ class User extends Authenticatable
         ->unique();
         // Log::info("Employee $employee->employee_code, AttachFormTypes $attach_form_type_ids");
 
+        $dc_ids = [13,17];
         $assformcat = AssFormCat::whereIn("attach_form_type_id",$attach_form_type_ids)
         ->whereHas('positionlevels',function($query) use($position_level_id){
             $query->where('position_levels.id',$position_level_id);
         })
-        ->when($location_id == '7', function ($query) {
+        ->when($location_id == '7' || (in_array($location_id,$dc_ids)), function ($query) { // For DC Exception cuz dc staffs will matched by HO Criteria on Warehouse Form
             $query->whereIn('location_id',['7','70']);
         })
         ->when($location_id != '7', function ($query) use($location_id) {
-            // For DC Exception cuz dc staffs will matched by HO Criteria on Warehouse Form
-            $dc_ids = [13,17];
-            if(in_array($location_id,$dc_ids)){
-                $query->whereIn('location_id',['0','7','70']);                
-            }else{
-                $query->whereIn('location_id',['0','70']);                
-            }
+            $query->whereIn('location_id',['0','70']);                
         })
         ->where('status_id',1)
         ->get();
