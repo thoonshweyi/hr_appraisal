@@ -306,7 +306,7 @@ class AppraisalFormsController extends Controller
         $viewMode = request()->get('view', session('view_mode', $adminauthorize ? 'desktop' : 'mobile'));
         session(['view_mode' => $viewMode]);
         if ($viewMode === 'desktop') {
-            return view('appraisalforms.edit', compact(
+            return view('appraisalforms.editlist', compact(
                 'appraisalform',
                 'assesseeusers',
                 'criterias',
@@ -496,6 +496,7 @@ class AppraisalFormsController extends Controller
             return redirect()->back()->with("error","There is an error in submitting Appraisal Form.".$err);
         }
     }
+
 
     public function fillform(Request $request){
 

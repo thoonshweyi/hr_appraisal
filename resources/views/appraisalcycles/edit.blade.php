@@ -77,15 +77,6 @@
                     <li class="nav-item">
                         <button type="button" id="appraisal-btn" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
-                    <li class="nav-item">
-                        <button type="button" id="dashboard-btn"  class="tablinks" onclick="gettab(event,'dashboard')">Dashboard</button>
-                    </li>
-
-                    @if(!branchHR())
-                    <li class="nav-item">
-                        <button type="button" id="assesseesummary-btn"  class="tablinks" onclick="gettab(event,'assesseesummary')">Assessee Summary</button>
-                    </li>
-                    @endif
 
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
@@ -573,106 +564,6 @@
                             </div>
                         </div>
 
-
-
-                        @if(!branchHR())
-                        <div id="assesseesummary" class="tab-pane">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    {{-- <h4 class="title">All Assessees</h4> --}}
-
-                                    <div class="table-responsive rounded mb-3">
-                                        <table id="assesseeusertable" class="table mb-0 w-100">
-                                            <thead class="bg-white text-uppercase">
-                                                <tr class="ligth ligth-data">
-                                                    <th>No</th>
-                                                    <th>Employee Name</th>
-                                                    <th>Employee Code</th>
-                                                    <th>Branch</th>
-                                                    <th>Position Level</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="ligth-body">
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <button type="button" id="export-btn" class="btn cus_btn">Export</button>
-
-                                </div>
-                             </div>
-                        </div>
-                        @endif
-
-                        <div id="dashboard" class="tab-pane">
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-3">
-                                    <div class="card kpi-card rounded-4 p-3 h-100">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                        <div class="kpi-label">Total Assessors</div>
-                                        <div id="kpiTotal" class="kpi-value">Loading....</div>
-                                        </div>
-                                        <i class="fas fa-users text-info icon"></i>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="card kpi-card rounded-4 p-3 h-100">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                        <div class="kpi-label">Completed Forms</div>
-                                        <div id="kpiCompleted" class="kpi-value text-success">Loading....</div>
-                                        </div>
-                                        <i class="fas fa-check-circle icon" style="color: var(--success)"></i>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="card kpi-card rounded-4 p-3 h-100">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                        <div class="kpi-label">In Progress Forms</div>
-                                        <div id="kpiProgress" class="kpi-value" style="color:var(--warning)">Loading....</div>
-                                        </div>
-                                        <i class="fas fa-tasks icon" style="color: var(--warning)"></i>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="card kpi-card rounded-4 p-3 h-100">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                        <div class="kpi-label">Not Started Forms</div>
-                                        <div id="kpiNotStarted" class="kpi-value" style="color:var(--danger)">Loading....</div>
-                                        </div>
-                                        <i class="fas fa-exclamation-triangle icon" style="color: var(--danger)"></i>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                                <h2>Branches (click to drill down)</h2>
-                                            </div>
-                                            {{-- <div class="sub">Horizontal bars show % Completed (target: 100%).</div> --}}
-
-                                            <div id="byBranchChart" class="row " >
-                                               
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
                 </div>
             </div>
             </div>
@@ -919,7 +810,6 @@
   </style>
 @endsection
 @section('js')
-    <script src="{{ asset('assets/libs/jstreerepo/dist/jstree.min.js') }}" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
         $("#status_id").selectize({
@@ -1136,73 +1026,8 @@
                 }],
             })
 
-            $('#assesseeusertable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "searching": false,
-                "lengthChange": false,
-                "pageLength": 10,
-                "autoWidth": true,
-                "responsive": true,
-                "order": [
-                [1, 'asc']
-                ],
-                stateSave: true,
-                stateDuration: -1,
-                stateSaveCallback: function(settings, data) {
-                    localStorage.setItem('DataTables_assesseeusertable', JSON.stringify(data));
-                },
-                stateLoadCallback: function(settings) {
-                    return JSON.parse(localStorage.getItem('DataTables_assesseeusertable'));
-                },
-                'ajax': {
-                    url: `/${appraisalCycleId}/assesseeusers/`, // <-- include the ID here
-                    'type': 'GET',
-                    'data': function(d) {
-                        d.filter_employee_name = $('#filter_employee_name').val();
-                        d.filter_employee_code = $('#filter_employee_code').val();
-                        d.filter_branch_id = $('#filter_branch_id').val();
-                        d.filter_position_level_id = $('#filter_position_level_id').val();
-                        d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
-                        d.filter_section_id = $('#filter_section_id').val();
-                        d.filter_sub_section_id = $('#filter_sub_section_id').val();
-                    }
-                },
-                columns: [
-                    {
-                        data: null,
-                        name: 'no',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: 'employee.employee_name', name: 'employee.employee_name' },
-                    { data: 'employee.employee_code', name: 'employee.employee_code' },
-                    { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
-                    { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' },
-                    {{-- { data: 'employee.department.name', name: 'employee.department.name' },
-                    { data: 'employee.position.name', name: 'employee.position.name' }, --}}
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data ?? '';
-                        }
-                    }
-                ],
-                "columnDefs": [{
-                "searchable": false,
-                "orderable": false,
-                "targets": 0,
-                }],
-            })
             $('.searchbtns').on('click', function(e) {
                 $('#participantusertable').DataTable().draw(true);
-                $('#assesseeusertable').DataTable().draw(true);
                 getAssessorUsers();
 
             })
@@ -1709,16 +1534,16 @@
                     // Clear frontend input fields (optional)
                     $('#filter_employee_name').val('');
                     $('#filter_employee_code').val('');
-                    $('#filter_branch_id').val('');
-                    $('#filter_position_level_id').val('');
+                    $('#filter_branch_id')[0].selectize.clear();
+                    $('#filter_position_level_id')[0].selectize.clear();
                     {{-- $('#filter_subdepartment_id').val(''); --}}
-                    $('#filter_section_id').val('');
+                    // $('#filter_section_id').val('');
+                    $('#filter_sub_section_id')[0].selectize.clear();;
 
 
 
                     // Redraw DataTables
                     $('#participantusertable').DataTable().draw(true);
-                    $('#assesseeusertable').DataTable().draw(true);
                     getAssessorUsers();
                 }
             });
@@ -2171,101 +1996,6 @@
     {{-- End Print Forms Btn --}}
 
 
-    // Start User Chart
-    var appraisal_cycle_id = $("#appraisal_cycle_id").val();
-	$.ajax({
-		url: `/api/appraisalcycles/${appraisal_cycle_id}/assessorformsdashboard`,
-		method: 'GET',
-		success:function(data){
-			{{-- console.log(data) --}}
-
-			$('#totalassessorscount').text(data.totalassessors);
-			$('#assessmentformscount').text(data.assessmentforms);
-			$('#readyscount').text(data.readys);
-			$('#pendingscount').text(data.pendings);
-
-		},
-		error: function(){
-			$('#usercount').text("Error loading data");
-		}
-	});
-	//  End User Chart
-
-    {{-- Start By Branch Dashboard --}}
-    $.ajax({
-		url: `/api/appraisalcycles/${appraisal_cycle_id}/bybranchesdashboard`,
-		method: 'GET',
-		success:function(data){
-			console.log(data)
-
-
-            let html = '';
-            $.each(data,function(branch,databybranch){
-                console.log(databybranch.statuses["19"]["percentage"]);
-                let percent = databybranch.statuses["19"]["percentage"];
-                let progresscolor = '';
-				if(percent <= 20){
-					progresscolor = 'bg-danger'
-				}else if(percent <= 40){
-					progresscolor = 'bg-warning'
-				}else if(percent <= 60){
-					progresscolor = 'bg-primary'
-				}else if(percent <= 80){
-					progresscolor = 'bg-info'
-				}else{
-					progresscolor = 'bg-success'
-				}
-                html += `
-				<div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card p-3 branch-card" data-branch="Branch 19">
-                        <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div style="font-weight:700">${branch}</div>
-                            <div class="small-muted">${databybranch.assessors} employees</div>
-                        </div>
-                        <div class="text-end">
-                            <div style="font-weight:800; font-size:1.1rem">${percent}%</div>
-                            <div class="small-muted">Completed</div>
-                        </div>
-                        </div>
-                        <div class="mt-3">
-                        <div class="progress" role="progressbar" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width:${percent}%; background:rgb(112,134,80)">${percent}%</div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-				`;
-            });
-            $('#byBranchChart').html(html);
-
-
-		},
-		error: function(){
-			$('#usercount').text("Error loading data");
-		}
-	});
-    {{-- End By Branch Dashboard --}}
-
-
-    {{-- Start Appraisal Form Chart --}}
-	$.ajax({
-		url: `/api/appraisalcycles/${appraisal_cycle_id}/appraisalformdashboard`,
-		method: 'GET',
-		success:function(data){
-			console.log(data)
-
-			$('#kpiTotal').text(data.totalemployees);
-			$('#kpiCompleted').text(data.completed);
-			$('#kpiProgress').text(data.inprogress);
-			$('#kpiNotStarted').text(data.notstarted);
-
-		},
-		error: function(){
-			$('#usercount').text("Error loading data");
-		}
-	});
-    {{-- End Appraisal  --}}
 
 
     {{-- Start Bulk Send Noti --}}
@@ -2328,6 +2058,26 @@
     });
     {{-- End Bulk Send Noti --}}
 
+
+       // Start User Chart
+    var appraisal_cycle_id = $("#appraisal_cycle_id").val();
+	$.ajax({
+		url: `/api/appraisalcycles/${appraisal_cycle_id}/assessorformsdashboard`,
+		method: 'GET',
+		success:function(data){
+			{{-- console.log(data) --}}
+
+			$('#totalassessorscount').text(data.totalassessors);
+			$('#assessmentformscount').text(data.assessmentforms);
+			$('#readyscount').text(data.readys);
+			$('#pendingscount').text(data.pendings);
+
+		},
+		error: function(){
+			$('#usercount').text("Error loading data");
+		}
+	});
+	//  End User Chart
 
 </script>
 @stop

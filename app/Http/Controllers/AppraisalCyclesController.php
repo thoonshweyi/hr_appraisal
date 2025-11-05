@@ -218,6 +218,19 @@ class AppraisalCyclesController extends Controller
         return redirect(route("appraisalcycles.index"))->with('success',"AppraisalCycle updated successfully");
     }
 
+
+    public function report(Request $request, string $id){
+        $appraisalcycle = AppraisalCycle::find($id);
+        $branches = Branch::where('branch_active',true)->orderBy('branch_id')->get();
+        $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
+        $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
+        $sections = Section::where('status_id',1)->orderBy('id')->get();
+        $subsections = SubSection::where('status_id',1)->orderBy('id')->get();
+        $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
+
+        return view("appraisalcycles.report",compact("appraisalcycle","branches","positionlevels","statuses","subdepartments","sections","subsections"));
+    }
+
     public function destroy(string $id)
     {
         $appraisalcycle = AppraisalCycle::findOrFail($id);
@@ -509,7 +522,7 @@ class AppraisalCyclesController extends Controller
         });
 
 
-        clearFilterSection();
+        // clearFilterSection();
           // for getting employee info
         if(!empty($filter_user_id)){
             $results = $results->where("id",$filter_user_id);

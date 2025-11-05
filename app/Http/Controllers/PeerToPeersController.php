@@ -304,3 +304,24 @@ class PeerToPeersController extends Controller
 //     ass_form_cat_id,
 //     appraisal_cycle_id
 // HAVING COUNT(*) > 1;
+
+
+// => Warehouse Branch criteria to ho criteria
+// SELECT 
+//     p.*,
+//     u.name AS assessor_name,
+//     b.id AS branch_id,
+//     b.branch_name
+// FROM peer_to_peers AS p
+// LEFT JOIN users AS u 
+//     ON p.assessee_user_id = u.id
+// LEFT JOIN branch_users AS ub 
+//     ON u.id = ub.user_id
+// LEFT JOIN branches AS b 
+//     ON ub.branch_id = b.branch_id
+// LEFT JOIN ass_form_cats AS ascat
+//     ON ascat.id = p.ass_form_cat_id
+// LEFT JOIN attach_form_types AS attty
+//     ON attty.id = ascat.attach_form_type_id
+// WHERE b.branch_id IN (13, 17)
+// AND attty.id IN (17);
