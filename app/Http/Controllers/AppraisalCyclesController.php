@@ -440,7 +440,7 @@ class AppraisalCyclesController extends Controller
 
         if (!empty($filter_employee_code)) {
             $results = $results->whereHas('employee',function($query) use($filter_employee_code){
-                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%')->orWhere('employee_name', 'like', '%'.$filter_employee_code.'%');;
+                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%')->orWhere('employee_name', 'like', '%'.$filter_employee_code.'%');
             });
         }
 
