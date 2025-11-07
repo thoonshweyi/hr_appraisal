@@ -230,14 +230,15 @@
                                                 <td>{{ $total_meet_standard }}</td>
                                                 <td>{{ $total_below_standard }}</td>
                                                 <td>{{ $total_weak }}</td>
-
-                                                    <td colspan="{{ $assesseeusers->flatten()->count() }}" class="position-relative">
+                                                 @foreach($assesseeuserbybranch as $assesseeuser)
+                                                    <td class="position-relative">
                                                         @if(isset($assesseeuser))
                                                             <span id="total_results_{{ $assesseeuser->id }}"> {{ $appraisalform->getTotalResult($assesseeuser->id) != 0 ? $appraisalform->getTotalResult($assesseeuser->id) : '' }} </span>
                                                         @else
                                                             &nbsp;
                                                         @endif
                                                     </td>
+                                                @endforeach
                                             </tr>
 
                                             <tr>
