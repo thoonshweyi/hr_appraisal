@@ -154,20 +154,24 @@
                                             <tr>
                                                 <th class="criteria-header" style="">CRITERIA</th>
                                                 @foreach(['Excellent', 'Good', 'Meet', 'Below', 'Weak'] as $rating)
-                                                    <th class="vertical-header"> <span class="ratings">{{ $rating }} </span></th>
+                                                <th class="vertical-header"> 
+                                                    <span class="">
+                                                        {{ $rating }}
+                                                    </span>
+                                                </th>
                                                 @endforeach
 
                                                 @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
                                                     @foreach($assesseeuserbybranch as $assesseeuser)
-                                                        <th class="vertical-header">
-                                                            <span class="employees">
-                                                            @if(isset($assesseeuser))
-                                                                {{ $assesseeuser->employee->employee_name }}
-                                                            @else
-                                                                &nbsp;
-                                                            @endif
-                                                            </span>
-                                                        </th>
+                                                    <th class="vertical-header">
+                                                        <span class="employees">
+                                                        @if(isset($assesseeuser))
+                                                            {{ $assesseeuser->employee->employee_name }}
+                                                        @else
+                                                            &nbsp;
+                                                        @endif
+                                                        </span>
+                                                    </th>
                                                     @endforeach
                                                 @endforeach
                                             </tr>
@@ -175,12 +179,12 @@
                                             <!-- Criteria Rows -->
                                             @foreach ($criterias as $idx=>$criteria)
                                                 <tr>
-                                                    <td class="text-left">{{ $criteria->name }}</td>
-                                                    <td style="vertical-align: middle">{{ $criteria->excellent }}</td>
-                                                    <td>{{ $criteria->good }}</td>
-                                                    <td>{{ $criteria->meet_standard }}</td>
-                                                    <td>{{ $criteria->below_standard }}</td>
-                                                    <td>{{ $criteria->weak }}</td>
+                                                    <td class="text-left"><span class="rating-marks">{{ $criteria->name }}</span></td>
+                                                    <td style="vertical-align: middle"><span class="rating-marks">{{ $criteria->excellent }}</span></td>
+                                                    <td><span class="rating-marks">{{ $criteria->good }}</span></td>
+                                                    <td><span class="rating-marks">{{ $criteria->meet_standard }}</span></td>
+                                                    <td><span class="rating-marks">{{ $criteria->below_standard }}</span></td>
+                                                    <td><span class="rating-marks">{{ $criteria->weak }}</span></td>
 
                                                     @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
                                                         @foreach($assesseeuserbybranch as $assesseeuser)
