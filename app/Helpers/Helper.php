@@ -80,7 +80,7 @@ function branchHR(){
     $authuser = Auth::user();
     $branch_ids = $authuser->branches->pluck('branch_id');
     
-    if ($authuser->hasRole('HR Authorized') && ($branch_ids && !$branch_ids->contains('7')) && $authuser->email != "hradmin@gmail.com") {
+    if ($authuser->hasRole('HR Authorized') && ($branch_ids && !$branch_ids->contains('7') || $authuser->email == "allbranchhr@gmail.com") ) {
         return true;
     }
     return false;
