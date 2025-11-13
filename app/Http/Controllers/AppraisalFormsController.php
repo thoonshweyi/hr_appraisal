@@ -644,6 +644,7 @@ class AppraisalFormsController extends Controller
         $appraisalforms = AppraisalForm::where('assessor_user_id', $id)
         ->orderBy('created_at', 'desc')
         ->with(['assformcat','appraisalcycle','status'])->get();
+        // dd($appraisalforms);
 
         if (!empty($filter_appraisal_cycle_id)) {
             $appraisalforms = $appraisalforms->where('appraisal_cycle_id', $filter_appraisal_cycle_id);
@@ -652,7 +653,9 @@ class AppraisalFormsController extends Controller
         $printhistory = PrintHistory::where("assessor_user_id",$id)
                         ->where('appraisal_cycle_id', $filter_appraisal_cycle_id)->first();
         $printed_at = $printhistory ? Carbon::parse($printhistory->printed_at)->format('d-M-Y h:i:s') : null;
-        return response()->json(["forms"=>$appraisalforms,"printed_at"=> $printed_at ]);
+
+        // dd($appraisalforms);
+        return response()->json(["forms"=>$appraisalforms->values()->toArray(),"printed_at"=> $printed_at ]);
     }
 
     public function userdashboard(Request $request,$id){

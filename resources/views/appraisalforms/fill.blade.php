@@ -77,17 +77,29 @@
         margin-bottom: 5px;
     }
     /*  */
-    .vertical-header {
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-        padding: 5px 2px;
-        font-size: 10px;
-        text-align: center;
+   .vertical-header {
         width: 4% !important;
-        min-width: 4% !important;;
-        max-width: 4% !important;;
+        min-width: 4% !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
+        height: 100px;
 
-        vertical-align: middle;
+        position: relative;
+    }
+    .vertical-header span {
+        width: 100px; 
+        display: inline-block;
+
+        transform: rotate(-90deg);
+        transform-origin: center;
+        white-space: nowrap;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;    /* centers after rotation */
+        box-sizing: border-box;
+
+        white-space: wrap;
     }
     .header-row td{
         padding: 5px 40px;
@@ -126,11 +138,11 @@
     .print-date{
         float:right;
     }
-    .employees,.ratings{
+    /* .employees,.ratings{
         display: inline-block;
         width: 100%;
         height: 100%;
-    }
+    } */
 </style>
     <nav aria-label="Pagination" class="mt-2">
         <ul class="pagination justify-content-center">
