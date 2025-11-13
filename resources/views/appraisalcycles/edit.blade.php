@@ -636,7 +636,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content rounded-0">
                 <div class="modal-header">
-                    <h6 class="modal-title">Balance Modal</h6>
+                    <h6 class="modal-title">Peer To Peer Modal</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -665,12 +665,17 @@
                     </div>
 
                     <div id="assesseescontent" class="transactions">
+                        <div>
+                                <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger">Bulk Delete</a>
+                        </div>
                         <div class="table-responsive rounded mb-3 position-relative" style="height:60vh;">
 
                             <table id="peertopeer" class="table mb-0 w-100" style="min-height: 100px !important;">
                                 <thead class="bg-white text-uppercase">
                                     <tr class="ligth ligth-data">
-                                        <th></th>
+                                        <th>
+                                            <input type="checkbox" name="selectalls" id="selectalls" class="form-check-input selectalls" />
+                                        </th>
                                         <th style="">No</th>
                                         {{-- <th>Assessor Name</th> --}}
                                         <th>Assessee Name</th>
@@ -683,6 +688,7 @@
                                         <th>
                                             Action
                                         </th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody class="ligth-body">
@@ -1236,11 +1242,16 @@
                     }
                 },
                 columns: [
-                    {
-                        className: 'details-control',
-                        orderable: false,
+                     {
                         data: null,
-                        defaultContent: ''
+                        name: 'no',
+                        width: "2%",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            const checked = getselectedids.includes(row.id) ? 'checked' : '';
+                            return `<input type="checkbox" name="singlechecks" class="form-check-input singlechecks text-center" value="${row.id}" ${checked} />`;
+                        }
                     },
                     {
                         data: null,
@@ -1267,7 +1278,13 @@
                         render: function (data, type, row) {
                             return data ?? '';
                         }
-                    }
+                    },
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: '',
+                    },
                 ],
                 "columnDefs": [{
                     "searchable": false,
@@ -1275,6 +1292,16 @@
                     "targets": 0,
                 }],
             })
+
+            peertopeertable.on('draw', function () {
+                peertopeertable.rows().every(function () {
+                    const data = this.data(); // this row’s data from the server
+                    if (getselectedids.includes(String(data.id))) {
+                        $(this.node()).find('.singlechecks').prop('checked', true);
+                    }
+                });
+                $('#selectalls').prop('checked', false)
+            });
 
             $('#peertopeer tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
@@ -1313,6 +1340,69 @@
                     `;
                 }
             });
+
+            var getselectedids = [];
+            $('#peertopeer tbody').on('change', '.singlechecks', function () {
+                const id = $(this).val();
+                if ($(this).prop("checked")) {
+                    if (!getselectedids.includes(id)) {
+                        console.log(id);
+                        getselectedids.push(id);
+                    }
+                } else {
+                    getselectedids = getselectedids.filter(item => item !== id);
+                }
+            });
+           $('#selectalls').on('click', function () {
+                const checked = $(this).prop('checked');
+
+                $('#peertopeer .singlechecks').each(function () {
+                    $(this).prop('checked', checked).trigger('change');
+                });
+            });
+
+             $("#bulkdelete-btn").click(function(){
+
+                    Swal.fire({
+                         title: "Are you sure?",
+                         text: `You won't be able to revert!`,
+                         icon: "warning",
+                         showCancelButton: true,
+                         confirmButtonColor: "#3085d6",
+                         cancelButtonColor: "#d33",
+                         confirmButtonText: "Yes, delete it!"
+                    }).then((result) => {
+                         if (result.isConfirmed) {
+                              // data remove 
+                              $.ajax({
+                                   url:"{{ route('peertopeers.bulkdeletes') }}",
+                                   type:"DELETE",
+                                   dataType:"json",
+                                   data:{
+                                        selectedids:getselectedids,
+                                        _token:"{{ csrf_token() }}"
+                                   },
+                                   success:function(response){
+                                        console.log(response);   // 1
+                                        
+                                        if(response){
+                                            $('#peertopeer').DataTable().draw(true);
+                                            Swal.fire({
+                                                title: "Deleted!",
+                                                text: "Peer To Peer has been deleted.",
+                                                icon: "success"
+                                            });
+
+                                        }
+                                   },
+                                   error:function(response){
+                                        console.log("Error: ",response)
+                                   }
+                              });
+                              
+                         }
+                    });   
+               });
 
             // Start Delete Item
             $(document).on("click",".delete-btns",function(){

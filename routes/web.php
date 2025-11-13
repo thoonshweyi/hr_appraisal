@@ -246,6 +246,8 @@ Route::middleware('auth')->group(function () {
     Route::post("peertopeersstatus",[PeerToPeersController::class,"changestatus"])->name("peertopeers.changestatus");
     Route::get('/getEmployeeAssessees', [PeerToPeersController::class, 'getEmployeeAssessees'])->name('peertopeers.getemployeeassessees');
     Route::get('/getEmployeeAssessors', [PeerToPeersController::class, 'getEmployeeAssessors'])->name('peertopeers.getemployeeassessors');
+    Route::delete("/peertopeersbulkdeletes",[PeerToPeersController::class,"bulkdeletes"])->name("peertopeers.bulkdeletes");
+
     Route::get('/dctohocriterias', [PeerToPeersController::class, 'dctohocriterias'])->name('peertopeers.dctohocriterias');
 
 

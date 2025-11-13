@@ -287,6 +287,31 @@ class PeerToPeersController extends Controller
 
 
     }
+
+    public function bulkdeletes(Request $request)
+    {
+        \DB::beginTransaction();
+        try{
+            $getselectedids = $request->selectedids;
+            $peertopeers = PeerToPeer::whereIn("id",$getselectedids)->get();
+            foreach ($peertopeers as $key => $peertopeer) {
+                $peertopeer->delete();
+
+                // Revoking Appraisal Form
+                $appraisal_cycle_id = $peertopeer->appraisal_cycle_id;
+                $assessor_user_id = $peertopeer->assessor_user_id;
+                $ass_form_cat_id = $peertopeer->ass_form_cat_id;
+                $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,[$ass_form_cat_id]);
+
+            }
+
+            \DB::commit();
+            return response()->json(["success"=>"Selected data have been deleted successfully"]);
+        }catch(Exception $e){
+            Log::error($e->getMEssage());
+            return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
+        }
+    }
 }
 
 
