@@ -1036,7 +1036,6 @@
                 var $icon = $btn.find('i'); // The <i> inside it
                 var tr = $btn.closest('tr');
                 var userId = $btn.data('user');
-
                 if (tr.next('.child-row').length) {
                     tr.next('.child-row').toggle(); // Toggle visibility
 
@@ -1054,7 +1053,10 @@
                         data: {
                             filter_appraisal_cycle_id: $("#appraisal_cycle_id").val()
                         },
-                        success: function ({forms,printed_at}) {
+                        success: function (response) {
+                            let forms = response.forms;
+                            let printed_at = response.printed_at;
+                            console.log(typeof forms);
                             var html =`
                             <div class="d-flex justify-content-between mt-2">
                                 <h4 class="card-title">Form Lists
