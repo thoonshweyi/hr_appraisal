@@ -287,13 +287,16 @@ class AppraisalFormsController extends Controller
         });
         // dd($assessee_ids);
 
-        $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->orderBy("id",'asc')->get();
+        $criterias = Criteria::where("ass_form_cat_id", $appraisalform->ass_form_cat_id)
+            ->orderBy("id", "asc")
+            ->get();
 
-        $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
-        $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');
-        $total_meet_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('meet_standard');
-        $total_below_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('below_standard');
-        $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
+        $total_excellent = $criterias->sum('excellent');
+        $total_good = $criterias->sum('good');
+        $total_meet_standard = $criterias->sum('meet_standard');
+        $total_below_standard = $criterias->sum('below_standard');
+        $total_weak = $criterias->sum('weak');
+
 
         $roles = Auth::user()->roles->pluck('name');
         $adminauthorize = $roles->contains('Admin') || $roles->contains('HR Authorized');

@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
+<!-- Loader Overlay -->
+<div id="pageLoader">
+  <div class="loader"></div>
+</div>
+
 <a href="#assesseemodal" class="fab expanded text-white" id="mainFab" data-toggle="modal">
     <div class="fab-content">
         <span class="fab-icon">
@@ -368,6 +374,8 @@
 @endsection
 
 @section('css')
+<link href="{{ asset('assets/dist/css/pageloader.css') }}" rel="stylesheet" />    
+
 <style type="text/css">
     .form-header {
         background-color: #ffffff;
@@ -768,7 +776,11 @@
         });
 
 
+        let confirmClicked = false;
+        let submitting = false;
         $('.submitbtns').click(function(e){
+            if (submitting) return; 
+
             Swal.fire({
                 title: "{{ __('apprasialform.result_submit')}}",
                 text: "",
@@ -779,15 +791,28 @@
                 confirmButtonText: "{{ __('message.ok')}}",
                 cancelButtonText: "{{ __('message.cancel')}}",
             }).then((result) => {
-                if (result.isConfirmed) {
+                if (result.isConfirmed && !confirmClicked) {
+                    confirmClicked = true;
+                    submitting = true;
+
                     $('#appraisalformf').attr('action','{{ route('appraisalforms.update',$appraisalform->id) }}');
                     $('#appraisalformf').submit();
                 }
             });
         });
+
         $('.savedraftbtns').click(function(e){
-            $('#appraisalformf').attr('action','{{ route('appraisalforms.savedraft',$appraisalform->id) }}');
-            $('#appraisalformf').submit();
+            e.preventDefault();
+            let $btn = $(this);
+            if ($btn.prop('disabled')) return; 
+
+            $btn.prop('disabled', true);      
+            $btn.val('Saving...');            
+            $('#pageLoader').fadeIn();
+
+            $('#appraisalformf')
+                .attr('action', '{{ route('appraisalforms.savedraft', $appraisalform->id) }}')
+                .submit();
         });
         {{-- End Save Draft --}}
 
