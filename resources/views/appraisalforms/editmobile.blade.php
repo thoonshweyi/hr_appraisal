@@ -44,6 +44,13 @@
                             @foreach ($errors->all() as $error)
                                 @once($error)
                                     <li>{{ $error }} x{{ $errorCounts[$error] }} times.</li>
+                                    <script type="text/javascript">
+                                        Swal.fire({
+                                            title: "Form Submit Error!",
+                                            text: "{{ $error }}",
+                                            icon: "error"
+                                        });
+                                    </script>
                                 @endonce
                             @endforeach
                         </ul>
