@@ -72,17 +72,34 @@ class AppraisalFormsController extends Controller
             $appraisalforms = AppraisalForm::whereIn("id",$getselectedids)->get();
 
             foreach($appraisalforms as $appraisalform){
-                $alreadySent = \DB::table('notifications')
+
+                $query = \DB::table('notifications')
                     ->where('notifiable_id', $appraisalform->assessor_user_id)
                     ->where('notifiable_type', "App\Models\User")
                     ->where('type', "App\Notifications\AppraisalFormsNotify")
-                    ->whereRaw("data::jsonb ->> 'appraisalform_id' = ?", [$appraisalform->id])
-                    ->exists();
+                    ->whereRaw("data::jsonb ->> 'appraisalform_id' = ?", [$appraisalform->id]);
 
+                $notification = $query->first();
 
-                if (! $alreadySent) {
+                if (! $notification) {
+
                     $title = 'You received a new Appraisal Form "' . $appraisalform->assformcat->name . '"';
-                    Notification::send($appraisalform->assessoruser,new AppraisalFormsNotify($appraisalform->id,$appraisalform->assformcat->id,$title,$appraisalform->appraisal_cycle_id));
+
+                    Notification::send(
+                        $appraisalform->assessoruser,
+                        new AppraisalFormsNotify(
+                            $appraisalform->id,
+                            $appraisalform->assformcat->id,
+                            $title,
+                            $appraisalform->appraisal_cycle_id
+                        )
+                    );
+
+                } else {
+                    // Update the existing notification to unread
+                    $query->update([
+                        'read_at' => null
+                    ]);
                 }
             }
 
