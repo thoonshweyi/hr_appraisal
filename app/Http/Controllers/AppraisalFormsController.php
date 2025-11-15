@@ -403,7 +403,7 @@ class AppraisalFormsController extends Controller
 
             $adminauthorize = adminHRAuthorize();
             if($adminauthorize){
-                 return redirect(route("appraisalforms.index"))->with('success',"Appraisal Form updated successfully");
+                return redirect()->route("appraisalcycles.edit",$appraisalform->appraisal_cycle_id)->with('success',"Appraisal Form Saved successfully")->with("js",true);
             }else{
                 return redirect(route("appraisalforms.notification"))->with('success',"Appraisal Form updated successfully");
             }

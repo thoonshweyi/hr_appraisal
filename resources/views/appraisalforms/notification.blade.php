@@ -223,7 +223,10 @@
 <!-- End MODAL AREA -->
 @endsection
 @section('js')
+
 <script>
+
+  
     $(document).ready(function() {
         $("#filter_branch_id").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
