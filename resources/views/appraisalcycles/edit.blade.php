@@ -426,9 +426,47 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="ligth-body">
-
+                                                @foreach($participantusers as $idx=>$participantuser)
+                                                <tr>
+                                                    <td>{{$idx + $participantusers->firstItem()}}</td>
+                                                    <td>{{ $participantuser->employee->employee_name }}</td>
+                                                    <td>{{ $participantuser->employee->employee_code }}</td>
+                                                    <td>{{ $participantuser->employee->branch->branch_name }}</td>
+                                                    <td>{{ $participantuser->employee->positionlevel->name }}</td>
+                                                    <td>{{ $participantuser->getAppraisalFormCount($appraisalcycle->id) }} / {{ $participantuser->getAllFormCount($appraisalcycle->id) }}</td>
+                                                    <td>
+                                                         <div class='d-flex justify-content-center align-items-center'>
+                                                            <div id='progresses'  style='background : conic-gradient(steelblue {{ $participantuser->getSentPercentage($appraisalcycle->id) }}%,#eee {{$participantuser->getSentPercentage($appraisalcycle->id)}}%)'>
+                                                                    <span id='progressvalues'>{{ $participantuser->getSentPercentage($appraisalcycle->id)}}%</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        @php 
+                                                                $printbtn = ($participantuser->employee->positionlevel->id < 5 && !$participantuser->printhistory);
+                                                        @endphp
+                                                        <div class='d-flex justify-content-center align-items-center'>
+                                                            <form id='appraisalform' action="{{route('appraisalforms.create')}}" method='GET'>
+                                                                <input type='hidden' name='assessor_user_id' value='{{ $participantuser->id }}'>
+                                                                <input type='hidden' name='appraisal_cycle_id' value='{{ $appraisalcycle->id }}'/>
+                                                                <button type='submit' class='btn btn-link p-0 m-0' title='Send'>
+                                                                    <i class='far fa-paper-plane text-primary mr-2'></i>
+                                                                </button>
+                                                            </form>
+                                                            @if($printbtn)
+                                                                    <a href='javascript:void(0);' data-user='{{$participantuser->id}}' class='text-warning mx-2 print_btn' title='Print'><i class='fas fa-print'></i></a>
+                                                            @endif
+                                                            <a href='javascript:void(0);' class='show-forms' data-user='{{$participantuser->id}}' title='Open'><i class='fas fa-chevron-down'></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
                                             </tbody>
+
                                         </table>
+                                         <div class="d-flex justify-content-center">
+                                            {{ $participantusers->appends(request()->all())->links("pagination::bootstrap-4") }}
+                                        </div>
                                     </div>
 
                                     {{-- <div class="card">
@@ -909,128 +947,128 @@
 
         {{-- Start assessorusers, participantusers, assesseeusers, peertopeer  --}}
             const appraisalCycleId = {{ $appraisalcycle->id }};
-            $('#participantusertable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "searching": false,
-                "lengthChange": false,
-                "pageLength": 10,
-                "autoWidth": true,
-                "responsive": false,
-                ordering: true,
-                "order": [
-                    [1, 'asc']
-                ],
-                stateSave: true,
-                stateDuration: -1,
-                stateSaveCallback: function(settings, data) {
-                    localStorage.setItem('DataTables_participantusertable', JSON.stringify(data));
-                },
-                stateLoadCallback: function(settings) {
-                    return JSON.parse(localStorage.getItem('DataTables_participantusertable'));
-                },
-                'ajax': {
-                    url: `/${appraisalCycleId}/participantusers/`,
-                'type': 'GET',
-                'data': function(d) {
-                    d.filter_employee_name = $('#filter_employee_name').val();
-                    d.filter_employee_code = $('#filter_employee_code').val();
-                    d.filter_branch_id = $('#filter_branch_id').val();
-                    d.filter_position_level_id = $('#filter_position_level_id').val();
-                    d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
-                    d.filter_section_id = $('#filter_section_id').val();
-                    d.filter_sub_section_id = $('#filter_sub_section_id').val();
-                },
-                },
-                columns: [
-                    {
-                        data: null,
-                        name: 'no',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {   data: 'employee.employee_name',
-                        name: 'employee.employee_name',
-                        render: function(data,type,row){
-                                {{-- const positionLevel = row.employee.positionlevel;
-                                const hasPrintHistory = row.printhistory ? true : false;
-                                const allformSent = true;
-                                if (positionLevel < 5) {
-                                    return hasPrintHistory && allformSent;
-                                } else {
-                                    return allformSent;
-                                } --}}
+            // $('#participantusertable').DataTable({
+            //     "processing": true,
+            //     "serverSide": true,
+            //     "searching": false,
+            //     "lengthChange": false,
+            //     "pageLength": 10,
+            //     "autoWidth": true,
+            //     "responsive": false,
+            //     ordering: true,
+            //     "order": [
+            //         [1, 'asc']
+            //     ],
+            //     stateSave: true,
+            //     stateDuration: -1,
+            //     stateSaveCallback: function(settings, data) {
+            //         localStorage.setItem('DataTables_participantusertable', JSON.stringify(data));
+            //     },
+            //     stateLoadCallback: function(settings) {
+            //         return JSON.parse(localStorage.getItem('DataTables_participantusertable'));
+            //     },
+            //     'ajax': {
+            //         url: `/${appraisalCycleId}/participantusers/`,
+            //     'type': 'GET',
+            //     'data': function(d) {
+            //         d.filter_employee_name = $('#filter_employee_name').val();
+            //         d.filter_employee_code = $('#filter_employee_code').val();
+            //         d.filter_branch_id = $('#filter_branch_id').val();
+            //         d.filter_position_level_id = $('#filter_position_level_id').val();
+            //         d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
+            //         d.filter_section_id = $('#filter_section_id').val();
+            //         d.filter_sub_section_id = $('#filter_sub_section_id').val();
+            //     },
+            //     },
+            //     columns: [
+            //         {
+            //             data: null,
+            //             name: 'no',
+            //             orderable: false,
+            //             searchable: false,
+            //             render: function (data, type, row, meta) {
+            //                 return meta.row + meta.settings._iDisplayStart + 1;
+            //             }
+            //         },
+            //         {   data: 'employee.employee_name',
+            //             name: 'employee.employee_name',
+            //             render: function(data,type,row){
+            //                     {{-- const positionLevel = row.employee.positionlevel;
+            //                     const hasPrintHistory = row.printhistory ? true : false;
+            //                     const allformSent = true;
+            //                     if (positionLevel < 5) {
+            //                         return hasPrintHistory && allformSent;
+            //                     } else {
+            //                         return allformSent;
+            //                     } --}}
 
-                                const positionLevel = row.employee.positionlevel.id;
-                                const hasPrintHistory = row.printhistory ? true : false;
-                                const allformSent = row.allformcount == row.appraisalformcount;
-                                const printDoc = positionLevel < 5;
-                                const printed = printDoc ? hasPrintHistory : true;
+            //                     const positionLevel = row.employee.positionlevel.id;
+            //                     const hasPrintHistory = row.printhistory ? true : false;
+            //                     const allformSent = row.allformcount == row.appraisalformcount;
+            //                     const printDoc = positionLevel < 5;
+            //                     const printed = printDoc ? hasPrintHistory : true;
 
-                            return `
-                            <div class="d-flex align-items-center">
-                                <span class="mr-2">${data}</span>
-                                ${allformSent && printed ? `
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="9" />
-                                    <path d="M9 12l2 2l4 -4" />
-                                    </svg>
-                                ` : '' }
+            //                 return `
+            //                 <div class="d-flex align-items-center">
+            //                     <span class="mr-2">${data}</span>
+            //                     ${allformSent && printed ? `
+            //                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            //                         <circle cx="12" cy="12" r="9" />
+            //                         <path d="M9 12l2 2l4 -4" />
+            //                         </svg>
+            //                     ` : '' }
 
-                            </div>
-                            `
-                        }
-                    },
-                    { data: 'employee.employee_code', name: 'employee.employee_code' },
-                    { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
-                    {{-- { data: 'employee.department.name', name: 'employee.department.name' }, --}}
-                    {{-- { data: 'employee.position.name', name: 'employee.position.name' }, --}}
-                    {
-                        data: 'employee.positionlevel.name',
-                        name: 'employee.positionlevel.name',
-                        render: function (data, type, row) {
-                            {{-- console.log(row); --}}
-                            return `${data} ${row.employee.position_level_id < 5 ? "<i class='fas fa-file-export text-success ml-2'></i>" : ''}`; // Render raw value
-                        }
-                    },
+            //                 </div>
+            //                 `
+            //             }
+            //         },
+            //         { data: 'employee.employee_code', name: 'employee.employee_code' },
+            //         { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
+            //         {{-- { data: 'employee.department.name', name: 'employee.department.name' }, --}}
+            //         {{-- { data: 'employee.position.name', name: 'employee.position.name' }, --}}
+            //         {
+            //             data: 'employee.positionlevel.name',
+            //             name: 'employee.positionlevel.name',
+            //             render: function (data, type, row) {
+            //                 {{-- console.log(row); --}}
+            //                 return `${data} ${row.employee.position_level_id < 5 ? "<i class='fas fa-file-export text-success ml-2'></i>" : ''}`; // Render raw value
+            //             }
+            //         },
 
-                    {
-                        data: 'form_count',
-                        name: 'form_count',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return `${row.appraisalformcount}/${row.allformcount}`;
-                        }
-                    },
-                    {
-                        data: 'progress',
-                        name: 'progress',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data ?? ''; // Render raw value
-                        }
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data ?? '';
-                        }
-                    }
-                ],
-                "columnDefs": [{
-                "searchable": false,
-                "orderable": false,
-                "targets": 0,
-                }],
-            })
+            //         {
+            //             data: 'form_count',
+            //             name: 'form_count',
+            //             orderable: false,
+            //             searchable: false,
+            //             render: function (data, type, row) {
+            //                 return `${row.appraisalformcount}/${row.allformcount}`;
+            //             }
+            //         },
+            //         {
+            //             data: 'progress',
+            //             name: 'progress',
+            //             orderable: false,
+            //             searchable: false,
+            //             render: function (data, type, row) {
+            //                 return data ?? ''; // Render raw value
+            //             }
+            //         },
+            //         {
+            //             data: 'action',
+            //             name: 'action',
+            //             orderable: false,
+            //             searchable: false,
+            //             render: function (data, type, row) {
+            //                 return data ?? '';
+            //             }
+            //         }
+            //     ],
+            //     "columnDefs": [{
+            //     "searchable": false,
+            //     "orderable": false,
+            //     "targets": 0,
+            //     }],
+            // })
 
             $('.searchbtns').on('click', function(e) {
                 $('#participantusertable').DataTable().draw(true);

@@ -155,28 +155,11 @@ class AppraisalCyclesController extends Controller
         $subsections = SubSection::where('status_id',1)->orderBy('id')->get();
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
 
-        // $users = User::where('status',1)
-        //         ->whereNotIn('id',[1])
-        //         ->get();
-
-        // dd($branches);
-
-        // $participant_user_ids = PeerToPeer::where('appraisal_cycle_id',$id)->groupBy('assessor_user_id')->pluck("assessor_user_id");
-        // // dd($participant_user_ids);
-
-        // $participantusers = User::whereIn("id",$participant_user_ids)->get();
-        // // dd($participantusers);
+        $participantusers = $this->participantusers($request,$id);
+        // dd($participantusers);
 
 
-
-        // $assessee_user_ids = AppraisalFormAssesseeUser::whereHas("appraisalform",function($query) use($id){
-        //     $query->where('appraisal_cycle_id',$id);
-        // })
-        // ->groupBy('assessee_user_id')->pluck("assessee_user_id");
-        // $assesseeusers = User::whereIn("id",$assessee_user_ids)->get();
-
-
-        return view("appraisalcycles.edit",compact("appraisalcycle","branches","positionlevels","statuses","subdepartments","sections","subsections"));
+        return view("appraisalcycles.edit",compact("appraisalcycle","branches","positionlevels","statuses","subdepartments","sections","subsections","participantusers"));
     }
 
 
@@ -287,6 +270,7 @@ class AppraisalCyclesController extends Controller
 
    public function participantusers(Request $request, string $id){
 
+        // dd("hay");
         $participant_user_ids = PeerToPeer::where('appraisal_cycle_id',$id)->groupBy('assessor_user_id')->pluck("assessor_user_id");
         // dd($participant_user_ids);
 
@@ -362,9 +346,10 @@ class AppraisalCyclesController extends Controller
         ->orderBy("id", "desc")
         ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel",
         'printhistory'])
-        ->get();
+        ->paginate(10);
 
 
+        return $participantusers;
         // dd($participantusers);
         // ->paginate(10);
 
