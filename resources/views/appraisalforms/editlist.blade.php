@@ -245,14 +245,16 @@
                                                 <td>{{ $total_meet_standard }}</td>
                                                 <td>{{ $total_below_standard }}</td>
                                                 <td>{{ $total_weak }}</td>
-                                                 @foreach($assesseeuserbybranch as $assesseeuser)
+                                                @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
+                                                    @foreach($assesseeuserbybranch as $assesseeuser)
                                                     <td class="position-relative">
                                                         @if(isset($assesseeuser))
                                                             <span id="total_results_{{ $assesseeuser->id }}"> {{ $appraisalform->getTotalResult($assesseeuser->id) != 0 ? $appraisalform->getTotalResult($assesseeuser->id) : '' }} </span>
                                                         @else
-                                                            &nbsp;
+                                                            a
                                                         @endif
                                                     </td>
+                                                    @endforeach
                                                 @endforeach
                                             </tr>
 
