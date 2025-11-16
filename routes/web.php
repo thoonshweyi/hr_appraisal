@@ -285,9 +285,9 @@ Route::middleware('auth')->group(function () {
     Route::get("/assesseesummarysexport/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"export"])->name("assesseesummary.export");
     Route::get("/assesseesdetail/{appraisal_cycle_id}",[AssesseeDetailController::class,"exportview"])->name("assesseesdetail.export");
 
+    Route::get("/{appraisal_cycle_id}/manpowerusers",[AppraisalCyclesController::class,"manpowerusers"])->name("manpowerusers.index");
     Route::get("/{appraisal_cycle_id}/participantusers",[AppraisalCyclesController::class,"participantusers"])->name("participantusers.index");
     Route::get("/{appraisal_cycle_id}/assesseeusers",[AppraisalCyclesController::class,"assesseeusers"])->name("assesseeusers.index");
-    Route::get("/{appraisal_cycle_id}/assessorusers",[AppraisalCyclesController::class,"assessorusers"])->name("assessorusers.index");
 
 
 

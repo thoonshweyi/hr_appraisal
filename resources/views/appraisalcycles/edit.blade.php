@@ -81,7 +81,7 @@
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
                 <div id="tab-tilter" class="col-lg-12 tab-filter">
-                    <form id="searchnfilterform" class="" action="{{ route('assesseesummary.export',$appraisalcycle->id) }}" method="GET">
+                    <form id="searchnfilterform" class="" action="{{ route('appraisalcycles.edit',$appraisalcycle->id) }}" method="GET">
                         @csrf
                         <div class="row align-items-end justify-content-start">
 
@@ -314,16 +314,17 @@
                                         @csrf
 
                                         <ul id="result" class="user-list">
-                                            {{-- @foreach($users as $user)
+                                          
+                                            @foreach($manpowerusers as $manpoweruser)
                                             <div class="user-info">
-                                                <li data-user_id = {{ $user->id }}>
+                                                <li data-user_id = "{{ $manpoweruser->id }}" data-user_name = '{{ $manpoweruser->employee->employee_name}}'>
                                                     <i class="ri-folder-4-line"></i>
-                                                        <h4>{{ $user->name }} ( {{ $user->employee_id }} )</h4>
+                                                        <h4>{{ $manpoweruser->name}} ( {{ $manpoweruser->employee_id}} )</h4>
+                                                        <input type="hidden" class="empuser_ids" name="empuser_ids[]" value="{{ $manpoweruser->id}}">
                                                 </li>
 
                                             </div>
-                                            @endforeach --}}
-
+                                            @endforeach
 
                                             {{-- <li><h3>Loading...</h3></li> --}}
 
@@ -426,7 +427,6 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="ligth-body">
-<<<<<<< HEAD
                                                 @foreach($participantusers as $idx=>$participantuser)
                                                 <tr>
                                                     <td>{{$idx + $participantusers->firstItem()}}</td>
@@ -462,9 +462,6 @@
                                                     </td>
                                                 </tr>
                                                 @endforeach
-=======
-                                                    
->>>>>>> 103d1e8e15721a78cc09596cb5a8df319c5950ad
                                             </tbody>
 
                                         </table>
@@ -949,7 +946,7 @@
 
 
 
-        {{-- Start assessorusers, participantusers, assesseeusers, peertopeer  --}}
+        {{-- Start manpowerusers, participantusers, assesseeusers, peertopeer  --}}
             const appraisalCycleId = {{ $appraisalcycle->id }};
             // $('#participantusertable').DataTable({
             //     "processing": true,
@@ -1075,9 +1072,7 @@
             // })
 
             $('.searchbtns').on('click', function(e) {
-                $('#participantusertable').DataTable().draw(true);
-                getAssessorUsers();
-
+                $('#searchnfilterform').submit();
             })
             $('#participantusertable').on('click', '.show-forms', function () {
                 var $btn = $(this); // The clicked <a>
@@ -1200,50 +1195,7 @@
                 $('#formchartmodal').modal('show');
             });
 
-            function getAssessorUsers(){
-                $.ajax({
-                    url: `/${appraisalCycleId}/assessorusers/`,
-                    type: "GET",
-                    dataType: "json",
-                    data: $('#searchnfilterform').serialize(),
-                    beforeSend : function(){
-                        $("#myloading-container").removeClass('d-none');
-                    },
-                    success: function (response) {
-                        {{-- console.log(response); --}}
-
-                        let html = '';
-                        const assessorusers = response.users;
-
-                        assessorusers.forEach(function(assessoruser,idx){
-                            html += `
-                            <div class="user-info">
-                                <li data-user_id = ${assessoruser.id} data-user_name = '${assessoruser.employee.employee_name}'>
-                                    <i class="ri-folder-4-line"></i>
-                                        <h4>${assessoruser.name} ( ${assessoruser.employee_id} )</h4>
-                                        <input type="hidden" class="empuser_ids" name="empuser_ids[]" value="${assessoruser.id}">
-                                </li>
-
-                            </div>
-                            `;
-                        })
-
-
-                        $('#result').html(html);
-
-
-                    },
-                    complete: function(){
-                        $("#myloading-container").addClass('d-none');
-                    },
-                    error: function (response) {
-                        console.log("Error:", response);
-                    }
-                });
-            }
-            getAssessorUsers();
-
-
+        
 
 
 
@@ -1587,7 +1539,7 @@
                     `;
                 }
             });
-        {{-- End assessorusers, participantusers, assesseeusers, peertopeer --}}
+        {{-- End manpowerusers, participantusers, assesseeusers, peertopeer --}}
 
         {{-- window.addEventListener('storage', function(e) {
             if (e.key === 'DataTables_participantusertable') {
@@ -1897,7 +1849,7 @@
         const appraisalCycleId = {{ $appraisalcycle->id }};
 
         $.ajax({
-            url: `/${appraisalCycleId}/assessorusers/`,
+            url: `/${appraisalCycleId}/manpowerusers/`,
             type: "GET",
             dataType: "json",
             data: {

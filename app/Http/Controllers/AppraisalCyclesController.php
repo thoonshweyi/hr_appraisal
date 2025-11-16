@@ -155,11 +155,12 @@ class AppraisalCyclesController extends Controller
         $subsections = SubSection::where('status_id',1)->orderBy('id')->get();
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
 
+        $manpowerusers = $this->manpowerusers($request,$id);
         $participantusers = $this->participantusers($request,$id);
         // dd($participantusers);
 
 
-        return view("appraisalcycles.edit",compact("appraisalcycle","branches","positionlevels","statuses","subdepartments","sections","subsections","participantusers"));
+        return view("appraisalcycles.edit",compact("appraisalcycle","branches","positionlevels","statuses","subdepartments","sections","subsections","manpowerusers","participantusers"));
     }
 
 
@@ -477,7 +478,7 @@ class AppraisalCyclesController extends Controller
 
    }
 
-   public function assessorusers(Request $request, string $id){
+   public function manpowerusers(Request $request, string $id){
         $users = User::where('status',1)
         ->whereNotIn('id',[1]);
 
@@ -580,10 +581,10 @@ class AppraisalCyclesController extends Controller
 
         $results = $results->doesntHave('roles');
 
-            $users = $results->orderBy('id','asc')->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
-            ->get();
+        $users = $results->orderBy('id','asc')->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->get();
 
-
+        return $users;
         return response()->json([
             "users"=>$users
         ]);
