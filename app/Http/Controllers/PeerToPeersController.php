@@ -114,9 +114,9 @@ class PeerToPeersController extends Controller
 
             // Checking Attach Avaibility
             $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
-            // if(!$appraisalcycle->isBeforeActionStart()){
-            //     return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('error',"Peer to Peer can only be attached before action start.");
-            // }
+            if(!$appraisalcycle->isBeforeActionStart()){
+                return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('error',"Peer to Peer can only be attached before action start.");
+            }
 
             // Checking Existing peer to peer
 
