@@ -4,18 +4,22 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PeerToPeer extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $table = "peer_to_peers";
     protected $primaryKey = "id";
     protected $fillable = [
         "assessor_user_id",
         "assessee_user_id",
         "ass_form_cat_id",
-        "appraisal_cycle_id"
+        "appraisal_cycle_id",
+        "user_id",
+        "delete_by"
     ];
 
     public function assessor(){

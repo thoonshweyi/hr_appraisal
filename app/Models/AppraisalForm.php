@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AppraisalForm extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = "appraisal_forms";
     protected $primaryKey = "id";
@@ -18,7 +20,8 @@ class AppraisalForm extends Model
         "user_id",
         "assessed",
         "modify_user_id",
-        'status_id',
+        "status_id",
+        "delete_by"
     ];
 
     public function assessor(){
@@ -42,7 +45,7 @@ class AppraisalForm extends Model
         return $this->belongsTo(Status::class);
     }
     public function assesseeusers(){
-        return $this->belongsToMany(User::class,"appraisal_form_assessee_users","appraisal_form_id","assessee_user_id");
+        return $this->belongsToMany(User::class,"appraisal_form_assessee_users","appraisal_form_id","assessee_user_id")->wherePivotNull('deleted_at');
     }
 
     public function formresults(){

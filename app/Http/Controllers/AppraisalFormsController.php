@@ -200,7 +200,8 @@ class AppraisalFormsController extends Controller
             foreach($assessee_user_ids as $assessee_user_id){
                 AppraisalFormAssesseeUser::firstOrcreate([
                     "appraisal_form_id" => $appraisalform->id,
-                    "assessee_user_id" => $assessee_user_id
+                    "assessee_user_id" => $assessee_user_id,
+                    "user_id" => Auth::guard()->user()->id
                 ]);
             }
 
@@ -542,7 +543,8 @@ class AppraisalFormsController extends Controller
             foreach($assessee_ids as $assessee_user_id){
                 AppraisalFormAssesseeUser::create([
                     "appraisal_form_id" => $appraisalform->id,
-                    "assessee_user_id" => $assessee_user_id
+                    "assessee_user_id" => $assessee_user_id,
+                    "user_id" => Auth::guard()->user()->id
                 ]);
             }
 

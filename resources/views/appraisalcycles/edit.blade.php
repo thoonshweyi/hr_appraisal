@@ -335,7 +335,7 @@
                                         <form id="peer_to_peer_form" action="{{ route('peertopeers.create') }}" method="" class="my-2">
                                             <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
                                             <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>
-                                            @if($appraisalcycle->isBeforeActionStart())
+                                            @if($appraisalcycle->isBeforeActionStart() || Auth::user()->id == 1)
                                                 <button type="button" class="btn new_btn mr-2">New</button>
                                             @endif
                                         </form>
@@ -704,7 +704,7 @@
                     </div>
 
                     <div id="assesseescontent" class="transactions">
-                        @if($appraisalcycle->isBeforeActionStart())
+                        @if($appraisalcycle->isBeforeActionStart() || Auth::user()->id == 1)
                         <div>
                                 <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger">Bulk Delete</a>
                         </div>

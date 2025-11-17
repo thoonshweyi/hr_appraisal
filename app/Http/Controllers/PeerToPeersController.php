@@ -113,25 +113,56 @@ class PeerToPeersController extends Controller
             $appraisal_cycle_id = $request->appraisal_cycle_id;
 
             // Checking Attach Avaibility
-            $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
-            if(!$appraisalcycle->isBeforeActionStart()){
-                return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('error',"Peer to Peer can only be attached before action start.");
-            }
+            // $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
+            // if(!$appraisalcycle->isBeforeActionStart()){
+            //     return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('error',"Peer to Peer can only be attached before action start.");
+            // }
 
             // Checking Existing peer to peer
-
+            $user = Auth::user();
+            $user_id = $user->id;
             foreach($assessee_user_ids as $idx=>$asssessee_user_id){
                 $peertopeer = PeerToPeer::firstOrCreate([
                     "assessor_user_id" => $assessor_user_id,
                     "assessee_user_id" => $assessee_user_ids[$idx],
                     "ass_form_cat_id" => $ass_form_cat_ids[$idx],
-                    "appraisal_cycle_id" => $appraisal_cycle_id
+                    "appraisal_cycle_id" => $appraisal_cycle_id,
+                    "user_id"=> $user_id
                 ]);
+
+                // Start Adding Assessee
+                $appraisalform = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
+                                    ->where('assessor_user_id', $assessor_user_id)
+                                    ->where('ass_form_cat_id', $ass_form_cat_ids[$idx])
+                                    ->first();
+                if($appraisalform){
+                    $appraisalform->update([
+                        'assessed' => false,
+                        'status_id' => 20, 
+                    ]);
+                    $assesseeuser =     AppraisalFormAssesseeUser::firstOrcreate([
+                                            "appraisal_form_id" => $appraisalform->id,
+                                            "assessee_user_id" => $assessee_user_ids[$idx],
+                                            "user_id" => Auth::guard()->user()->id
+                                        ]);
+
+                    $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
+                    foreach($notifications as $notification){
+                        if (isset($notification->data['appraisalform_id']) && ($notification->data['appraisalform_id'] == $appraisalform->id)) {
+                            $notification->update([
+                                'read_at' => null
+                            ]);
+                        }
+                    }
+
+                  
+                }
+                // End Adding Assessee
             }
 
 
             // Revoking Appraisal Form
-            $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,$ass_form_cat_ids);
+            // $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,$ass_form_cat_ids);
             // Unsend Apprasial Notification
 
        
@@ -220,7 +251,7 @@ class PeerToPeersController extends Controller
             $appraisal_cycle_id = $peertopeer->appraisal_cycle_id;
             $assessor_user_id = $peertopeer->assessor_user_id;
             $ass_form_cat_id = $peertopeer->ass_form_cat_id;
-            $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,[$ass_form_cat_id]);
+            // $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,[$ass_form_cat_id]);
 
             \DB::commit();
             return redirect()->back()->with('success',"PeerToPeer deleted successfully");
@@ -232,28 +263,28 @@ class PeerToPeersController extends Controller
     }
 
 
-    public function revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,$ass_form_cat_ids){
-        $appraisalforms = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
-        ->where('assessor_user_id', $assessor_user_id)
-        ->whereIn('ass_form_cat_id', $ass_form_cat_ids)
-        ->get();
+    // public function revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,$ass_form_cat_ids){
+    //     $appraisalforms = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
+    //     ->where('assessor_user_id', $assessor_user_id)
+    //     ->whereIn('ass_form_cat_id', $ass_form_cat_ids)
+    //     ->get();
 
-        $formIds = $appraisalforms->pluck('id')->toArray();
-        Log::info("Forms:",$formIds);
-        foreach ($appraisalforms as $form) {
-            AppraisalFormAssesseeUser::where('appraisal_form_id', $form->id)->delete();
-            FormResult::where('appraisal_form_id', $form->id)->delete();
+    //     $formIds = $appraisalforms->pluck('id')->toArray();
+    //     Log::info("Forms:",$formIds);
+    //     foreach ($appraisalforms as $form) {
+    //         AppraisalFormAssesseeUser::where('appraisal_form_id', $form->id)->delete();
+    //         FormResult::where('appraisal_form_id', $form->id)->delete();
 
-            $form->delete();
-        }
+    //         $form->delete();
+    //     }
 
-        $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
-        foreach($notifications as $notification){
-            if (isset($notification->data['appraisalform_id']) && in_array($notification->data['appraisalform_id'], $formIds)) {
-                $notification->delete();
-            }
-        }
-    }
+    //     $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
+    //     foreach($notifications as $notification){
+    //         if (isset($notification->data['appraisalform_id']) && in_array($notification->data['appraisalform_id'], $formIds)) {
+    //             $notification->delete();
+    //         }
+    //     }
+    // }
 
     public function getPeerToPeers($assessor_user_id,$assessee_user_ids,$ass_form_cat_id,$appraisal_cycle_id){
         $peertopeers = PeerToPeer::where("assessor_user_id",$assessor_user_id)
@@ -295,14 +326,50 @@ class PeerToPeersController extends Controller
             $getselectedids = $request->selectedids;
             $peertopeers = PeerToPeer::whereIn("id",$getselectedids)->get();
             foreach ($peertopeers as $key => $peertopeer) {
+                $peertopeer->update([
+                    "delete_by" => Auth::guard()->user()->id
+                ]);
                 $peertopeer->delete();
 
-                // Revoking Appraisal Form
                 $appraisal_cycle_id = $peertopeer->appraisal_cycle_id;
                 $assessor_user_id = $peertopeer->assessor_user_id;
                 $ass_form_cat_id = $peertopeer->ass_form_cat_id;
-                $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,[$ass_form_cat_id]);
+                $assessee_user_id = $peertopeer->assessee_user_id;
 
+                // Start Removing Assessee
+                $appraisalform = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
+                                    ->where('assessor_user_id', $assessor_user_id)
+                                    ->where('ass_form_cat_id', $ass_form_cat_id)
+                                    ->first();
+                if($appraisalform){
+                    $assesseeuser =     AppraisalFormAssesseeUser::where([
+                                            "appraisal_form_id" => $appraisalform->id,
+                                            "assessee_user_id" => $assessee_user_id
+                                        ])->first();
+                    $assesseeuser->update([
+                        "delete_by" => Auth::guard()->user()->id
+                    ]);
+                    $assesseeuser->delete();
+
+                    $remainAssesseeUsers = AppraisalFormAssesseeUser::where('appraisal_form_id', $appraisalform->id)->exists();
+                    if(!$remainAssesseeUsers){
+                        $appraisalform->update([
+                            "delete_by" => Auth::guard()->user()->id
+                        ]);
+                        $appraisalform->delete();
+
+                        $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
+                        foreach($notifications as $notification){
+                            if (isset($notification->data['appraisalform_id']) && ($notification->data['appraisalform_id'] == $appraisalform->id)) {
+                                $notification->update([
+                                    'read_at' => now()
+                                ]);
+                            }
+                        }
+                    }
+                    
+                }
+                // End Removing Assessee
             }
 
             \DB::commit();
@@ -311,6 +378,10 @@ class PeerToPeersController extends Controller
             Log::error($e->getMEssage());
             return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
         }
+    }
+
+    public function adjustAppraisalForms(){
+
     }
 }
 
