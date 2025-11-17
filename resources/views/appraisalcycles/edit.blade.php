@@ -704,9 +704,11 @@
                     </div>
 
                     <div id="assesseescontent" class="transactions">
+                        @if($appraisalcycle->isBeforeActionStart())
                         <div>
                                 <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger">Bulk Delete</a>
                         </div>
+                        @endif
                         <div class="table-responsive rounded mb-3 position-relative" style="height:60vh;">
 
                             <table id="peertopeer" class="table mb-0 w-100" style="min-height: 100px !important;">
@@ -1626,11 +1628,8 @@
                     // $('#filter_section_id').val('');
                     $('#filter_sub_section_id')[0].selectize.clear();;
 
+                    window.location.href = window.location.href.split('?')[0];
 
-
-                    // Redraw DataTables
-                    $('#participantusertable').DataTable().draw(true);
-                    getAssessorUsers();
                 }
             });
         });
@@ -2065,7 +2064,6 @@
                     console.log(response);
 
                     if(response.status == 'success'){
-                        $('#participantusertable').DataTable().draw(true);
                         Swal.fire({
                             title: "Printed!",
                             text: "User Appraisal Form Printed Successfully",
