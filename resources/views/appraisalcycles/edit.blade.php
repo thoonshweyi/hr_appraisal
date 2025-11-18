@@ -335,9 +335,9 @@
                                         <form id="peer_to_peer_form" action="{{ route('peertopeers.create') }}" method="" class="my-2">
                                             <input type="hidden" id="assessor_user_id" name="assessor_user_id" class="" value=""/>
                                             <input type="hidden" id="appraisal_cycle_id" name="appraisal_cycle_id" class="" value="{{ $appraisalcycle->id }}"/>
-                                            @if($appraisalcycle->isBeforeActionStart() || Auth::user()->id == 1)
+                                            {{-- @if($appraisalcycle->isBeforeActionStart() || Auth::user()->id == 1) --}}
                                                 <button type="button" class="btn new_btn mr-2">New</button>
-                                            @endif
+                                            {{-- @endif --}}
                                         </form>
                                             {{-- <input type="hidden" id="empuser_ids" name="empuser_ids[]" value={{ $appraisalcycle->id }}> --}}
                                             <!-- <button type="button" class="btn compare_btn">Compare</button> -->
@@ -704,11 +704,12 @@
                     </div>
 
                     <div id="assesseescontent" class="transactions">
-                        @if($appraisalcycle->isBeforeActionStart() || Auth::user()->id == 1)
+                        
+                        {{-- @if($appraisalcycle->isBeforeActionStart() || Auth::user()->id == 1) --}}
                         <div>
                                 <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger">Bulk Delete</a>
                         </div>
-                        @endif
+                        {{--@endif--}}
                         <div class="table-responsive rounded mb-3 position-relative" style="height:60vh;">
 
                             <table id="peertopeer" class="table mb-0 w-100" style="min-height: 100px !important;">
