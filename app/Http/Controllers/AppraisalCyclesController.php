@@ -69,10 +69,6 @@ class AppraisalCyclesController extends Controller
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
 
 
-
-        // dd($divisions);
-
-
         if (!empty($filter_appraisalcycle_name)) {
             $results = $results->where('appraisalcycle_name', 'like', '%'.$filter_appraisalcycle_name.'%');
         }
@@ -100,9 +96,6 @@ class AppraisalCyclesController extends Controller
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
 
         $positionlevels = PositionLevel::where('status_id',1)->orderBy('id')->get();
-
-        // dd($branches);
-
 
         return view("appraisalcycles.create",compact("statuses"));
     }
@@ -368,11 +361,18 @@ class AppraisalCyclesController extends Controller
         }
 
 
+        if ($request->has('page')) {
+            $request->session()->put('last_page', $request->get('page'));
+        }
+
+        $page = $request->get('page', $request->session()->get('last_page', 1));
+
+
         $participantusers = $results
         ->orderBy("id", "desc")
         ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel",
         'printhistory'])
-        ->paginate(10);
+        ->paginate(10, ['*'], 'page', $page);
 
 
         return $participantusers;
@@ -554,6 +554,7 @@ class AppraisalCyclesController extends Controller
 
 
           // for getting employee info
+        $filter_user_id = $request->filter_user_id;
         if(!empty($filter_user_id)){
             $results = $results->where("id",$filter_user_id);
 
@@ -667,13 +668,9 @@ class AppraisalCyclesController extends Controller
         }
 
         return response()->json($responses);
-
-
     }
 
     public function compareEmployees(Request $request, string $id){
-
-
         // dd($request->empuser_ids);
 
         $empuser_ids = $request->empuser_ids;

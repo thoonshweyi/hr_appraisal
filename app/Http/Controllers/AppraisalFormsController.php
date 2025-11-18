@@ -273,8 +273,6 @@ class AppraisalFormsController extends Controller
 
     public function edit(Request $request,$id){
 
-
-
         $appraisalform = AppraisalForm::find($id);
         // dd($appraisalform);
             $this->authorize('edit', $appraisalform);

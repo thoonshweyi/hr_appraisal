@@ -1895,7 +1895,7 @@
                 filter_user_id: userid
             },
             success: function (response) {
-                {{-- console.log(response); --}}
+                console.log(response);
 
                 let html = ``;
                 const userempinfo = response.user;

@@ -208,7 +208,7 @@
                                                                     data-assessee="{{ $assesseeuser->id }}" data-assessee-name="{{ $assesseeuser->employee->employee_name }}" data-criteria-name="{{ $criteria->name }}"
                                                                     readonly/>
                                                                     {{-- @if($i == 0 && $idx == 0) --}}
-                                                                    <div class="d-none critooltips">
+                                                                    <div class="critooltips invisible">
                                                                         <h6> <span>{{ $assesseeuser->employee->employee_name }}</span>
                                                                             <button type="button" class="close tooltipcloses" aria-label="Close">
                                                                                 <span >&times;</span>
@@ -460,8 +460,8 @@
 
         // Focus event to show the tooltip when the input is focused
         $('.custom-input').focus(function () {
-            $(".critooltips").addClass('d-none'); // Hide all tooltips first
-            $(this).next(".critooltips").removeClass('d-none'); // Show the specific tooltip for the input
+            $(".critooltips").addClass('invisible'); // Hide all tooltips first
+            $(this).next(".critooltips").removeClass('invisible'); // Show the specific tooltip for the input
 
             const $tableWrapper = $(this).closest('.table-responsive');
             const scrollWidth = $tableWrapper[0].scrollWidth;
@@ -491,7 +491,7 @@
         });
 
         $('.tooltipcloses').click(function(){
-            $(this).closest('.critooltips').addClass('d-none');
+            $(this).closest('.critooltips').addClass('invisible');
         });
 
         $(document).on('mousedown',function(e){
@@ -499,10 +499,10 @@
             {{-- console.log(e.target.closest('.critooltips')) --}}
 
             if(!e.target.classList.contains('custom-input') && !e.target.closest('.critooltips')){
-                $('.critooltips').addClass('d-none');
+                $('.critooltips').addClass('invisible');
             }
         });
-{{--
+        {{--
         document.addEventListener('click', function (e) {
 
             if(e.target.className != 'custom-input'){
@@ -514,40 +514,7 @@
 
 
 
-        {{-- Start Global tooltip --}}
-        {{-- $('.custom-input').focus(function () {
-            let $input = $(this);
-            let tooltip = $input.next('.critooltips').clone(); // clone the actual tooltip content
-
-            // Set content and remove previous
-            $('#global-tooltip').html(tooltip.html()).removeClass('d-none');
-
-            // Get input offset
-            let offset = $input.offset();
-            console.log(offset.top);
-            let inputHeight = $input.outerHeight();
-
-            // Position tooltip above the input
-            $('#global-tooltip').css({
-                position:absolute,
-                top: offset.top - 210 + 'px', // adjust based on your tooltip height
-                left: offset.left + ($input.outerWidth() / 2) + 'px',
-                transform: 'translateX(-50%)',
-                position: 'absolute',
-                zIndex: 9999
-            });
-        });
-
-        $('.custom-input').blur(function () {
-            $('#global-tooltip').addClass('d-none');
-        });
-
-
-        tippy('.custom-input', {
-            content: 'My tooltip!',
-        }); --}}
-
-        {{-- End Global tooltip --}}
+   
 
         {{-- End Tooltip --}}
 
