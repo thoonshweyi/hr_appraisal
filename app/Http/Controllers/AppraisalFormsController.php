@@ -246,6 +246,7 @@ class AppraisalFormsController extends Controller
         $assessee_ids = $appraisalform->assesseeusers->pluck('id');
         $assesseeusers = User::whereIn("id",$assessee_ids)
         ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->orderBy('id','asc')
         ->get();
         // dd($assessee_ids);
 
@@ -282,6 +283,7 @@ class AppraisalFormsController extends Controller
         $assessee_ids = $appraisalform->assesseeusers->pluck('id');
         $assesseeusers = User::whereIn("id",$assessee_ids)
         ->with(['employee.branch',"employee.department","employee.subdepartment","employee.position","employee.positionlevel"])
+        ->orderBy('id','asc')
         ->get()
         ->groupBy(function ($user) {
             return $user->employee->branch->branch_name ?? 'No Branch';
