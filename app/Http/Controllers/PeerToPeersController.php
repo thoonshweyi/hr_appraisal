@@ -236,31 +236,31 @@ class PeerToPeersController extends Controller
     }
 
 
-    public function destroy(string $id)
-    {
-        \DB::beginTransaction();
+    // public function destroy(string $id)
+    // {
+    //     \DB::beginTransaction();
 
-        try {
+    //     try {
 
-            $peertopeer = PeerToPeer::findOrFail($id);
-            $peertopeer->delete();
+    //         $peertopeer = PeerToPeer::findOrFail($id);
+    //         $peertopeer->delete();
 
 
 
-            // Revoking Appraisal Form
-            $appraisal_cycle_id = $peertopeer->appraisal_cycle_id;
-            $assessor_user_id = $peertopeer->assessor_user_id;
-            $ass_form_cat_id = $peertopeer->ass_form_cat_id;
-            // $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,[$ass_form_cat_id]);
+    //         // Revoking Appraisal Form
+    //         $appraisal_cycle_id = $peertopeer->appraisal_cycle_id;
+    //         $assessor_user_id = $peertopeer->assessor_user_id;
+    //         $ass_form_cat_id = $peertopeer->ass_form_cat_id;
+    //         // $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,[$ass_form_cat_id]);
 
-            \DB::commit();
-            return redirect()->back()->with('success',"PeerToPeer deleted successfully");
-        } catch (\Exception $e) {
-            \DB::rollback();
-            // Handle the exception and notify the user
-            return redirect()->back()->with('error', "System Error:".$e->getMessage());
-        }
-    }
+    //         \DB::commit();
+    //         return redirect()->back()->with('success',"PeerToPeer deleted successfully");
+    //     } catch (\Exception $e) {
+    //         \DB::rollback();
+    //         // Handle the exception and notify the user
+    //         return redirect()->back()->with('error', "System Error:".$e->getMessage());
+    //     }
+    // }
 
 
     // public function revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,$ass_form_cat_ids){

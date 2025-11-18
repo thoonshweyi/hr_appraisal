@@ -235,6 +235,7 @@
            </div>
 
 
+           @if($appraisalform->status_id != 19)
             <div class="col-md-12 mt-2">
 
                 <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0 back-btn">{{ __('button.back')}}</button>
@@ -243,6 +244,7 @@
 
                 <button type="button" class="btn btn-success btn-sm rounded-0 submitbtns">{{ __('button.submit')}}</button>
             </div>
+            @endif
         </div>
     </div>
 

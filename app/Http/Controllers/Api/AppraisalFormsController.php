@@ -73,6 +73,10 @@ class AppraisalFormsController extends Controller
 
             foreach($appraisalforms as $appraisalform){
 
+                $appraisalform->update([
+                    "assessed" => false,
+                ]);
+
                 $query = \DB::table('notifications')
                     ->where('notifiable_id', $appraisalform->assessor_user_id)
                     ->where('notifiable_type', "App\Models\User")

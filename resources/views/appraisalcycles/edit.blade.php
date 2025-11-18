@@ -702,21 +702,22 @@
                         <div id="assesseestab" class="tab active" onclick="showTab('assesseescontent')">Assessees</div>
                         <div id="assessorstab" class="tab " onclick="showTab('assessorscontent')">Assessors</div>
                     </div>
-
+                    {{-- @if($appraisalcycle->isBeforeActionStart() || Auth::user()->id == 1) --}}
+                    <div style="position:relative;z-index:1000;display:inline-block;" class="mt-2">
+                            <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger">Bulk Delete</a>
+                    </div>
+                    {{--@endif--}}
+               
                     <div id="assesseescontent" class="transactions">
                         
-                        {{-- @if($appraisalcycle->isBeforeActionStart() || Auth::user()->id == 1) --}}
-                        <div>
-                                <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger">Bulk Delete</a>
-                        </div>
-                        {{--@endif--}}
-                        <div class="table-responsive rounded mb-3 position-relative" style="height:60vh;">
+                        
+                        <div class="table-responsive rounded mb-3 position-relative" style="height:60vh; margin-top:-50px;">
 
                             <table id="peertopeer" class="table mb-0 w-100" style="min-height: 100px !important;">
                                 <thead class="bg-white text-uppercase">
                                     <tr class="ligth ligth-data">
                                         <th>
-                                            <input type="checkbox" name="selectalls" id="selectalls" class="form-check-input selectalls" />
+                                            <input type="checkbox" name="selectalls" id="assesseeSelectall" class="form-check-input" />
                                         </th>
                                         <th style="">No</th>
                                         {{-- <th>Assessor Name</th> --}}
@@ -743,12 +744,14 @@
                         </div>
                     </div>
                     <div id="assessorscontent" class="transactions"  style="display: none;">
-                        <div class="table-responsive rounded mb-3 position-relative" style="height:60vh;">
+                        <div class="table-responsive rounded mb-3 position-relative" style="height:60vh; margin-top:-50px;">
 
                             <table id="empassessorstable" class="table mb-0 w-100" style="min-height: 100px !important;">
                                 <thead class="bg-white text-uppercase">
                                     <tr class="ligth ligth-data">
-                                        <th></th>
+                                        <th>
+                                            <input type="checkbox" name="selectalls" id="assessorSelectall" class="form-check-input" />
+                                        </th>
                                         <th style="">No</th>
                                         {{-- <th>Assessor Name</th> --}}
                                         <th>Assessor Name</th>
@@ -760,6 +763,7 @@
                                         <th>
                                             Action
                                         </th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody class="ligth-body">
@@ -1205,7 +1209,7 @@
             const peertopeertable =  $('#peertopeer').DataTable({
                 "processing": true,
                 "serverSide": true,
-                "searching": false,
+                "searching": true,
                 "lengthChange": false,
                 "pageLength": 10,
                 "autoWidth": false,
@@ -1297,9 +1301,10 @@
                         $(this.node()).find('.singlechecks').prop('checked', true);
                     }
                 });
-                $('#selectalls').prop('checked', false)
+                $('#assesseeSelectall').prop('checked', false)
             });
 
+       
             $('#peertopeer tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
                 var row = peertopeertable.row(tr);
@@ -1338,8 +1343,9 @@
                 }
             });
 
+            // Start Bulk Delete
             var getselectedids = [];
-            $('#peertopeer tbody').on('change', '.singlechecks', function () {
+            $('#peertopeer tbody, #empassessorstable tbody').on('change', '.singlechecks', function () {
                 const id = $(this).val();
                 if ($(this).prop("checked")) {
                     if (!getselectedids.includes(id)) {
@@ -1350,13 +1356,21 @@
                     getselectedids = getselectedids.filter(item => item !== id);
                 }
             });
-           $('#selectalls').on('click', function () {
+           $('#assesseeSelectall').on('click', function () {
                 const checked = $(this).prop('checked');
 
                 $('#peertopeer .singlechecks').each(function () {
                     $(this).prop('checked', checked).trigger('change');
                 });
             });
+            $('#assessorSelectall').on('click', function () {
+                const checked = $(this).prop('checked');
+
+                $('#empassessorstable .singlechecks').each(function () {
+                    $(this).prop('checked', checked).trigger('change');
+                });
+            });
+
 
              $("#bulkdelete-btn").click(function(){
 
@@ -1384,6 +1398,7 @@
                                         
                                         if(response){
                                             $('#peertopeer').DataTable().draw(true);
+                                            $('#empassessorstable').DataTable().draw(true);
                                             Swal.fire({
                                                 title: "Deleted!",
                                                 text: "Peer To Peer has been deleted.",
@@ -1401,7 +1416,10 @@
                     });   
                });
 
-            // Start Delete Item
+            // End Bulk Delete
+            
+            
+               // Start Delete Item
             $(document).on("click",".delete-btns",function(){
                 console.log('hay');
 
@@ -1432,7 +1450,7 @@
             const empassessorstable = $('#empassessorstable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                "searching": false,
+                "searching": true,
                 "lengthChange": false,
                 "pageLength": 10,
                 "autoWidth": false,
@@ -1466,11 +1484,16 @@
                     }
                 },
                 columns: [
-                    {
-                        className: 'details-control',
-                        orderable: false,
+                   {
                         data: null,
-                        defaultContent: ''
+                        name: 'no',
+                        width: "2%",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            const checked = getselectedids.includes(row.id) ? 'checked' : '';
+                            return `<input type="checkbox" name="singlechecks" class="form-check-input singlechecks text-center" value="${row.id}" ${checked} />`;
+                        }
                     },
                     {
                         data: null,
@@ -1497,7 +1520,13 @@
                         render: function (data, type, row) {
                             return data ?? '';
                         }
-                    }
+                    },
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: ''
+                    },
                 ],
                 "columnDefs": [{
                     "searchable": false,
@@ -1505,6 +1534,16 @@
                     "targets": 0,
                 }],
             })
+            empassessorstable.on('draw', function () {
+                empassessorstable.rows().every(function () {
+                    const data = this.data(); // this row’s data from the server
+                    if (getselectedids.includes(String(data.id))) {
+                        $(this.node()).find('.singlechecks').prop('checked', true);
+                    }
+                });
+                $('#assessorSelectall').prop('checked', false)
+            });
+
             $('#empassessorstable tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
                 var row = empassessorstable.row(tr);

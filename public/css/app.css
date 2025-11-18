@@ -993,9 +993,10 @@ input.lang:checked + label .badge {
 }
 /* End Assessors & Their Forms */
 
-.selectalls, .singlechecks{
+.selectalls, .singlechecks,#assesseeSelectall,#assessorSelectall{
     position: relative !important;
 }
+
 
 /* Start User Welcome */
        .header-section {
