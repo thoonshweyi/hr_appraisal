@@ -316,17 +316,32 @@ class AppraisalCyclesController extends Controller
         }
 
          // // 
-        // if (!empty($filter_status) || !empty($request->session()->get('filter_status'))) {
-        //     if ($filter_status == 'pending') {
-        //         $user_ids = $participantusers->get()->filter(function ($item) use ($id) {
-        //             return $item->getSentPercentage($id) != 100;
-        //         })->pluck('id');
-        //         // dd($user_ids);
+        if (!empty($filter_status) || !empty($request->session()->get('filter_status'))) {
+            if ($filter_status == 'pending') {
+                $allIds = $results->pluck('id');
 
-        //         $results = $results->whereIn("id",$user_ids);
-        //         // return collect($results)->paginate(10);
-        //     }
-        // }
+                $cycleId = $id;
+                $filteredIds = $allIds->filter(function ($id) use ($cycleId) {
+                    return User::find($id)->getSentPercentage($cycleId) != 100;
+                });
+
+                $results = $results->whereIn('id', $filteredIds);
+
+                //     $results = $results->whereRaw("
+                //     (
+                //         SELECT COUNT(*) FROM appraisal_forms 
+                //         WHERE appraisal_forms.assessor_user_id = users.id
+                //         AND appraisal_forms.appraisal_cycle_id = ?
+                //     )
+                //     <
+                //     (
+                //         SELECT COUNT(DISTINCT ass_form_cat_id) FROM peer_to_peers
+                //         WHERE peer_to_peers.assessor_user_id = users.id
+                //         AND peer_to_peers.appraisal_cycle_id = ?
+                //     )
+                // ", [$id, $id]);
+            }
+        }
 
 
 

@@ -303,6 +303,7 @@ Route::middleware('auth')->group(function () {
             'filter_subdepartment_id',
             'filter_section_id',
             'filter_sub_section_id',
+            'last_page'
         ]);
         return response()->json(['status' => 'success']);
     })->name('clear.filter.sessions');

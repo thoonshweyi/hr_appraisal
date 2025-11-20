@@ -156,6 +156,17 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-2 px-1">
+                                <div class="form-group d-flex">
+                                    <label for="filter_status"><i class="fas fa-briefcase text-primary mx-2"></i></label>
+                                    <select name="filter_status" id="filter_status" class="form-control form-control-sm rounded-0 ">
+                                        <option value="" selected disabled>Choose Status</option>
+                                        <option value="pending" {{  request()->get('filter_status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
 
 
                             <div class="col-auto ">
@@ -950,6 +961,17 @@
        $('#action_end_date').flatpickr({
                 dateFormat: "Y-m-d",
         });
+
+         $("#filter_status").selectize({
+            plugins: ["restore_on_backspace", "remove_button"],
+            delimiter: " - ",
+            persist: true,
+            maxItems: 1,
+            valueField: "value",
+            labelField: "label",
+            placeholder: 'Choose Section',
+            searchField: ["value", "label"]
+        })
 
 
 
