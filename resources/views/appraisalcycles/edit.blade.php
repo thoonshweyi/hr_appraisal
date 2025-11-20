@@ -969,7 +969,7 @@
             maxItems: 1,
             valueField: "value",
             labelField: "label",
-            placeholder: 'Choose Section',
+            placeholder: 'Choose Status',
             searchField: ["value", "label"]
         })
 
