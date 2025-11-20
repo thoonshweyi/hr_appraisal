@@ -301,6 +301,9 @@ class AppraisalCyclesController extends Controller
                                         ? $request->filter_sub_section_id 
                                         : session('filter_sub_section_id');
 
+        $filter_status =   $request->filled('filter_status') 
+                            ? $request->filter_status 
+                            : session('filter_status');
 
 
         // $results = PeerToPeer::query();
@@ -311,6 +314,20 @@ class AppraisalCyclesController extends Controller
                 $query->whereIn("branches.branch_id",Auth::user()->branches->pluck('branch_id'));
             });
         }
+
+         // // 
+        // if (!empty($filter_status) || !empty($request->session()->get('filter_status'))) {
+        //     if ($filter_status == 'pending') {
+        //         $user_ids = $participantusers->get()->filter(function ($item) use ($id) {
+        //             return $item->getSentPercentage($id) != 100;
+        //         })->pluck('id');
+        //         // dd($user_ids);
+
+        //         $results = $results->whereIn("id",$user_ids);
+        //         // return collect($results)->paginate(10);
+        //     }
+        // }
+
 
 
         if (!empty($filter_employee_name)) {
@@ -360,7 +377,7 @@ class AppraisalCyclesController extends Controller
             });
         }
 
-
+       
         if ($request->has('page')) {
             $request->session()->put('last_page', $request->get('page'));
         }
