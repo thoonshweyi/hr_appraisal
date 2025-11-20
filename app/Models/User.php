@@ -156,15 +156,20 @@ class User extends Authenticatable
 
 
     public function getAllFormCount($appraisal_cycle_id){
-        $assformcat_ids = PeerToPeer::where('assessor_user_id',$this->id)
-        ->where('appraisal_cycle_id', $appraisal_cycle_id)
-        ->distinct()
-        ->pluck('ass_form_cat_id');
+        // $assformcat_ids = PeerToPeer::where('assessor_user_id',$this->id)
+        // ->where('appraisal_cycle_id', $appraisal_cycle_id)
+        // ->distinct()
+        // ->pluck('ass_form_cat_id');
 
         // // dd($assformcat_ids);
         // $assformcats = AssFormCat::whereIn('id',$assformcat_ids)->whereNotIn('id',$filled_assformcat_ids)->get();
 
-        return count($assformcat_ids);
+        // return count($assformcat_ids);
+
+        return PeerToPeer::where('assessor_user_id', $this->id)
+            ->where('appraisal_cycle_id', $appraisal_cycle_id)
+            ->distinct('ass_form_cat_id')
+            ->count('ass_form_cat_id');
     }
 
     public function getSentPercentage($appraisal_cycle_id){

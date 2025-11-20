@@ -376,3 +376,26 @@ Route::post('/save-fcm-token', function (Illuminate\Http\Request $request) {
 Route::get('/check-session-lifetime', function () {
     return config('session.lifetime'); // Should return 1
 });
+
+
+Route::get('/pendingusers', function () {
+    $id = 4;
+
+    $participant_user_ids = App\Models\PeerToPeer::where('appraisal_cycle_id', $id)
+        ->groupBy('assessor_user_id')
+        ->pluck("assessor_user_id");
+
+    $users = App\Models\User::whereIn("id", $participant_user_ids)
+        ->get()
+        ->filter(function ($item) use ($id) {
+            return $item->getSentPercentage($id) < 100;
+        })
+        ->values(); // <-- important
+
+    $employeeids = $users
+        ->pluck('employee_id')
+        ->filter()     // remove null
+        ->values();    // reindex
+    
+    dd($employeeids);
+});

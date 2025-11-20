@@ -75,7 +75,7 @@ class AppraisalCyclesController extends Controller
                             ->distinct("assessor_user_id")
                             ->count();
 
-        $assessmentforms = $total = PeerToPeer::selectRaw('COUNT(DISTINCT (assessor_user_id, ass_form_cat_id)) as total')
+        $assessmentforms = $total = PeerToPeer::where("appraisal_cycle_id",$id)->selectRaw('COUNT(DISTINCT (assessor_user_id, ass_form_cat_id)) as total')
         ->value('total');
 
         $readys = $appraisalforms->count();
