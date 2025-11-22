@@ -205,7 +205,8 @@ class AppraisalCyclesController extends Controller
         $subsections = SubSection::where('status_id',1)->orderBy('id')->get();
         $statuses = Status::whereIn('id',[1,2])->orderBy('id')->get();
 
-        return view("appraisalcycles.report",compact("appraisalcycle","branches","positionlevels","statuses","subdepartments","sections","subsections"));
+        $assessedusers = $this->assessedusers($request,$id);
+        return view("appraisalcycles.report",compact("appraisalcycle","branches","positionlevels","statuses","subdepartments","sections","subsections","assessedusers"));
     }
 
     public function destroy(string $id)
@@ -261,6 +262,143 @@ class AppraisalCyclesController extends Controller
         }
    }
 
+
+
+    public function manpowerusers(Request $request, string $id){
+        $users = User::where('status',1)
+        ->whereNotIn('id',[1]);
+
+
+        $filter_employee_name       = $request->filled('filter_employee_name') 
+                                        ? $request->filter_employee_name 
+                                        : session('filter_employee_name');
+
+        $filter_employee_code       = $request->filled('filter_employee_code') 
+                                        ? $request->filter_employee_code 
+                                        : session('filter_employee_code');
+
+        $filter_branch_id           = $request->filled('filter_branch_id') 
+                                        ? $request->filter_branch_id 
+                                        : session('filter_branch_id');
+
+        $filter_position_level_id   = $request->filled('filter_position_level_id') 
+                                        ? $request->filter_position_level_id 
+                                        : session('filter_position_level_id');
+
+        $filter_subdepartment_id    = $request->filled('filter_subdepartment_id') 
+                                        ? $request->filter_subdepartment_id 
+                                        : session('filter_subdepartment_id');
+
+        $filter_section_id          = $request->filled('filter_section_id') 
+                                        ? $request->filter_section_id 
+                                        : session('filter_section_id');
+
+        $filter_sub_section_id      = $request->filled('filter_sub_section_id') 
+                                        ? $request->filter_sub_section_id 
+                                        : session('filter_sub_section_id');
+
+
+        // $results = PeerToPeer::query();
+        $results = $users;
+
+        if(branchHR()){
+            $results = $results->whereHas("branches",function($query){
+                $query->whereIn("branches.branch_id",Auth::user()->branches->pluck('branch_id'));
+            });
+        }
+
+
+
+        $results = $results->whereHas('employee',function($query){
+            $query->where('status_id',1);
+        });
+
+
+            // for getting employee info
+        $filter_user_id = $request->filter_user_id;
+        if(!empty($filter_user_id)){
+            $results = $results->where("id",$filter_user_id);
+
+            $user = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+            ->first();
+
+            return response()->json([
+                "user"=>$user
+            ]);
+        }
+
+        if (!empty($filter_employee_name) ) {
+            $results = $results->whereHas('employee',function($query) use($filter_employee_name){
+                $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
+            });
+
+            $request->session()->put('filter_employee_name', $filter_employee_name);
+        }
+
+        //
+        if (!empty($filter_employee_code) || !empty($request->session()->get('filter_employee_code'))) {
+            // dd($request->session()->get('filter_employee_code'));
+            $results = $results->whereHas('employee',function($query) use($filter_employee_code){
+                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%')->orWhere('employee_name', 'like', '%'.$filter_employee_code.'%');;
+            });
+
+            $request->session()->put('filter_employee_code', $filter_employee_code);
+        }
+
+        //
+        if (!empty($filter_branch_id) || !empty($request->session()->get('filter_branch_id'))) {
+            $results = $results->whereHas('employee',function($query) use($filter_branch_id){
+                $query->where('branch_id', $filter_branch_id);
+            });
+
+            $request->session()->put('filter_branch_id', $filter_branch_id);
+        }
+
+        // 
+        if (!empty($filter_position_level_id) || !empty($request->session()->get('filter_position_level_id'))) {
+
+            $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
+                $query->where('position_level_id', $filter_position_level_id);
+            });
+
+            $request->session()->put('filter_position_level_id', $filter_position_level_id);
+
+        }
+
+        if (!empty($filter_subdepartment_id) || !empty($request->session()->get('sub_department_id'))) {
+            $results = $results->whereHas('employee',function($query) use($filter_subdepartment_id){
+                $query->where('sub_department_id', $filter_subdepartment_id);
+            });
+            $request->session()->put('filter_subdepartment_id', $filter_subdepartment_id);
+        }
+
+        if (!empty($filter_section_id) || !empty($request->session()->get("filter_section_id"))) {
+            $results = $results->whereHas('employee',function($query) use($filter_section_id){
+                $query->where('section_id', $filter_section_id);
+            });
+            $request->session()->put('filter_section_id', $filter_section_id);
+        }
+
+        //
+        if (!empty($filter_sub_section_id) || !empty($request->session()->get('filter_sub_section_id'))) {
+            $results = $results->whereHas('employee',function($query) use($filter_sub_section_id){
+                $query->where('sub_section_id', $filter_sub_section_id);
+            });
+            $request->session()->put('filter_sub_section_id', $filter_sub_section_id);
+        }
+
+
+
+        $results = $results->doesntHave('roles');
+
+        $users = $results->orderBy('id','asc')->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->get();
+
+        return $users;
+        return response()->json([
+            "users"=>$users
+        ]);
+    }
 
    public function participantusers(Request $request, string $id){
 
@@ -452,7 +590,7 @@ class AppraisalCyclesController extends Controller
    }
 
 
-   public function assesseeusers(Request $request, string $id){
+   public function assessedusers(Request $request, string $id){
 
 
         $assessee_user_ids = AppraisalFormAssesseeUser::whereHas("appraisalform",function($query) use($id){
@@ -463,83 +601,7 @@ class AppraisalCyclesController extends Controller
 
 
 
-        $filter_employee_name = $request->filter_employee_name;
-        $filter_employee_code = $request->filter_employee_code;
-        $filter_branch_id = $request->filter_branch_id;
-        $filter_position_level_id = $request->filter_position_level_id;
-        $filter_subdepartment_id = $request->filter_subdepartment_id;
-        $filter_section_id = $request->filter_section_id;
-        $filter_sub_section_id = $request->filter_sub_section_id;
-
-        // $results = PeerToPeer::query();
-        $results = $assesseeusers;
-
-
-        if (!empty($filter_employee_name)) {
-            $results = $results->whereHas('employee',function($query) use($filter_employee_name){
-                $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
-            });
-        }
-
-        if (!empty($filter_employee_code)) {
-            $results = $results->whereHas('employee',function($query) use($filter_employee_code){
-                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%')->orWhere('employee_name', 'like', '%'.$filter_employee_code.'%');
-            });
-        }
-
-        if (!empty($filter_branch_id)) {
-            $results = $results->whereHas('employee',function($query) use($filter_branch_id){
-                $query->where('branch_id', $filter_branch_id);
-            });
-        }
-
-
-        if (!empty($filter_position_level_id)) {
-            $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
-                $query->where('position_level_id', $filter_position_level_id);
-            });
-        }
-
-        if (!empty($filter_subdepartment_id)) {
-            $results = $results->whereHas('employee',function($query) use($filter_subdepartment_id){
-                $query->where('sub_department_id', $filter_subdepartment_id);
-            });
-        }
-
-        if (!empty($filter_section_id)) {
-            $results = $results->whereHas('employee',function($query) use($filter_section_id){
-                $query->where('section_id', $filter_section_id);
-            });
-        }
-
-        if (!empty($filter_sub_section_id)) {
-            $results = $results->whereHas('employee',function($query) use($filter_sub_section_id){
-                $query->where('sub_section_id', $filter_sub_section_id);
-            });
-        }
-
-        $assesseeusers = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
-        ->get();
-        // ->paginate(10);
-
-
-
-        return DataTables::of($assesseeusers)
-                ->addColumn('action', function ($assesseeuser) use ($id) {
-                    return "
-                        <a href='". route('assesseesummary.review',['assessee_user_id'=>$assesseeuser->id,'appraisal_cycle_id'=>$id])."'class='text-primary mr-2' title='Open' onclick=''><i class='far fa-eye'></i></i></a>
-                    ";
-                })
-                ->rawColumns(['action']) // <-- Allow raw HTML
-                ->make(true);
-
-   }
-
-   public function manpowerusers(Request $request, string $id){
-        $users = User::where('status',1)
-        ->whereNotIn('id',[1]);
-
-
+        
         $filter_employee_name       = $request->filled('filter_employee_name') 
                                         ? $request->filter_employee_name 
                                         : session('filter_employee_name');
@@ -567,38 +629,10 @@ class AppraisalCyclesController extends Controller
         $filter_sub_section_id      = $request->filled('filter_sub_section_id') 
                                         ? $request->filter_sub_section_id 
                                         : session('filter_sub_section_id');
-
-
         // $results = PeerToPeer::query();
-        $results = $users;
+        $results = $assesseeusers;
 
-        if(branchHR()){
-            $results = $results->whereHas("branches",function($query){
-                $query->whereIn("branches.branch_id",Auth::user()->branches->pluck('branch_id'));
-            });
-        }
-
-
-
-        $results = $results->whereHas('employee',function($query){
-            $query->where('status_id',1);
-        });
-
-
-          // for getting employee info
-        $filter_user_id = $request->filter_user_id;
-        if(!empty($filter_user_id)){
-            $results = $results->where("id",$filter_user_id);
-
-            $user = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
-            ->first();
-
-            return response()->json([
-                "user"=>$user
-            ]);
-        }
-
-        if (!empty($filter_employee_name) ) {
+        if (!empty($filter_employee_name)) {
             $results = $results->whereHas('employee',function($query) use($filter_employee_name){
                 $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
             });
@@ -607,71 +641,74 @@ class AppraisalCyclesController extends Controller
         }
 
         //
-        if (!empty($filter_employee_code) || !empty($request->session()->get('filter_employee_code'))) {
-            // dd($request->session()->get('filter_employee_code'));
+        if (!empty($filter_employee_code)) {
             $results = $results->whereHas('employee',function($query) use($filter_employee_code){
-                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%')->orWhere('employee_name', 'like', '%'.$filter_employee_code.'%');;
+                $query->where('employee_code', 'like' , '%'.$filter_employee_code.'%')->orWhere('employee_name', 'like', '%'.$filter_employee_code.'%');
             });
 
             $request->session()->put('filter_employee_code', $filter_employee_code);
         }
 
         //
-        if (!empty($filter_branch_id) || !empty($request->session()->get('filter_branch_id'))) {
+        if (!empty($filter_branch_id)) {
             $results = $results->whereHas('employee',function($query) use($filter_branch_id){
                 $query->where('branch_id', $filter_branch_id);
             });
-
             $request->session()->put('filter_branch_id', $filter_branch_id);
         }
 
-        // 
-        if (!empty($filter_position_level_id) || !empty($request->session()->get('filter_position_level_id'))) {
-
+        //
+        if (!empty($filter_position_level_id)) {
             $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
                 $query->where('position_level_id', $filter_position_level_id);
             });
-
             $request->session()->put('filter_position_level_id', $filter_position_level_id);
-
         }
 
-        if (!empty($filter_subdepartment_id) || !empty($request->session()->get('sub_department_id'))) {
+        if (!empty($filter_subdepartment_id)) {
             $results = $results->whereHas('employee',function($query) use($filter_subdepartment_id){
                 $query->where('sub_department_id', $filter_subdepartment_id);
             });
+
             $request->session()->put('filter_subdepartment_id', $filter_subdepartment_id);
         }
 
-        if (!empty($filter_section_id) || !empty($request->session()->get("filter_section_id"))) {
+        if (!empty($filter_section_id)) {
             $results = $results->whereHas('employee',function($query) use($filter_section_id){
                 $query->where('section_id', $filter_section_id);
             });
+
             $request->session()->put('filter_section_id', $filter_section_id);
         }
 
         //
-        if (!empty($filter_sub_section_id) || !empty($request->session()->get('filter_sub_section_id'))) {
+        if (!empty($filter_sub_section_id)) {
             $results = $results->whereHas('employee',function($query) use($filter_sub_section_id){
                 $query->where('sub_section_id', $filter_sub_section_id);
             });
+
             $request->session()->put('filter_sub_section_id', $filter_sub_section_id);
         }
 
+        $assesseeusers = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        // ->get();
+        ->paginate(10);
 
+        return $assesseeusers;
 
-        $results = $results->doesntHave('roles');
+        //
+        return DataTables::of($assesseeusers)
+                ->addColumn('action', function ($assesseeuser) use ($id) {
+                    return "
+                        <a href='". route('assesseesummary.review',['assessee_user_id'=>$assesseeuser->id,'appraisal_cycle_id'=>$id])."'class='text-primary mr-2' title='Open' onclick=''><i class='far fa-eye'></i></i></a>
+                    ";
+                })
+                ->rawColumns(['action'])
+                ->make(true);
 
-        $users = $results->orderBy('id','asc')->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
-        ->get();
-
-        return $users;
-        return response()->json([
-            "users"=>$users
-        ]);
    }
 
-
+  
     public function countdown(Request $request,string $id){
         $appraisalcycle = AppraisalCycle::find($id);
         $startdate = Carbon::parse($appraisalcycle->action_start_date)->startOfDay()->format('M d Y 00:00:00');

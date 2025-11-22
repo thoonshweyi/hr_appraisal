@@ -187,13 +187,12 @@
                               <tr>
                                 <th rowspan="2" style="width: 5% !important;">No</th>
                                 <th rowspan="2" class="criteria_headers">Criteria</th>
-                                <th colspan="4">Assessors</th>
+                                <th colspan="{{ $assessorusers->count() }}">Assessors</th>
                               </tr>
                               <tr>
                                 @foreach ($assessorusers as $assessoruser)
                                     <th>{{ $assessoruser->employee->employee_name }} <br><small>{{ $assessoruser->employee->branch->branch_name }}</small></th>
                                 @endforeach
-
                               </tr>
                             </thead>
                             <tbody>

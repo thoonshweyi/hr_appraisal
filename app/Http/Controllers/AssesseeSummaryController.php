@@ -35,7 +35,7 @@ class AssesseeSummaryController extends Controller
         foreach($criterias ?? [] as $criteria){
             $criteria_totals[$criteria->id] = $this->getCriteriaTotal($assessee_user_id,$criteria->id,$appraisal_cycle_id);
         }
-
+        // dd($criteria_totals);
         $ratetotal = array_sum($criteria_totals);
 
 
@@ -45,12 +45,13 @@ class AssesseeSummaryController extends Controller
                             $query->where('assessee_user_id',$assesseeuser->id);
                         })->pluck('assessor_user_id');
         $assessorusers = User::whereIn("id",$assessor_user_ids)->get();
-        $assessoruserscount = count($assessorusers);
+        $assessoruserscount = count($assessor_user_ids);
+        // dd($assessoruserscount);
 
 
         $average = floor($ratetotal / $assessoruserscount);
 
-
+        // dd($average);                      
         $grade = Grade::where('from_rate', '<=', $average)
               ->where('to_rate', '>=', $average)
               ->first();
@@ -69,7 +70,7 @@ class AssesseeSummaryController extends Controller
         $criteriatotal = FormResult::where('assessee_user_id',$assessee_user_id)
                             ->where('criteria_id',$criteria_id)
                             ->whereHas('appraisalform',function($query) use($appraisal_cycle_id){
-                                $query->where('appraisal_cycle_id',$appraisal_cycle_id);
+                                $query->where('appraisal_cycle_id',$appraisal_cycle_id)->whereNull('deleted_at'); ;
                             })->sum('result');
         // dd($criteriatotal);
 

@@ -81,7 +81,7 @@
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
                 <div id="tab-tilter" class="col-lg-12 tab-filter">
-                    <form id="searchnfilterform" class="" action="{{ route('assesseesummary.export',$appraisalcycle->id) }}" method="GET">
+                    <form id="searchnfilterform" class="" action="{{ route('appraisalcycles.report',$appraisalcycle->id) }}"    method="GET">
                         @csrf
                         <div class="row align-items-end justify-content-start">
 
@@ -163,7 +163,6 @@
                                     <button type="button" class="btn  ml-auto mr-2 cus_btn searchbtns">Search</button>
                                     <button type="button" id="btn-clear" class="btn btn-light ml-auto">Reset</button>
                                 </div>
-
                             </div>
 
                         </div>
@@ -194,9 +193,23 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="ligth-body">
-
+                                                @foreach($assessedusers as $idx=>$assesseduser)
+                                                <tr>
+                                                    <td>{{$idx + $assessedusers->firstItem()}}</td>
+                                                    <td>{{ $assesseduser->employee->employee_name }}</td>
+                                                    <td>{{ $assesseduser->employee->employee_code }}</td>
+                                                    <td>{{ $assesseduser->employee->branch->branch_name }}</td>
+                                                    <td>{{ $assesseduser->employee->positionlevel->name }}</td>
+                                                    <td>
+                                                        <a href="{{route('assesseesummary.review',['assessee_user_id'=>$assesseduser->id,'appraisal_cycle_id'=>$appraisalcycle->id]) }}" class='text-primary mr-2' title='Open' onclick=''><i class='far fa-eye'></i></i></a>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-center">
+                                            {{ $assessedusers->appends(request()->all())->links("pagination::bootstrap-4") }}
+                                        </div>
                                     </div>
                                     <button type="button" id="export-btn" class="btn cus_btn">Export</button>
 
@@ -461,82 +474,89 @@
             const appraisalCycleId = {{ $appraisalcycle->id }};
 
 
-            $('#assesseeusertable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "searching": false,
-                "lengthChange": false,
-                "pageLength": 10,
-                "autoWidth": true,
-                "responsive": true,
-                "order": [
-                [1, 'asc']
-                ],
-                stateSave: true,
-                stateDuration: -1,
-                stateSaveCallback: function(settings, data) {
-                    localStorage.setItem('DataTables_assesseeusertable', JSON.stringify(data));
-                },
-                stateLoadCallback: function(settings) {
-                    return JSON.parse(localStorage.getItem('DataTables_assesseeusertable'));
-                },
-                'ajax': {
-                    url: `/${appraisalCycleId}/assesseeusers/`, // <-- include the ID here
-                    'type': 'GET',
-                    'data': function(d) {
-                        d.filter_employee_name = $('#filter_employee_name').val();
-                        d.filter_employee_code = $('#filter_employee_code').val();
-                        d.filter_branch_id = $('#filter_branch_id').val();
-                        d.filter_position_level_id = $('#filter_position_level_id').val();
-                        d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
-                        d.filter_section_id = $('#filter_section_id').val();
-                        d.filter_sub_section_id = $('#filter_sub_section_id').val();
-                    }
-                },
-                columns: [
-                    {
-                        data: null,
-                        name: 'no',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: 'employee.employee_name', name: 'employee.employee_name' },
-                    { data: 'employee.employee_code', name: 'employee.employee_code' },
-                    { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
-                    { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' },
-                    {{-- { data: 'employee.department.name', name: 'employee.department.name' },
-                    { data: 'employee.position.name', name: 'employee.position.name' }, --}}
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data ?? '';
-                        }
-                    }
-                ],
-                "columnDefs": [{
-                "searchable": false,
-                "orderable": false,
-                "targets": 0,
-                }],
-            })
-            $('.searchbtns').on('click', function(e) {
-                $('#assesseeusertable').DataTable().draw(true);
-            })
+            // $('#assesseeusertable').DataTable({
+            //     "processing": true,
+            //     "serverSide": true,
+            //     "searching": false,
+            //     "lengthChange": false,
+            //     "pageLength": 10,
+            //     "autoWidth": true,
+            //     "responsive": true,
+            //     "order": [
+            //     [1, 'asc']
+            //     ],
+            //     stateSave: true,
+            //     stateDuration: -1,
+            //     stateSaveCallback: function(settings, data) {
+            //         localStorage.setItem('DataTables_assesseeusertable', JSON.stringify(data));
+            //     },
+            //     stateLoadCallback: function(settings) {
+            //         return JSON.parse(localStorage.getItem('DataTables_assesseeusertable'));
+            //     },
+            //     'ajax': {
+            //         url: `/${appraisalCycleId}/assesseeusers/`, // <-- include the ID here
+            //         'type': 'GET',
+            //         'data': function(d) {
+            //             d.filter_employee_name = $('#filter_employee_name').val();
+            //             d.filter_employee_code = $('#filter_employee_code').val();
+            //             d.filter_branch_id = $('#filter_branch_id').val();
+            //             d.filter_position_level_id = $('#filter_position_level_id').val();
+            //             d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
+            //             d.filter_section_id = $('#filter_section_id').val();
+            //             d.filter_sub_section_id = $('#filter_sub_section_id').val();
+            //         }
+            //     },
+            //     columns: [
+            //         {
+            //             data: null,
+            //             name: 'no',
+            //             orderable: false,
+            //             searchable: false,
+            //             render: function (data, type, row, meta) {
+            //                 return meta.row + meta.settings._iDisplayStart + 1;
+            //             }
+            //         },
+            //         { data: 'employee.employee_name', name: 'employee.employee_name' },
+            //         { data: 'employee.employee_code', name: 'employee.employee_code' },
+            //         { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
+            //         { data: 'employee.positionlevel.name', name: 'employee.positionlevel.name' },
+            //         {{-- { data: 'employee.department.name', name: 'employee.department.name' },
+            //         { data: 'employee.position.name', name: 'employee.position.name' }, --}}
+            //         {
+            //             data: 'action',
+            //             name: 'action',
+            //             orderable: false,
+            //             searchable: false,
+            //             render: function (data, type, row) {
+            //                 return data ?? '';
+            //             }
+            //         }
+            //     ],
+            //     "columnDefs": [{
+            //     "searchable": false,
+            //     "orderable": false,
+            //     "targets": 0,
+            //     }],
+            // })
+            // $('.searchbtns').on('click', function(e) {
+            //     $('#assesseeusertable').DataTable().draw(true);
+            // })
 
         {{-- End assessorusers, participantusers, assesseeusers, peertopeer --}}
+
+        
+        $('.searchbtns').on('click', function(e) {
+            $('#searchnfilterform').submit();
+        })
 
 
         {{-- Start Export Btn --}}
         $('#export-btn').click(function(){
+            $('#searchnfilterform').attr('action',"{{ route('assesseesummary.export',$appraisalcycle->id) }}")
             $('#searchnfilterform').submit();
         });
         {{-- End Export Btn --}}
+
 
 
         {{-- Start Clear Btn --}}
@@ -557,16 +577,14 @@
                     // Clear frontend input fields (optional)
                     $('#filter_employee_name').val('');
                     $('#filter_employee_code').val('');
-                    $('#filter_branch_id').val('');
-                    $('#filter_position_level_id').val('');
+                    $('#filter_branch_id')[0].selectize.clear();
+                    $('#filter_position_level_id')[0].selectize.clear();
                     {{-- $('#filter_subdepartment_id').val(''); --}}
-                    $('#filter_section_id').val('');
+                    // $('#filter_section_id').val('');
+                    $('#filter_sub_section_id')[0].selectize.clear();;
 
+                    window.location.href = window.location.href.split('?')[0];
 
-
-                    // Redraw DataTables
-                    $('#assesseeusertable').DataTable().draw(true);
-                    getAssessorUsers();
                 }
             });
         });

@@ -65,6 +65,8 @@ class AssesseeSummaryExport implements FromCollection, WithHeadings, WithDrawing
             $average = $assesseeuser->getAverage($ratetotal,$assessoruserscount);
             $grade = $assesseeuser->getGrade($average)->name;
 
+            Log::info($assesseeuser->id."-".$assesseeuser->employee_id."-".$average);
+
             $data->push([
                 'Employee Name' => $assesseeuser->employee->employee_name,
                 'Employee Code'=> $assesseeuser->employee->employee_code,
