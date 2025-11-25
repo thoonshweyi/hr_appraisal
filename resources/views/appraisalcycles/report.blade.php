@@ -630,13 +630,13 @@
             document.getElementById('tab-tilter').classList.remove('d-none');
         }
 
-        localStorage.setItem('autoclick', linkid);
+        localStorage.setItem('rpautoclick', linkid);
     }
 
     var appraisal_cycle_id = $("#appraisal_cycle_id").val();
 
 
-    var autotab = localStorage.getItem("autoclick") || 'dashboard';
+    var autotab = localStorage.getItem("rpautoclick") || 'dashboard';
     document.getElementById(`${autotab}-btn`).click();
     // End Tag Box
 

@@ -368,12 +368,14 @@
             const $input = $(this);
             const allowed = $input.data('valids').toString().split(',').map(Number);
             const value = parseInt($input.val());
+            console.log(value,isNaN(value));
 
-            if ($input.val() !== '' && !allowed.includes(value)) {
+            if (isNaN(value) || !allowed.includes(value)) {
                 Swal.fire({
                     icon: "warning",
                     title: "သတ်မှတ်ထားသော အဆင့်သတ်မှတ်ချက်များနှင့် မကိုက်ညီပါ။",
                     text: allowed.join(', ') + " ထဲမှ တစ်ခုကို ရွေးပါ",
+                    scrollbarPadding: false 
                 });
                 $input.val('');
             }
@@ -456,12 +458,23 @@
 
 
         {{-- Start Tooltip --}}
-        // This prevents the tooltip from hiding if the click is on the input or inside the tooltip.
-
-        // Focus event to show the tooltip when the input is focused
+        
+        let getInputMethod = localStorage.getItem('inputmethod') ?? 'mouse';
+        console.log(getInputMethod);
+        let allowKeyboard = getInputMethod == 'keyboard';
+        console.log(allowKeyboard);
+        let adminHRAuthorize = @json(adminHRAuthorize()); 
+        if (allowKeyboard && adminHRAuthorize) {
+            $('.custom-input').removeAttr('readonly');
+        } else {
+            $('.custom-input').attr('readonly', true);
+        }
         $('.custom-input').focus(function () {
+
+
             $(".critooltips").addClass('invisible'); // Hide all tooltips first
-            $(this).next(".critooltips").removeClass('invisible'); // Show the specific tooltip for the input
+
+            allowKeyboard && adminHRAuthorize ? '' : $(this).next(".critooltips").removeClass('invisible'); // **** Show the specific tooltip for the input
 
             const $tableWrapper = $(this).closest('.table-responsive');
             const scrollWidth = $tableWrapper[0].scrollWidth;
@@ -667,5 +680,8 @@
 
     })
     {{-- End Back Btn --}}
+
+
+ 
 </script>
 @stop

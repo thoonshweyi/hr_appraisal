@@ -155,11 +155,11 @@
                             <a href="{{ route('appraisalcycles.edit',$appraisalcycle->id) }}" class="text-info mr-2"><i class="fas fa-pen"></i></a>
                             @endcan
                             @can('delete-add-on')
-                            <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
+                            <a href="#" class="text-danger mr-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
                             @endcan
 
                             @if(!branchHR())
-                            <a href="{{ route('appraisalcycles.report',$appraisalcycle->id) }}" class="text-success ms-2"><i class="fas fa-chart-bar"></i></a>
+                            <a href="{{ route('appraisalcycles.report',$appraisalcycle->id) }}" class="text-success"><i class="fas fa-chart-bar"></i></a>
                             @endif
                         </td>
                         <form id="formdelete-{{ $idx }}" class="" action="{{route('appraisalcycles.destroy',$appraisalcycle->id)}}" method="POST">

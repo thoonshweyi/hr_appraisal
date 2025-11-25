@@ -75,6 +75,7 @@
   box-sizing: border-box; }
 
 html {
+  overflow-y: scroll !important;
   font-family: sans-serif;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;

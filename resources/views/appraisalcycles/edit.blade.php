@@ -77,7 +77,9 @@
                     <li class="nav-item">
                         <button type="button" id="appraisal-btn" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
-
+                     <li class="nav-item">
+                        <button type="button" id="setting-btn" class="tablinks" onclick="gettab(event,'setting')">Setting</button>
+                    </li>
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
                 <div id="tab-tilter" class="col-lg-12 tab-filter">
@@ -178,7 +180,6 @@
                             </div>
 
                         </div>
-
                     </form>
                 </div>
 
@@ -614,6 +615,33 @@
                             </div>
                         </div>
 
+                        <div id="setting">
+                            <div class="card border-0 rounded-0 shadow mb-4">
+                              <div class="card-body">
+                                   <div class="accordion">
+                                        <div class="acctitle shown">Appraisal Form</div>
+                                        <div class="acccontent">
+                                             <div class="col-md-12 py-3">
+                                                  <form action="" method="POST">
+                                                       @csrf
+                                                       <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="" class="">Input Method</label>
+                                                                    <input type="radio" name="inputmethod" id="inputmethodkeyboard" class="inputmethod" value="keyboard"/>
+                                                                    <label for="inputmethodkeyboard">Keyboard</label>
+                                                                    <input type="radio" name="inputmethod" id="inputmethodmouse" class="inputmethod" value="mouse" checked/>
+                                                                    <label for="inputmethodmouse">Mouse</label>
+                                                                </div>
+                                                            </div>
+                                                       </div>
+                                                  </form>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </div>
+                            </div>                                                        
+                        </div>
                 </div>
             </div>
             </div>
@@ -869,6 +897,54 @@
         }
     /* End Assessor Assessee Tab */
 
+
+
+    /* Start Accordion */
+    .accordion{
+    width: 100%;
+    }
+    .acctitle{
+    font-size: 13px;
+    user-select: none;
+
+    padding: 5px;
+    margin: 0;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    position: relative;
+    }
+    .acctitle::after{
+    content: '\f0e0';
+    font-family: 'Font Awesome 5 Free';
+
+    /* position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%); */
+
+    float: right;
+    }
+    /* .active.acctitle::after{
+    content: '\f068';
+    } */
+    .shown::after{
+    content: '\f2B6';
+    }
+    .acccontent{
+    height: 0;
+    background-color: #f4f4f4;
+    text-align: justify;
+
+    padding: 0 10px;
+
+    overflow: hidden;
+
+    transition: height 0.3s ease-in-out;
+    }
+/* End Accordion */
 
   </style>
 @endsection
@@ -2225,5 +2301,53 @@
 	});
 	//  End User Chart
 
+
+
+    // Start Accordion
+        var getacctitles = document.getElementsByClassName('acctitle');
+        // console.log(getacctitles);
+        var getacccontents = document.querySelectorAll('.acccontent');
+        // console.log(getacccontents);
+
+
+        for(var x = 0 ; x < getacctitles.length ; x++){
+            
+            getacctitles[x].addEventListener('click',function(e){
+                // console.log(e.target);
+                // console.log(this);
+
+                this.classList.toggle('shown');
+
+                var getcontent = this.nextElementSibling;
+                // console.log(getcontent);
+
+                if(getcontent.style.height){
+                        getcontent.style.height = null; //beware can't set 0
+                }else{
+                        // console.log(getcontent.scrollHeight);
+                        getcontent.style.height = getcontent.scrollHeight + 'px';
+                }
+            });
+
+            if(getacctitles[x].classList.contains('shown')){
+                getacccontents[x].style.height = getacccontents[x].scrollHeight + 'px';
+            }
+        }
+    // End Accordion
+
+
+    // Start Input Method
+    $(document).on('change', '.inputmethod', function () {
+        console.log("Input Method:",$(this).val());
+        localStorage.setItem('inputmethod', $(this).val());
+    });
+    $(function () {
+        let saved = localStorage.getItem('inputmethod');
+
+        $('input[name="inputmethod"]').each(function () {
+            this.checked = (this.value === saved);
+        });
+    });
+    // End Input Method
 </script>
 @stop
