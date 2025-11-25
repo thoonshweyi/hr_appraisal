@@ -364,25 +364,35 @@
         }); --}}
 
 
+        let typingTimer;
+
         $('.custom-input').on('input', function () {
             const $input = $(this);
+            // this.value = this.value.replace(/[^0-9]/g, ""); 
+
+            clearTimeout(typingTimer);
+
+            typingTimer = setTimeout(() => {
+                validateScore($input);
+            }, 300); // wait 300ms after user stops typing
+        });
+        function validateScore($input) {
             const allowed = $input.data('valids').toString().split(',').map(Number);
             const value = parseInt($input.val());
-            console.log(value,isNaN(value));
 
             if (isNaN(value) || !allowed.includes(value)) {
                 Swal.fire({
                     icon: "warning",
                     title: "သတ်မှတ်ထားသော အဆင့်သတ်မှတ်ချက်များနှင့် မကိုက်ညီပါ။",
                     text: allowed.join(', ') + " ထဲမှ တစ်ခုကို ရွေးပါ",
-                    scrollbarPadding: false 
+                    scrollbarPadding: false
                 });
                 $input.val('');
             }
 
             updateTotals();
             autofocusNextInput($input);
-        });
+        }
 
         function updateTotals() {
             const totals = {};

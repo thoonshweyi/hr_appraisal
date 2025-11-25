@@ -78,7 +78,7 @@
                         <button type="button" id="appraisal-btn" class="tablinks" onclick="gettab(event,'appraisal')">Appraisal</button>
                     </li>
                      <li class="nav-item">
-                        <button type="button" id="setting-btn" class="tablinks" onclick="gettab(event,'setting')">Setting</button>
+                        <button type="button" id="mysetting-btn" class="tablinks" onclick="gettab(event,'mysetting')">Setting</button>
                     </li>
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
@@ -615,7 +615,7 @@
                             </div>
                         </div>
 
-                        <div id="setting">
+                        <div id="mysetting" class="tab-pane">
                             <div class="card border-0 rounded-0 shadow mb-4">
                               <div class="card-body">
                                    <div class="accordion">
@@ -1053,128 +1053,6 @@
 
         {{-- Start manpowerusers, participantusers, assesseeusers, peertopeer  --}}
             const appraisalCycleId = {{ $appraisalcycle->id }};
-            // $('#participantusertable').DataTable({
-            //     "processing": true,
-            //     "serverSide": true,
-            //     "searching": false,
-            //     "lengthChange": false,
-            //     "pageLength": 10,
-            //     "autoWidth": true,
-            //     "responsive": false,
-            //     ordering: true,
-            //     "order": [
-            //         [1, 'asc']
-            //     ],
-            //     stateSave: true,
-            //     stateDuration: -1,
-            //     stateSaveCallback: function(settings, data) {
-            //         localStorage.setItem('DataTables_participantusertable', JSON.stringify(data));
-            //     },
-            //     stateLoadCallback: function(settings) {
-            //         return JSON.parse(localStorage.getItem('DataTables_participantusertable'));
-            //     },
-            //     'ajax': {
-            //         url: `/${appraisalCycleId}/participantusers/`,
-            //     'type': 'GET',
-            //     'data': function(d) {
-            //         d.filter_employee_name = $('#filter_employee_name').val();
-            //         d.filter_employee_code = $('#filter_employee_code').val();
-            //         d.filter_branch_id = $('#filter_branch_id').val();
-            //         d.filter_position_level_id = $('#filter_position_level_id').val();
-            //         d.filter_subdepartment_id = $('#filter_subdepartment_id').val();
-            //         d.filter_section_id = $('#filter_section_id').val();
-            //         d.filter_sub_section_id = $('#filter_sub_section_id').val();
-            //     },
-            //     },
-            //     columns: [
-            //         {
-            //             data: null,
-            //             name: 'no',
-            //             orderable: false,
-            //             searchable: false,
-            //             render: function (data, type, row, meta) {
-            //                 return meta.row + meta.settings._iDisplayStart + 1;
-            //             }
-            //         },
-            //         {   data: 'employee.employee_name',
-            //             name: 'employee.employee_name',
-            //             render: function(data,type,row){
-            //                     {{-- const positionLevel = row.employee.positionlevel;
-            //                     const hasPrintHistory = row.printhistory ? true : false;
-            //                     const allformSent = true;
-            //                     if (positionLevel < 5) {
-            //                         return hasPrintHistory && allformSent;
-            //                     } else {
-            //                         return allformSent;
-            //                     } --}}
-
-            //                     const positionLevel = row.employee.positionlevel.id;
-            //                     const hasPrintHistory = row.printhistory ? true : false;
-            //                     const allformSent = row.allformcount == row.appraisalformcount;
-            //                     const printDoc = positionLevel < 5;
-            //                     const printed = printDoc ? hasPrintHistory : true;
-
-            //                 return `
-            //                 <div class="d-flex align-items-center">
-            //                     <span class="mr-2">${data}</span>
-            //                     ${allformSent && printed ? `
-            //                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            //                         <circle cx="12" cy="12" r="9" />
-            //                         <path d="M9 12l2 2l4 -4" />
-            //                         </svg>
-            //                     ` : '' }
-
-            //                 </div>
-            //                 `
-            //             }
-            //         },
-            //         { data: 'employee.employee_code', name: 'employee.employee_code' },
-            //         { data: 'employee.branch.branch_name', name: 'employee.branch.branch_name' },
-            //         {{-- { data: 'employee.department.name', name: 'employee.department.name' }, --}}
-            //         {{-- { data: 'employee.position.name', name: 'employee.position.name' }, --}}
-            //         {
-            //             data: 'employee.positionlevel.name',
-            //             name: 'employee.positionlevel.name',
-            //             render: function (data, type, row) {
-            //                 {{-- console.log(row); --}}
-            //                 return `${data} ${row.employee.position_level_id < 5 ? "<i class='fas fa-file-export text-success ml-2'></i>" : ''}`; // Render raw value
-            //             }
-            //         },
-
-            //         {
-            //             data: 'form_count',
-            //             name: 'form_count',
-            //             orderable: false,
-            //             searchable: false,
-            //             render: function (data, type, row) {
-            //                 return `${row.appraisalformcount}/${row.allformcount}`;
-            //             }
-            //         },
-            //         {
-            //             data: 'progress',
-            //             name: 'progress',
-            //             orderable: false,
-            //             searchable: false,
-            //             render: function (data, type, row) {
-            //                 return data ?? ''; // Render raw value
-            //             }
-            //         },
-            //         {
-            //             data: 'action',
-            //             name: 'action',
-            //             orderable: false,
-            //             searchable: false,
-            //             render: function (data, type, row) {
-            //                 return data ?? '';
-            //             }
-            //         }
-            //     ],
-            //     "columnDefs": [{
-            //     "searchable": false,
-            //     "orderable": false,
-            //     "targets": 0,
-            //     }],
-            // })
 
             $('.searchbtns').on('click', function(e) {
                 $('#searchnfilterform').submit();
