@@ -78,36 +78,46 @@
                                 $totalgivenmark = 0;
                             @endphp
                             @foreach($assformcat->criterias()->orderBy('id')->get() as $idx => $criteria)
-                                <td style="width:60px;text-align:center;vertical-align: middle;"></td>
-                          
+                                <td style="width:60px;text-align:center;vertical-align: middle;">{{ $getassessorgivenmark = $assesseedetail->getAssessorGivenMark($assessoruser->id,$assesseeuser->id,$criteria->id,  $appraisal_cycle_id ) }}</td>
+                                @php
+                                    $totalgivenmark += (int) $getassessorgivenmark;
+                                @endphp
                             @endforeach
                             {{-- Fill remaining with empty cells to reach 13 --}}
                             @for($i = $criteriaCount; $i < 13; $i++)
                                 <td style="text-align:center;vertical-align: middle;"></td>
                             @endfor
                             <td style="text-align: right;vertical-align: middle;">
+                                {{ $totalgivenmark }}
                             </td>
                         </tr>
                     @endforeach
 
 
                 @endforeach
-    
+                    @php
+                            $assessors = $assesseeuser->getAssessors($appraisal_cycle_id);
+                            $assessoruserscount = $assesseeuser->getAssessorUsersCount($assessors);
+                            $criteria_totals = $assesseeuser->getCriteriaTotalArrs($appraisal_cycle_id);
+                            $ratetotal = $assesseeuser->getRateTotal($criteria_totals);
+                            $average = $assesseeuser->getAverage($ratetotal,$assessoruserscount);
+                            $grade = $assesseeuser->getGrade($average) ? $assesseeuser->getGrade($average)->name : '';
+                    @endphp
                     <tr>
                         <td colspan="15" style="text-align: right;vertical-align: middle;">Rate Total</td>
-                        <td colspan="1" style="text-align: right;vertical-align: middle;"></td>
+                        <td colspan="1" style="text-align: right;vertical-align: middle;">{{ $ratetotal }}</td>
                     </tr>
                      <tr>
                         <td colspan="15" style="text-align: right;vertical-align: middle;">Assessors</td>
-                        <td colspan="1" style="text-align: right;vertical-align: middle;"></td>
+                        <td colspan="1" style="text-align: right;vertical-align: middle;">{{ $assessoruserscount }}</td>
                     </tr>
                      <tr>
                         <td colspan="15" style="text-align: right;vertical-align: middle;">Average</td>
-                        <td colspan="1" style="text-align: right;vertical-align: middle;"></td>
+                        <td colspan="1" style="text-align: right;vertical-align: middle;">{{ $average}}</td>
                     </tr>
                     <tr>
                         <td colspan="15" style="text-align: right;vertical-align: middle;">Grade</td>
-                        <td colspan="1" style="text-align: right;vertical-align: middle;"></td>
+                        <td colspan="1" style="text-align: right;vertical-align: middle;">{{ $grade}}</td>
                     </tr>
             @endforeach
         </table>

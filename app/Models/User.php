@@ -226,6 +226,7 @@ class User extends Authenticatable
         $assessorusers = User::whereIn("id",$assessor_user_ids)->get();
 
         Log::info("Assessee".$this->id."Ass form cat:". $ass_form_cat_id ."Assessors".count($assessorusers));
+        
         return $assessorusers;
     }
     public function getAssessorUsersCount($assessorusers){
@@ -270,6 +271,10 @@ class User extends Authenticatable
             ];
 
         return $datas;
+    }
+
+    public function appraisalforms(){
+        return $this->belongsToMany(AppraisalForm::class, 'appraisal_form_assessee_users', 'assessee_user_id', 'appraisal_form_id');
     }
 
 }
