@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\AppraisalForm;
 use App\Models\AppraisalCycle;
 use App\Models\AssesseeDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\AppraisalFormAssesseeUser;
 
@@ -120,76 +121,99 @@ class AssesseeDetailController extends Controller
     $assessee_ids = $assesseeusers->pluck('id')->toArray();
 
 
-    // $appraisal_forms = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
-    //     ->with('assesseeusers') 
-    //     ->get();
+   
 
-    // // Build mapping: assesse -> category -> assessors[]
-    // $assessors_map = [];
-    // $assformcats_map = [];
-
-    // foreach ($appraisal_forms as $form) {
-    //     foreach ($form->assesseeusers as $assessee) {
-    //         $assessors_map[$assessee->id][$form->ass_form_cat_id][] = $form->assessor_user_id;
-    //         $assformcats_map[$assessee->id][$form->ass_form_cat_id] = true;
-    //     }
-    // }
-
-
-    // $all_cat_ids = collect($assformcats_map)->map(fn($arr)=>array_keys($arr))
-    //     ->flatten()->unique();
-
-    // $assformcats = AssFormCat::whereIn('id',$all_cat_ids)
-    //     ->with('criterias')
-    //     ->get()
-    //     ->keyBy('id');
-
-    // $formresults = FormResult::query()
-    // ->select(
-    //     'form_results.*',
-    //     'appraisal_forms.ass_form_cat_id',
-    //     'appraisal_forms.assessor_user_id'
-    // )
-    // ->join('appraisal_forms', 'appraisal_forms.id', '=', 'form_results.appraisal_form_id')
-    // ->where('appraisal_forms.appraisal_cycle_id', $appraisal_cycle_id)
-    // ->whereNull('appraisal_forms.deleted_at')
-    // ->whereIn('assessee_user_id', $assessee_ids)
-    // ->orderBy('appraisal_forms.id')
-    // ->get();
-
-
-    $formresults = FormResult::query()
+  $formresults = DB::table('form_results')
+    ->join('appraisal_forms', function($q) use($appraisal_cycle_id){
+        $q->on('appraisal_forms.id','=','form_results.appraisal_form_id')
+        ->where('appraisal_forms.appraisal_cycle_id', $appraisal_cycle_id)
+          ->whereNull('appraisal_forms.deleted_at');
+    })
+    ->join('appraisal_form_assessee_users', function($q){
+        $q->on('appraisal_form_assessee_users.appraisal_form_id', '=', 'appraisal_forms.id')
+          ->whereNull('appraisal_form_assessee_users.deleted_at');   // << ADD THIS
+    })
+    ->join('ass_form_cats', 'ass_form_cats.id', '=', 'appraisal_forms.ass_form_cat_id')
+    ->join('criterias', 'criterias.id', '=', 'form_results.criteria_id')
+    ->join('users as assessor', 'assessor.id', '=', 'appraisal_forms.assessor_user_id')
+    ->join('users as assessee', 'assessee.id', '=', 'appraisal_form_assessee_users.assessee_user_id')
     ->select(
-        'form_results.*',
-        'appraisal_forms.ass_form_cat_id',
-        'appraisal_forms.assessor_user_id'
+        'assessee.id as assessee_id',
+        'assessee.name as assessee_name',
+
+        'assessor.id as assessor_id',
+        'assessor.name as assessor_name',
+
+        'ass_form_cats.id as category_id',
+        'ass_form_cats.name as category_name',
+
+        'criterias.id as criteria_id',
+        'criterias.name as criteria_question',
+
+        'form_results.result'
     )
-    ->join('appraisal_forms', 'appraisal_forms.id', '=', 'form_results.appraisal_form_id')
-    ->where('appraisal_forms.appraisal_cycle_id', $appraisal_cycle_id)
     ->whereNull('appraisal_forms.deleted_at')
-    ->whereIn('assessee_user_id', [56])
-    ->orderBy('appraisal_forms.id')
+    ->whereIn('appraisal_form_assessee_users.assessee_user_id', [44])
+    // ->distinct()
+    ->orderBy('assessee.id')
+    ->orderBy('category_id')
+    ->orderBy('assessor_id')
+    ->orderBy('criteria_id')
     ->get();
 
-    // Build final structure
-   $report = [];
+    // dd($formresults);
+
+        // dd($formresults);
+    $report = [];
+    $assessees = [];
+    $categories = [];
+    $assessors = [];
+    $criteriaList = [];
 
     foreach ($formresults as $r) {
-        $report[$r->assessee_user_id][$r->ass_form_cat_id][$r->assessor_user_id][$r->criteria_id]
-            = $r->result;
+
+        // report tree
+        $report[$r->assessee_id][$r->category_id][$r->assessor_id][$r->criteria_id] = $r->result;
+
+        // store full assessee info once
+        $assessees[$r->assessee_id] = (object)[
+            'id' => $r->assessee_id,
+            'name' => $r->assessee_name
+        ];
+
+        // store full category info once
+        $categories[$r->category_id] = (object)[
+            'id' => $r->category_id,
+            'name' => $r->category_name
+        ];
+
+        // store assessor info under each category + assessee
+        $assessors[$r->assessee_id][$r->category_id][$r->assessor_id] = (object)[
+            'id' => $r->assessor_id,
+            'name' => $r->assessor_name
+        ];
+
+        // store criteria info
+        $criteriaList[$r->category_id][$r->criteria_id] = (object)[
+            'id' => $r->criteria_id,
+            'question' => $r->criteria_question
+        ];
     }
-    dd($report);
+
+    // dd($report);
+
 
     /* --------------------------------------------------------
         5. Send all massive preloaded arrays to Blade
     -------------------------------------------------------- */
     return view('assesseesdetail.detail', [
-        'assesseeusers'      => $assesseeusers,
+        'assessees'      => $assessees,
         'appraisalcycle'     => AppraisalCycle::find($appraisal_cycle_id),
         'appraisal_cycle_id' => $appraisal_cycle_id,
-        'assessors_map'      => $assessors_map,
-        'assformcats'        => $assformcats,
-        'report'             => $report,
+        'report'             => $report,        // tree: [assessee][category][assessor][criteria] = result
+        'categories'         => $categories,    // meta (optional, you can keep)
+        'criteriaList'       => $criteriaList,  // criteriaList[category_id][criteria_id] => object
+        'assessors'          => $assessors      // assessors[assessee_id][category_id][assessor_id] => object
     ]);
 }
 

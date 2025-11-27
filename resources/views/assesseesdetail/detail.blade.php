@@ -32,83 +32,73 @@
 
 
             {{-- {{ dd($assesseeusers) }} --}}
-            @foreach($assesseeusers as $assesseeuser)
+            @foreach($report as $assesseeIdx=>$assesseeArr)
 
-                @foreach($assesseeuser->getAppraisalAssFormCats($appraisalcycle->id) as $assformcatidx=>$assformcat)
-                    <tr style="{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">
-                        @if($assformcatidx <= 0)
-                        <th style="text-align:center;vertical-align: middle;{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}" rowspan="2" >Assessee</th>
-                        @else
-                        <th rowspan="2" style="text-align:center;vertical-align: middle;{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}"></th>
-                        @endif
-                        <th style="text-align:center;vertical-align: middle;{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}" rowspan="2">Assessors</th>
-                        <th style="text-align:center;vertical-align: middle;{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}" colspan="13">{{ $assformcat->name }}</th>
-                        <th style="text-align:center;vertical-align: middle;{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}" rowspan="2">Sum</th>
-                    </tr>
-                    <tr style="{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">
+                @foreach($assesseeArr as $catId => $assessorsInCat)
                     @php
-                        $criteriaCount = count($assformcat->criterias);
+                        $catName   = $categories[$catId]->name ?? 'Unknown';
+                        $criterias = $criteriaList[$catId] ?? [];
+                        $criteriaCount = count($criterias);
                     @endphp
 
+                    <tr style="{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">
+                        @if($loop->first)
+                        <th style="text-align:center;vertical-align: middle;{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}" rowspan="2" >Assessee</th>
+                        @else
+                        <th rowspan="2" style="text-align:center;vertical-align: middle;{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}"></th>
+                        @endif
+                        <th style="text-align:center;vertical-align: middle;{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}" rowspan="2">Assessors</th>
+                        <th style="text-align:center;vertical-align: middle;{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}" colspan="13">{{ $catName }}</th>
+                        <th style="text-align:center;vertical-align: middle;{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}" rowspan="2">Sum</th>
+                    </tr>
+                    <tr style="{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">
+           
                     {{-- Print available criteria --}}
-                    @foreach($assformcat->criterias as $idx => $criteria)
-                        <th style="text-align:center;vertical-align: middle;{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">{{ $idx + 1 }} (Q)</th>
+                    @foreach($criterias as $i => $c)
+                        <th style="text-align:center;vertical-align: middle;{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">{{ $loop->iteration }} (Q)</th>
                     @endforeach
 
                     {{-- Fill remaining with empty cells to reach 13 --}}
                     @for($i = $criteriaCount; $i < 13; $i++)
-                        <th style="text-align:center;vertical-align: middle;{{ $assformcatidx <= 0 ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">
+                        <th style="text-align:center;vertical-align: middle;{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">
 
                         </th>
                     @endfor
                     </tr>
 
-                    @foreach($assessors = $assesseeuser->getAssessorsByAssFormCat($appraisal_cycle_id,$assformcat->id) as $idx=>$assessoruser)
-                        <tr>
-                            @if($assformcatidx <= 0)
-                            <td style="text-align:center;vertical-align: middle;"> {{ $idx == 0 ? $assesseeuser->employee->employee_name : '' }} </td>
-                            @else
-                            <td ></td>
-                            @endif
-                            <td style="text-align:center;vertical-align: middle;">{{ $assessoruser->employee->employee_name }}</td>
+                    @foreach($assessorsInCat as $assessorIdx=>$crisInAssessor)
+                    <tr>
+                        @if($loop->first)
+                        {{-- <td style="text-align:center;vertical-align: middle;"> {{ $loop->first ? $assessees[$assesseeIdx]->employee->employee_name : '' }} </td> --}}
+                        <td style="text-align:center;vertical-align: middle;"> {{ $loop->first ? $assessees[$assesseeIdx]->name : '' }} </td> 
+                        @else
+                        <td ></td>
+                        @endif
+                        {{-- <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->employee->employee_name ?? '---' }}</td> --}}
+                        <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->name ?? '---' }}</td> 
+                        {{-- Get Result --}}
+                        @php
 
-                            {{-- Get Result --}}
-                            @php
-
-                                $totalgivenmark = 0;
-                            @endphp
-                            @foreach($assformcat->criterias()->orderBy('id')->get() as $idx => $criteria)
-                                <td style="width:60px;text-align:center;vertical-align: middle;"></td>
+                            $totalgivenmark = 0;
+                        @endphp
+                        @foreach($crisInAssessor as $idx => $result)
+                            <td style="width:60px;text-align:center;vertical-align: middle;">{{ $result }}</td>
                           
-                            @endforeach
-                            {{-- Fill remaining with empty cells to reach 13 --}}
-                            @for($i = $criteriaCount; $i < 13; $i++)
-                                <td style="text-align:center;vertical-align: middle;"></td>
-                            @endfor
-                            <td style="text-align: right;vertical-align: middle;">
-                            </td>
-                        </tr>
+                        @endforeach
+                        {{-- Fill remaining with empty cells to reach 13 --}}
+                        @for($i = $criteriaCount; $i < 13; $i++)
+                            <td style="text-align:center;vertical-align: middle;"></td>
+                        @endfor
+                        <td style="text-align: right;vertical-align: middle;">
+                            {{ $totalgivenmark }}
+                        </td>
+                    </tr>
                     @endforeach
 
 
+
                 @endforeach
-    
-                    <tr>
-                        <td colspan="15" style="text-align: right;vertical-align: middle;">Rate Total</td>
-                        <td colspan="1" style="text-align: right;vertical-align: middle;"></td>
-                    </tr>
-                     <tr>
-                        <td colspan="15" style="text-align: right;vertical-align: middle;">Assessors</td>
-                        <td colspan="1" style="text-align: right;vertical-align: middle;"></td>
-                    </tr>
-                     <tr>
-                        <td colspan="15" style="text-align: right;vertical-align: middle;">Average</td>
-                        <td colspan="1" style="text-align: right;vertical-align: middle;"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="15" style="text-align: right;vertical-align: middle;">Grade</td>
-                        <td colspan="1" style="text-align: right;vertical-align: middle;"></td>
-                    </tr>
+            
             @endforeach
         </table>
 
