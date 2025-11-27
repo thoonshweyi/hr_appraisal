@@ -83,7 +83,9 @@
                         @endphp
                         @foreach($crisInAssessor as $idx => $result)
                             <td style="width:60px;text-align:center;vertical-align: middle;">{{ $result }}</td>
-                          
+                            @php
+                                    $totalgivenmark += (int) $result;
+                            @endphp
                         @endforeach
                         {{-- Fill remaining with empty cells to reach 13 --}}
                         @for($i = $criteriaCount; $i < 13; $i++)
@@ -94,11 +96,22 @@
                         </td>
                     </tr>
                     @endforeach
-
-
-
+                 
+      
                 @endforeach
-            
+                 
+                    <tr>
+                        <td colspan="15" style="text-align: right;vertical-align: middle;">Rate Total</td>
+                        <td colspan="1" style="text-align: right;vertical-align: middle;">{{ $assessees[$assesseeIdx]->total_score }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="15" style="text-align: right;vertical-align: middle;">Assessors</td>
+                        <td colspan="1" style="text-align: right;vertical-align: middle;">{{ $assessees[$assesseeIdx]->assessor_count }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="15" style="text-align: right;vertical-align: middle;">Average</td>
+                        <td colspan="1" style="text-align: right;vertical-align: middle;">{{ $assessees[$assesseeIdx]->average_score }}</td>
+                    </tr>
             @endforeach
         </table>
 

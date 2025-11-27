@@ -79,7 +79,7 @@ class AssesseeSummaryController extends Controller
     }
 
     public function export(Request $request,$appraisal_cycle_id){
-
+        ini_set('max_execution_time', 600);
         $assessee_user_ids = AppraisalFormAssesseeUser::whereHas("appraisalform",function($query) use($appraisal_cycle_id){
             $query->where('appraisal_cycle_id',$appraisal_cycle_id);
         })

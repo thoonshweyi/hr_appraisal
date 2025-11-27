@@ -19,7 +19,7 @@ class AppraisalExport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-            new AssesseeSummaryExport($this->assesseeusers,$this->appraisal_cycle_id),
+            // new AssesseeSummaryExport($this->assesseeusers,$this->appraisal_cycle_id),
             new AssesseeDetailExport($this->assesseeusers,$this->appraisal_cycle_id)
         ];
     }
