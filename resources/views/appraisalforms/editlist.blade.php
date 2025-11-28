@@ -292,7 +292,7 @@
                                 </div>
 
 
-                            @if($appraisalform->status_id != 19)
+                            @if($appraisalform->status_id != 19 || Auth::id() == 1)
                             <div class="col-md-12 mt-2">
 
                                 <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0 back-btn">{{ __('button.back')}}</button>
