@@ -92,6 +92,8 @@ class AssesseeSummaryController extends Controller
         $filter_employee_code = $request->filter_employee_code;
         $filter_branch_id = $request->filter_branch_id;
         $filter_position_level_id = $request->filter_position_level_id;
+        $filter_sub_section_id = $request->filter_sub_section_id;
+
 
         // $results = PeerToPeer::query();
         $results = $assesseeusers;
@@ -120,6 +122,12 @@ class AssesseeSummaryController extends Controller
         if (!empty($filter_position_level_id)) {
             $results = $results->whereHas('employee',function($query) use($filter_position_level_id){
                 $query->where('position_level_id', $filter_position_level_id);
+            });
+        }
+
+        if ($request->filter_sub_section_id) {
+            $results = $results->whereHas('employee',function($query) use($filter_sub_section_id){
+                $query->where('sub_section_id',$filter_sub_section_id);
             });
         }
 

@@ -55,7 +55,7 @@
            
                     {{-- Print available criteria --}}
                     @foreach($criterias as $i => $c)
-                        <th style="text-align:center;vertical-align: middle;{{ $loop->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">{{ $loop->iteration }} (Q)</th>
+                        <th style="text-align:center;vertical-align: middle;{{ $loop->parent->first ?  'background-color: #d0f0d0;' : 'background-color: #D9D9D9;' }}">{{ $loop->iteration }} (Q)</th>
                     @endforeach
 
                     {{-- Fill remaining with empty cells to reach 13 --}}
@@ -68,24 +68,28 @@
 
                     @foreach($assessorsInCat as $assessorIdx=>$crisInAssessor)
                     <tr>
-                        @if($loop->first)
+                        @if($loop->parent->first)
                         {{-- <td style="text-align:center;vertical-align: middle;"> {{ $loop->first ? $assessees[$assesseeIdx]->employee->employee_name : '' }} </td> --}}
-                        <td style="text-align:center;vertical-align: middle;"> {{ $loop->first ? $assessees[$assesseeIdx]->name : '' }} </td> 
+                        <td style="text-align:center;vertical-align: middle;"> {{ $loop->first ? $assessees[$assesseeIdx]->name : '' }} </td>
                         @else
                         <td ></td>
                         @endif
-                        {{-- <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->employee->employee_name ?? '---' }}</td> --}}
-                        <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->name ?? '---' }}</td> 
+                        {{-- <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->employee->employee_name ??  '----' }}</td> --}}
+                        <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->name ??  '----' }}</td>
                         {{-- Get Result --}}
                         @php
 
                             $totalgivenmark = 0;
                         @endphp
-                        @foreach($crisInAssessor as $idx => $result)
-                            <td style="width:60px;text-align:center;vertical-align: middle;">{{ $result }}</td>
+                        @foreach($criterias as $criteriaId => $c)
                             @php
-                                    $totalgivenmark += (int) $result;
+                                $result = $report[$assesseeIdx][$catId][$assessorIdx][$criteriaId] ?? '';
+                                $totalgivenmark += (int) $result;
                             @endphp
+
+                            <td style="width:60px;text-align:center;vertical-align: middle;">
+                                {{ $result }}
+                            </td>
                         @endforeach
                         {{-- Fill remaining with empty cells to reach 13 --}}
                         @for($i = $criteriaCount; $i < 13; $i++)
@@ -111,6 +115,10 @@
                     <tr>
                         <td colspan="15" style="text-align: right;vertical-align: middle;">Average</td>
                         <td colspan="1" style="text-align: right;vertical-align: middle;">{{ $assessees[$assesseeIdx]->average_score }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="15" style="text-align: right;vertical-align: middle;">Grade</td>
+                        <td colspan="1" style="text-align: right;vertical-align: middle;">{{ $assessees[$assesseeIdx]->grade }}</td>
                     </tr>
             @endforeach
         </table>
