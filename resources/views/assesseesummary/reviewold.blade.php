@@ -10,6 +10,9 @@
                         <h4 class="mb-3">Assessee Summary</h4>
                     </div>
                 </div>
+
+
+
             </div>
 
 
@@ -80,13 +83,6 @@
 
                         <div class="table-responsive">
 
-
-                        @php
-                            $catId = $assesseeuser->employee->attach_form_type_id;
-                            $catName   = $categories[$catId]->name ?? 'Unknown';
-                            $criterias = $criteriaList[$catId] ?? [];
-                            $criteriaCount = count($criterias);
-                        @endphp
                         <table class="table table-bordered my-0 report-table">
                             <tr>
                               <th colspan="4" class="table-header">Employee Performance Appraisal Report</th>
@@ -101,13 +97,13 @@
                                 <td class="label-cell">Position:</td>
                                 <td class="value-cell">{{ $assesseeuser->employee->position->name }}</td>
                                 <td class="label-cell">Criteria Set:</td>
-                                <td class="value-cell">{{ $catName }}</td>
+                                <td class="value-cell">{{ $assesseeuser->getAssFormCat()->name }}</td>
                             </tr>
                             <tr>
                                 <td class="label-cell">Department:</td>
                                 <td class="value-cell">{{ $assesseeuser->employee->department->name }}</td>
                                 <td class="label-cell">Grade:</td>
-                                <td class="value-cell">{{ $grade }}</td>
+                                <td class="value-cell">{{ substr($grade->name, 0, 1) }}</td>
                             </tr>
                             <tr class="criteria-label">
                               <td style="">S/No</td>
@@ -116,14 +112,13 @@
                             </tr>
                             <!-- Rows for criteria -->
 
-                            @foreach($criteriaList as $catId=>$criterias)
                             @foreach ($criterias as $idx=>$criteria)
+
                             <tr>
-                              <td >{{ $loop->iteration }}</td>
-                              <td colspan="2">{{ $criteria->question }}</td>
-                              <td>{{-- $criteria_totals[$criteria->id] --}}</td>
+                              <td >{{ ++$idx }}</td>
+                              <td colspan="2">{{ $criteria->name }}</td>
+                              <td>{{ $criteria_totals[$criteria->id] }}</td>
                             </tr>
-                            @endforeach
                             @endforeach
                             <!-- Totals -->
                             <tr>
@@ -175,51 +170,42 @@
                     <label for="" class="mr-2">Assessee: </label><h6 class="text-dark fw-bold d-inline text-lg">{{ $assesseeuser->employee->employee_name }}</h6>
                     <div>
                         <label for="" class="mr-2">Criteria Set: </label>
-                         @foreach($categories as $category)
-                            <span class="badge user-select-none me-1 assesseeformcattag" style='background:skyblue;color:white;' data-formid = '{{ $category->id }}' >{{ $category->name }}</span>
+                          {{-- {{ dd($assesseesummary->getAssesseeAssFormCats($assesseeuser->id, Route::current()->parameter('appraisal_cycle_id'))) }} --}}
+                          @php
+                          $asseseeformcats = $assesseesummary->getAssesseeAssFormCats($assesseeuser->id, Route::current()->parameter('appraisal_cycle_id'));
+                         @endphp
+
+                         @foreach($asseseeformcats as $asseseeformcat)
+                            <span class="badge user-select-none me-1 assesseeformcattag" style='background:skyblue;color:white;' data-formid = '{{ $asseseeformcat->id }}' >{{ $asseseeformcat->name }}</span>
                          @endforeach
                     </div>
 
 
-                    <div class="table-responsive" id="assessortable-{{ $category->id }}">
+                    <div class="table-responsive" id="assessortable-{{ $asseseeformcat->id }}">
                         <table class="table table-bordered assessorsummarytable">
                             <thead>
                               <tr>
                                 <th rowspan="2" style="width: 5% !important;">No</th>
                                 <th rowspan="2" class="criteria_headers">Criteria</th>
-                                <th colspan="{{ $assessoruserscount }}">Assessors</th>
+                                <th colspan="{{ $assessorusers->count() }}">Assessors</th>
                               </tr>
                               <tr>
-
-                                @foreach($assessors as $assesseeIdx => $assessorsInCat)
-                                    @foreach($assessorsInCat as $catId => $assessorsArr)
-                                        @foreach ($assessorsArr as $assessor)
-                                            <th>{{ $assessor->employee->employee_name }} <br><small>{{-- $assessoruser->employee->branch->branch_name --}}</small></th>
-                                        @endforeach
-                                    @endforeach
+                                @foreach ($assessorusers as $assessoruser)
+                                    <th>{{ $assessoruser->employee->employee_name }} <br><small>{{ $assessoruser->employee->branch->branch_name }}</small></th>
                                 @endforeach
                               </tr>
                             </thead>
                             <tbody>
 
-                                @foreach($criteriaList as $catId=>$criterias)
-                                    @foreach ($criterias as $criIdx=>$criteria)
-                                        <tr class="criterias formcriteria-{{ $catId }}">
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $criteria->question }}</td>
+                                @foreach($criterias as $idx => $criteria)
+                                    <tr class="criterias formcriteria-{{ $criteria->assformcat->id }}">
+                                        <td>{{ ++$idx }}</td>
+                                        <td>{{ $criteria->name }}</td>
 
-                                            @foreach($assessors as $assesseeIdx => $assessorsInCat)
-                                                @foreach($assessorsInCat as $catIdx => $assessorsArr)
-                                                    @foreach ($assessorsArr as $assessor)
-                                                    @php
-                                                        $result = $report[$assesseeIdx][$catId][$assessor->id][$criIdx] ?? '';
-                                                    @endphp
-                                                    <td>{{ $result }}</td>
-                                                    @endforeach
-                                                @endforeach
-                                            @endforeach
-                                        </tr>
-                                    @endforeach
+                                        @foreach ($assessorusers as $assessoruser)
+                                            <td>{{ $assesseesummary->getAssessorGivenMark($assessoruser->id,$assesseeuser->id,$criteria->id,  Route::current()->parameter('appraisal_cycle_id') ) }}</td>
+                                        @endforeach
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>

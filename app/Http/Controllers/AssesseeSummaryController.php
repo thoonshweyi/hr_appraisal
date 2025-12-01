@@ -14,54 +14,94 @@ use App\Exports\AppraisalExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AssesseeSummaryExport;
 use App\Models\AppraisalFormAssesseeUser;
+use App\Services\AssessmentReportService;
 
 class AssesseeSummaryController extends Controller
 {
 
 
-    public function review($assessee_user_id,$appraisal_cycle_id){
+    // public function review($assessee_user_id,$appraisal_cycle_id){
 
+    //     $assesseeuser = User::where('id',$assessee_user_id)->first();
+    //     // dd($assesseeuser);
+
+    //     $appraisal_form_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
+    //                         ->whereHas('assesseeusers',function($query) use($assesseeuser){
+    //                             $query->where('assessee_user_id',$assesseeuser->id);
+    //                         })->pluck('id');
+    //     $criteria_ids = FormResult::whereIn("appraisal_form_id",$appraisal_form_ids)->pluck("criteria_id");
+    //     $criterias = Criteria::whereIn("id",$criteria_ids)->orderBy("id")->get();
+
+    //     $criteria_totals = [];
+    //     foreach($criterias ?? [] as $criteria){
+    //         $criteria_totals[$criteria->id] = $this->getCriteriaTotal($assessee_user_id,$criteria->id,$appraisal_cycle_id);
+    //     }
+    //     // dd($criteria_totals);
+    //     $ratetotal = array_sum($criteria_totals);
+
+
+    //     // Get Assessors
+    //     $assessor_user_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
+    //                     ->whereHas('assesseeusers',function($query) use($assesseeuser){
+    //                         $query->where('assessee_user_id',$assesseeuser->id);
+    //                     })->pluck('assessor_user_id');
+    //     $assessorusers = User::whereIn("id",$assessor_user_ids)->get();
+    //     $assessoruserscount = count($assessor_user_ids);
+    //     // dd($assessoruserscount);
+
+
+    //     $average = floor($ratetotal / $assessoruserscount);
+
+    //     // dd($average);                      
+    //     $grade = Grade::where('from_rate', '<=', $average)
+    //           ->where('to_rate', '>=', $average)
+    //           ->first();
+
+    //     // dd($grade);
+
+    //     $assesseesummary = new AssesseeSummary();
+
+
+    //     return view('assesseesummary.reviewold',compact("assesseeuser","criterias",'criteria_totals','ratetotal','assessorusers','assessoruserscount','average','grade','assesseesummary'));
+    // }
+
+    public function review($assessee_user_id,$appraisal_cycle_id, AssessmentReportService $reportService){
+
+        $assesseeusers = User::where('id',$assessee_user_id)->get();
+       
+        $shareReport = $reportService->generate($assesseeusers, $appraisal_cycle_id);
         $assesseeuser = User::where('id',$assessee_user_id)->first();
         // dd($assesseeuser);
 
-        $appraisal_form_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
-                            ->whereHas('assesseeusers',function($query) use($assesseeuser){
-                                $query->where('assessee_user_id',$assesseeuser->id);
-                            })->pluck('id');
-        $criteria_ids = FormResult::whereIn("appraisal_form_id",$appraisal_form_ids)->pluck("criteria_id");
-        $criterias = Criteria::whereIn("id",$criteria_ids)->orderBy("id")->get();
+        // dd($shareReport);
+        $firstKey   = array_key_first($shareReport->assessees);
+        $assessee   = $shareReport->assessees[$firstKey];
+        $report = $shareReport->report;
+        $categories = $shareReport->categories;
+        $criteriaList = $shareReport->criteriaList;
+        $assessors = $shareReport->assessors;
 
-        $criteria_totals = [];
-        foreach($criterias ?? [] as $criteria){
-            $criteria_totals[$criteria->id] = $this->getCriteriaTotal($assessee_user_id,$criteria->id,$appraisal_cycle_id);
-        }
-        // dd($criteria_totals);
-        $ratetotal = array_sum($criteria_totals);
-
-
-        // Get Assessors
-        $assessor_user_ids = AppraisalForm::where('appraisal_cycle_id',$appraisal_cycle_id)
-                        ->whereHas('assesseeusers',function($query) use($assesseeuser){
-                            $query->where('assessee_user_id',$assesseeuser->id);
-                        })->pluck('assessor_user_id');
-        $assessorusers = User::whereIn("id",$assessor_user_ids)->get();
-        $assessoruserscount = count($assessor_user_ids);
-        // dd($assessoruserscount);
-
-
-        $average = floor($ratetotal / $assessoruserscount);
-
-        // dd($average);                      
-        $grade = Grade::where('from_rate', '<=', $average)
-              ->where('to_rate', '>=', $average)
-              ->first();
-
-        // dd($grade);
+        $assessoruserscount =  $assessee->assessor_count;
+        $ratetotal = $assessee->total_score;
+        $average = $assessee->average_score;
+        $grade = $assessee->grade;
+            
 
         $assesseesummary = new AssesseeSummary();
 
-
-        return view('assesseesummary.review',compact("assesseeuser","criterias",'criteria_totals','ratetotal','assessorusers','assessoruserscount','average','grade','assesseesummary'));
+        // dd($assessors);
+        return view('assesseesummary.review',compact(
+            "assesseeuser",
+            "assessee",
+            "report",
+            "categories",
+            "criteriaList",
+            "assessors",
+            "assessoruserscount",
+            "ratetotal",
+            "average",
+            "grade",
+        ));
     }
 
 
