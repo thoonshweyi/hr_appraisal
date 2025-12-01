@@ -280,10 +280,10 @@ class AssesseeDetailController extends Controller
             'assessees'      => $assessees,
             'appraisalcycle'     => AppraisalCycle::find($appraisal_cycle_id),
             'appraisal_cycle_id' => $appraisal_cycle_id,
-            'report'             => $report,        // tree: [assessee][category][assessor][criteria] = result
+            'report'             => $report,                // tree: [assessee][category][assessor][criteria] = result
             'categories'         => $categories,
-            'criteriaList'       => $criteriaList,  // criteriaList[category_id][criteria_id] => object
-            'assessors'          => $assessors      // assessors[assessee_id][category_id][assessor_id] => object
+            'criteriaList'       => $criteriaList,          // criteriaList[category_id][criteria_id] => object
+            'assessors'          => $assessors              // assessors[assessee_id][category_id][assessor_id] => object
         ]);
     }
 

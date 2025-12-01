@@ -3,13 +3,15 @@
 namespace App\Exports;
 
 
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithMapping;
+
 use Maatwebsite\Excel\Concerns\WithDrawings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -17,7 +19,6 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
-use Maatwebsite\Excel\Concerns\WithTitle;
 
 class AssesseeSummaryExport implements FromCollection, WithHeadings, WithDrawings, ShouldAutoSize, WithEvents, WithColumnFormatting, WithMapping,WithColumnWidths, WithTitle
 {
@@ -25,11 +26,15 @@ class AssesseeSummaryExport implements FromCollection, WithHeadings, WithDrawing
     private $assesseeusers;
     private $appraisal_cycle_id;
     private $totalRows;
-    public function __construct($assesseeusers,$appraisal_cycle_id)
+    private $shareReport;
+
+    public function __construct($assesseeusers,$appraisal_cycle_id,$shareReport)
     {
-        $this->assesseeusers = $assesseeusers;
+        // $this->assesseeusers = $assesseeusers;
+        $this->assesseeusers = $assesseeusers->keyBy('id');
         $this->appraisal_cycle_id = $appraisal_cycle_id;
         $this->totalRows = count($assesseeusers) + 1;
+        $this->shareReport = $shareReport;
 
         // dd($this->assesseeusers);
     }
@@ -54,18 +59,49 @@ class AssesseeSummaryExport implements FromCollection, WithHeadings, WithDrawing
         ];
     }
 
+    // public function collection()
+    // {
+    //     $data = collect();
+    //     foreach($this->assesseeusers as $assesseeuser){
+    //         $assessors = $assesseeuser->getAssessors($this->appraisal_cycle_id);
+    //         $assessoruserscount = $assesseeuser->getAssessorUsersCount($assessors);
+    //         $criteria_totals = $assesseeuser->getCriteriaTotalArrs($this->appraisal_cycle_id);
+    //         $ratetotal = $assesseeuser->getRateTotal($criteria_totals);
+    //         $average = $assesseeuser->getAverage($ratetotal,$assessoruserscount);
+    //         $grade = $assesseeuser->getGrade($average)->name;
+
+    //         Log::info($assesseeuser->id."-".$assesseeuser->employee_id."-".$average);
+
+    //         $data->push([
+    //             'Employee Name' => $assesseeuser->employee->employee_name,
+    //             'Employee Code'=> $assesseeuser->employee->employee_code,
+    //             'Branch'=>  $assesseeuser->employee->branch->branch_name,
+    //             'Department'=>  $assesseeuser->employee->department->name,
+    //             'Rank' =>  $assesseeuser->employee->positionlevel->name,
+    //             'Position' =>  $assesseeuser->employee->position->name,
+    //             'Assessors' => $assessoruserscount,
+    //             'RateTotal' => $ratetotal,
+    //             'Average' => $average,
+    //             'Grade' => $grade,
+    //         ]);
+    //     }
+
+    //     return $data;
+    // }
+
     public function collection()
     {
         $data = collect();
-        foreach($this->assesseeusers as $assesseeuser){
-            $assessors = $assesseeuser->getAssessors($this->appraisal_cycle_id);
-            $assessoruserscount = $assesseeuser->getAssessorUsersCount($assessors);
-            $criteria_totals = $assesseeuser->getCriteriaTotalArrs($this->appraisal_cycle_id);
-            $ratetotal = $assesseeuser->getRateTotal($criteria_totals);
-            $average = $assesseeuser->getAverage($ratetotal,$assessoruserscount);
-            $grade = $assesseeuser->getGrade($average)->name;
 
-            Log::info($assesseeuser->id."-".$assesseeuser->employee_id."-".$average);
+        $assessees = $this->shareReport->assessees;
+        foreach($assessees as $assesseeIdx=>$assessee){
+
+            $assessoruserscount =  $assessee->assessor_count;
+            $ratetotal = $assessee->total_score;
+            $average = $assessee->average_score;
+            $grade = $assessee->grade;
+            
+            $assesseeuser = $this->assesseeusers[$assesseeIdx];
 
             $data->push([
                 'Employee Name' => $assesseeuser->employee->employee_name,
