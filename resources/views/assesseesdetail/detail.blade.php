@@ -69,13 +69,13 @@
                     @foreach($assessorsInCat as $assessorIdx=>$crisInAssessor)
                     <tr>
                         @if($loop->parent->first)
-                        {{-- <td style="text-align:center;vertical-align: middle;"> {{ $loop->first ? $assessees[$assesseeIdx]->employee->employee_name : '' }} </td> --}}
-                        <td style="text-align:center;vertical-align: middle;"> {{ $loop->first ? $assessees[$assesseeIdx]->name : '' }} </td>
+                        <td style="text-align:center;vertical-align: middle;"> {{ $loop->first ? $assessees[$assesseeIdx]->employee->employee_name : '' }} </td>
+                        {{-- <td style="text-align:center;vertical-align: middle;"> {{ $loop->first ? $assessees[$assesseeIdx]->name : '' }} </td> --}}
                         @else
                         <td ></td>
                         @endif
-                        {{-- <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->employee->employee_name ??  '----' }}</td> --}}
-                        <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->name ??  '----' }}</td>
+                        <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->employee->employee_name ??  '----' }}</td>
+                        {{-- <td style="text-align:center;vertical-align: middle;"> {{ $assessors[$assesseeIdx][$catId][$assessorIdx]->name ??  '----' }}</td> --}}
                         {{-- Get Result --}}
                         @php
 

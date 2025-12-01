@@ -166,29 +166,32 @@ class AssesseeDetailController extends Controller
         //     ->get();
         // ---------------------------------------------------------------------------------
 
-        // \DB::enableQueryLog();
+        \DB::enableQueryLog();
         $formresults = DB::table('appraisal_forms')
-        ->whereExists(function($q) use ($assessee_ids) {
-            $q->select(DB::raw(1))
-                ->from('appraisal_form_assessee_users')
-                ->whereColumn('appraisal_form_assessee_users.appraisal_form_id', 'appraisal_forms.id')
+        ->join('appraisal_form_assessee_users', function($q) use($assessee_ids){
+            $q->on('appraisal_form_assessee_users.appraisal_form_id', '=', 'appraisal_forms.id')
                 ->whereNull('appraisal_form_assessee_users.deleted_at')
-                ->whereIn('appraisal_form_assessee_users.assessee_user_id', [44,43]);
+                ->whereIn('assessee_user_id',$assessee_ids);
         })
-        ->leftJoin('form_results', function($q) use ($assessee_ids) {
+        ->leftjoin('form_results', function($q) {
             $q->on('form_results.appraisal_form_id', '=', 'appraisal_forms.id')
-            ->whereIn('form_results.assessee_user_id', [44,43]);
+            ->whereColumn('form_results.assessee_user_id', '=', 'appraisal_form_assessee_users.assessee_user_id');
         })
         ->join('ass_form_cats', 'ass_form_cats.id', '=', 'appraisal_forms.ass_form_cat_id')
         ->leftjoin('criterias', 'criterias.id', '=', 'form_results.criteria_id')
         ->join('users as assessor', 'assessor.id', '=', 'appraisal_forms.assessor_user_id')
-        ->join('users as assessee', 'assessee.id', '=', 'form_results.assessee_user_id')
+        ->leftJoin('employees as assessoremp', 'assessoremp.employee_code', '=', 'assessor.employee_id')
+        ->leftjoin('users as assessee', 'assessee.id', '=', 'appraisal_form_assessee_users.assessee_user_id')
+        ->leftJoin('employees as assesseeemp', 'assesseeemp.employee_code', '=', 'assessee.employee_id')
         ->select(
             'assessee.id as assessee_id',
             'assessee.name as assessee_name',
+            'assesseeemp.employee_name as assessee_employee_name',
 
             'assessor.id as assessor_id',
             'assessor.name as assessor_name',
+            'assessoremp.employee_name as assessor_employee_name',
+
 
             'ass_form_cats.id as category_id',
             'ass_form_cats.name as category_name',
@@ -196,7 +199,7 @@ class AssesseeDetailController extends Controller
             'criterias.id as criteria_id',
             'criterias.name as criteria_question',
 
-                DB::raw('COALESCE(form_results.result, 0) as result')
+            DB::raw('COALESCE(form_results.result, 0) as result')
         )
         ->where('appraisal_forms.appraisal_cycle_id', $appraisal_cycle_id)
         ->whereNull('appraisal_forms.deleted_at')
@@ -225,10 +228,10 @@ class AssesseeDetailController extends Controller
                 'id' => $r->assessee_id,
                 'name' => $r->assessee_name,
                 'employee' => (object)[
-                    // 'employee_name'       => $r->assessee_employee_name,
-                    // 'code'       => $r->assessee_employee_code ?? null,
-                    // 'department' => $r->assessee_department ?? null,
-                    // 'position'   => $r->assessee_position ?? null,
+                    'employee_name'       => $r->assessee_employee_name,
+                    'code'       => $r->assessee_employee_code ?? null,
+                    'department' => $r->assessee_department ?? null,
+                    'position'   => $r->assessee_position ?? null,
                 ]
             ];
 
@@ -241,10 +244,10 @@ class AssesseeDetailController extends Controller
                 'id' => $r->assessor_id,
                 'name' => $r->assessor_name,
                 'employee' => (object)[
-                    // 'employee_name'         => $r->assessor_employee_name,
-                    // 'code'         => $r->assessor_employee_code ?? null,      
-                    // 'department'   => $r->assessor_department ?? null,         
-                    // 'position'     => $r->assessor_position ?? null,          
+                    'employee_name'         => $r->assessor_employee_name,
+                    'code'         => $r->assessor_employee_code ?? null,      
+                    'department'   => $r->assessor_department ?? null,         
+                    'position'     => $r->assessor_position ?? null,          
                 ]
             ];
 
