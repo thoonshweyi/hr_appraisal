@@ -67,6 +67,7 @@ class AssessmentReportService{
         $categories = [];
         $assessors = [];
         $criteriaList = [];
+        $criteriaTotals = [];
 
         foreach ($formresults as $r) {
 
@@ -108,10 +109,12 @@ class AssessmentReportService{
 
             $assesseeTotals[$r->assessee_id] = ($assesseeTotals[$r->assessee_id] ?? 0) + (int)$r->result;
             $assesseeAssessorCount[$r->assessee_id][$r->assessor_id] = true;
+
+            $criteriaTotals[$r->assessee_id][$r->criteria_id] = ($criteriaTotals[$r->assessee_id][$r->criteria_id] ?? 0) + (int)$r->result;
         }
 
         // dd($report);
-        // dd($assessors);
+        // dd($criteriaTotals);
 
         foreach($assesseeTotals as $id => $total){
             $assessees[$id]->total_score = $total;
@@ -131,6 +134,7 @@ class AssessmentReportService{
             'categories'=>$categories,
             'assessors'=>$assessors,
             'criteriaList'=>$criteriaList,
+            'criteriaTotals'=> $criteriaTotals
         ];
     }
 

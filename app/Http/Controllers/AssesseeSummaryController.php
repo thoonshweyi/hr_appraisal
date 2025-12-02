@@ -89,6 +89,8 @@ class AssesseeSummaryController extends Controller
 
         $assesseesummary = new AssesseeSummary();
 
+        $criteriaTotals = $shareReport->criteriaTotals;
+
         // dd($report);
         return view('assesseesummary.review',compact(
             "assesseeuser",
@@ -101,6 +103,7 @@ class AssesseeSummaryController extends Controller
             "ratetotal",
             "average",
             "grade",
+            "criteriaTotals"
         ));
     }
 

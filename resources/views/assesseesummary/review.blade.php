@@ -121,7 +121,7 @@
                             <tr>
                               <td >{{ $loop->iteration }}</td>
                               <td colspan="2">{{ $criteria->question }}</td>
-                              <td>{{-- $criteria_totals[$criteria->id] --}}</td>
+                              <td>{{ $criteriaTotals[$assessee->id][$criteria->id] }}</td>
                             </tr>
                             @endforeach
                             @endforeach
