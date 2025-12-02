@@ -546,6 +546,7 @@
 
         
         $('.searchbtns').on('click', function(e) {
+            $('#searchnfilterform').attr('action',"{{ route('appraisalcycles.report',$appraisalcycle->id) }}")
             $('#searchnfilterform').submit();
         })
 
