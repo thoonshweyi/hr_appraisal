@@ -138,6 +138,10 @@
                               <td colspan="3" class="">Average</td>
                               <td colspan="1">{{ $average }}</td>
                             </tr>
+                                <tr>
+                            <td colspan="3" class="">Grade</td>
+                              <td colspan="1">{{ $grade }}</td>
+                            </tr>
                         </table>
 
                         </div>
