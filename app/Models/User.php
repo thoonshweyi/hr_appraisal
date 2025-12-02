@@ -247,7 +247,7 @@ class User extends Authenticatable
         return $this->hasOne(PrintHistory::class,'assessor_user_id');
     }
 
-    public function formProgress($appraisal_cycle_id){
+    public function assessmentProgress($appraisal_cycle_id){
             $appraisalforms = AppraisalForm::where('assessor_user_id', $this->id)
                                 ->where("appraisal_cycle_id",$appraisal_cycle_id)
                                 ->get();
@@ -258,16 +258,16 @@ class User extends Authenticatable
             $notStartedCount     = $appraisalforms->where("status_id", 21)->count();
             $doneCount           = $appraisalforms->where("status_id", 19)->count();
 
-            // $perDone = $totalAppraisalForms > 0
-            //     ? round(($doneCount / $totalAppraisalForms) * 100, 2)
-            //     : 0;
+            $perDone = $totalAppraisalForms > 0
+                ? round(($doneCount / $totalAppraisalForms) * 100, 2)
+                : 0;
 
             $datas = [
                 "totalappraisalforms" => $totalAppraisalForms,
                 "inprogress" => $inProgressCount,
                 "notstarted" => $notStartedCount,
                 "done" => $doneCount,
-                // "per_done" => $perDone,
+                "per_done" => $perDone,
             ];
 
         return $datas;

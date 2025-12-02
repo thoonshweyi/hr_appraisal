@@ -435,11 +435,16 @@
                                                     <th>Position Level</th>
                                                     <th>Sent / All Forms</th>
                                                     <th>Send Progress</th>
+                                                    <th>Assessment Progress</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="ligth-body">
                                                 @foreach($participantusers as $idx=>$participantuser)
+
+                                                @php
+                                                    $assessmentProgress = $participantuser->assessmentProgress($appraisalcycle->id);
+                                                @endphp
                                                 <tr>
                                                     <td>{{$idx + $participantusers->firstItem()}}</td>
                                                     <td>{{ $participantuser->employee->employee_name }}</td>
@@ -448,10 +453,15 @@
                                                     <td>{{ $participantuser->employee->positionlevel->name }}</td>
                                                     <td>{{ $participantuser->getAppraisalFormCount($appraisalcycle->id) }} / {{ $participantuser->getAllFormCount($appraisalcycle->id) }}</td>
                                                     <td>
-                                                         <div class='d-flex justify-content-center align-items-center'>
+                                                        <div class='d-flex justify-content-center align-items-center'>
                                                             <div id='progresses'  style='background : conic-gradient(steelblue {{ $participantuser->getSentPercentage($appraisalcycle->id) }}%,#eee {{$participantuser->getSentPercentage($appraisalcycle->id)}}%)'>
                                                                     <span id='progressvalues'>{{ $participantuser->getSentPercentage($appraisalcycle->id)}}%</span>
                                                             </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div  class="progress" role="progressbar" aria-valuenow="{{ $assessmentProgress['per_done']  }}" aria-valuemin="0" aria-valuemax="100" style="height: 15px;">
+                                                            <div class="progress-bar" style="width:{{ $assessmentProgress['per_done']  }}%; background: linear-gradient(135deg, #007bff, #0056b3);">{{ $assessmentProgress['per_done'] }}%</div>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -1082,7 +1092,9 @@
                         success: function (response) {
                             let forms = response.forms;
                             let printed_at = response.printed_at;
-                            console.log(typeof forms);
+                            console.log(response);
+
+                            let assessmentProgress = response.assessmentProgress;
                             var html =`
                             <div class="d-flex justify-content-between mt-2">
                                 <h4 class="card-title">Form Lists
@@ -1095,8 +1107,42 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn mr-2 cus_btn sendnoti-btns">Send Notification</button>
 
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="button" class="btn mr-2 cus_btn sendnoti-btns">Send Notification</button>
+                                </div>
+
+                                 <div class="col-6">
+                                    <div class="row g-1">
+                                        <div class="col-3 p-2">
+                                            <div class="text-center p-md-3 p-1 rounded minicards info">
+                                                <div class="h4 mb-0">${assessmentProgress.totalappraisalforms}</div>
+                                                <small class="text-muted">Total</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 p-2">
+                                            <div class="text-center p-md-3 p-1 rounded minicards not-started">
+                                                <div class="h4 mb-0">${assessmentProgress.notstarted}</div>
+                                                <small class="text-muted">Not Started</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 p-2">
+                                            <div class="text-center p-md-3 p-1 rounded minicards in-progress">
+                                                <div class="h4 mb-0">${assessmentProgress.inprogress}</div>
+                                                <small class="text-muted">In Progress</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3 p-2">
+                                            <div class="text-center p-md-3 p-1 rounded minicards done">
+                                                <div class="h4 mb-0">${assessmentProgress.done}</div>
+                                                <small class="text-muted">Done</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <table class="table table-sm userforms">
                                 <tr>
@@ -1127,7 +1173,7 @@
                                 </tr>`;
                             });
                             html += '</table>';
-                            tr.after(`<tr class="child-row"><td claass="m-0" colspan="8">${html}</td></tr>`);
+                            tr.after(`<tr class="child-row"><td claass="m-0" colspan="9">${html}</td></tr>`);
                         }
                     });
                 }
