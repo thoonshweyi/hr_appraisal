@@ -52,7 +52,7 @@ class AssessmentReportService{
         )
         ->where('appraisal_forms.appraisal_cycle_id', $appraisal_cycle_id)
         ->whereNull('appraisal_forms.deleted_at')
-        ->orderBy('assessee.id')
+        ->orderBy('assessee.name')
         ->orderBy('category_id')
         ->orderBy('assessor_id')
         ->orderBy('criteria_id')

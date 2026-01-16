@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\AppraisalForm;
 use App\Models\AssesseeSummary;
 use App\Exports\AppraisalExport;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AssesseeSummaryExport;
 use App\Models\AppraisalFormAssesseeUser;
@@ -168,15 +169,19 @@ class AssesseeSummaryController extends Controller
             });
         }
 
-        if ($request->filter_sub_section_id) {
+        if (!empty($filter_sub_section_id)) {
             $results = $results->whereHas('employee',function($query) use($filter_sub_section_id){
                 $query->where('sub_section_id',$filter_sub_section_id);
             });
         }
 
-        $assesseeusers = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+
+        $assesseeusers = $results
+        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->orderBy("users.name","asc")
         ->get();
 
+        Log::info($results->pluck('id'));
 
         // $response = Excel::download(new AssesseeSummaryExport($assesseeusers,$appraisal_cycle_id), "AssesseeSummaryReport".Carbon::now()->format('Y-m-d').".xlsx");
         $response = Excel::download(new AppraisalExport($assesseeusers,$appraisal_cycle_id), "AppraisalReport".Carbon::now()->format('Y-m-d').".xlsx");

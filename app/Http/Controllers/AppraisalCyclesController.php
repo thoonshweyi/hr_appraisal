@@ -25,6 +25,7 @@ use App\Imports\DivisionImport;
 use App\Imports\PositionImport;
 use App\Models\AgileDepartment;
 use App\Imports\DepartmentImport;
+use Illuminate\Support\Facades\Log;
 use App\Imports\SubDepartmentImport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -690,10 +691,13 @@ class AppraisalCyclesController extends Controller
             $request->session()->put('filter_sub_section_id', $filter_sub_section_id);
         }
 
-        $assesseeusers = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        $assesseeusers = $results
+        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->orderBy("users.name","asc")
         // ->get();
         ->paginate(10);
 
+        Log::info($results->pluck('id'));
         return $assesseeusers;
 
         //

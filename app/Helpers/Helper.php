@@ -99,3 +99,7 @@ function clearFilterSection(){
         'filter_sub_section_id',
     ]);
 }
+
+function applyAssesseeFilters($request){
+
+}
