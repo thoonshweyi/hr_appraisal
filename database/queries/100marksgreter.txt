@@ -1,0 +1,12 @@
+SELECT 
+    form_results.appraisal_form_id,
+    form_results.assessee_user_id,
+    COUNT(form_results.assessee_user_id) AS total_assessments
+FROM form_results
+LEFT JOIN appraisal_forms 
+       ON appraisal_forms.id = form_results.appraisal_form_id
+GROUP BY 
+    form_results.appraisal_form_id,
+    form_results.assessee_user_id
+HAVING COUNT(form_results.assessee_user_id) > 13
+ORDER BY form_results.appraisal_form_id DESC;

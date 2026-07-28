@@ -1,0 +1,42 @@
+SELECT * FROM public.users
+where name like '%Thoon%'
+ORDER BY id DESC LIMIT 100
+
+SELECT * FROM public.peer_to_peers
+where assessee_user_id = 44 and appraisal_cycle_id = 4
+ORDER BY id DESC LIMIT 100
+
+SELECT * FROM public.appraisal_forms
+where assessor_user_id in (70,
+78,
+75,
+69,
+39,
+54,
+47,
+56,
+40)
+and ass_form_cat_id = 67 and appraisal_cycle_id = 4
+ORDER BY id DESC LIMIT 100
+
+=>Delete
+SELECT * FROM public.appraisal_form_assessee_users
+where appraisal_form_id in (
+36418,
+36264,
+35622,
+34170,
+33343,
+32949,
+32897,
+32887,
+29374
+)
+and assessee_user_id = 44
+ORDER BY id DESC LIMIT 100
+
+
+SELECT * FROM public.ass_form_cats
+where id = 70
+ORDER BY id DESC LIMIT 100
+

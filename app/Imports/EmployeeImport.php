@@ -47,13 +47,12 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
         // Validate data
         // $row['department'] = Str::lower($row['department']);
 
-        // $row['beginning_date'];
         $validator = Validator::make($row, [
             'employee_name'      => 'required|string|max:255',
-            'division' => 'required|exists:divisions,name',
-            'department' => ['required',"exists:agile_departments,name"],
-            'sub_department' => 'required|exists:sub_departments,name',
-            'section' => 'required|exists:sections,name',
+            'division' => 'required',
+            'department' => ['required'],
+            'sub_department' => 'required',
+            'section' => 'required',
             'sub_section' => 'required|exists:sub_sections,name',
             'position' => 'required|exists:positions,name',
 
@@ -66,7 +65,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
             'position_level'=> "required|exists:position_levels,name",
             // "nrc"=> "required",
             // "father_name"=> "required",
-            'attach_form_type' => 'required',
+            // 'attach_form_type' => 'required',
             // 'phone' => 'required'
         ]);
         // If validation fails, throw an exception with the row number
@@ -97,29 +96,63 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
         // BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>Branch::where('branch_code',$row['branch_code'])->first()->branch_id]);
         BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>Branch::where('branch_name',$row['branch'])->first()->branch_id]);
 
+        $updateData =   [
+            'employee_name'      => $row['employee_name'],
+            'nickname'           => $row['nickname'],
+            'status_id'          => 1, // Default status_id (change as needed)
+            'user_id'            => $user_id,
+            'beginning_date'     => $row['beginning_date'],
+            "branch_id"          => Branch::where('branch_name', $row['branch'])->first()?->branch_id,
+            "age"                => $row['age'],
+            "gender_id"          => Gender::where('name', $row['gender'])->first()?->id,
+            "position_level_id"  => PositionLevel::where('name', $row['position_level'])->first()?->id,
+            "nrc"                => $row['nrc'],
+            "father_name"        => $row['father_name'],
+            // "phone"                => $row['phone'] ? $row['phone'] : null,
+        ];
+
+        // Start Agile HR Related Data Handling
+        $updateData['division_id'] = Division::firstOrCreate(
+            ['slug' => $row['division']],
+            ['name' => $row['division']]
+        )->id;
+
+        $updateData['department_id'] = AgileDepartment::firstOrCreate(
+            ['slug' => $row['department']],
+            ['name' => $row['department']]
+        )->id;
+
+        $updateData['sub_department_id'] = SubDepartment::firstOrCreate(
+            ['slug' => $row['sub_department']],
+            ['name' => $row['sub_department']]
+        )->id;
+
+        $updateData['section_id'] = Section::firstOrCreate(
+            ['slug' => $row['section']],
+            ['name' => $row['section']]
+        )->id;
+
+        $updateData['sub_section_id'] = SubSection::firstOrCreate(
+            ['slug' => $row['sub_section']],
+            ['name' => $row['sub_section']]
+        )->id;
+
+        $updateData['position_id'] = Position::firstOrCreate(
+            ['slug' => $row['position']],
+            ['name' => $row['position']]
+        )->id;
+        // End Agile HR Related Data Handling
+
+        if (!empty($row['attach_form_type'])) {
+            $attachFormTypeId = AttachFormType::where('name', $row['attach_form_type'])->value('id');
+            if ($attachFormTypeId) {
+                $data['attach_form_type_id'] = $attachFormTypeId;
+            }
+        }
+
         return Employee::updateOrCreate(
             ['employee_code' => $row['employee_code']], // Check for existing record
-            [
-                'employee_name'      => $row['employee_name'],
-                'nickname'           => $row['nickname'],
-                "division_id"        => Division::where('name', $row['division'])->first()?->id,
-                "department_id"      => AgileDepartment::where('name', $row['department'])->first()?->id,
-                "sub_department_id"  => SubDepartment::where('name', $row['sub_department'])->first()?->id,
-                "section_id"         => Section::where('name', 'like' , "%".$row['section'].'%')->first()?->id,
-                "sub_section_id"     => SubSection::where('name', 'like' , "%".$row['sub_section'].'%')->first()?->id,
-                "position_id"        => Position::where('name', $row['position'])->first()?->id,
-                'status_id'          => 1, // Default status_id (change as needed)
-                'user_id'            => $user_id,
-                'beginning_date'     => $row['beginning_date'],
-                "branch_id"          => Branch::where('branch_name', $row['branch'])->first()?->branch_id,
-                "age"                => $row['age'],
-                "gender_id"          => Gender::where('name', $row['gender'])->first()?->id,
-                "position_level_id"  => PositionLevel::where('name', $row['position_level'])->first()?->id,
-                "nrc"                => $row['nrc'],
-                "father_name"        => $row['father_name'],
-                "attach_form_type_id"=> AttachFormType::where('name', $row['attach_form_type'])->first()?->id,
-                // "phone"                => $row['phone'] ? $row['phone'] : null,
-            ]
+            $updateData
         );
     }
 
