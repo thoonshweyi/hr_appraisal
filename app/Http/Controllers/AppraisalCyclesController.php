@@ -47,7 +47,11 @@ class AppraisalCyclesController extends Controller
         $this->middleware('auth');
         $this->middleware('permission:view-add-on', ['only' => ['index']]);
         $this->middleware('permission:create-add-on', ['only' => ['create', 'store']]);
+<<<<<<< Updated upstream
         $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update', 'sendFilteredForms']]);
+=======
+        $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update', 'batchSend', 'storeBatchSend']]);
+>>>>>>> Stashed changes
         $this->middleware('permission:delete-add-on', ['only' => ['destroy']]);
     }
     public function index(Request $request){
@@ -1019,7 +1023,164 @@ class AppraisalCyclesController extends Controller
         return view("appraisalcycles.compare",compact("users"));
 
     }
-
  
+    public function batchSend(Request $request, string $id)
+    {
+        $appraisalcycle = AppraisalCycle::findOrFail($id);
+        $peerQuery = PeerToPeer::where('appraisal_cycle_id', $id)
+            ->with([
+                'assessoruser.employee.branch',
+                'assessoruser.employee.position',
+                'assesseeuser.employee',
+                'assformcat',
+            ]);
+
+        if (branchHR()) {
+            $branchIds = Auth::user()->branches->pluck('branch_id');
+            $peerQuery->whereHas('assessoruser.branches', function ($query) use ($branchIds) {
+                $query->whereIn('branches.branch_id', $branchIds);
+            });
+        }
+
+<<<<<<< Updated upstream
+=======
+        if ($request->filled('search')) {
+            $keyword = $request->search;
+            $peerQuery->whereHas('assessoruser.employee', function ($query) use ($keyword) {
+                $query->where('employee_name', 'like', '%'.$keyword.'%')
+                    ->orWhere('employee_code', 'like', '%'.$keyword.'%');
+            });
+        }
+
+        if ($request->filled('branch_id')) {
+            $peerQuery->whereHas('assessoruser.employee', function ($query) use ($request) {
+                $query->where('branch_id', $request->branch_id);
+            });
+        }
+
+        if ($request->filled('ass_form_cat_id')) {
+            $peerQuery->where('ass_form_cat_id', $request->ass_form_cat_id);
+        }
+
+        $assignments = $peerQuery->get()
+            ->groupBy(function ($peer) {
+                return $peer->assessor_user_id.'-'.$peer->ass_form_cat_id;
+            });
+
+        $branches = Branch::where('branch_active', true)->orderBy('branch_name')->get();
+        $assformcats = \App\Models\AssFormCat::whereIn(
+            'id',
+            PeerToPeer::where('appraisal_cycle_id', $id)->pluck('ass_form_cat_id')->unique()
+        )->orderBy('name')->get();
+
+        return view('appraisalforms.batch-send', compact(
+            'appraisalcycle',
+            'assignments',
+            'branches',
+            'assformcats'
+        ));
+    }
+
+    public function storeBatchSend(Request $request, string $id)
+    {
+        $request->validate([
+            'assignments' => 'required|array|min:1',
+            'assignments.*' => ['required', 'regex:/^\d+-\d+$/'],
+        ]);
+
+        AppraisalCycle::findOrFail($id);
+        $created = 0;
+        $skipped = 0;
+
+        DB::transaction(function () use ($request, $id, &$created, &$skipped) {
+            foreach (array_unique($request->assignments) as $assignmentKey) {
+                [$assessorId, $assFormCatId] = array_map('intval', explode('-', $assignmentKey));
+
+                $peers = PeerToPeer::where('appraisal_cycle_id', $id)
+                    ->where('assessor_user_id', $assessorId)
+                    ->where('ass_form_cat_id', $assFormCatId)
+                    ->when(branchHR(), function ($query) {
+                        $branchIds = Auth::user()->branches->pluck('branch_id');
+                        $query->whereHas('assessoruser.branches', function ($branchQuery) use ($branchIds) {
+                            $branchQuery->whereIn('branches.branch_id', $branchIds);
+                        });
+                    })
+                    ->lockForUpdate()
+                    ->get();
+
+                if ($peers->isEmpty()) {
+                    continue;
+                }
+
+                $appraisalform = AppraisalForm::withTrashed()
+                    ->where('appraisal_cycle_id', $id)
+                    ->where('assessor_user_id', $assessorId)
+                    ->where('ass_form_cat_id', $assFormCatId)
+                    ->first();
+
+                if ($appraisalform && ! $appraisalform->trashed()) {
+                    $skipped++;
+                    continue;
+                }
+
+                if ($appraisalform) {
+                    $appraisalform->restore();
+                    $appraisalform->update(['user_id' => Auth::id()]);
+                } else {
+                    $appraisalform = AppraisalForm::create([
+                        'appraisal_cycle_id' => $id,
+                        'assessor_user_id' => $assessorId,
+                        'ass_form_cat_id' => $assFormCatId,
+                        'user_id' => Auth::id(),
+                    ]);
+                }
+
+                foreach ($peers->unique('assessee_user_id') as $peer) {
+                    $pivot = AppraisalFormAssesseeUser::withTrashed()
+                        ->where('appraisal_form_id', $appraisalform->id)
+                        ->where('assessee_user_id', $peer->assessee_user_id)
+                        ->first();
+
+                    if ($pivot) {
+                        if ($pivot->trashed()) {
+                            $pivot->restore();
+                        }
+                    } else {
+                        AppraisalFormAssesseeUser::create([
+                            'appraisal_form_id' => $appraisalform->id,
+                            'assessee_user_id' => $peer->assessee_user_id,
+                            'user_id' => Auth::id(),
+                        ]);
+                    }
+                }
+
+                $assessor = User::find($assessorId);
+                $assformcat = \App\Models\AssFormCat::find($assFormCatId);
+                $title = 'You received new Appraisal Form "'.$assformcat->name.'"';
+                $notificationExists = DB::table('notifications')
+                    ->where('notifiable_id', $assessorId)
+                    ->where('notifiable_type', User::class)
+                    ->where('type', AppraisalFormsNotify::class)
+                    ->whereRaw("data::jsonb ->> 'appraisalform_id' = ?", [$appraisalform->id])
+                    ->exists();
+
+                if (! $notificationExists) {
+                    Notification::send($assessor, new AppraisalFormsNotify(
+                        $appraisalform->id,
+                        $assFormCatId,
+                        $title,
+                        $id
+                    ));
+                }
+                $created++;
+            }
+        });
+
+        return redirect()
+            ->route('appraisalcycles.batchsend', $id)
+            ->with('success', "{$created} form(s) sent. {$skipped} duplicate form(s) skipped.");
+    }
+
 }
 
+>>>>>>> Stashed changes

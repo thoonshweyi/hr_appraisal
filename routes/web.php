@@ -225,7 +225,12 @@ Route::middleware('auth')->group(function () {
     Route::post("/appraisalcycles",[AppraisalCyclesController::class,"store"])->name("appraisalcycles.store");
     Route::get("/appraisalcycles/{id}",[AppraisalCyclesController::class,"show"])->name("appraisalcycles.show");
     Route::get("/appraisalcycles/{id}/edit",[AppraisalCyclesController::class,"edit"])->name("appraisalcycles.edit");
+<<<<<<< Updated upstream
     Route::post("/appraisalcycles/{id}/send-filtered-forms",[AppraisalCyclesController::class,"sendFilteredForms"])->name("appraisalcycles.sendfilteredforms");
+=======
+    Route::get("/appraisalcycles/{id}/batch-send",[AppraisalCyclesController::class,"batchSend"])->name("appraisalcycles.batchsend");
+    Route::post("/appraisalcycles/{id}/batch-send",[AppraisalCyclesController::class,"storeBatchSend"])->name("appraisalcycles.batchsend.store");
+>>>>>>> Stashed changes
     Route::get("/appraisalcycles/{id}/report",[AppraisalCyclesController::class,"report"])->name("appraisalcycles.report");
     Route::put("/appraisalcycles/{id}",[AppraisalCyclesController::class,"update"])->name("appraisalcycles.update");
     Route::delete("/appraisalcycles/{id}",[AppraisalCyclesController::class,"destroy"])->name("appraisalcycles.destroy");

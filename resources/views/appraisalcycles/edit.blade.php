@@ -82,103 +82,55 @@
                     </li>
                 </ul>
                 <h4 id="tab-title" class="tab-title"></h4>
-                <div id="tab-tilter" class="col-lg-12 tab-filter">
-                    <form id="searchnfilterform" class="" action="{{ route('appraisalcycles.edit',$appraisalcycle->id) }}" method="GET">
+                <div id="tab-tilter" class="col-lg-12 tab-filter appraisal-search-panel">
+                    <div class="search-panel-heading">
+                        <h5>Find Employees <span>Filter appraisal participants</span></h5>
+                    </div>
+                    <form id="searchnfilterform" class="search-filter-box" action="{{ route('appraisalcycles.edit',$appraisalcycle->id) }}" method="GET">
                         @csrf
-                        <div class="row align-items-end justify-content-start">
-
-                            <div class="col-md-2  px-1">
-                                <div class="form-group d-flex">
-                                    <label for="filter_employee_code"><i class="fas fa-user-tag text-primary mx-2"></i></label>
-                                    <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm rounded-0 " placeholder="Enter Employee Code / Name" value="{{ session('filter_employee_code') }}"/>
-                                    {{-- <i class="fas fa-id-card"></i> --}}
-                                </div>
+                        <div class="filter-grid">
+                            <div class="filter-field filter-field-search">
+                                <label for="filter_employee_code">Employee</label>
+                                <input type="text" name="filter_employee_code" id="filter_employee_code" class="form-control form-control-sm" placeholder="Code or name" value="{{ session('filter_employee_code') }}"/>
                             </div>
-
-                            <div class="col-md-2 px-1">
-                                <div class="form-group d-flex">
-                                    <label for="filter_branch_id"><i class="fas fa-map-marker-alt text-primary mx-2"></i></label>
-                                    <select name="filter_branch_id" id="filter_branch_id" class="form-control form-control-sm rounded-0 ">
-                                        <option value="" selected disabled>Choose Branch</option>
-                                        @foreach($branches as $branch)
-                                            <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == session('filter_branch_id') ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="filter-field">
+                                <label for="filter_branch_id">Branch</label>
+                                <select name="filter_branch_id" id="filter_branch_id" class="form-control form-control-sm">
+                                    <option value="">All branches</option>
+                                    @foreach($branches as $branch)
+                                        <option value="{{$branch['branch_id']}}" {{ $branch['branch_id'] == session('filter_branch_id') ? 'selected' : '' }}>{{$branch['branch_name']}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-
-
-                            {{-- <div class="col-md-2 px-1">
-                                <div class="form-group d-flex">
-                                    <label for="filter_subdepartment_id"><i class="fas fa-building text-primary mx-2"></i></label>
-                                    <select name="filter_subdepartment_id" id="filter_subdepartment_id" class="form-control form-control-sm rounded-0 ">
-                                        <option value="" selected disabled>Choose Sub Department</option>
-                                        @foreach($subdepartments as $subdepartment)
-                                            <option value="{{$subdepartment['id']}}" {{ $subdepartment['id'] == session('filter_subdepartment_id') ? 'selected' : '' }}>{{$subdepartment['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
-
-                            {{-- <div class="col-md-2">
-                                <div class="form-group d-flex">
-                                    <label for="filter_section_id"><i class="fas fa-building text-primary mx-2"></i></label>
-                                    <select name="filter_section_id" id="filter_section_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose  Section</option>
-                                        @foreach($sections as $section)
-                                                    <option value="{{$section['id']}}" {{ $section['id'] == session('filter_section_id') ? 'selected' : '' }}>{{$section['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
-
-                            <div class="col-md-2">
-                                <div class="form-group d-flex">
-                                    <label for="filter_sub_section_id"><i class="fas fa-building text-primary mx-2"></i></label>
-                                    <select name="filter_sub_section_id" id="filter_sub_section_id" class="form-control form-control-sm rounded-0">
-                                        <option value="" selected disabled>Choose Sub Section</option>
-                                        @foreach($subsections as $subsection)
-                                                    <option value="{{$subsection['id']}}" {{ $subsection['id'] == session('filter_sub_section_id') ? 'selected' : '' }}>{{$subsection['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="filter-field">
+                                <label for="filter_sub_section_id">Sub Section</label>
+                                <select name="filter_sub_section_id" id="filter_sub_section_id" class="form-control form-control-sm">
+                                    <option value="">All sub sections</option>
+                                    @foreach($subsections as $subsection)
+                                        <option value="{{$subsection['id']}}" {{ $subsection['id'] == session('filter_sub_section_id') ? 'selected' : '' }}>{{$subsection['name']}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-
-
-
-                            <div class="col-md-2 px-1">
-                                <div class="form-group d-flex">
-                                    <label for="filter_position_level_id"><i class="fas fa-briefcase text-primary mx-2"></i></label>
-                                    <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm rounded-0 ">
-                                        <option value="" selected disabled>Choose Position Level</option>
-                                        @foreach($positionlevels as $positionlevel)
-                                            <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == session('filter_position_level_id') ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="filter-field">
+                                <label for="filter_position_level_id">Position Level</label>
+                                <select name="filter_position_level_id" id="filter_position_level_id" class="form-control form-control-sm">
+                                    <option value="">All levels</option>
+                                    @foreach($positionlevels as $positionlevel)
+                                        <option value="{{$positionlevel['id']}}" {{ $positionlevel['id'] == session('filter_position_level_id') ? 'selected' : '' }}>{{$positionlevel['name']}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-
-                            <div class="col-md-2 px-1">
-                                <div class="form-group d-flex">
-                                    <label for="filter_status"><i class="fas fa-briefcase text-primary mx-2"></i></label>
-                                    <select name="filter_status" id="filter_status" class="form-control form-control-sm rounded-0 ">
-                                        <option value="" selected disabled>Choose Status</option>
-                                        <option value="pending" {{  request()->get('filter_status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    </select>
-                                </div>
+                            <div class="filter-field">
+                                <label for="filter_status">Status</label>
+                                <select name="filter_status" id="filter_status" class="form-control form-control-sm">
+                                    <option value="">All statuses</option>
+                                    <option value="pending" {{ request()->get('filter_status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                </select>
                             </div>
-
-
-
-
-                            <div class="col-auto ">
-                                <div class="d-flex align-items-end">
-                                    <button type="button" class="btn  ml-auto mr-2 cus_btn searchbtns">Search</button>
-                                    <button type="button" id="btn-clear" class="btn btn-light ml-auto">Reset</button>
-                                </div>
-
+                            <div class="filter-actions">
+                                <button type="button" class="btn search-primary-btn searchbtns">Apply</button>
+                                <button type="button" id="btn-clear" class="btn search-reset-btn">Clear</button>
                             </div>
-
                         </div>
                     </form>
                 </div>
@@ -424,6 +376,7 @@
                         <div id="appraisal" class="tab-pane">
                             <div class="row">
                                <div class="col-lg-12">
+<<<<<<< Updated upstream
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <div>
                                             <h5 class="mb-1">Appraisal Form Sending</h5>
@@ -432,6 +385,13 @@
                                         <button type="button" id="send-filtered-forms" class="btn btn-success btn-sm">
                                             <i class="far fa-paper-plane mr-1"></i> Send Forms to Search Results
                                         </button>
+=======
+                                    <div class="appraisal-tab-toolbar">
+                                        <h6>Appraisal Forms</h6>
+                                        <a href="{{ route('appraisalcycles.batchsend', $appraisalcycle->id) }}" class="btn batch-send-link">
+                                            Batch Send
+                                        </a>
+>>>>>>> Stashed changes
                                     </div>
                                     <div class="table-responsive rounded mb-3">
                                         <table id="participantusertable"  class="table mb-0 w-100" >
@@ -855,6 +815,154 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <style>
     /* Start Assessor Assessee Card */
+    .appraisal-search-panel {
+        width: calc(100% - 36px);
+        max-width: calc(100% - 36px);
+        flex: 0 0 calc(100% - 36px);
+        margin: 0 18px 4px;
+        padding: 8px 0 9px;
+        border-bottom: 1px solid #edf1f6;
+        background: transparent;
+    }
+    .search-panel-heading {
+        margin-bottom: 8px;
+    }
+    .search-panel-heading h5 {
+        margin: 0;
+        color: #172b4d;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .search-panel-heading h5 span {
+        margin-left: 7px;
+        color: #94a0b2;
+        font-size: 11px;
+        font-weight: 400;
+    }
+    .search-filter-box {
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+    .filter-grid {
+        display: grid;
+        grid-template-columns: minmax(150px, 1.15fr) repeat(4, minmax(130px, 1fr)) auto;
+        gap: 8px;
+        align-items: start;
+    }
+    .filter-field {
+        min-width: 0;
+    }
+    .filter-field label {
+        display: block;
+        margin: 0 0 3px 2px;
+        color: #7d899c;
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 1.2;
+        text-transform: uppercase;
+        letter-spacing: .35px;
+    }
+    .search-filter-box .form-control {
+        width: 100%;
+        height: 32px;
+        min-height: 32px;
+        padding: 4px 9px;
+        border-color: #dce4ef;
+        border-radius: 5px !important;
+        background-color: #fff;
+        font-size: 12px;
+    }
+    .search-filter-box .selectize-control {
+        margin: 0;
+        min-height: 32px;
+        transform: translateY(-4px);
+    }
+    .search-filter-box .selectize-input {
+        height: 32px !important;
+        min-height: 32px !important;
+        padding: 6px 9px !important;
+        border-color: #dce4ef;
+        border-radius: 5px !important;
+        box-shadow: none !important;
+        font-size: 12px;
+    }
+    .filter-actions {
+        display: flex;
+        gap: 6px;
+        padding-top: 15px;
+    }
+    .batch-send-link {
+        height: 30px;
+        padding: 5px 12px;
+        border-radius: 5px;
+        color: #fff !important;
+        background: #16834f;
+        box-shadow: none;
+        font-size: 12px;
+        line-height: 18px;
+    }
+    .search-primary-btn {
+        height: 32px;
+        padding: 4px 14px;
+        color: #fff;
+        border-radius: 5px;
+        background: #2f6fdf;
+        font-size: 12px;
+    }
+    .search-reset-btn {
+        height: 32px;
+        padding: 4px 12px;
+        color: #52647f;
+        border: 1px solid #dce4ef;
+        border-radius: 5px;
+        background: #fff;
+        font-size: 12px;
+    }
+    .appraisal-tab-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        min-height: 38px;
+        padding: 4px 2px;
+        margin-bottom: 6px;
+        border-bottom: 1px solid #edf1f6;
+    }
+    .appraisal-tab-toolbar h6 {
+        margin: 0;
+        color: #172b4d;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    @media (max-width: 1199px) {
+        .filter-grid {
+            grid-template-columns: repeat(3, minmax(150px, 1fr));
+        }
+    }
+    @media (max-width: 767px) {
+        .appraisal-search-panel {
+            width: calc(100% - 20px);
+            max-width: calc(100% - 20px);
+            flex-basis: calc(100% - 20px);
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+        .filter-grid {
+            grid-template-columns: 1fr;
+        }
+        .filter-actions .btn {
+            flex: 1;
+        }
+        .filter-actions {
+            padding-top: 0;
+        }
+        .appraisal-tab-toolbar {
+            align-items: center;
+            flex-direction: row;
+        }
+    }
+
     .card-count {
         font-size: 0.9rem;
         font-weight: 500;
