@@ -409,6 +409,7 @@ class EmployeesController extends Controller
             \DB::commit();
             return redirect(route("employees.index"))->with('success',"Employee excel imported successfully");
 
+            // throw new Exception("Validation Error: Please check the excel file for errors.");
         }catch (ExcelImportValidationException $e) {
             // If validation fails, show the error message to the user
             Log::info($e);

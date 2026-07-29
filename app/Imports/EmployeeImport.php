@@ -37,10 +37,12 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
     public function model(array $row)
     {
         Log::info($this->rowNumber);
-        $row['beginning_date'] = is_numeric($row['beginning_date'])
-        ? Carbon::instance(Date::excelToDateTimeObject($row['beginning_date']))
-        : Carbon::parse($row['beginning_date']); // Handles cases where date is already formatted correctly
 
+        if (!empty($row['beginning_date'])) {
+            $row['beginning_date'] = is_numeric($row['beginning_date'])
+            ? Carbon::instance(Date::excelToDateTimeObject($row['beginning_date']))
+            : Carbon::parse($row['beginning_date']); // Handles cases where date is already formatted correctly
+        }
         // dd(AttachFormType::where('name',$row['attach_form_type'])->first()->id);
 
         // dd($row);
@@ -53,18 +55,16 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
             'department' => ['required'],
             'sub_department' => 'required',
             'section' => 'required',
-            'sub_section' => 'required|exists:sub_sections,name',
-            'position' => 'required|exists:positions,name',
+            'sub_section' => 'required',
+            'position' => 'required',
 
-            'beginning_date'=> "required|date",
+            'beginning_date'=> "date",
             "employee_code"=> "required",
             // "branch_code"=> "required|exists:branches,branch_code",
             "branch"=> "required|exists:branches,branch_name",
             "age"=> "required",
             "gender"=> "required|exists:genders,name",
-            'position_level'=> "required|exists:position_levels,name",
-            // "nrc"=> "required",
-            // "father_name"=> "required",
+            'position_level'=> "required",
             // 'attach_form_type' => 'required',
             // 'phone' => 'required'
         ]);
@@ -101,59 +101,64 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
             'nickname'           => $row['nickname'],
             'status_id'          => 1, // Default status_id (change as needed)
             'user_id'            => $user_id,
-            'beginning_date'     => $row['beginning_date'],
             "branch_id"          => Branch::where('branch_name', $row['branch'])->first()?->branch_id,
             "age"                => $row['age'],
             "gender_id"          => Gender::where('name', $row['gender'])->first()?->id,
-            "position_level_id"  => PositionLevel::where('name', $row['position_level'])->first()?->id,
-            "nrc"                => $row['nrc'],
-            "father_name"        => $row['father_name'],
             // "phone"                => $row['phone'] ? $row['phone'] : null,
         ];
 
         // Start Agile HR Related Data Handling
-        $updateData['division_id'] = Division::firstOrCreate(
-            ['slug' => $row['division']],
-            ['name' => $row['division']]
-        )->id;
+        $updateData['division_id'] = $this->firstOrCreateMaster(Division::class, $row['division'], $user_id);
+        $updateData['department_id'] = $this->firstOrCreateMaster(AgileDepartment::class, $row['department'], $user_id);
+        $updateData['sub_department_id'] = $this->firstOrCreateMaster(SubDepartment::class, $row['sub_department'], $user_id);
+        $updateData['section_id'] = $this->firstOrCreateMaster(Section::class, $row['section'], $user_id);
+        $updateData['position_id'] = $this->firstOrCreateMaster(Position::class, $row['position'], $user_id);
+        $updateData['position_level_id'] = $this->firstOrCreateMaster(PositionLevel::class, $row['position_level'], $user_id);
 
-        $updateData['department_id'] = AgileDepartment::firstOrCreate(
-            ['slug' => $row['department']],
-            ['name' => $row['department']]
-        )->id;
 
-        $updateData['sub_department_id'] = SubDepartment::firstOrCreate(
-            ['slug' => $row['sub_department']],
-            ['name' => $row['sub_department']]
-        )->id;
-
-        $updateData['section_id'] = Section::firstOrCreate(
-            ['slug' => $row['section']],
-            ['name' => $row['section']]
-        )->id;
-
-        $updateData['sub_section_id'] = SubSection::firstOrCreate(
-            ['slug' => $row['sub_section']],
-            ['name' => $row['sub_section']]
-        )->id;
-
-        $updateData['position_id'] = Position::firstOrCreate(
-            ['slug' => $row['position']],
-            ['name' => $row['position']]
-        )->id;
+        if (!empty($row['beginning_date'])) {
+            $updateData['beginning_date'] = $row['beginning_date'];
+        }
+        if (!empty($row['nrc'])) {
+            $updateData['nrc'] = $row['nrc'];
+        }
+        if (!empty($row['father_name'])) {
+            $updateData['father_name'] = $row['father_name'];
+        }
         // End Agile HR Related Data Handling
 
         if (!empty($row['attach_form_type'])) {
             $attachFormTypeId = AttachFormType::where('name', $row['attach_form_type'])->value('id');
             if ($attachFormTypeId) {
-                $data['attach_form_type_id'] = $attachFormTypeId;
+                $updateData['attach_form_type_id'] = $attachFormTypeId;
             }
+        }
+
+        if (!empty($row['sub_section'])) {
+            $updateData['sub_section_id'] = $this->firstOrCreateMaster(
+                SubSection::class,
+                $row['sub_section'],
+                $user_id
+            );
         }
 
         return Employee::updateOrCreate(
             ['employee_code' => $row['employee_code']], // Check for existing record
             $updateData
         );
+    }
+
+    private function firstOrCreateMaster(string $model, string $name, int $userId): int
+    {
+        return $model::firstOrCreate(
+            ['slug' => Str::slug($name)],
+            [
+                'name' => $name,
+                'slug' => Str::slug($name),
+                'status_id' => 1,
+                'user_id' => $userId,
+            ]
+        )->id;
     }
 
     public function onRow($row)
