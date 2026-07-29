@@ -424,6 +424,15 @@
                         <div id="appraisal" class="tab-pane">
                             <div class="row">
                                <div class="col-lg-12">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <h5 class="mb-1">Appraisal Form Sending</h5>
+                                            <small class="text-muted">The current search filters will be applied to all matching assessors, including other pages.</small>
+                                        </div>
+                                        <button type="button" id="send-filtered-forms" class="btn btn-success btn-sm">
+                                            <i class="far fa-paper-plane mr-1"></i> Send Forms to Search Results
+                                        </button>
+                                    </div>
                                     <div class="table-responsive rounded mb-3">
                                         <table id="participantusertable"  class="table mb-0 w-100" >
                                             <thead class="bg-white text-uppercase">
@@ -2203,6 +2212,102 @@
         });
     });
     {{-- End Bulk Send Noti --}}
+
+    $('#send-filtered-forms').on('click', function () {
+        const $button = $(this);
+        const requestData = {};
+
+        $('#searchnfilterform').serializeArray().forEach(function (item) {
+            requestData[item.name] = item.value;
+        });
+        requestData.action = 'preview';
+        requestData._token = "{{ csrf_token() }}";
+
+        $button.prop('disabled', true);
+
+        $.ajax({
+            url: "{{ route('appraisalcycles.sendfilteredforms', $appraisalcycle->id) }}",
+            type: 'POST',
+            dataType: 'json',
+            data: requestData,
+            success: function (response) {
+                if (!response.forms_count) {
+                    Swal.fire('No forms found', 'No assessor/form mapping matches the current search filters.', 'info');
+                    return;
+                }
+
+                const rows = response.assignments.slice(0, 100).map(function (assignment) {
+                    const assesseeNames = assignment.assessees.map(function (assessee) {
+                        return $('<div>').text(assessee.name).html();
+                    }).join(', ');
+
+                    return `
+                        <tr>
+                            <td>${$('<div>').text(assignment.assessor).html()}</td>
+                            <td>${$('<div>').text(assignment.criteria_set).html()}</td>
+                            <td>${assesseeNames}</td>
+                            <td>${$('<div>').text(assignment.appraisal).html()}</td>
+                        </tr>`;
+                }).join('');
+
+                const remainder = response.forms_count > 100
+                    ? `<p class="text-muted mt-2">Showing first 100 of ${response.forms_count} forms.</p>`
+                    : '';
+
+                Swal.fire({
+                    title: `Send ${response.forms_count} form(s) to ${response.users_count} assessor(s)?`,
+                    width: '90%',
+                    html: `
+                        <div class="table-responsive text-left" style="max-height: 55vh; overflow-y: auto;">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Assessor</th>
+                                        <th>Criteria Set</th>
+                                        <th>Assessees</th>
+                                        <th>Appraisal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${rows}</tbody>
+                            </table>
+                        </div>
+                        ${remainder}
+                        <small class="text-muted">Existing forms will be skipped to prevent duplicates.</small>`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, send forms',
+                    showLoaderOnConfirm: true,
+                    preConfirm: function () {
+                        const sendData = Object.assign({}, requestData, { action: 'send' });
+
+                        return $.ajax({
+                            url: "{{ route('appraisalcycles.sendfilteredforms', $appraisalcycle->id) }}",
+                            type: 'POST',
+                            dataType: 'json',
+                            data: sendData
+                        }).catch(function (xhr) {
+                            Swal.showValidationMessage(xhr.responseJSON?.message || 'Unable to send forms.');
+                        });
+                    },
+                    allowOutsideClick: function () {
+                        return !Swal.isLoading();
+                    }
+                }).then(function (result) {
+                    if (result.isConfirmed && result.value?.success) {
+                        Swal.fire('Completed', result.value.message, 'success').then(function () {
+                            window.location.reload();
+                        });
+                    }
+                });
+            },
+            error: function (xhr) {
+                Swal.fire('Error', xhr.responseJSON?.message || 'Unable to preview forms.', 'error');
+            },
+            complete: function () {
+                $button.prop('disabled', false);
+            }
+        });
+    });
 
 
        // Start User Chart

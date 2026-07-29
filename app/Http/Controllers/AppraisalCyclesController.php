@@ -28,12 +28,15 @@ use App\Imports\DepartmentImport;
 use Illuminate\Support\Facades\Log;
 use App\Imports\SubDepartmentImport;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AppraisalCycleImport;
 use App\Imports\AgileDepartmentImport;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\AppraisalFormAssesseeUser;
+use App\Notifications\AppraisalFormsNotify;
 use App\Exceptions\ExcelImportValidationException;
 
 
@@ -44,7 +47,7 @@ class AppraisalCyclesController extends Controller
         $this->middleware('auth');
         $this->middleware('permission:view-add-on', ['only' => ['index']]);
         $this->middleware('permission:create-add-on', ['only' => ['create', 'store']]);
-        $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:edit-add-on', ['only' => ['edit', 'update', 'sendFilteredForms']]);
         $this->middleware('permission:delete-add-on', ['only' => ['destroy']]);
     }
     public function index(Request $request){
@@ -194,6 +197,193 @@ class AppraisalCyclesController extends Controller
         $appraisalcycle->user_id = $user_id;
         $appraisalcycle->save();
         return redirect(route("appraisalcycles.index"))->with('success',"AppraisalCycle updated successfully");
+    }
+
+    public function sendFilteredForms(Request $request, string $id)
+    {
+        $request->validate([
+            'action' => 'required|in:preview,send',
+            'filter_employee_code' => 'nullable|string|max:255',
+            'filter_branch_id' => 'nullable|integer',
+            'filter_position_level_id' => 'nullable|integer',
+            'filter_sub_section_id' => 'nullable|integer',
+            'filter_status' => 'nullable|in:pending',
+        ]);
+
+        if (! $request->filled('filter_employee_code')
+            && ! $request->filled('filter_branch_id')
+            && ! $request->filled('filter_position_level_id')
+            && ! $request->filled('filter_sub_section_id')
+            && ! $request->filled('filter_status')) {
+            return response()->json([
+                'message' => 'Please search or choose at least one filter before sending forms.',
+            ], 422);
+        }
+
+        $appraisalcycle = AppraisalCycle::findOrFail($id);
+        $participantIds = PeerToPeer::where('appraisal_cycle_id', $id)
+            ->distinct()
+            ->pluck('assessor_user_id');
+
+        $users = User::whereIn('id', $participantIds)
+            ->when(branchHR(), function ($query) {
+                $query->whereHas('branches', function ($branchQuery) {
+                    $branchQuery->whereIn('branches.branch_id', Auth::user()->branches->pluck('branch_id'));
+                });
+            })
+            ->when($request->filled('filter_employee_code'), function ($query) use ($request) {
+                $keyword = $request->filter_employee_code;
+                $query->whereHas('employee', function ($employeeQuery) use ($keyword) {
+                    $employeeQuery->where(function ($searchQuery) use ($keyword) {
+                        $searchQuery->where('employee_code', 'like', '%'.$keyword.'%')
+                            ->orWhere('employee_name', 'like', '%'.$keyword.'%');
+                    });
+                });
+            })
+            ->when($request->filled('filter_branch_id'), function ($query) use ($request) {
+                $query->whereHas('employee', fn ($employeeQuery) => $employeeQuery->where('branch_id', $request->filter_branch_id));
+            })
+            ->when($request->filled('filter_position_level_id'), function ($query) use ($request) {
+                $query->whereHas('employee', fn ($employeeQuery) => $employeeQuery->where('position_level_id', $request->filter_position_level_id));
+            })
+            ->when($request->filled('filter_sub_section_id'), function ($query) use ($request) {
+                $query->whereHas('employee', fn ($employeeQuery) => $employeeQuery->where('sub_section_id', $request->filter_sub_section_id));
+            })
+            ->with('employee')
+            ->orderBy('id')
+            ->get();
+
+        if ($request->filter_status === 'pending') {
+            $users = $users->filter(fn ($user) => $user->getSentPercentage($id) != 100)->values();
+        }
+
+        $assignments = PeerToPeer::where('appraisal_cycle_id', $id)
+            ->whereIn('assessor_user_id', $users->pluck('id'))
+            ->with([
+                'assessoruser.employee',
+                'assesseeuser.employee',
+                'assformcat',
+            ])
+            ->get()
+            ->groupBy(fn ($peer) => $peer->assessor_user_id.'-'.$peer->ass_form_cat_id)
+            ->map(function ($peers) use ($appraisalcycle) {
+                $first = $peers->first();
+
+                return [
+                    'assessor_user_id' => $first->assessor_user_id,
+                    'assessor' => optional(optional($first->assessoruser)->employee)->employee_name
+                        ?? optional($first->assessoruser)->name
+                        ?? 'N/A',
+                    'ass_form_cat_id' => $first->ass_form_cat_id,
+                    'criteria_set' => optional($first->assformcat)->name ?? 'N/A',
+                    'appraisal' => $appraisalcycle->name,
+                    'assessees' => $peers->unique('assessee_user_id')->map(function ($peer) {
+                        return [
+                            'id' => $peer->assessee_user_id,
+                            'name' => optional(optional($peer->assesseeuser)->employee)->employee_name
+                                ?? optional($peer->assesseeuser)->name
+                                ?? 'N/A',
+                        ];
+                    })->values()->all(),
+                ];
+            })
+            ->values();
+
+        if ($request->action === 'preview') {
+            return response()->json([
+                'appraisal' => $appraisalcycle->name,
+                'users_count' => $users->count(),
+                'forms_count' => $assignments->count(),
+                'assignments' => $assignments,
+            ]);
+        }
+
+        $created = 0;
+        $skipped = 0;
+
+        DB::transaction(function () use ($assignments, $id, &$created, &$skipped) {
+            // Serialise sends for the same filtered assignments so two simultaneous
+            // requests cannot both create an otherwise missing form.
+            PeerToPeer::where('appraisal_cycle_id', $id)
+                ->whereIn('assessor_user_id', $assignments->pluck('assessor_user_id'))
+                ->lockForUpdate()
+                ->get();
+
+            foreach ($assignments as $assignment) {
+                $appraisalform = AppraisalForm::withTrashed()
+                    ->where('assessor_user_id', $assignment['assessor_user_id'])
+                    ->where('ass_form_cat_id', $assignment['ass_form_cat_id'])
+                    ->where('appraisal_cycle_id', $id)
+                    ->lockForUpdate()
+                    ->first();
+
+                $isNew = ! $appraisalform;
+                $wasDeleted = $appraisalform && $appraisalform->trashed();
+
+                if ($isNew) {
+                    $appraisalform = AppraisalForm::create([
+                        'assessor_user_id' => $assignment['assessor_user_id'],
+                        'ass_form_cat_id' => $assignment['ass_form_cat_id'],
+                        'appraisal_cycle_id' => $id,
+                        'user_id' => Auth::id(),
+                    ]);
+                } elseif ($wasDeleted) {
+                    $appraisalform->restore();
+                    $appraisalform->update(['user_id' => Auth::id()]);
+                }
+
+                foreach ($assignment['assessees'] as $assessee) {
+                    $pivot = AppraisalFormAssesseeUser::withTrashed()
+                        ->where('appraisal_form_id', $appraisalform->id)
+                        ->where('assessee_user_id', $assessee['id'])
+                        ->first();
+
+                    if (! $pivot) {
+                        AppraisalFormAssesseeUser::create([
+                            'appraisal_form_id' => $appraisalform->id,
+                            'assessee_user_id' => $assessee['id'],
+                            'user_id' => Auth::id(),
+                        ]);
+                    } elseif ($pivot->trashed()) {
+                        $pivot->restore();
+                    }
+                }
+
+                if (! $isNew && ! $wasDeleted) {
+                    $skipped++;
+                    continue;
+                }
+
+                $notificationExists = DB::table('notifications')
+                    ->where('notifiable_id', $appraisalform->assessor_user_id)
+                    ->where('notifiable_type', User::class)
+                    ->where('type', AppraisalFormsNotify::class)
+                    ->whereRaw("data::jsonb ->> 'appraisalform_id' = ?", [$appraisalform->id])
+                    ->exists();
+
+                if (! $notificationExists) {
+                    $title = 'You received new Appraisal Form "'.$assignment['criteria_set'].'"';
+                    Notification::send(
+                        User::find($appraisalform->assessor_user_id),
+                        new AppraisalFormsNotify(
+                            $appraisalform->id,
+                            $appraisalform->ass_form_cat_id,
+                            $title,
+                            $id
+                        )
+                    );
+                }
+
+                $created++;
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$created} form(s) sent. {$skipped} existing duplicate form(s) skipped.",
+            'created' => $created,
+            'skipped' => $skipped,
+        ]);
     }
 
 
@@ -832,6 +1022,4 @@ class AppraisalCyclesController extends Controller
 
  
 }
-
-
 
