@@ -314,20 +314,6 @@ class AppraisalCyclesController extends Controller
             $query->where('status_id',1);
         });
 
-
-            // for getting employee info
-        $filter_user_id = $request->filter_user_id;
-        if(!empty($filter_user_id)){
-            $results = $results->where("id",$filter_user_id);
-
-            $user = $results->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
-            ->first();
-
-            return response()->json([
-                "user"=>$user
-            ]);
-        }
-
         if (!empty($filter_employee_name) ) {
             $results = $results->whereHas('employee',function($query) use($filter_employee_name){
                 $query->where('employee_name', 'like', '%'.$filter_employee_name.'%');
@@ -392,7 +378,9 @@ class AppraisalCyclesController extends Controller
 
         $results = $results->doesntHave('roles');
 
-        $users = $results->orderBy('id','asc')->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        $users = $results
+        ->orderBy('name','asc')
+        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
         ->get();
 
         return $users;
@@ -549,45 +537,6 @@ class AppraisalCyclesController extends Controller
         return $participantusers;
         // dd($participantusers);
         // ->paginate(10);
-
-
-
-        return DataTables::of($participantusers)
-                ->addColumn('progress', function ($participantuser) use ($id) {
-                    return "
-                        <div class='d-flex justify-content-center align-items-center'>
-                            <div id='progresses'  style='background : conic-gradient(steelblue {$participantuser->getSentPercentage($id)}%,#eee {$participantuser->getSentPercentage($id)}%)'>
-                                    <span id='progressvalues'>{$participantuser->getSentPercentage($id)}%</span>
-                            </div>
-                        </div>
-                    ";
-                })
-                ->addColumn('action', function ($participantuser) use ($id) {
-
-                    $printbtn = ($participantuser->employee->positionlevel->id < 5 && !$participantuser->printhistory) ? "<a href='javascript:void(0);' data-user='$participantuser->id' class='text-warning mx-2 print_btn' title='Print'><i class='fas fa-print'></i></a>" : '';
-                    return "
-                        <div class='d-flex justify-content-center align-items-center'>
-                            <form id='appraisalform' action='".route('appraisalforms.create')."' method='GET'>
-                                <input type='hidden' name='assessor_user_id' value='$participantuser->id'>
-                                <input type='hidden' name='appraisal_cycle_id' value='$id'/>
-                               <button type='submit' class='btn btn-link p-0 m-0' title='Send'>
-                                    <i class='far fa-paper-plane text-primary mr-2'></i>
-                                </button>
-                            </form>
-
-                            $printbtn
-                            <a href='javascript:void(0);' class='show-forms' data-user='$participantuser->id' title='Open'><i class='fas fa-chevron-down'></i></a>
-                        </div>
-                    ";
-                })
-                ->addColumn("appraisalformcount", function($user) use($id){
-                    return $user->getAppraisalFormCount($id);
-                })
-                ->addColumn("allformcount", function($user) use($id){
-                    return $user->getAllFormCount($id);
-                })
-                ->rawColumns(['progress', 'action']) // <-- Allow raw HTML
-                ->make(true);
    }
 
 
@@ -699,16 +648,6 @@ class AppraisalCyclesController extends Controller
 
         Log::info($results->pluck('id'));
         return $assesseeusers;
-
-        //
-        return DataTables::of($assesseeusers)
-                ->addColumn('action', function ($assesseeuser) use ($id) {
-                    return "
-                        <a href='". route('assesseesummary.review',['assessee_user_id'=>$assesseeuser->id,'appraisal_cycle_id'=>$id])."'class='text-primary mr-2' title='Open' onclick=''><i class='far fa-eye'></i></i></a>
-                    ";
-                })
-                ->rawColumns(['action'])
-                ->make(true);
 
    }
 

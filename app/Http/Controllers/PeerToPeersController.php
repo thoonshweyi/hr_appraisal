@@ -205,7 +205,6 @@ class PeerToPeersController extends Controller
                 })
                 ->rawColumns(['action']) //
                 ->make(true);
-
     }
 
     public function getEmployeeAssessors(Request $request){

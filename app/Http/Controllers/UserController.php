@@ -156,6 +156,19 @@ class UserController extends Controller
         try {
             $user = User::find($id);
             $branches = BranchUser::where('user_id', $user->id)->with('branches')->get();
+
+            if(request()->ajax()){
+                $user->load([
+                    'employee.branch',
+                    'employee.department',
+                    'employee.position',
+                    'employee.positionlevel',
+                ]);
+
+                return response()->json([
+                    "user"=>$user
+                ]);
+            }
             return view('users.show', compact('user','branches'));
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
@@ -282,7 +295,6 @@ class UserController extends Controller
         //         ->with('error', 'Fail to update User Profile!');
         // }
     }
-
 
     public function getFilteredAssessees(Request $request){
         // dd($request);
@@ -421,5 +433,6 @@ class UserController extends Controller
 
         return response()->json($dulusers);
     }
+
 
 }

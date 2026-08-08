@@ -387,7 +387,7 @@
                                                     <span id="empassesseescount" class="badge bg-success card-count d-none">0</span>
                                                     <a href="#balancemodal" data-toggle="modal" onclick="$('#assesseestab').trigger('click');">Show More</a>
                                                 </div>
-                                                <ul id="assesseeschart" class="list-group list-group-flush">
+                                                <ul id="assesseeslist" class="list-group list-group-flush">
                                                     {{-- <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Michael Chan</strong> — Junior Developer</li>
                                                     <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Lily Zhao</strong> — IT Intern</li>
                                                     <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Tommy Brown</strong> — QA Engineer</li>
@@ -404,7 +404,7 @@
                                                 <span id="empassessorscount" class="badge bg-primary card-count d-none">0</span>
                                                 <a href="#balancemodal" data-toggle="modal" onclick="$('#assessorstab').trigger('click');">Show More</a>
                                               </div>
-                                              <ul id="empassessorschart" class="list-group list-group-flush ">
+                                              <ul id="assessorslist" class="list-group list-group-flush ">
                                                 {{-- <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Alice Smith</strong> — HR Manager</li>
                                                 <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>David Lee</strong> — Team Lead, IT</li>
                                                 <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>Sara Tan</strong> — Project Manager</li> --}}
@@ -758,24 +758,16 @@
                     {{--@endif--}}
                
                     <div id="assesseescontent" class="transactions">
-                        
-                        
                         <div class="table-responsive rounded mb-3 position-relative" style="height:60vh; margin-top:-50px;">
-
-                            <table id="peertopeer" class="table mb-0 w-100" style="min-height: 100px !important;">
+                            <table id="assesseestable" class="table mb-0 w-100" style="min-height: 100px !important;">
                                 <thead class="bg-white text-uppercase">
                                     <tr class="ligth ligth-data">
                                         <th>
                                             <input type="checkbox" name="selectalls" id="assesseeSelectall" class="form-check-input" />
                                         </th>
                                         <th style="">No</th>
-                                        {{-- <th>Assessor Name</th> --}}
                                         <th>Assessee Name</th>
                                         <th>Department</th>
-                                        {{-- <th>Branch</th>
-                                        <th>Position Level</th>
-                                        <th>Position</th> --}}
-                                        {{-- <th>Assessment-form Category</th> --}}
                                         <th style="width: 40% !important;">Criteria Set</th>
                                         <th>
                                             Action
@@ -788,26 +780,21 @@
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center">
-                                {{-- {{ $genders->appends(request()->all())->links("pagination::bootstrap-4") }} --}}
                             </div>
                         </div>
                     </div>
                     <div id="assessorscontent" class="transactions"  style="display: none;">
                         <div class="table-responsive rounded mb-3 position-relative" style="height:60vh; margin-top:-50px;">
 
-                            <table id="empassessorstable" class="table mb-0 w-100" style="min-height: 100px !important;">
+                            <table id="assessorstable" class="table mb-0 w-100" style="min-height: 100px !important;">
                                 <thead class="bg-white text-uppercase">
                                     <tr class="ligth ligth-data">
                                         <th>
                                             <input type="checkbox" name="selectalls" id="assessorSelectall" class="form-check-input" />
                                         </th>
                                         <th style="">No</th>
-                                        {{-- <th>Assessor Name</th> --}}
                                         <th>Assessor Name</th>
                                         <th>Department</th>
-                                        {{-- <th>Branch</th>
-                                        <th>Position Level</th>
-                                        <th>Position</th> --}}
                                         <th style="width: 40% !important;">Criteria Set</th>
                                         <th>
                                             Action
@@ -1025,30 +1012,29 @@
             searchField: ["value", "label"]
         });
 
-
-
         $("#start_date,#end_date").flatpickr({
             dateFormat: "Y-m-d",
             {{-- minDate: "today", --}}
             {{-- maxDate: new Date().fp_incr(30) --}}
-       });
-
-       $("#action_start_time,#action_end_time").flatpickr({
-            enableTime: true, // Enable time picker
-            noCalendar: true, // Hide the calendar if only time is neededparticipantusers
-            dateFormat: "H:i", // Format for hours and minutes
-            time_24hr: true // Use 24-hour format
         });
 
+        $("#action_start_time,#action_end_time").flatpickr({
+                enableTime: true, // Enable time picker
+                noCalendar: true, // Hide the calendar if only time is neededparticipantusers
+                dateFormat: "H:i", // Format for hours and minutes
+                time_24hr: true // Use 24-hour format
+            });
 
-        $('#action_start_date').flatpickr({
-            dateFormat: "Y-m-d",
-       });
-       $('#action_end_date').flatpickr({
+
+            $('#action_start_date').flatpickr({
                 dateFormat: "Y-m-d",
         });
 
-         $("#filter_status").selectize({
+        $('#action_end_date').flatpickr({
+                dateFormat: "Y-m-d",
+        });
+
+        $("#filter_status").selectize({
             plugins: ["restore_on_backspace", "remove_button"],
             delimiter: " - ",
             persist: true,
@@ -1060,13 +1046,496 @@
         })
 
 
+        const appraisalCycleId = {{ $appraisalcycle->id }};
 
-        {{-- Start manpowerusers, participantusers, assesseeusers, peertopeer  --}}
-            const appraisalCycleId = {{ $appraisalcycle->id }};
+        $('.searchbtns').on('click', function(e) {
+            $('#searchnfilterform').submit();
+        })
 
-            $('.searchbtns').on('click', function(e) {
-                $('#searchnfilterform').submit();
+        // Start Peer to Peer
+            {{-- Start User List Filter --}}
+            let tableBody = document.querySelector("#assesseestable tbody");
+            $(document).on('click',".user-info li",function(){
+                let getuser_id = $(this).data('user_id');
+                {{-- let getassformcat_id =  --}}
+                {{-- console.log(getuser_id); --}}
+                $(".user-info li").removeClass('active');
+                $(this).toggleClass('active');
+                $('#assessor_user_id').val(getuser_id);
+
+                $('#assesseestable').DataTable().draw(true);
+                $('#assessorstable').DataTable().draw(true);
+
+                {{-- Start Assessees List --}}
+                $.ajax({
+                    url: '/api/getrecentassessees',
+                    method: 'GET',
+                    data: $('#peer_to_peer_form').serialize(),
+                    success:function(data){
+                        {{-- console.log(data); --}}
+
+                        let html = '';
+                        $.each(data,function(idx,employeeassessee){
+                            html += `
+                            <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>${employeeassessee.assesseeuser.employee.employee_name}</strong> — ${employeeassessee.assesseeuser.employee.position.name}</li>
+                            `;
+                        });
+                        $('#assesseeslist').html(html);
+                    },
+                    error:function(){
+                        $('#postchart').html('<span class="text-danger">Failed to load employee assessees data.<span>')
+                    }
+                });
+                {{-- End Assessees List --}}
+
+
+
+                {{-- Start Assessors List --}}
+                $.ajax({
+                    url: '/api/getrecentassessors',
+                    method: 'GET',
+                    data: $('#peer_to_peer_form').serialize(),
+                    success:function(data){
+                        {{-- console.log(data); --}}
+
+                        let html = '';
+                        $.each(data,function(idx,employeeassessors){
+                            html += `
+                            <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>${employeeassessors.assessoruser.employee.employee_name}</strong> — ${employeeassessors.assessoruser.employee.position.name}</li>
+                            `;
+                        });
+                        $('#assessorslist').html(html);
+                    },
+                    error:function(){
+                        $('#postchart').html('<span class="text-danger">Failed to load employee assessors data.<span>')
+                    }
+                });
+                {{-- End Assessors List --}}
+
+
+                getEmployeeInfo(getuser_id);
+            });
+            function getEmployeeInfo(userid){
+                console.log(userid);
+                const appraisalCycleId = {{ $appraisalcycle->id }};
+
+                $.ajax({
+                    url: `/users/${userid}`,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+
+                        let html = ``;
+                        const userempinfo = response.user;
+                        html += `
+                        <div class="card shadow-sm mb-0">
+                            <div class="card-body">
+                            <h5 class="card-title mb-1"><i class="bi bi-person-badge-fill me-2"></i>Employee Information</h5>
+                            <div class="row">
+                                <div class="col-md-3"><strong>Name:</strong> ${userempinfo.employee.employee_name}</div>
+                                <div class="col-md-3"><strong>Position:</strong> ${userempinfo.employee.position.name}</div>
+                                <div class="col-md-3"><strong>Department:</strong> ${userempinfo.employee.department.name}</div>
+                                <div class="col-md-3"><strong>Employee ID:</strong> ${userempinfo.employee.employee_code}</div>
+                            </div>
+                            </div>
+                        </div>
+                        `
+
+                        console.log(userempinfo);
+
+                        $('#employeeinfo').html(html);
+
+
+                    },
+                    error: function (response) {
+                        console.log("Error:", response);
+                    }
+                });
+            }
+            {{-- End User List Filter --}}
+
+
+            // Start Assessee Table
+            const assesseestable =  $('#assesseestable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "searching": true,
+                "lengthChange": false,
+                "pageLength": 10,
+                "autoWidth": false,
+                "responsive": false,
+                "order": [
+                    [1, 'des']
+                ],
+                'ajax': {
+                    url: `/getEmployeeAssessees`,
+                    'type': 'GET',
+                    'data': function(d) {
+                        var formData = $('#peer_to_peer_form').serializeArray();
+                        formData.forEach(function(item) {
+                            d[item.name] = item.value;
+                        });
+                    },
+                    dataSrc: function (json) {
+                        {{-- console.log('Success response:', json); --}}
+                        const rowcount = json.recordsTotal;
+
+                        if(rowcount <= 0){
+                            $("#empassesseescount").addClass('d-none');
+                            $("#empassesseescount").html(0);
+                        }else if(json.recordsTotal > 0){
+                            $("#empassesseescount").removeClass('d-none');
+                            $("#empassesseescount").html(rowcount);
+                        }
+
+                        // Return the data array to populate the table
+                        return json.data;
+                    }
+                },
+                columns: [
+                     {
+                        data: null,
+                        name: 'no',
+                        width: "2%",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            const checked = getselectedids.includes(row.id) ? 'checked' : '';
+                            return `<input type="checkbox" name="singlechecks" class="form-check-input singlechecks text-center" value="${row.id}" ${checked} />`;
+                        }
+                    },
+                    {
+                        data: null,
+                        name: 'no',
+                        width: "2%",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {{-- { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false}, --}}
+                    { data: 'assesseeuser.employee.employee_name', name: 'assesseeuser.employee.employee_name', orderable: false},
+                    { data: 'assesseeuser.employee.department.name', name: 'assesseeuser.employee.department.name', orderable: false },
+                    {{-- { data: 'assesseeuser.employee.branch.branch_name', name: 'assesseeuser.employee.branch.branch_name', orderable: false },
+                    { data: 'assesseeuser.employee.positionlevel.name', name: 'assesseeuser.employee.positionlevel.name', orderable: false },
+                    { data: 'assesseeuser.employee.position.name', name: 'assesseeuser.employee.position.name', orderable: false }, --}}
+                    { data: 'assformcat.name', name: 'assformcat.name', orderable: false },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return data ?? '';
+                        }
+                    },
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: '',
+                    },
+                ],
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0,
+                }],
             })
+
+            assesseestable.on('draw', function () {
+                assesseestable.rows().every(function () {
+                    const data = this.data(); // this row’s data from the server
+                    if (getselectedids.includes(String(data.id))) {
+                        $(this.node()).find('.singlechecks').prop('checked', true);
+                    }
+                });
+                $('#assesseeSelectall').prop('checked', false)
+            });
+
+            $('#assesseestable tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = assesseestable.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+                function format(d) {
+                    return `
+                        <table cellpadding="5" cellspacing="0" border="0" style="width:100%;padding-left:50px;" class='empinfos'>
+                            <tr>
+                                <td><strong>Department:</strong></td>
+                                <td >${d.assesseeuser.employee.department.name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Branch:</strong></td>
+                                <td >${d.assesseeuser.employee.branch.branch_name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Position Level:</strong></td>
+                                <td >${d.assesseeuser.employee.positionlevel.name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Position:</strong></td>
+                                <td >${d.assesseeuser.employee.position.name ?? 'N/A'}</td>
+                            </tr>
+                        </table>
+                    `;
+                }
+            });
+            // End Assessee Table
+
+       
+            // Start Assessor Table
+            const assessorstable = $('#assessorstable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "searching": true,
+                "lengthChange": false,
+                "pageLength": 10,
+                "autoWidth": false,
+                "responsive": false,
+                "order": [
+                    [1, 'des']
+                ],
+                'ajax': {
+                    url: `/getEmployeeAssessors`,
+                    'type': 'GET',
+                    'data': function(d) {
+                        var formData = $('#peer_to_peer_form').serializeArray();
+                        formData.forEach(function(item) {
+                            d[item.name] = item.value;
+                        });
+                    },
+                    dataSrc: function (json) {
+                        {{-- console.log('Success response:', json); --}}
+                        const rowcount = json.recordsTotal;
+
+                        if(rowcount <= 0){
+                            $("#empassessorscount").addClass('d-none');
+                            $("#empassessorscount").html(0);
+                        }else if(json.recordsTotal > 0){
+                            $("#empassessorscount").removeClass('d-none');
+                            $("#empassessorscount").html(rowcount);
+                        }
+
+                        // Return the data array to populate the table
+                        return json.data;
+                    }
+                },
+                columns: [
+                   {
+                        data: null,
+                        name: 'no',
+                        width: "2%",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            const checked = getselectedids.includes(row.id) ? 'checked' : '';
+                            return `<input type="checkbox" name="singlechecks" class="form-check-input singlechecks text-center" value="${row.id}" ${checked} />`;
+                        }
+                    },
+                    {
+                        data: null,
+                        name: 'no',
+                        width: "2%",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {{-- { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false}, --}}
+                    { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false},
+                    { data: 'assessoruser.employee.department.name', name: 'assessoruser.employee.department.name', orderable: false },
+                    {{-- { data: 'assessoruser.employee.branch.branch_name', name: 'assessoruser.employee.branch.branch_name', orderable: false },
+                    { data: 'assessoruser.employee.positionlevel.name', name: 'assessoruser.employee.positionlevel.name', orderable: false },
+                    { data: 'assessoruser.employee.position.name', name: 'assessoruser.employee.position.name', orderable: false }, --}}
+                    { data: 'assformcat.name', name: 'assformcat.name', orderable: false },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return data ?? '';
+                        }
+                    },
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: ''
+                    },
+                ],
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0,
+                }],
+            })
+            assessorstable.on('draw', function () {
+                assessorstable.rows().every(function () {
+                    const data = this.data(); // this row’s data from the server
+                    if (getselectedids.includes(String(data.id))) {
+                        $(this.node()).find('.singlechecks').prop('checked', true);
+                    }
+                });
+                $('#assessorSelectall').prop('checked', false)
+            });
+
+            $('#assessorstable tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = assessorstable.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+                function format(d) {
+                    // You can customize this to show more info about the row
+                    return `
+                        <table cellpadding="5" cellspacing="0" border="0" style="width:100%;padding-left:50px;" class='empinfos'>
+                            <tr>
+                                <td><strong>Department:</strong></td>
+                                <td >${d.assessoruser.employee.department.name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Branch:</strong></td>
+                                <td >${d.assessoruser.employee.branch.branch_name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Position Level:</strong></td>
+                                <td >${d.assessoruser.employee.positionlevel.name ?? 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Position:</strong></td>
+                                <td >${d.assessoruser.employee.position.name ?? 'N/A'}</td>
+                            </tr>
+                        </table>
+                    `;
+                }
+            });
+            // End Assessor Table
+
+            
+
+            // Start Bulk Delete
+            var getselectedids = [];
+            $('#assesseestable tbody, #assessorstable tbody').on('change', '.singlechecks', function () {
+                const id = $(this).val();
+                if ($(this).prop("checked")) {
+                    if (!getselectedids.includes(id)) {
+                        console.log(id);
+                        getselectedids.push(id);
+                    }
+                } else {
+                    getselectedids = getselectedids.filter(item => item !== id);
+                }
+            });
+            $('#assesseeSelectall').on('click', function () {
+                const checked = $(this).prop('checked');
+
+                $('#assesseestable .singlechecks').each(function () {
+                    $(this).prop('checked', checked).trigger('change');
+                });
+            });
+            $('#assessorSelectall').on('click', function () {
+                const checked = $(this).prop('checked');
+
+                $('#assessorstable .singlechecks').each(function () {
+                    $(this).prop('checked', checked).trigger('change');
+                });
+            });
+
+
+            $("#bulkdelete-btn").click(function(){
+                Swal.fire({
+                        title: "Are you sure?",
+                        text: `You won't be able to revert!`,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                        if (result.isConfirmed) {
+                            // data remove 
+                            $.ajax({
+                                url:"{{ route('peertopeers.bulkdeletes') }}",
+                                type:"DELETE",
+                                dataType:"json",
+                                data:{
+                                    selectedids:getselectedids,
+                                    _token:"{{ csrf_token() }}"
+                                },
+                                success:function(response){
+                                    console.log(response);   // 1
+                                    
+                                    if(response){
+                                        $('#assesseestable').DataTable().draw(true);
+                                        $('#assessorstable').DataTable().draw(true);
+                                        Swal.fire({
+                                            title: "Deleted!",
+                                            text: "Peer To Peer has been deleted.",
+                                            icon: "success"
+                                        });
+
+                                    }
+                                },
+                                error:function(response){
+                                    console.log("Error: ",response)
+                                }
+                            });
+                            
+                        }
+                });   
+            });
+            // End Bulk Delete
+            
+            
+            // Start Delete Item
+            $(document).on("click",".delete-btns",function(){
+                console.log('hay');
+
+                var getidx = $(this).data("idx");
+                {{-- // console.log(getidx); --}}
+
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#formdelete-'+getidx).submit();
+
+                    }
+                });
+
+
+            });
+            // End Delete Item
+
+
+            // Start Participant User Table
             $('#participantusertable').on('click', '.show-forms', function () {
                 var $btn = $(this); // The clicked <a>
                 var $icon = $btn.find('i'); // The <i> inside it
@@ -1178,6 +1647,9 @@
                     });
                 }
             });
+            // End Participant User Table
+
+            // Start Form Chart
             let formChart = null;
             $(document).on('click', '.formchart-btn', function () {
                 var userId = $(this).data('user');
@@ -1222,394 +1694,10 @@
                 });
 
                 $('#formchartmodal').modal('show');
-            });
-
-        
-
-
-
-            const peertopeertable =  $('#peertopeer').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "searching": true,
-                "lengthChange": false,
-                "pageLength": 10,
-                "autoWidth": false,
-                "responsive": false,
-                "order": [
-                    [1, 'des']
-                ],
-                'ajax': {
-                    url: `/getEmployeeAssessees`,
-                    'type': 'GET',
-                    'data': function(d) {
-                        var formData = $('#peer_to_peer_form').serializeArray();
-                        formData.forEach(function(item) {
-                            d[item.name] = item.value;
-                        });
-                    },
-                    dataSrc: function (json) {
-                        {{-- console.log('Success response:', json); --}}
-                        const rowcount = json.recordsTotal;
-
-                        if(rowcount <= 0){
-                            $("#empassesseescount").addClass('d-none');
-                            $("#empassesseescount").html(0);
-                        }else if(json.recordsTotal > 0){
-                            $("#empassesseescount").removeClass('d-none');
-                            $("#empassesseescount").html(rowcount);
-                        }
-
-                        // Return the data array to populate the table
-                        return json.data;
-                    }
-                },
-                columns: [
-                     {
-                        data: null,
-                        name: 'no',
-                        width: "2%",
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row, meta) {
-                            const checked = getselectedids.includes(row.id) ? 'checked' : '';
-                            return `<input type="checkbox" name="singlechecks" class="form-check-input singlechecks text-center" value="${row.id}" ${checked} />`;
-                        }
-                    },
-                    {
-                        data: null,
-                        name: 'no',
-                        width: "2%",
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {{-- { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false}, --}}
-                    { data: 'assesseeuser.employee.employee_name', name: 'assesseeuser.employee.employee_name', orderable: false},
-                    { data: 'assesseeuser.employee.department.name', name: 'assesseeuser.employee.department.name', orderable: false },
-                    {{-- { data: 'assesseeuser.employee.branch.branch_name', name: 'assesseeuser.employee.branch.branch_name', orderable: false },
-                    { data: 'assesseeuser.employee.positionlevel.name', name: 'assesseeuser.employee.positionlevel.name', orderable: false },
-                    { data: 'assesseeuser.employee.position.name', name: 'assesseeuser.employee.position.name', orderable: false }, --}}
-                    { data: 'assformcat.name', name: 'assformcat.name', orderable: false },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data ?? '';
-                        }
-                    },
-                    {
-                        className: 'details-control',
-                        orderable: false,
-                        data: null,
-                        defaultContent: '',
-                    },
-                ],
-                "columnDefs": [{
-                    "searchable": false,
-                    "orderable": false,
-                    "targets": 0,
-                }],
             })
+            // End Form Chart
+        // Start Peer to Peer
 
-            peertopeertable.on('draw', function () {
-                peertopeertable.rows().every(function () {
-                    const data = this.data(); // this row’s data from the server
-                    if (getselectedids.includes(String(data.id))) {
-                        $(this.node()).find('.singlechecks').prop('checked', true);
-                    }
-                });
-                $('#assesseeSelectall').prop('checked', false)
-            });
-
-       
-            $('#peertopeer tbody').on('click', 'td.details-control', function () {
-                var tr = $(this).closest('tr');
-                var row = peertopeertable.row(tr);
-
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                } else {
-                    // Open this row
-                    row.child(format(row.data())).show();
-                    tr.addClass('shown');
-                }
-                function format(d) {
-                    // You can customize this to show more info about the row
-                    return `
-                        <table cellpadding="5" cellspacing="0" border="0" style="width:100%;padding-left:50px;" class='empinfos'>
-                            <tr>
-                                <td><strong>Department:</strong></td>
-                                <td >${d.assesseeuser.employee.department.name ?? 'N/A'}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Branch:</strong></td>
-                                <td >${d.assesseeuser.employee.branch.branch_name ?? 'N/A'}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Position Level:</strong></td>
-                                <td >${d.assesseeuser.employee.positionlevel.name ?? 'N/A'}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Position:</strong></td>
-                                <td >${d.assesseeuser.employee.position.name ?? 'N/A'}</td>
-                            </tr>
-                        </table>
-                    `;
-                }
-            });
-
-            // Start Bulk Delete
-            var getselectedids = [];
-            $('#peertopeer tbody, #empassessorstable tbody').on('change', '.singlechecks', function () {
-                const id = $(this).val();
-                if ($(this).prop("checked")) {
-                    if (!getselectedids.includes(id)) {
-                        console.log(id);
-                        getselectedids.push(id);
-                    }
-                } else {
-                    getselectedids = getselectedids.filter(item => item !== id);
-                }
-            });
-           $('#assesseeSelectall').on('click', function () {
-                const checked = $(this).prop('checked');
-
-                $('#peertopeer .singlechecks').each(function () {
-                    $(this).prop('checked', checked).trigger('change');
-                });
-            });
-            $('#assessorSelectall').on('click', function () {
-                const checked = $(this).prop('checked');
-
-                $('#empassessorstable .singlechecks').each(function () {
-                    $(this).prop('checked', checked).trigger('change');
-                });
-            });
-
-
-             $("#bulkdelete-btn").click(function(){
-
-                    Swal.fire({
-                         title: "Are you sure?",
-                         text: `You won't be able to revert!`,
-                         icon: "warning",
-                         showCancelButton: true,
-                         confirmButtonColor: "#3085d6",
-                         cancelButtonColor: "#d33",
-                         confirmButtonText: "Yes, delete it!"
-                    }).then((result) => {
-                         if (result.isConfirmed) {
-                              // data remove 
-                              $.ajax({
-                                   url:"{{ route('peertopeers.bulkdeletes') }}",
-                                   type:"DELETE",
-                                   dataType:"json",
-                                   data:{
-                                        selectedids:getselectedids,
-                                        _token:"{{ csrf_token() }}"
-                                   },
-                                   success:function(response){
-                                        console.log(response);   // 1
-                                        
-                                        if(response){
-                                            $('#peertopeer').DataTable().draw(true);
-                                            $('#empassessorstable').DataTable().draw(true);
-                                            Swal.fire({
-                                                title: "Deleted!",
-                                                text: "Peer To Peer has been deleted.",
-                                                icon: "success"
-                                            });
-
-                                        }
-                                   },
-                                   error:function(response){
-                                        console.log("Error: ",response)
-                                   }
-                              });
-                              
-                         }
-                    });   
-               });
-
-            // End Bulk Delete
-            
-            
-               // Start Delete Item
-            $(document).on("click",".delete-btns",function(){
-                console.log('hay');
-
-                var getidx = $(this).data("idx");
-                {{-- // console.log(getidx); --}}
-
-
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $('#formdelete-'+getidx).submit();
-
-                    }
-                });
-
-
-            });
-            // End Delete Item
-
-
-            const empassessorstable = $('#empassessorstable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "searching": true,
-                "lengthChange": false,
-                "pageLength": 10,
-                "autoWidth": false,
-                "responsive": false,
-                "order": [
-                    [1, 'des']
-                ],
-                'ajax': {
-                    url: `/getEmployeeAssessors`,
-                    'type': 'GET',
-                    'data': function(d) {
-                        var formData = $('#peer_to_peer_form').serializeArray();
-                        formData.forEach(function(item) {
-                            d[item.name] = item.value;
-                        });
-                    },
-                    dataSrc: function (json) {
-                        {{-- console.log('Success response:', json); --}}
-                        const rowcount = json.recordsTotal;
-
-                        if(rowcount <= 0){
-                            $("#empassessorscount").addClass('d-none');
-                            $("#empassessorscount").html(0);
-                        }else if(json.recordsTotal > 0){
-                            $("#empassessorscount").removeClass('d-none');
-                            $("#empassessorscount").html(rowcount);
-                        }
-
-                        // Return the data array to populate the table
-                        return json.data;
-                    }
-                },
-                columns: [
-                   {
-                        data: null,
-                        name: 'no',
-                        width: "2%",
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row, meta) {
-                            const checked = getselectedids.includes(row.id) ? 'checked' : '';
-                            return `<input type="checkbox" name="singlechecks" class="form-check-input singlechecks text-center" value="${row.id}" ${checked} />`;
-                        }
-                    },
-                    {
-                        data: null,
-                        name: 'no',
-                        width: "2%",
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {{-- { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false}, --}}
-                    { data: 'assessoruser.employee.employee_name', name: 'assessoruser.employee.employee_name', orderable: false},
-                    { data: 'assessoruser.employee.department.name', name: 'assessoruser.employee.department.name', orderable: false },
-                    {{-- { data: 'assessoruser.employee.branch.branch_name', name: 'assessoruser.employee.branch.branch_name', orderable: false },
-                    { data: 'assessoruser.employee.positionlevel.name', name: 'assessoruser.employee.positionlevel.name', orderable: false },
-                    { data: 'assessoruser.employee.position.name', name: 'assessoruser.employee.position.name', orderable: false }, --}}
-                    { data: 'assformcat.name', name: 'assformcat.name', orderable: false },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data ?? '';
-                        }
-                    },
-                    {
-                        className: 'details-control',
-                        orderable: false,
-                        data: null,
-                        defaultContent: ''
-                    },
-                ],
-                "columnDefs": [{
-                    "searchable": false,
-                    "orderable": false,
-                    "targets": 0,
-                }],
-            })
-            empassessorstable.on('draw', function () {
-                empassessorstable.rows().every(function () {
-                    const data = this.data(); // this row’s data from the server
-                    if (getselectedids.includes(String(data.id))) {
-                        $(this.node()).find('.singlechecks').prop('checked', true);
-                    }
-                });
-                $('#assessorSelectall').prop('checked', false)
-            });
-
-            $('#empassessorstable tbody').on('click', 'td.details-control', function () {
-                var tr = $(this).closest('tr');
-                var row = empassessorstable.row(tr);
-
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                } else {
-                    // Open this row
-                    row.child(format(row.data())).show();
-                    tr.addClass('shown');
-                }
-                function format(d) {
-                    // You can customize this to show more info about the row
-                    return `
-                        <table cellpadding="5" cellspacing="0" border="0" style="width:100%;padding-left:50px;" class='empinfos'>
-                            <tr>
-                                <td><strong>Department:</strong></td>
-                                <td >${d.assessoruser.employee.department.name ?? 'N/A'}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Branch:</strong></td>
-                                <td >${d.assessoruser.employee.branch.branch_name ?? 'N/A'}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Position Level:</strong></td>
-                                <td >${d.assessoruser.employee.positionlevel.name ?? 'N/A'}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Position:</strong></td>
-                                <td >${d.assessoruser.employee.position.name ?? 'N/A'}</td>
-                            </tr>
-                        </table>
-                    `;
-                }
-            });
-        {{-- End manpowerusers, participantusers, assesseeusers, peertopeer --}}
-
-        {{-- window.addEventListener('storage', function(e) {
-            if (e.key === 'DataTables_participantusertable') {
-                location.reload(); // or table.ajax.reload()
-            }
-        }); --}}
 
         {{-- Start Assessment Network --}}
         let assessmentNetworkChart = null;
@@ -1655,19 +1743,10 @@
 
            $('#ptopmodal').modal();
         });
-
         {{-- End Assessment Network --}}
 
 
-        {{-- Start Export Btn --}}
-        $('#export-btn').click(function(){
-            $('#searchnfilterform').submit();
-        });
-        {{-- End Export Btn --}}
-
-
         {{-- Start Clear Btn --}}
-
         $('#btn-clear').click(function(){
             $('#searchnfilterform').trigger('reset');
 
@@ -1699,12 +1778,9 @@
 
 
         {{-- Start Compare Form --}}
-
-
-        $('.compare_btn').click(function(){
-
-            $('#compare-form').submit();
-        });
+        // $('.compare_btn').click(function(){
+        //     $('#compare-form').submit();
+        // });
         {{-- End Compare Form --}}
 
     });
@@ -1750,209 +1826,14 @@
         localStorage.setItem('autoclick', linkid);
     }
 
-
-
     var autotab = localStorage.getItem("autoclick") || 'peer_to_peer';
     document.getElementById(`${autotab}-btn`).click();
     // End Tag Box
 
 
 
-    {{-- Start User List Filter --}}
-    const filterel = document.getElementById('search');
-    const resultel = document.getElementById('result');
-
-    const totalusers = 50;
-
-
-    async function getdata(){
-
-        // Method 1
-        // fetch(url)
-        // .then(res=>res.json())
-        // .then(data => data.results)
-
-
-
-        // Method 2
-        const res = await fetch(`https://randomuser.me/api/?results=${totalusers}`);
-        // console.log(res);
-
-        // const data = await res.json();
-        // console.log(data);
-        // console.log(data.results);
-        // other api can
-        // console.log(data[results]);
-
-
-        const {results} = await res.json();
-        // console.log(results);
-
-        resultel.innerText = '';
-
-        results.forEach(user => {
-
-            // console.log(user);
-
-            const li = document.createElement('li');
-
-            li.innerHTML = `
-
-            <img src="${user.picture.large}" alt="${user.name.first}"/>
-            <div class="user-info">
-                <h4>${user.name.title}. ${user.name.first} ${user.name.last}</h4>
-                <p>${user.location.city} , ${user.location.country}</p>
-            </div>
-
-
-            `;
-
-            resultel.appendChild(li);
-
-            listitems.push(li);
-
-            // console.log(listitems);
-
-        });
-    }
-    {{-- getdata(); --}}
-
-
-    filterel.addEventListener('input',(e)=>filterdata(e.target.value));
-
-    function filterdata(search){
-        // console.log(search);
-    const listitems = document.querySelectorAll('.user-info li');
-        listitems.forEach(listitem=>{
-            // console.log(listitem);
-            if(listitem.innerText.toLocaleLowerCase().includes(search.toLowerCase())){
-                listitem.classList.remove('hide');
-                listitem.querySelector('.empuser_ids').removeAttribute('disabled');
-            }else{
-                listitem.classList.add('hide');
-                listitem.querySelector('.empuser_ids').setAttribute('disabled','true');
-            }
-        });
-    }
-    let tableBody = document.querySelector("#peertopeer tbody");
-    $(document).on('click',".user-info li",function(){
-        let getuser_id = $(this).data('user_id');
-        {{-- let getassformcat_id =  --}}
-        {{-- console.log(getuser_id); --}}
-        $(".user-info li").removeClass('active');
-        $(this).toggleClass('active');
-        $('#assessor_user_id').val(getuser_id);
-
-        $('#peertopeer').DataTable().draw(true);
-        $('#empassessorstable').DataTable().draw(true);
-
-        {{-- Start Employee Assessees Chart --}}
-        $.ajax({
-            url: '/api/getrecentassessees',
-            method: 'GET',
-            data: $('#peer_to_peer_form').serialize(),
-            success:function(data){
-                {{-- console.log(data); --}}
-
-                let html = '';
-                $.each(data,function(idx,employeeassessee){
-
-
-                    html += `
-                    <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>${employeeassessee.assesseeuser.employee.employee_name}</strong> — ${employeeassessee.assesseeuser.employee.position.name}</li>
-                    `;
-
-                });
-
-
-                $('#assesseeschart').html(html);
-
-            },
-            error:function(){
-                $('#postchart').html('<span class="text-danger">Failed to load employee assessees data.<span>')
-            }
-        });
-        {{-- End Employee Assessees Chart --}}
-
-
-        {{-- Start Employeee Assessors Chart --}}
-        $.ajax({
-            url: '/api/getrecentassessors',
-            method: 'GET',
-            data: $('#peer_to_peer_form').serialize(),
-            success:function(data){
-                {{-- console.log(data); --}}
-
-                let html = '';
-                $.each(data,function(idx,employeeassessors){
-
-
-                    html += `
-                    <li class="list-group-item"><i class="bi bi-person-circle list-icon"></i><strong>${employeeassessors.assessoruser.employee.employee_name}</strong> — ${employeeassessors.assessoruser.employee.position.name}</li>
-                    `;
-
-                });
-
-
-                $('#empassessorschart').html(html);
-            },
-            error:function(){
-                $('#postchart').html('<span class="text-danger">Failed to load employee assessors data.<span>')
-            }
-        });
-        {{-- End Employee Assessors Chart --}}
-
-
-        getEmployeeInfo(getuser_id);
-    });
-    function getEmployeeInfo(userid){
-        console.log(userid);
-        const appraisalCycleId = {{ $appraisalcycle->id }};
-
-        $.ajax({
-            url: `/${appraisalCycleId}/manpowerusers/`,
-            type: "GET",
-            dataType: "json",
-            data: {
-                filter_user_id: userid
-            },
-            success: function (response) {
-                console.log(response);
-
-                let html = ``;
-                const userempinfo = response.user;
-                html += `
-                <div class="card shadow-sm mb-0">
-                    <div class="card-body">
-                    <h5 class="card-title mb-1"><i class="bi bi-person-badge-fill me-2"></i>Employee Information</h5>
-                    <div class="row">
-                        <div class="col-md-3"><strong>Name:</strong> ${userempinfo.employee.employee_name}</div>
-                        <div class="col-md-3"><strong>Position:</strong> ${userempinfo.employee.position.name}</div>
-                        <div class="col-md-3"><strong>Department:</strong> ${userempinfo.employee.department.name}</div>
-                        <div class="col-md-3"><strong>Employee ID:</strong> ${userempinfo.employee.employee_code}</div>
-                    </div>
-                    </div>
-                </div>
-                `
-
-                console.log(userempinfo);
-
-                $('#employeeinfo').html(html);
-
-
-            },
-            error: function (response) {
-                console.log("Error:", response);
-            }
-        });
-    }
-
-
-    {{-- End User List Filter --}}
-
 
     {{-- Start notify btn --}}
-
     $(document).on('click','.notify-btns',function(){
         $.ajax({
             url: `/appraisalcyclessendnotifications`,
@@ -1974,7 +1855,6 @@
             }
         });
     });
-
     {{-- End notify btn --}}
 
 
@@ -2086,7 +1966,6 @@
 
 
     {{-- Start Print Forms Btn --}}
-
     $(document).on("click",".print_btn",function(){
         let userId = $(this).data('user');
         let appraisal_cycle_id = $("#appraisal_cycle_id").val();
@@ -2136,16 +2015,12 @@
             }); --}}
         };
     });
-
-
-
     {{-- End Print Forms Btn --}}
 
 
 
 
     {{-- Start Bulk Send Noti --}}
-
     $(document).on("click",".selectalls",function(){
         $(this).closest("table").find(".singlechecks").prop("checked",$(this).prop("checked"));;
 
@@ -2205,7 +2080,7 @@
     {{-- End Bulk Send Noti --}}
 
 
-       // Start User Chart
+    // Start User Chart
     var appraisal_cycle_id = $("#appraisal_cycle_id").val();
 	$.ajax({
 		url: `/api/appraisalcycles/${appraisal_cycle_id}/assessorformsdashboard`,
