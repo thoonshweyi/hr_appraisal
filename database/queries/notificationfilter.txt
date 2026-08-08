@@ -1,0 +1,32 @@
+Option 1: Cast data to JSONB in the query
+SELECT *
+FROM notifications
+WHERE (data::jsonb)->>'specific_form_id' = '42914';
+
+Or for an integer comparison:
+
+SELECT *
+FROM notifications
+WHERE ((data::jsonb)->>'specific_form_id')::int = 42914;
+Option 2: Change the column type permanently (recommended)
+
+If all values in data are valid JSON:
+
+ALTER TABLE notifications
+ALTER COLUMN data TYPE jsonb
+USING data::jsonb;
+
+Then your original query will work:
+
+SELECT *
+FROM notifications
+WHERE data->>'specific_form_id' = '42914';
+
+To verify the column type, run:
+
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'notifications'
+  AND column_name = 'data';
+
+If it returns text, use the cast (data::jsonb) or convert the column to jsonb.

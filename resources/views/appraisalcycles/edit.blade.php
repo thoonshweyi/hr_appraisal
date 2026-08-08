@@ -434,7 +434,6 @@
                                                     <th>Branch</th>
                                                     <th>Position Level</th>
                                                     <th>Sent / All Forms</th>
-                                                    <th>Send Progress</th>
                                                     <th>Assessment Progress</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -453,13 +452,6 @@
                                                     <td>{{ $participantuser->employee->positionlevel->name }}</td>
                                                     <td>{{ $participantuser->getAppraisalFormCount($appraisalcycle->id) }} / {{ $participantuser->getAllFormCount($appraisalcycle->id) }}</td>
                                                     <td>
-                                                        <div class='d-flex justify-content-center align-items-center'>
-                                                            <div id='progresses'  style='background : conic-gradient(steelblue {{ $participantuser->getSentPercentage($appraisalcycle->id) }}%,#eee {{$participantuser->getSentPercentage($appraisalcycle->id)}}%)'>
-                                                                    <span id='progressvalues'>{{ $participantuser->getSentPercentage($appraisalcycle->id)}}%</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
                                                         <div  class="progress" role="progressbar" aria-valuenow="{{ $assessmentProgress['per_done']  }}" aria-valuemin="0" aria-valuemax="100" style="height: 15px;">
                                                             <div class="progress-bar" style="width:{{ $assessmentProgress['per_done']  }}%; background: linear-gradient(135deg, #007bff, #0056b3);">{{ $assessmentProgress['per_done'] }}%</div>
                                                         </div>
@@ -468,16 +460,9 @@
                                                         @php 
                                                                 $printbtn = ($participantuser->employee->positionlevel->id < 5 && !$participantuser->printhistory);
                                                         @endphp
-                                                        <div class='d-flex justify-content-center align-items-center'>
-                                                            <form id='appraisalform' action="{{route('appraisalforms.create')}}" method='GET'>
-                                                                <input type='hidden' name='assessor_user_id' value='{{ $participantuser->id }}'>
-                                                                <input type='hidden' name='appraisal_cycle_id' value='{{ $appraisalcycle->id }}'/>
-                                                                <button type='submit' class='btn btn-link p-0 m-0' title='Send'>
-                                                                    <i class='far fa-paper-plane text-primary mr-2'></i>
-                                                                </button>
-                                                            </form>
+                                                        <div class='d-flex justify-content-end align-items-center'>
                                                             @if($printbtn)
-                                                                    <a href='javascript:void(0);' data-user='{{$participantuser->id}}' class='text-warning mx-2 print_btn' title='Print'><i class='fas fa-print'></i></a>
+                                                                <a href='javascript:void(0);' data-user='{{$participantuser->id}}' class='text-warning mx-2 print_btn' title='Print'><i class='fas fa-print'></i></a>
                                                             @endif
                                                             <a href='javascript:void(0);' class='show-forms' data-user='{{$participantuser->id}}' title='Open'><i class='fas fa-chevron-down'></i></a>
                                                         </div>

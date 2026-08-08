@@ -2,47 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Branch;
-use App\Models\Gender;
-use App\Models\Status;
-use App\Models\Section;
-use App\Models\Division;
-use App\Models\Employee;
-use App\Models\Position;
-use App\Models\AssFormCat;
-use App\Models\BranchUser;
-use App\Models\FormResult;
-use App\Models\PeerToPeer;
-use App\Models\SubSection;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\AppraisalForm;
-use App\Models\PositionLevel;
-use App\Models\SubDepartment;
-use App\Imports\SectionImport;
-use App\Models\AppraisalCycle;
-use App\Models\AttachFormType;
+use App\Exceptions\ExcelImportValidationException;
+use App\Imports\AgileDepartmentImport;
+use App\Imports\DepartmentImport;
 use App\Imports\DivisionImport;
 use App\Imports\EmployeeImport;
 use App\Imports\PositionImport;
-use App\Models\AgileDepartment;
-use App\Imports\DepartmentImport;
-use Illuminate\Support\Facades\Log;
+use App\Imports\SectionImport;
 use App\Imports\SubDepartmentImport;
+use App\Interfaces\PeerToPeerRepositoryInterface;
+use App\Models\AgileDepartment;
+use App\Models\AppraisalCycle;
+use App\Models\AppraisalForm;
+use App\Models\AppraisalFormAssesseeUser;
+use App\Models\AssFormCat;
+use App\Models\AttachFormType;
+use App\Models\Branch;
+use App\Models\BranchUser;
+use App\Models\Division;
+use App\Models\Employee;
+use App\Models\FormResult;
+use App\Models\Gender;
+use App\Models\PeerToPeer;
+use App\Models\Position;
+use App\Models\PositionLevel;
+use App\Models\Section;
+use App\Models\Status;
+use App\Models\SubDepartment;
+use App\Models\SubSection;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\AgileDepartmentImport;
-use Yajra\DataTables\Facades\DataTables;
-use App\Models\AppraisalFormAssesseeUser;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use App\Exceptions\ExcelImportValidationException;
-use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class PeerToPeersController extends Controller
 {
-    function __construct()
+    function __construct(private PeerToPeerRepositoryInterface $peer_to_peer_repository)
     {
         $this->middleware('auth');
         $this->middleware('permission:view-add-on', ['only' => ['index']]);
@@ -112,12 +113,6 @@ class PeerToPeersController extends Controller
             $ass_form_cat_ids = $request->ass_form_cat_ids;
             $appraisal_cycle_id = $request->appraisal_cycle_id;
 
-            // Checking Attach Avaibility
-            // $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
-            // if(!$appraisalcycle->isBeforeActionStart()){
-            //     return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('error',"Peer to Peer can only be attached before action start.");
-            // }
-
             // Checking Existing peer to peer
             $user = Auth::user();
             $user_id = $user->id;
@@ -127,46 +122,13 @@ class PeerToPeersController extends Controller
                     "assessee_user_id" => $assessee_user_ids[$idx],
                     "ass_form_cat_id" => $ass_form_cat_ids[$idx],
                     "appraisal_cycle_id" => $appraisal_cycle_id,
+                ],[
                     "user_id"=> $user_id
                 ]);
 
-                // Start Adding Assessee
-                $appraisalform = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
-                                    ->where('assessor_user_id', $assessor_user_id)
-                                    ->where('ass_form_cat_id', $ass_form_cat_ids[$idx])
-                                    ->first();
-                if($appraisalform){
-                    $appraisalform->update([
-                        'assessed' => false,
-                        'status_id' => 20, 
-                    ]);
-                    $assesseeuser =     AppraisalFormAssesseeUser::firstOrcreate([
-                                            "appraisal_form_id" => $appraisalform->id,
-                                            "assessee_user_id" => $assessee_user_ids[$idx],
-                                            "user_id" => Auth::guard()->user()->id
-                                        ]);
-
-                    $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
-                    foreach($notifications as $notification){
-                        if (isset($notification->data['appraisalform_id']) && ($notification->data['appraisalform_id'] == $appraisalform->id)) {
-                            $notification->update([
-                                'read_at' => null
-                            ]);
-                        }
-                    }
-
-                  
-                }
-                // End Adding Assessee
+                $this->peer_to_peer_repository->sendAppraisalForm($peertopeer,$request->all());
             }
-
-
-            // Revoking Appraisal Form
-            // $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,$ass_form_cat_ids);
-            // Unsend Apprasial Notification
-
        
-
             \DB::commit();
             return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('success',"Peer To Peer created successfully");;
         } catch (\Exception $e) {
@@ -234,57 +196,6 @@ class PeerToPeersController extends Controller
         ->make(true);
     }
 
-
-    // public function destroy(string $id)
-    // {
-    //     \DB::beginTransaction();
-
-    //     try {
-
-    //         $peertopeer = PeerToPeer::findOrFail($id);
-    //         $peertopeer->delete();
-
-
-
-    //         // Revoking Appraisal Form
-    //         $appraisal_cycle_id = $peertopeer->appraisal_cycle_id;
-    //         $assessor_user_id = $peertopeer->assessor_user_id;
-    //         $ass_form_cat_id = $peertopeer->ass_form_cat_id;
-    //         // $this->revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,[$ass_form_cat_id]);
-
-    //         \DB::commit();
-    //         return redirect()->back()->with('success',"PeerToPeer deleted successfully");
-    //     } catch (\Exception $e) {
-    //         \DB::rollback();
-    //         // Handle the exception and notify the user
-    //         return redirect()->back()->with('error', "System Error:".$e->getMessage());
-    //     }
-    // }
-
-
-    // public function revokeAppraisalForms($appraisal_cycle_id,$assessor_user_id,$ass_form_cat_ids){
-    //     $appraisalforms = AppraisalForm::where('appraisal_cycle_id', $appraisal_cycle_id)
-    //     ->where('assessor_user_id', $assessor_user_id)
-    //     ->whereIn('ass_form_cat_id', $ass_form_cat_ids)
-    //     ->get();
-
-    //     $formIds = $appraisalforms->pluck('id')->toArray();
-    //     Log::info("Forms:",$formIds);
-    //     foreach ($appraisalforms as $form) {
-    //         AppraisalFormAssesseeUser::where('appraisal_form_id', $form->id)->delete();
-    //         FormResult::where('appraisal_form_id', $form->id)->delete();
-
-    //         $form->delete();
-    //     }
-
-    //     $notifications = DatabaseNotification::where("notifiable_id",$assessor_user_id)->get();
-    //     foreach($notifications as $notification){
-    //         if (isset($notification->data['appraisalform_id']) && in_array($notification->data['appraisalform_id'], $formIds)) {
-    //             $notification->delete();
-    //         }
-    //     }
-    // }
-
     public function getPeerToPeers($assessor_user_id,$assessee_user_ids,$ass_form_cat_id,$appraisal_cycle_id){
         $peertopeers = PeerToPeer::where("assessor_user_id",$assessor_user_id)
                         ->whereIn("asssessee_user_id",$asssessee_user_ids)
@@ -293,29 +204,6 @@ class PeerToPeersController extends Controller
                         ->get();
 
         return $peertopeers;
-    }
-
-    public function dctohocriterias(Request $request){
-        $row =  PeerToPeer::whereHas("assesseeuser",function($query){
-            $query->whereHas("branches",function($q){
-                $q->whereIn("branches.branch_id",[13,17]);
-            });
-        })
-        // ->whereHas("assformcat",function($query){
-        //     $query->where("attach_form_type_id",17);
-        // });
-        ->where("appraisal_cycle_id",4)
-        ->where('ass_form_cat_id',143)
-        ->update(['ass_form_cat_id' => 141]);
-        // dd($peertopeers);
-
-        // 145,140
-        // 144, 142
-        // 143, 141
-      
-        dd($row);
-
-
     }
 
     public function bulkdeletes(Request $request)
@@ -377,10 +265,6 @@ class PeerToPeersController extends Controller
             Log::error($e->getMEssage());
             return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
         }
-    }
-
-    public function adjustAppraisalForms(){
-
     }
 }
 

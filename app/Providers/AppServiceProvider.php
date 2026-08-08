@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Interfaces\PeerToPeerRepositoryInterface;
+use App\Repositories\PeerToPeerRepository;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -16,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(PeerToPeerRepositoryInterface::class, PeerToPeerRepository::class);
     }
 
     /**

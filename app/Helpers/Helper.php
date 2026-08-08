@@ -1,15 +1,17 @@
 <?php
 
-use Carbon\Carbon;
+use App\Models\{CNDBDocument, ImportProductImage, SourcingProductImage, SourcingDocument, LogisticsDocument};
 use App\Models\ImportProduct;
 use App\Models\SourcingProduct;
+use App\Notifications\AppraisalFormsNotify;
+use Carbon\Carbon;
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Symfony\Component\Console\Logger\ConsoleLogger;
-use App\Models\{CNDBDocument, ImportProductImage, SourcingProductImage, SourcingDocument, LogisticsDocument};
 
 function number_convert($string)
 {
@@ -100,6 +102,21 @@ function clearFilterSection(){
     ]);
 }
 
-function applyAssesseeFilters($request){
+function getUserData(){
+    return Auth::user();
+}
 
+function sendNotification($user, $appraisalform, $title)
+{
+    $type = "App\Notifications\AppraisalFormsNotify";
+    $getnoti = \DB::table("notifications")->where("notifiable_id",$user->id)->where("type",$type)->where('data->appraisalform_id',$appraisalform->id)->pluck('id');
+    
+    // dd($getnoti);
+    if(count($getnoti) > 0){
+        \DB::table("notifications")->where('id',$getnoti)->update(["read_at" => null]);
+        return false;
+    }
+    
+
+    return Notification::send($user, new AppraisalFormsNotify($appraisalform->id ?? null, $appraisalform->ass_form_cat_id ?? null, $title ?? null, $appraisalform->appraisal_cycle_id ?? null));
 }
