@@ -333,7 +333,7 @@
                         </a>
                     </li>
                     <li class="">
-                        <a download href="{{ asset('/download/HR Staff Assessment Form - Rank 4 & 5.xlsx') }}" target="_blank">
+                        <a download href="{{ asset('/download/employee_format.xlsx') }}" target="_blank">
                             <i class="las la-minus"></i><span>{{ __('nav.employee_format')}}</span>
                         </a>
                     </li>
