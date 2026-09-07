@@ -18,6 +18,7 @@ class AppraisalFormAssesseeUser extends Model
         "assessee_user_id",
         "status_id",
         "user_id",
+        "deleted_at",
         "delete_by"
     ];
 

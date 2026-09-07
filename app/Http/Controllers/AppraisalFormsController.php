@@ -198,10 +198,12 @@ class AppraisalFormsController extends Controller
             ]);
 
             foreach($assessee_user_ids as $assessee_user_id){
-                AppraisalFormAssesseeUser::firstOrcreate([
+                AppraisalFormAssesseeUser::withTrashed()->updateOrCreate([
                     "appraisal_form_id" => $appraisalform->id,
                     "assessee_user_id" => $assessee_user_id,
-                    "user_id" => Auth::guard()->user()->id
+                ],[
+                    "user_id" => Auth::guard()->user()->id,
+                    "deleted_at" => null
                 ]);
             }
 

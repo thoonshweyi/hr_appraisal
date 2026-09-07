@@ -36,11 +36,12 @@ class PeerToPeerRepository implements PeerToPeerRepositoryInterface
             ]);
         }
 
-        AppraisalFormAssesseeUser::firstOrcreate([
+        AppraisalFormAssesseeUser::withTrashed()->updateOrCreate([
             "appraisal_form_id" => $appraisalform->id,
             "assessee_user_id" => $assessee_user_id,
         ],[
-            "user_id" => Auth::guard()->user()->id
+            "user_id" => Auth::guard()->user()->id,
+            "deleted_at" => null
         ]);
 
         $assessor = User::find($assessor_user_id);
