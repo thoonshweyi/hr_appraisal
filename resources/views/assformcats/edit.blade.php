@@ -183,29 +183,29 @@
                                                 <td>{{ $idx}}</td>
                                                 <input type="hidden" name="criteriaids[]" id="{{ $criteria->id }}" value="{{ $criteria->id }}">
                                                 <td class="cells">
-                                                    <textarea type="text" name="names[]" class="custom-input-lg" value="{{ $criteria->name }}" placeholder="Write Something....">{{ $criteria->name }}</textarea>
+                                                    <textarea type="text" name="names[]" class="custom-input-lg" value="{{ $criteria->name }}" placeholder="Write Something...." readonly>{{ $criteria->name }}</textarea>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="excellents[]" class="custom-input" value="{{ $criteria->excellent }}" data-oldVal={{ $criteria->excellent }}>
+                                                    <input type="text" name="excellents[]" class="custom-input" value="{{ $criteria->excellent }}" data-oldVal={{ $criteria->excellent }} readonly>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="goods[]" class="custom-input" value="{{ $criteria->good }}" data-oldVal={{ $criteria->good }}>
+                                                    <input type="text" name="goods[]" class="custom-input" value="{{ $criteria->good }}" data-oldVal={{ $criteria->good }} readonly>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="meet_standards[]" class="custom-input" value="{{ $criteria->meet_standard }}" data-oldVal={{ $criteria->meet_standard }}>
+                                                    <input type="text" name="meet_standards[]" class="custom-input" value="{{ $criteria->meet_standard }}" data-oldVal={{ $criteria->meet_standard }} readonly>
                                                 </td>
 
                                                 <td>
-                                                    <input type="text" name="below_standards[]" class="custom-input" value="{{ $criteria->below_standard }}" data-oldVal={{ $criteria->below_standard }}>
+                                                    <input type="text" name="below_standards[]" class="custom-input" value="{{ $criteria->below_standard }}" data-oldVal={{ $criteria->below_standard }} readonly>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="weaks[]" class="custom-input" value="{{ $criteria->weak }}" data-oldVal={{ $criteria->weak }}>
+                                                    <input type="text" name="weaks[]" class="custom-input" value="{{ $criteria->weak }}" data-oldVal={{ $criteria->weak }} readonly>
                                                 </td>
                                                 <td>
-                                                    <input type="checkbox" name="status_ids[]" class="status_ids" value="1" {{ $criteria->status_id == 1 ? "checked" : ''  }}>
+                                                    <input type="checkbox" name="status_ids[]" class="status_ids" value="1" {{ $criteria->status_id == 1 ? "checked" : ''  }} readonly>
                                                 </td>
                                                 <td>
-                                                    <a href="javascript:void(0);" type="button" title="Remove" class="remove-btns text-danger" data-id='{{ $idx}}'>
+                                                    <a href="javascript:void(0);" type="button" title="Remove" class="remove-btns text-danger" data-id='{{ $idx}}' readonly>
                                                         <i class="fas fa-minus-circle fa-lg"></i>
                                                     </a>
                                                 </td>
