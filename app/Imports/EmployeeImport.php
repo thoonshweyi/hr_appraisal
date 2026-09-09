@@ -36,7 +36,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
 
     public function model(array $row)
     {
-        Log::info($this->rowNumber);
+        Log::info($this->rowNumber, $row);
 
         if (!empty($row['beginning_date'])) {
             $row['beginning_date'] = is_numeric($row['beginning_date'])
@@ -45,7 +45,7 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
         }
         // dd(AttachFormType::where('name',$row['attach_form_type'])->first()->id);
 
-        // dd($row);
+        // dd($row['employee_name']);
         // Validate data
         // $row['department'] = Str::lower($row['department']);
 

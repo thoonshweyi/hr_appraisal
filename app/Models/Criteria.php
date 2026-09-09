@@ -19,7 +19,9 @@ class Criteria extends Model
         "name",
         "status_id",
         "user_id",
-        "ass_form_cat_id"
+        "ass_form_cat_id",
+        "delete_by",
+        "list_no"
     ];
 
     protected $fillable = [];

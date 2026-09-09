@@ -19,7 +19,8 @@ class AssFormCat extends Model
         "user_id",
         "attach_form_type_id",
         "lang",
-        "location_id"
+        "location_id",
+        "slug"
     ];
 
     public function user(){

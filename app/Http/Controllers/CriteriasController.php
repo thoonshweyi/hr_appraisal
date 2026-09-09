@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exceptions\ExcelImportValidationException;
+use DB;
 
 
 class CriteriasController extends Controller
@@ -149,23 +150,12 @@ class CriteriasController extends Controller
             'file' => 'required|mimes:xls,xlsx|max:2048',
         ]);
 
-
-          // Multi Images Upload
-        //   if($request->hasFile('file')){
-        //     // dd('hay');
-        //     // foreach($request->file("file") as $image){
-        //     //     Excel::import(new CriteriaImport, $request->file('file'));
-        //     // }
-        //     Excel::import(new CriteriaImport, $request->file('file'));
-
-        // }
-        // $ass_form_cat_id = $request->ass_form_cat_id;
-
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $file = $request->file('file');
             Excel::import(new CriteriasAllImport($this->max_totals), $file);
 
+            // dd('imported');
             \DB::commit();
             return redirect()->back()->with('success',"Criteria excel imported successfully");
 
@@ -180,9 +170,6 @@ class CriteriasController extends Controller
             // Handle the exception and notify the user
             return redirect()->back()->with('error', "System Error:".$e->getMessage());
         }
-
-
-
 
    }
 }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 function number_convert($string)
@@ -119,4 +120,17 @@ function sendNotification($user, $appraisalform, $title)
     
 
     return Notification::send($user, new AppraisalFormsNotify($appraisalform->id ?? null, $appraisalform->ass_form_cat_id ?? null, $title ?? null, $appraisalform->appraisal_cycle_id ?? null));
+}
+
+function firstOrCreateMaster(string $model, string $name, int $userId): int
+{
+    return $model::firstOrCreate(
+        ['slug' => Str::slug($name)],
+        [
+            'name' => $name,
+            'slug' => Str::slug($name),
+            'status_id' => 1,
+            'user_id' => $userId,
+        ]
+    )->id;
 }
