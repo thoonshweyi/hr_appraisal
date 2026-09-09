@@ -23,10 +23,15 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
  
 
     function __construct() {
+       
     }
 
     public function collection(Collection $rows){
         // dd($rows);
+     
+
+        $this->deleteOldCriterias($rows);
+
         $curcat = null;
         $list_no = 0;
 
@@ -72,29 +77,6 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
 
 
             if(Str::slug($row['assessment_form_category']) !=  $curcat){
-                // Start Move to trash old criterias
-                $assFormCatSlugs = $rows
-                    ->pluck('assessment_form_category')
-                    ->filter()
-                    ->map(fn ($name) => Str::slug(trim($name)))
-                    ->unique()
-                    ->values()
-                    ->toArray();
-                // dd($assFormCatSlugs);
-
-                $assFormCatIds = AssFormCat::whereIn('slug', $assFormCatSlugs)
-                    ->pluck('id');
-
-
-                $criteriaQuery = Criteria::whereIn('ass_form_cat_id', $assFormCatIds);
-                $criteriaQuery->update([
-                    'status_id'  => 2,
-                    'delete_by' => $user_id,
-                ]);
-
-                $criteriaQuery->delete();
-                // End Move to trash old criterias 
-
                 $list_no = 0;
             }
             $list_no++;
@@ -161,6 +143,31 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
     {
         // Increment the row number with each row
         $this->rowNumber += 1;
+    }
+
+    private function deleteOldCriterias($rows){
+        // Start Move to trash old criterias
+        $assFormCatSlugs = $rows
+            ->pluck('criteria_set')
+            ->filter()
+            ->map(fn ($name) => Str::slug(trim($name)))
+            ->unique()
+            ->values()
+            ->toArray();
+        // dd($assFormCatSlugs);
+
+        $assFormCatIds = AssFormCat::whereIn('slug', $assFormCatSlugs)
+            ->pluck('id');
+
+
+        $criteriaQuery = Criteria::whereIn('ass_form_cat_id', $assFormCatIds);
+        $criteriaQuery->update([
+            'status_id'  => 2,
+            'delete_by' => Auth::user()->id,
+        ]);
+
+        $criteriaQuery->delete();
+        // End Move to trash old criterias 
     }
 
 }
