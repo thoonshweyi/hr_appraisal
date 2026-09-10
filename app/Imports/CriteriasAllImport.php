@@ -2,38 +2,50 @@
 
 namespace App\Imports;
 
-use Carbon\Carbon;
-use App\Models\Criteria;
-use App\Models\Rankable;
+use App\Exceptions\ExcelImportValidationException;
 use App\Models\AssFormCat;
-use Illuminate\Support\Str;
-use App\Models\PositionLevel;
 use App\Models\AttachFormType;
+use App\Models\Criteria;
+use App\Models\PositionLevel;
+use App\Models\Rankable;
+use App\Rules\EnMmUnicode;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\OnEachRow;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use App\Exceptions\ExcelImportValidationException;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
     protected $rowNumber = 1;  // Initialize row number
  
 
+   
     function __construct() {
        
     }
 
     public function collection(Collection $rows){
         // dd($rows);
+
+        $max_totals = getMaxTotals();
+        // dd($max_totals);
      
 
         $this->deleteOldCriterias($rows);
 
         $curcat = null;
         $list_no = 0;
+
+        $total_excellent = 0;
+        $total_good = 0;
+        $total_meet_standard = 0;
+        $total_below_standard = 0;
+        $total_weak = 0;
 
         foreach ($rows as $row) {
             // Start Format Excel Row
@@ -47,7 +59,7 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
 
             // Start Validate Data
             $validator = Validator::make($data, [
-                'name'      => 'required|string',
+                'name'      => ['required', 'string'],
                 "excellent" => 'required|numeric',
                 "good" => 'required|numeric',
                 "meet_standard" => 'required|numeric',
@@ -68,19 +80,69 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
                 );
 
             }
+            // dd("Validated");
             // End Validate Data
+
+
+            if(Str::slug($row['assessment_form_category']) !=  $curcat){
+                Log::info(
+                    $total_excellent . " " .
+                    $total_good . " " .
+                    $total_meet_standard . " " .
+                    $total_below_standard . " " .
+                    $total_weak
+                );
+
+                $list_no = 0;
+
+                $total_excellent = 0;
+                $total_good = 0;
+                $total_meet_standard = 0;
+                $total_below_standard = 0;
+                $total_weak = 0;
+            }
+            $list_no++;
+
+
+            // Start Max Validation
+            $total_excellent += (int) $row['excellent'];
+            $total_good += (int) $row['good'];
+            $total_meet_standard += (int) $row['meet_standard'];
+            $total_below_standard += (int) $row['below_standard'];
+            $total_weak += (int) $row['weak'];
+
+            $max_errors = [];
+            if($total_excellent > $max_totals['max_total_excellent']){
+                $max_errors[][] = "Total Excellent cannot exceed ".$max_totals['max_total_excellent'];
+            }
+
+            if($total_good > $max_totals['max_total_good']){
+                $max_errors[][] = "Total Good cannot exceed ".$max_totals['max_total_good'];
+            }
+
+            if($total_meet_standard > $max_totals['max_total_meet_standard']){
+                $max_errors[][] = "Total Meet Standard cannot exceed ".$max_totals['max_total_meet_standard'];
+            }
+
+            if($total_below_standard > $max_totals['max_total_below_standard']){
+                $max_errors[][] = "Total Below Standard cannot exceed ".$max_totals['max_total_below_standard'];
+            }
+
+            if($total_weak > $max_totals['max_total_weak']){
+                $max_errors[][] = "Total Weak cannot exceed ".$max_totals['max_total_weak'];
+            }
+            if(!empty($max_errors)){
+                throw new ExcelImportValidationException(
+                    $max_errors,
+                    $this->rowNumber
+                );
+            }
+            // End Max Validation
 
             $user = Auth::user();
             $user_id = $user["id"];
 
             $this->rowNumber += 1;
-
-
-            if(Str::slug($row['assessment_form_category']) !=  $curcat){
-                $list_no = 0;
-            }
-            $list_no++;
-
 
 
             $attach_form_type_id = AttachFormType::where('name',$row['attach_form_type'])->first()->id;

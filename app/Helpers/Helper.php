@@ -134,3 +134,19 @@ function firstOrCreateMaster(string $model, string $name, int $userId): int
         ]
     )->id;
 }
+
+function getMaxTotals(){
+    $max_total_excellent = 100;
+    $max_total_good = 84;
+    $max_total_meet_standard = 67;
+    $max_total_below_standard = 40;
+    $max_total_weak = 19;
+    
+    return [
+        "max_total_excellent" => $max_total_excellent,
+        "max_total_good" => $max_total_good,
+        "max_total_meet_standard" => $max_total_meet_standard,
+        "max_total_below_standard" => $max_total_below_standard,
+        "max_total_weak" => $max_total_weak,
+    ];
+}

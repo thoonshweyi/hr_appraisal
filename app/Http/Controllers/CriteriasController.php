@@ -155,7 +155,7 @@ class CriteriasController extends Controller
             $file = $request->file('file');
             Excel::import(new CriteriasAllImport($this->max_totals), $file);
 
-            // dd('imported');
+            dd('imported');
             \DB::commit();
             return redirect()->back()->with('success',"Criteria excel imported successfully");
 
