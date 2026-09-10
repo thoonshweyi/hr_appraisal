@@ -337,6 +337,12 @@
                             <i class="las la-minus"></i><span>{{ __('nav.employee_format')}}</span>
                         </a>
                     </li>
+
+                    <li class="">
+                        <a download href="{{ asset('/download/all_criteria_format.xlsx') }}" target="_blank">
+                            <i class="las la-minus"></i><span>All Criteria Format</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 

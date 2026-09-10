@@ -1617,11 +1617,13 @@
                                 } else if (form.status_id === 20) {
                                     statusClass = 'bg-warning';
                                 }
+
+                                const url =  `/appraisalforms/${form.id}/${form.status_id == 19 ? 'archive' : ''}`;
                                 html += `
                                 <tr>
                                     <td><input type="checkbox" name="singlechecks" class="form-check-input m-0 singlechecks" value="${form.id}" /></td>
                                     <td>#${form.id}</td>
-                                    <td><a class="" href="{{ branchHR() ? '/appraisalforms/${form.id}/' : '/appraisalforms/${form.id}/edit'}} ">${form.assformcat.name}</a></td>
+                                    <td><a class="" href="${url}">${form.assformcat.name}</a></td>
                                     <td>${form.appraisalcycle.name}</td>
                                     <td><span class="badge ${statusClass}">${form.status.name}</span></td>
                                 </tr>`;

@@ -339,6 +339,41 @@ class AppraisalFormsController extends Controller
         ));
 
     }
+
+    public function archive(Request $request,$id){
+        $appraisalform = AppraisalForm::find($id);
+        // dd($appraisalform);
+            $this->authorize('view', $appraisalform);
+
+        $assessee_ids = $appraisalform->assesseeusers->pluck('id');
+        $assesseeusers = User::whereIn("id",$assessee_ids)
+        ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel"])
+        ->orderBy('id','asc')
+        ->get();
+
+        $formresults = FormResult::where('appraisal_form_id', $id)->get();
+        $criteriaIds = $formresults
+            ->pluck('criteria_id')
+            ->filter()
+            ->unique()
+            ->values();
+        $criterias = Criteria::withTrashed()->whereIn("id",$criteriaIds)->orderBy("id",'asc')->get();
+        // dd($criterias);
+
+        $total_excellent =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('excellent');
+        $total_good =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('good');
+        $total_meet_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('meet_standard');
+        $total_below_standard =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('below_standard');
+        $total_weak =  Criteria::where('ass_form_cat_id',$appraisalform->ass_form_cat_id)->sum('weak');
+
+
+        return view("appraisalforms.archive",compact(
+            'appraisalform',
+            'assesseeusers',
+            'criterias',
+            "total_excellent","total_good","total_meet_standard","total_below_standard","total_weak"
+        ));
+    }
     
     public function update(Request $request,$id){
 
