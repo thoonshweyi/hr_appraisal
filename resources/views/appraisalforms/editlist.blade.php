@@ -294,13 +294,13 @@
 
 
                             @if($appraisalform->status_id != 19 || Auth::id() == 1)
-                            <div class="col-md-12 mt-2">
+                            <div class="col-md-12 mt-3 d-flex flex-wrap align-items-center appraisal-action-buttons">
 
-                                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0 back-btn">{{ __('button.back')}}</button>
-                                <input type="button" name="savedraft" class="btn btn-warning btn-sm rounded-0 savedraftbtns" value="{{ __('button.savedraft')}}" />
+                                <button type="button" id="back-btn" class="btn btn-light back-btn appraisal-action-button">{{ __('button.back')}}</button>
+                                <input type="button" name="savedraft" class="btn btn-warning savedraftbtns appraisal-action-button" value="{{ __('button.savedraft')}}" />
 
 
-                                <button type="button" class="btn btn-success btn-sm rounded-0 submitbtns">{{ __('button.submit')}}</button>
+                                <button type="button" class="btn btn-success submitbtns appraisal-action-button">{{ __('button.submit')}}</button>
                             </div>
                             @endif
                         </form>

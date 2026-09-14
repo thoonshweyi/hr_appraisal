@@ -260,15 +260,37 @@
 
 
            @if($appraisalform->status_id != 19)
-            <div class="col-md-12 mt-2">
+            <div class="col-md-12 mt-3 d-flex flex-wrap align-items-center appraisal-action-buttons">
 
-                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0 back-btn">{{ __('button.back')}}</button>
-                <input type="button" name="savedraft" class="btn btn-warning btn-sm rounded-0 savedraftbtns" value="{{ __('button.savedraft')}}" />
+                <button type="button" id="back-btn" class="btn btn-light back-btn appraisal-action-button">{{ __('button.back')}}</button>
+                <input type="button" name="savedraft" class="btn btn-warning savedraftbtns appraisal-action-button" value="{{ __('button.savedraft')}}" />
 
 
-                <button type="button" class="btn btn-success btn-sm rounded-0 submitbtns">{{ __('button.submit')}}</button>
+                <button type="button" class="btn btn-success submitbtns appraisal-action-button">{{ __('button.submit')}}</button>
             </div>
             @endif
+
+            <div class="col-md-12 mt-2">
+                <section class="form-card appraisal-mobile-note" aria-labelledby="appraisal-note-title">
+                    <div id="appraisal-note-title" class="section-title">အမှတ်ပေးသူများသတိပြုရန်</div>
+                    <div class="appraisal-mobile-note-columns">
+                        <ul class="list-unstyled">
+                            <li>၁။ မိမိပေးသောအမှတ်ကို မိမိတာဝန်ယူရမည်။</li>
+                            <li>၂။ အမှတ်ပေးရာတွင် အောက်ပါအချက်များကို သတိပြုရှောင်ကြဉ်ရမည်။</li>
+                            <li>(က) တစ်ချက်ကောင်းမြင်ရုံနှင့် အမှတ်များများပေးခြင်း။</li>
+                            <li>(ခ) တစ်ချက်ဆိုးမြင်ရုံနှင့် အမှတ်နဲနဲပေးခြင်း။</li>
+                            <li>(ဂ) လတ်တလောအခြေအနေကြည့်ပြီး အမှတ်ပေးခြင်း။</li>
+                        </ul>
+                        <ul class="list-unstyled">
+                            <li>(ဃ) မျက်နှာလိုက်ပြီး အမှတ်ပေးခြင်း။</li>
+                            <li>(င) အမှတ်ပေးကပ်စီးနဲခြင်း။</li>
+                            <li>(စ) အမှတ်ပေးရက်ရောခြင်း။</li>
+                            <li>(ဆ) အမြဲတမ်းပျမ်းမျှပေးခြင်း။</li>
+                            <li>(ဇ) စိတ်မကြည်လင်သော အချိန်ပေးခြင်း။</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 
