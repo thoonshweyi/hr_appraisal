@@ -453,6 +453,23 @@ class AppraisalFormsController extends Controller
         }
     }
 
+    public function switchView(Request $request, AppraisalForm $appraisalform)
+    {
+        $this->authorize('edit', $appraisalform);
+
+        $viewMode = $request->input('view');
+
+        abort_unless(in_array($viewMode, ['desktop', 'mobile'], true), 422);
+
+        session(['view_mode' => $viewMode]);
+
+        return redirect()
+            ->route('appraisalforms.edit', $appraisalform->id)
+            ->withInput(
+                $request->only('appraisalformresults')
+            );
+    }
+
     public function savedraft(Request $request,$id){
 
         // dd($request->appraisalformresults);

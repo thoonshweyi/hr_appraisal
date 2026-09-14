@@ -75,20 +75,21 @@
                 @endif
            </div>
 
-           @php
-                $isMobileView = session('view_mode') == 'mobile';
+            @php
+                $isMobileView = session('view_mode') === 'mobile';
             @endphp
 
             <div class="col-md-12 mb-2 text-start">
-                @if ($isMobileView)
-                    <a href="{{ request()->fullUrlWithQuery(['view' => 'desktop']) }}" class="btn btn-primary">
-                        Switch to Desktop View
-                    </a>
-                @else
-                    <a href="{{ request()->fullUrlWithQuery(['view' => 'mobile']) }}" class="btn btn-primary">
-                        Switch to Mobile View
-                    </a>
-                @endif
+                <button
+                    type="submit"
+                    form="appraisalformf"
+                    formaction="{{ route('appraisalforms.switch-view', $appraisalform->id) }}"
+                    name="view"
+                    value="{{ $isMobileView ? 'desktop' : 'mobile' }}"
+                    class="btn btn-primary"
+                >
+                    Switch to {{ $isMobileView ? 'Desktop' : 'Mobile' }} View
+                </button>
             </div>
 
            <div class="col-md-12 mb-2">
@@ -177,7 +178,7 @@
                                                     <th class="vertical-header">
                                                         <span class="employees">
                                                         @if(isset($assesseeuser))
-                                                            {{ $assesseeuser->employee->employee_name }}
+                                                            {{ $assesseeuser->employee->employee_name }} {{-- "Lorem Ipsum is simply" --}}
                                                         @else
                                                             &nbsp;
                                                         @endif
@@ -426,6 +427,7 @@
 
             console.log(totals);
         }
+        updateTotals();
 
         function autofocusNextInput(input) {
             {{-- console.log(input); --}}
@@ -489,10 +491,6 @@
             const $tableWrapper = $(this).closest('.table-responsive');
             const scrollWidth = $tableWrapper[0].scrollWidth;
 
-            // $tableWrapper.animate({
-            //     scrollLeft: scrollWidth
-            // }, 100); // Scroll to the right for a quick scroll
-
             const input = $(this);
 
             // Remove old handlers to avoid duplicates and update input value on criteria circle click
@@ -525,29 +523,9 @@
                 $('.critooltips').addClass('invisible');
             }
         });
-        {{--
-        document.addEventListener('click', function (e) {
-
-            if(e.target.className != 'custom-input'){
-                console.log(e.target);
-                $(".critooltips").addClass('d-none'); // Hide all tooltips first
-
-            }
-        }); --}}
-
-
-
-   
-
         {{-- End Tooltip --}}
 
         {{-- Start Save Draft --}}
-        {{-- $('#appraisalform').submit(function(e){
-            e.preventDefault();
-            console.log('hi');
-
-            $(this).action('')
-        }); --}}
 
         let confirmClicked = false;
         let submitting = false;
@@ -597,79 +575,6 @@
         });
         {{-- End Print Arera --}}
     });
-
-
-
-    {{-- Start Pages --}}
-    {{-- 
-    let currentPage = 0;
-    const pages = document.querySelectorAll('.printableArea.page');
-    const totalPages = pages.length;
-
-    const prevBtn = document.getElementById('prevPage');
-    const nextBtn = document.getElementById('nextPage');
-    const pageNumbersContainer = document.getElementById('pageNumbers');
-
-    // Create page number buttons like Laravel pagination
-    for (let i = 0; i < totalPages; i++) {
-        const li = document.createElement('li');
-        li.classList.add('page-item');
-
-        const a = document.createElement('a');
-        a.classList.add('page-link');
-        a.classList.add('rounded-0');
-        a.href = "#";
-        a.textContent = i + 1;
-        a.setAttribute('data-page', i);
-
-        a.addEventListener('click', function (e) {
-            e.preventDefault();
-            currentPage = i;
-            updatePagination();
-        });
-
-        li.appendChild(a);
-        pageNumbersContainer.appendChild(li);
-    }
-
-    const pageButtons = pageNumbersContainer.querySelectorAll('.page-item');
-
-    function updatePagination() {
-        pages.forEach((page, index) => {
-            page.style.display = index === currentPage ? 'block' : 'none';
-        });
-
-        // Toggle prev/next
-        prevBtn.classList.toggle('disabled', currentPage === 0);
-        nextBtn.classList.toggle('disabled', currentPage === totalPages - 1);
-
-        // Highlight active page
-        pageButtons.forEach((li, index) => {
-            li.classList.toggle('active', index === currentPage);
-        });
-    }
-
-    prevBtn.querySelector('a').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (currentPage > 0) {
-            currentPage--;
-            updatePagination();
-        }
-    });
-
-    nextBtn.querySelector('a').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (currentPage < totalPages - 1) {
-            currentPage++;
-            updatePagination();
-        }
-    });
-
-    updatePagination();
-    --}}
-    {{-- End Pages --}}
-
-
 
     {{-- Start Back Btn --}}
     $(".back-btn").click(function(){

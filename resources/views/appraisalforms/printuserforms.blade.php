@@ -124,6 +124,7 @@
 
         .criteria-header{
             width: 60%;
+            max-width: 60%;
             min-width: 60% !important;
             max-width: 60% !important;;
             vertical-align:middle;
@@ -211,7 +212,7 @@
                                 <th class="vertical-header">
                                     <span class="employees">
                                     @if(isset($chunkArray[$i]) )
-                                        {{ $chunkArray[$i]->employee->employee_name }}
+                                        {{ $chunkArray[$i]->employee->employee_name }} {{-- "Lorem Ipsum is simply " --}}
                                     @else
                                         &nbsp;
                                     @endif

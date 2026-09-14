@@ -276,7 +276,10 @@ Route::middleware('auth')->group(function () {
     Route::get("/appraisalformsnotification",[AppraisalFormsController::class,"notification"])->name("appraisalforms.notification");
     Route::get("/appraisalformsprintuserforms/{user_id}/{appraisal_cycle_id}/",[AppraisalFormsController::class,"printuserforms"])->name("appraisalforms.printuserforms");
     Route::get("/appraisalforms/{id}/archive",[AppraisalFormsController::class,"archive"])->name("appraisalforms.archive");
-
+    Route::put(
+        '/appraisalforms/{appraisalform}/switch-view',
+        [AppraisalFormsController::class, 'switchView']
+    )->name('appraisalforms.switch-view');
 
     Route::get("/assesseesummary/{assessee_user_id}/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"review"])->name("assesseesummary.review");
     Route::get("/assesseesummarysexport/{appraisal_cycle_id}/",[AssesseeSummaryController::class,"export"])->name("assesseesummary.export");

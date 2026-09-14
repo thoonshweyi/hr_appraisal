@@ -89,19 +89,20 @@
            </div>
 
             @php
-                $isMobileView = session('view_mode') == 'mobile';
+                $isMobileView = session('view_mode') === 'mobile';
             @endphp
 
             <div class="col-md-12 mb-2 text-start">
-                @if ($isMobileView)
-                    <a href="{{ request()->fullUrlWithQuery(['view' => 'desktop']) }}" class="btn btn-primary">
-                        Switch to Desktop View
-                    </a>
-                @else
-                    <a href="{{ request()->fullUrlWithQuery(['view' => 'mobile']) }}" class="btn btn-primary">
-                        Switch to Mobile View
-                    </a>
-                @endif
+                <button
+                    type="submit"
+                    form="appraisalformf"
+                    formaction="{{ route('appraisalforms.switch-view', $appraisalform->id) }}"
+                    name="view"
+                    value="{{ $isMobileView ? 'desktop' : 'mobile' }}"
+                    class="btn btn-primary"
+                >
+                    Switch to {{ $isMobileView ? 'Desktop' : 'Mobile' }} View
+                </button>
             </div>
 
            <div class="col-md-12 mb-2">
@@ -148,18 +149,41 @@
                         @method('PUT')
 
 
+                    @php
+                        \Log::info('Old appraisalformresults', [
+                            'data' => old('appraisalformresults')
+                        ]);
+                    @endphp
                     @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
                     @foreach($assesseeuserbybranch as $assesseeuser)
                         <div id="assessee_{{ $assesseeuser->id }}_criterias" class="assessee_criterias" style="display: none;" data-assessee="{{ $assesseeuser->id }}">
                         @foreach ($criterias as $idx=>$criteria)
+                        
+                            @php
+                                $results = old('appraisalformresults', []);
+
+                                /*
+                                \Log::info('Assessee ' . $assesseeuser->id, [
+                                    'criteria_id' => $criteria->id,
+                                    'result' => $results[$assesseeuser->id][$criteria->id] ?? null,
+                                ]);
+                                */
+
+                                $preloadResult = $preloadresults[$assesseeuser->id][$criteria->id]->result ?? null;
+                                $selectedResult = old(
+                                    "appraisalformresults.{$assesseeuser->id}.{$criteria->id}",
+                                    $preloadResult
+                                );
+
+                            @endphp
                             <div class="form-card">
                                 <div class="section-title">{{ $criteria->name }}</div>
                                 <div class="score-radio d-flex flex-wrap">
                                     <div class="form-check me-2">
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-1" value="{{ $criteria->excellent }}"
-                                            {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->excellent)
+                                            {{ (string) $selectedResult === (string) $criteria->excellent
                                                 ? 'checked'
-                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->excellent ? 'checked' : '')
+                                                : ''
                                             }}
 
                                             data-assessee="{{ $assesseeuser->id }}"
@@ -169,9 +193,9 @@
 
                                     <div class="form-check me-2">
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2" value="{{ $criteria->good }}"
-                                          {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->good)
+                                          {{ (string) $selectedResult === (string) $criteria->good
                                                 ? 'checked'
-                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->good ? 'checked' : '') }}
+                                                : '' }}
                                             data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-2">{{ $criteria->good }}</label>
@@ -179,9 +203,9 @@
 
                                     <div class="form-check me-2">
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3" value="{{ $criteria->meet_standard }}"
-                                            {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->meet_standard)
+                                            {{ (string) $selectedResult === (string) $criteria->meet_standard
                                                 ? 'checked'
-                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->meet_standard ? 'checked' : '') }}
+                                                : '' }}
                                             data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-3">{{ $criteria->meet_standard }}</label>
@@ -189,9 +213,9 @@
 
                                     <div class="form-check me-2">
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4" value="{{ $criteria->below_standard }}"
-                                         {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->below_standard)
+                                         {{ (string) $selectedResult === (string) $criteria->below_standard
                                                 ? 'checked'
-                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->below_standard ? 'checked' : '') }}
+                                                : '' }}
                                             data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-4">{{ $criteria->below_standard }}</label>
@@ -199,9 +223,9 @@
 
                                     <div class="form-check me-2">
                                         <input class="form-check-input custom-input" type="radio" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" id="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5" value="{{ $criteria->weak }}"
-                                        {{ (old('appraisalformresults') && isset(old('appraisalformresults')[$assesseeuser->id][$criteria->id]) && old('appraisalformresults')[$assesseeuser->id][$criteria->id] == $criteria->weak)
+                                        {{ (string) $selectedResult === (string) $criteria->weak
                                                 ? 'checked'
-                                                : ( ($preloadresults[$assesseeuser->id][$criteria->id]->result ?? '') == $criteria->weak ? 'checked' : '') }}
+                                                : '' }}
                                             data-assessee="{{ $assesseeuser->id }}"
                                         />
                                         <label class="custom-input" for="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]-5">{{ $criteria->weak }}</label>
@@ -642,17 +666,6 @@
 
         $('.custom-input').on('click', function () {
             const $input = $(this);
-            {{-- const allowed = $input.data('valids').toString().split(',').map(Number);
-            const value = parseInt($input.val()); --}}
-
-            {{-- if ($input.val() !== '' && !allowed.includes(value)) {
-                Swal.fire({
-                    icon: "warning",
-                    title: "သတ်မှတ်ထားသော အဆင့်သတ်မှတ်ချက်များနှင့် မကိုက်ညီပါ။",
-                    text: allowed.join(', ') + " ထဲမှ တစ်ခုကို ရွေးပါ",
-                });
-                $input.val('');
-            } --}}
 
             updateTotals();
             autofocusNextInput($input);
@@ -695,6 +708,7 @@
 
             console.log(totals);
         }
+        updateTotals();
 
         function autofocusNextInput(input) {
             {{-- console.log(input); --}}
@@ -735,56 +749,6 @@
             }
         }
 
-
-        {{-- Start Tooltip --}}
-        // This prevents the tooltip from hiding if the click is on the input or inside the tooltip.
-
-        // Focus event to show the tooltip when the input is focused
-        $('.custom-input').focus(function () {
-            $(".critooltips").addClass('d-none'); // Hide all tooltips first
-            $(this).next(".critooltips").removeClass('d-none'); // Show the specific tooltip for the input
-
-            const $tableWrapper = $(this).closest('.table-responsive');
-            const scrollWidth = $tableWrapper[0].scrollWidth;
-
-            $tableWrapper.animate({
-                scrollLeft: scrollWidth
-            }, 100); // Scroll to the right for a quick scroll
-
-            const input = $(this);
-
-            // Remove old handlers to avoid duplicates and update input value on criteria circle click
-            input.next(".critooltips").find('.criteria-circles').off('mousedown').on('mousedown', function (e) {
-                {{-- e.preventDefault(); // Prevent input blur --}}
-                const value = $(this).data('value');
-                input.val(value);
-                updateTotals();
-
-                autofocusNextInput(input);
-            });
-        });
-
-
-        $('.custom-input').blur(function () {
-            {{-- setTimeout(() => {
-                $('.critooltips').addClass('d-none');
-            }, 1000); --}}
-        });
-
-        $('.tooltipcloses').click(function(){
-            $(this).closest('.critooltips').addClass('d-none');
-        });
-
-        $(document).on('mousedown',function(e){
-            {{-- console.log(e.target.classList.contains('custom-input')); --}}
-            {{-- console.log(e.target.closest('.critooltips')) --}}
-
-            if(!e.target.classList.contains('custom-input') && !e.target.closest('.critooltips')){
-                $('.critooltips').addClass('d-none');
-            }
-        });
-
-
         let confirmClicked = false;
         let submitting = false;
         $('.submitbtns').click(function(e){
@@ -824,15 +788,6 @@
                 .submit();
         });
         {{-- End Save Draft --}}
-
-        {{-- Start Print Area --}}
-        {{-- document.querySelector('.cus_btn').addEventListener('click', function () {
-            var pdfFrame1 = window.frames["reprint_frame"];
-                            pdfFrame1.print();
-        }); --}}
-        {{-- End Print Arera --}}
-
-
 
 
         {{-- Start Target Each Assessee  --}}
