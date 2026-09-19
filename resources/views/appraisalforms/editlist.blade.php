@@ -337,32 +337,14 @@
 @section('js')
 
 <script>
+
+    const draftRedirectUrl = @json(
+        adminHRAuthorize()
+            ? route('appraisalcycles.edit', $appraisalform->appraisal_cycle_id)
+            : route('appraisalforms.notification')
+    );
+
     $(document).ready(function() {
-
-
-        {{-- Your rating-value doesn't match the given-rating-scale-values! --}}
-        {{-- $(".custom-input").on("input", function () {
-            let min = parseInt($(this).attr("min"));
-            let max = parseInt($(this).attr("max"));
-            let value = parseInt($(this).val());
-
-            if (value > max) {
-
-                Swal.fire({
-                    icon: "warning",
-                    title: "Greater than maximum value.",
-                    text:"Value cannot be greater than " + max,
-                });
-                $(this).val(max);
-            } else if (value < min) {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Less than minimum value.",
-                    text: "Value cannot be less than " + min,
-                });
-                $(this).val(min);
-            }
-        }); --}}
 
 
         let typingTimer;
@@ -525,7 +507,6 @@
         });
         {{-- End Tooltip --}}
 
-        {{-- Start Save Draft --}}
 
         let confirmClicked = false;
         let submitting = false;
@@ -546,12 +527,60 @@
                     confirmClicked = true;
                     submitting = true;
 
+                    $('#pageLoader').fadeIn();
+
                     $('#appraisalformf').attr('action','{{ route('appraisalforms.update',$appraisalform->id) }}');
-                    $('#appraisalformf').submit();
+                    // $('#appraisalformf').submit();
+
+                    $.ajax({
+                        url:  $('#appraisalformf').attr('action'),
+                        type:"POST",
+                        dataType: "json",
+                        data:$("#appraisalformf").serialize(),
+                        success:function(response){
+                            console.log(response);
+
+                            const data = response;
+                            const appraisalform = data.data;
+
+                            if(data.success){
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Finished!",
+                                    text: data.message,
+                                });
+                                setTimeout(() => {                                            
+                                    window.location.replace(draftRedirectUrl);
+                                }, 3000);
+                            }else{
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Submit Error!!",
+                                    text: `${data.message}`,
+                                });
+                            }
+                        },
+                        error:function(response){
+                            console.log("Error: ",response);
+
+                            Swal.fire({
+                                icon: "error",
+                                title: "Submit Error!!",
+                                text: "Something went wrong while submiting Appraisal Form.",
+                            });
+                        },
+                        complete:function(resopnse){
+                            confirmClicked = false;
+                            submitting = false;
+
+                            $('#pageLoader').fadeOut();
+                        }
+                    });
                 }
             });
         });
 
+        {{-- Start Save Draft --}}
         $('.savedraftbtns').click(function(e){
             e.preventDefault();
             let $btn = $(this);
@@ -563,7 +592,50 @@
 
             $('#appraisalformf')
                 .attr('action', '{{ route('appraisalforms.savedraft', $appraisalform->id) }}')
-                .submit();
+            
+            $.ajax({
+                url:  $('#appraisalformf').attr('action'),
+                type:"POST",
+                dataType: "json",
+                data:$("#appraisalformf").serialize(),
+                success:function(response){
+                    console.log(response);
+
+                    const data = response;
+                    const appraisalform = data.data;
+
+                    if(data.success){
+                         
+                        Swal.fire({
+                            icon: "success",
+                            title: "Saved!",
+                            text: data.message,
+                        });
+                        setTimeout(() => {                                            
+                            window.location.replace(draftRedirectUrl);
+                        }, 3000);
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: "Save Error!!",
+                            text: `${data.message}`,
+                        });
+                    }
+                },
+                error:function(response){
+                    console.log("Error: ",response);
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Save Error!!",
+                        text: "Something went wrong while saving Appraisal Form.",
+                    });
+                },
+                complete:function(resopnse){
+                    $('#pageLoader').fadeOut();
+                    $btn.prop('disabled', false);      
+                }
+            });
         });
         {{-- End Save Draft --}}
 
@@ -590,6 +662,8 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $('.savedraftbtns').click();
+            }else{
+                window.location.replace(draftRedirectUrl);
             }
         });
 

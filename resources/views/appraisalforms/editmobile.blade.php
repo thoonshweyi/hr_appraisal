@@ -761,6 +761,12 @@
             }
         }
 
+        const draftRedirectUrl = @json(
+            adminHRAuthorize()
+                ? route('appraisalcycles.edit', $appraisalform->appraisal_cycle_id)
+                : route('appraisalforms.notification')
+        );
+
         let confirmClicked = false;
         let submitting = false;
         $('.submitbtns').click(function(e){
@@ -780,24 +786,114 @@
                     confirmClicked = true;
                     submitting = true;
 
+                    $('#pageLoader').fadeIn();
+
                     $('#appraisalformf').attr('action','{{ route('appraisalforms.update',$appraisalform->id) }}');
-                    $('#appraisalformf').submit();
+                    // $('#appraisalformf').submit();
+
+                    $.ajax({
+                        url:  $('#appraisalformf').attr('action'),
+                        type:"POST",
+                        dataType: "json",
+                        data:$("#appraisalformf").serialize(),
+                        success:function(response){
+                            console.log(response);
+
+                            const data = response;
+                            const appraisalform = data.data;
+
+                            if(data.success){
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Finished!",
+                                    text: data.message,
+                                });
+                                setTimeout(() => {                                            
+                                    window.location.replace(draftRedirectUrl);
+                                }, 3000);
+                            }else{
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Submit Error!!",
+                                    text: `${data.message}`,
+                                });
+                            }
+                        },
+                        error:function(response){
+                            console.log("Error: ",response);
+
+                            Swal.fire({
+                                icon: "error",
+                                title: "Submit Error!!",
+                                text: "Something went wrong while submiting Appraisal Form.",
+                            });
+                        },
+                        complete:function(resopnse){
+                            confirmClicked = false;
+                            submitting = false;
+
+                            $('#pageLoader').fadeOut();
+                        }
+                    });
                 }
             });
         });
 
+        {{-- Start Save Draft --}}
         $('.savedraftbtns').click(function(e){
             e.preventDefault();
             let $btn = $(this);
             if ($btn.prop('disabled')) return; 
 
             $btn.prop('disabled', true);      
-            $btn.val('Saving...');            
             $('#pageLoader').fadeIn();
 
             $('#appraisalformf')
                 .attr('action', '{{ route('appraisalforms.savedraft', $appraisalform->id) }}')
-                .submit();
+
+            $.ajax({
+                url:  $('#appraisalformf').attr('action'),
+                type:"POST",
+                dataType: "json",
+                data:$("#appraisalformf").serialize(),
+                success:function(response){
+                    console.log(response);
+
+                    const data = response;
+                    const appraisalform = data.data;
+
+                    if(data.success){
+                         
+                        Swal.fire({
+                            icon: "success",
+                            title: "Saved!",
+                            text: data.message,
+                        });
+                        setTimeout(() => {                                            
+                            window.location.replace(draftRedirectUrl);
+                        }, 3000);
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: "Save Error!!",
+                            text: `${data.message}`,
+                        });
+                    }
+                },
+                error:function(response){
+                    console.log("Error: ",response);
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Save Error!!",
+                        text: "Something went wrong while saving Appraisal Form.",
+                    });
+                },
+                complete:function(resopnse){
+                    $('#pageLoader').fadeOut();
+                    $btn.prop('disabled', false);      
+                }
+            });
         });
         {{-- End Save Draft --}}
 
@@ -934,6 +1030,8 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('.savedraftbtns').click();
+                }else{
+                    window.location.replace(draftRedirectUrl);
                 }
             });
 

@@ -441,20 +441,22 @@ class AppraisalFormsController extends Controller
                 }
             }
 
+            // throw new Exception("Submit Error");
             \DB::commit();
 
-
-            $adminauthorize = adminHRAuthorize();
-            if($adminauthorize){
-                return redirect()->route("appraisalcycles.edit",$appraisalform->appraisal_cycle_id)->with('success',"Appraisal Form Saved successfully")->with("js",true);
-            }else{
-                return redirect(route("appraisalforms.notification"))->with('success',"Appraisal Form updated successfully");
-            }
-        }catch(Exception $err){
+            return response()->json([
+                'success' => true,
+                'message' => "Appraisal Form Saved successfully",
+                'data' => $appraisalform,
+            ]);    
+        }catch(Exception $e){
             \DB::rollback();
-            Log::info($err);
+            Log::info($e);
 
-            return redirect()->back()->with("error","There is an error in submitting Appraisal Form.");
+            return response()->json([
+                'success'=>false,
+                'message'=> 'There is an error in submitting Appraisal Form.'.$e->getMessage()
+            ]);
         }
     }
 
@@ -533,19 +535,22 @@ class AppraisalFormsController extends Controller
             ]);
             // End Remember Current Assessee
 
+            // throw new Exception("Save Error");
             \DB::commit();
 
-            $adminauthorize = adminHRAuthorize();
-            if($adminauthorize){
-                 return redirect()->route("appraisalcycles.edit",$appraisalform->appraisal_cycle_id)->with('success',"Appraisal Form Saved successfully")->with("js",true);
-            }else{
-                return redirect(route("appraisalforms.notification"))->with('success',"Appraisal Form Saved successfully");
-            }
+            return response()->json([
+                'success' => true,
+                'message' => "Appraisal Form Saved successfully",
+                'data' => $appraisalform,
+            ]);        
         }catch(Exception $e){
             \DB::rollback();
             Log::info($e);
 
-            return redirect()->back()->with("error","There is an error in submitting Appraisal Form.".$e->getMessage());
+            return response()->json([
+                'success'=>false,
+                'message'=> 'There is an error in saving Appraisal Form.'.$e->getMessage()
+            ]);
         }
     }
 
