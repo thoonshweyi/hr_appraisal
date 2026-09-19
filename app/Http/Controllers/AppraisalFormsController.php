@@ -414,17 +414,18 @@ class AppraisalFormsController extends Controller
                         ->withInput();
 
                     }
-                    $formresult = FormResult::create([
+                    $formresult = FormResult::updateOrCreate([
                         "appraisal_form_id" => $id,
                         "assessee_user_id" => $assessee_id,
                         "criteria_id" => $criteria_id,
+                    ],[
                         "result" => $result,
                     ]);
                 }
             }
 
             // Start Remember Current Assessee
-            $assessee_user_id = $request['assessee_user_id'];
+            $assessee_user_id = $request['assessee_user_id'] ?? null;
             $appraisalform->update([
                 'assessee_user_id' => $assessee_user_id
             ]);
@@ -514,10 +515,11 @@ class AppraisalFormsController extends Controller
                         ->withInput();
 
                     }
-                    $formresult = FormResult::create([
+                    $formresult = FormResult::updateOrCreate([
                         "appraisal_form_id" => $id,
                         "assessee_user_id" => $assessee_id,
                         "criteria_id" => $criteria_id,
+                    ],[
                         "result" => $result,
                     ]);
                 }
@@ -525,7 +527,7 @@ class AppraisalFormsController extends Controller
 
 
             // Start Remember Current Assessee
-            $assessee_user_id = $request['assessee_user_id'];
+            $assessee_user_id = $request['assessee_user_id'] ?? null;
             $appraisalform->update([
                 'assessee_user_id' => $assessee_user_id
             ]);

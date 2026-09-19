@@ -252,7 +252,7 @@
                                                         @if(isset($assesseeuser))
                                                             <span id="total_results_{{ $assesseeuser->id }}"> {{ $appraisalform->getTotalResult($assesseeuser->id) != 0 ? $appraisalform->getTotalResult($assesseeuser->id) : '' }} </span>
                                                         @else
-                                                            a
+                                                            -
                                                         @endif
                                                     </td>
                                                     @endforeach

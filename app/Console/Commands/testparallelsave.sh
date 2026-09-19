@@ -1,0 +1,19 @@
+curl 'http://127.0.0.1:8000/appraisalformssavedraft/37090' \
+  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
+  -H 'Accept-Language: en-US,en;q=0.9' \
+  -H 'Cache-Control: max-age=0' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -b 'XSRF-TOKEN=eyJpdiI6ImlXbVFYNzR4K253OEdUTWJxRHZwakE9PSIsInZhbHVlIjoib09pdkVmMkUzL25qd2VGNjBXOFFYb3pUTytOSThmOENEZkM2RHZOeEVCLyszdzc4V1l1TFUray9EaFVueVJMWEwxTDY0SDNzRkdnaXNLYUcxMmJmV0NobFpLRGo0US9pV21JeklJcUNDcHNoeWxITHUrbWh3Q0ZnVU9hZUxwSmEiLCJtYWMiOiIzNDg5MzA5NTdlYmRhMGJjYWIyNjY1YWNiZWM2NTUxMmI3ZmNhYjgxZDQ3MzI1OWIxM2RmMGY0OTY0N2IxNjA2IiwidGFnIjoiIn0%3D; hr_appraisal_session=eyJpdiI6ImRtSDk0aU04eENaTTNsUmZvdDhMR3c9PSIsInZhbHVlIjoidnN0SGoyR0U2Qit5QkdDaHVMU21DelYrRVUwYzI2bW9JQ1dHMHJYRXBNL1d3Q0dTZU1EaUlnNTlFZFNUMFVEbER1WXBianhTVUNPbGJqZUhtMTRINWI2SlpMZUk5RytjVUdYK1liT1VvRTJuUWVITEVoZi9TejAzQkR6S05CckMiLCJtYWMiOiIxN2ZhYjk0MTg1MDA2ZjA3OTU1Y2QyZTRlNTE5ZDMyNTYyOGE2ZmNhNjRjN2I5YTMyOWI1YWJjMDYyYTdhOWVhIiwidGFnIjoiIn0%3D' \
+  -H 'Origin: http://127.0.0.1:8000' \
+  -H 'Referer: http://127.0.0.1:8000/appraisalforms/37090/edit' \
+  -H 'Sec-Fetch-Dest: document' \
+  -H 'Sec-Fetch-Mode: navigate' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Sec-Fetch-User: ?1' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="8", "Chromium";v="150", "Google Chrome";v="150"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Linux"' \
+  --data-raw '_token=CPk9mRMIPFyq44eZgYQiU4MaAcsD2mDV1Wsev0ht&_method=PUT&assessee_user_id=2896&appraisalformresults%5B2896%5D%5B2159%5D=8&appraisalformresults%5B2896%5D%5B2160%5D=8&appraisalformresults%5B2896%5D%5B2161%5D=&appraisalformresults%5B2896%5D%5B2162%5D=&appraisalformresults%5B2896%5D%5B2163%5D=&appraisalformresults%5B2896%5D%5B2164%5D=&appraisalformresults%5B2896%5D%5B2165%5D=&appraisalformresults%5B2896%5D%5B2166%5D=&appraisalformresults%5B2896%5D%5B2167%5D=&appraisalformresults%5B2896%5D%5B2168%5D=&appraisalformresults%5B2896%5D%5B2169%5D=&appraisalformresults%5B2896%5D%5B2170%5D=&appraisalformresults%5B3103%5D%5B2159%5D=&appraisalformresults%5B3103%5D%5B2160%5D=&appraisalformresults%5B3103%5D%5B2161%5D=&appraisalformresults%5B3103%5D%5B2162%5D=&appraisalformresults%5B3103%5D%5B2163%5D=&appraisalformresults%5B3103%5D%5B2164%5D=&appraisalformresults%5B3103%5D%5B2165%5D=&appraisalformresults%5B3103%5D%5B2166%5D=&appraisalformresults%5B3103%5D%5B2167%5D=&appraisalformresults%5B3103%5D%5B2168%5D=&appraisalformresults%5B3103%5D%5B2169%5D=&appraisalformresults%5B3103%5D%5B2170%5D=&appraisalformresults%5B2484%5D%5B2159%5D=&appraisalformresults%5B2484%5D%5B2160%5D=&appraisalformresults%5B2484%5D%5B2161%5D=&appraisalformresults%5B2484%5D%5B2162%5D=&appraisalformresults%5B2484%5D%5B2163%5D=&appraisalformresults%5B2484%5D%5B2164%5D=&appraisalformresults%5B2484%5D%5B2165%5D=&appraisalformresults%5B2484%5D%5B2166%5D=&appraisalformresults%5B2484%5D%5B2167%5D=&appraisalformresults%5B2484%5D%5B2168%5D=&appraisalformresults%5B2484%5D%5B2169%5D=&appraisalformresults%5B2484%5D%5B2170%5D='
