@@ -106,49 +106,47 @@
             </div>
 
            <div class="col-md-12 mb-2">
-                <div class="form-header mb-2" style="position: sticky;">
-                        {{-- <h4 class="text-center">PRO1 Global Company Co.,Ltd</h4> --}}
-                        <h5 class="">{{ $appraisalform->assformcat->name }}</h5>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="assessor-infos">
-                                <strong>Assessor (အကဲဖြတ်အမှတ်ပေးမည့်သူ)</strong>
-                                <span class="delimiter">-</span>
-                                <span class="value">{{ $appraisalform->assessoruser->employee->employee_name }}</span>
+
+                <form id="appraisalformf" action="" method="POST">
+                @csrf
+                @method('PUT')
+
+                    <div class="form-header mb-2" style="position: sticky;">
+                            {{-- <h4 class="text-center">PRO1 Global Company Co.,Ltd</h4> --}}
+                            <h5 class="">{{ $appraisalform->assformcat->name }}</h5>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="assessor-infos">
+                                    <strong>Assessor (အကဲဖြတ်အမှတ်ပေးမည့်သူ)</strong>
+                                    <span class="delimiter">-</span>
+                                    <span class="value">{{ $appraisalform->assessoruser->employee->employee_name }}</span>
+                                </div>
+                                <div class="assessor-infos">
+                                    <strong>Position (ရာထူး)</strong>
+                                    <span class="delimiter">-</span>
+                                    <span class="value">{{ $appraisalform->assessoruser->employee->position->name }}</span>
+                                </div>
+                                <div class="assessor-infos">
+                                    <strong>Department (ဌာန)</strong>
+                                    <span class="delimiter">-</span>
+                                    <span class="value">{{ $appraisalform->assessoruser->employee->attachformtype->name }}</span>
+                                </div>
                             </div>
-                            <div class="assessor-infos">
-                                <strong>Position (ရာထူး)</strong>
+                            <div class="col-sm-6">
+                                <label for="assessees" class="form-label"><strong>Assessees (အမှတ်ပေးခံရမည့်သူ) </strong>
                                 <span class="delimiter">-</span>
-                                <span class="value">{{ $appraisalform->assessoruser->employee->position->name }}</span>
+                                <span><a href="#assesseemodal" data-toggle="modal">{{ $assesseeusers->flatten()->count();  }} persons</span></a>
+                                </label>
+                                <select name="assessee_user_id" class="form-control" id="current_assessees">
+                                    @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
+                                    @foreach($assesseeuserbybranch as $assesseeuser)
+                                        <option value="{{$assesseeuser->id}}" {{ $assesseeuser->id == $appraisalform->assessee_user_id ? "selected" : '' }}>{{ $assesseeuser->employee->employee_name }}</option>
+                                    @endforeach
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="assessor-infos">
-                                <strong>Department (ဌာန)</strong>
-                                <span class="delimiter">-</span>
-                                <span class="value">{{ $appraisalform->assessoruser->employee->attachformtype->name }}</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label for="assessees" class="form-label"><strong>Assessees (အမှတ်ပေးခံရမည့်သူ) </strong>
-                            <span class="delimiter">-</span>
-                            <span><a href="#assesseemodal" data-toggle="modal">{{ $assesseeusers->flatten()->count();  }} persons</span></a>
-                            </label>
-                            <select class="form-control" id="current_assessees">
-                                @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
-                                @foreach($assesseeuserbybranch as $assesseeuser)
-                                    <option value="{{$assesseeuser->id}}" {{ $assesseeuser->id == $tar_assessee ? "selected" : '' }}>{{ $assesseeuser->employee->employee_name }}</option>
-                                @endforeach
-                                @endforeach
-                            </select>
                         </div>
                     </div>
-                </div>
-                                        {{-- {{ dd(old('appraisalformresults')) }} --}}
-
-                    <form id="appraisalformf" action="" method="POST">
-                        @csrf
-                        @method('PUT')
-
-
                     @php
                         \Log::info('Old appraisalformresults', [
                             'data' => old('appraisalformresults')
@@ -247,15 +245,7 @@
                         </div>
                     @endforeach
                     @endforeach
-                    </form>
-
-
-                {{-- <div class="navigation-bar">
-                    <button class="btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
-                    <h6 id="assesseeName">Yin Min Hlaing</h6>
-                    <button class="btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
-                </div> --}}
-
+                </form>
            </div>
 
 

@@ -282,8 +282,8 @@ class AppraisalFormsController extends Controller
 
         $assessee_ids = $appraisalform->assesseeusers->pluck('id');
         $assesseeusers = User::whereIn("id",$assessee_ids)
+        ->orderBy('name','asc')
         ->with(['employee.branch',"employee.department","employee.subdepartment","employee.position","employee.positionlevel"])
-        ->orderBy('id','asc')
         ->get()
         ->groupBy(function ($user) {
             return $user->employee->branch->branch_name ?? 'No Branch';
@@ -306,8 +306,6 @@ class AppraisalFormsController extends Controller
         // dd($adminauthorize);
 
         $preloadresults = $appraisalform->getPreloadResult($appraisalform->id);
-
-        $tar_assessee = $appraisalform->assessees()->where("status_id",2)?->first()?->assessee_user_id;
 
         $viewMode = request()->get('view', session('view_mode', $adminauthorize ? 'desktop' : 'mobile'));
         session(['view_mode' => $viewMode]);
@@ -335,7 +333,6 @@ class AppraisalFormsController extends Controller
             'total_below_standard',
             'total_weak',
             'preloadresults',
-            'tar_assessee'
         ));
 
     }
@@ -426,6 +423,13 @@ class AppraisalFormsController extends Controller
                 }
             }
 
+            // Start Remember Current Assessee
+            $assessee_user_id = $request['assessee_user_id'];
+            $appraisalform->update([
+                'assessee_user_id' => $assessee_user_id
+            ]);
+            // End Remember Current Assessee
+
             $type = "App\Notifications\AppraisalFormsNotify";
             // $getnoti = \DB::table("notifications")->where("notifiable_id",$user_id)->where("type",$type)->where('data->appraisalform_id',$id)->pluck('id');
             $getnotis = $user->unreadNotifications;
@@ -473,6 +477,7 @@ class AppraisalFormsController extends Controller
     public function savedraft(Request $request,$id){
 
         // dd($request->appraisalformresults);
+        // dd($request);
 
         \DB::beginTransaction();
         try{
@@ -519,26 +524,12 @@ class AppraisalFormsController extends Controller
             }
 
 
-            // Start Next Target Assessee
-            $criterias = Criteria::where("ass_form_cat_id",$appraisalform->ass_form_cat_id)->orderBy("id")->get();
-            $criteriaCount = $criterias->count();
-            $completedAssessees = $appraisalform->formresults
-            ->groupBy('assessee_user_id')
-            ->filter(function ($results) use ($criteriaCount) {
-                return $results->count() === $criteriaCount;
-            })
-            ->keys()
-            ->toArray();
-            // dd($completedAssessees);
-
-
-            $appraisalform->assessees()->whereIn("assessee_user_id",$completedAssessees)->update([
-                'status_id' => 1
+            // Start Remember Current Assessee
+            $assessee_user_id = $request['assessee_user_id'];
+            $appraisalform->update([
+                'assessee_user_id' => $assessee_user_id
             ]);
-            $appraisalform->assessees()->whereNotIn("assessee_user_id",$completedAssessees)->update([
-                'status_id' => 2
-            ]);
-            // End Next Target Assessee
+            // End Remember Current Assessee
 
             \DB::commit();
 
@@ -548,10 +539,11 @@ class AppraisalFormsController extends Controller
             }else{
                 return redirect(route("appraisalforms.notification"))->with('success',"Appraisal Form Saved successfully");
             }
-        }catch(Exception $err){
+        }catch(Exception $e){
             \DB::rollback();
+            Log::info($e);
 
-            return redirect()->back()->with("error","There is an error in submitting Appraisal Form.".$err);
+            return redirect()->back()->with("error","There is an error in submitting Appraisal Form.".$e->getMessage());
         }
     }
 
@@ -747,12 +739,21 @@ class AppraisalFormsController extends Controller
         $appraisalform_ids = $noti_datas->pluck('appraisalform_id');
         // dd($appraisalform_ids);
 
-        $appraisalforms = AppraisalForm::whereIn("id",$appraisalform_ids)
-        ->whereHas('appraisalcycle',function($query){
-                $todayStr = Carbon::now()->toDateString(); // Get only 'YYYY-MM-DD'
-                $query->whereDate('action_start_date', "<=", $todayStr)
-                      ->whereDate('action_end_date', ">=", $todayStr);
+        $appraisalforms = AppraisalForm::whereIn('appraisal_forms.id', $appraisalform_ids)
+        ->whereHas('appraisalcycle', function ($query) {
+            $todayStr = Carbon::now()->toDateString();
+
+            $query->whereDate('action_start_date', '<=', $todayStr)
+                ->whereDate('action_end_date', '>=', $todayStr);
         })
+        ->join(
+            'ass_form_cats',
+            'ass_form_cats.id',
+            '=',
+            'appraisal_forms.ass_form_cat_id'
+        )
+        ->orderBy('ass_form_cats.name')
+        ->select('appraisal_forms.*')
         ->paginate(10);
 
         return view("appraisalforms.notification", ['appraisalforms' => $appraisalforms]);

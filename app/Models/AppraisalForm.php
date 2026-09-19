@@ -21,7 +21,8 @@ class AppraisalForm extends Model
         "assessed",
         "modify_user_id",
         "status_id",
-        "delete_by"
+        "delete_by",
+        "assessee_user_id"
     ];
 
     public function assessor(){
