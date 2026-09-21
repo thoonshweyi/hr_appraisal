@@ -1118,16 +1118,16 @@
             console.log('Incomplete:', incompleteAssessees);
             if (completelyEmptyAssessees.length > 0){
                 Swal.fire({
-                    icon: "error",
-                    title: "Submit Error!!",
+                    icon: "warning",
+                    title: "Submission Failed",
                     text: @json(__('apprasialform.emloyee_remaining')),
                 });
                 return false;
             }
             if(incompleteAssessees.length > 0){
                 Swal.fire({
-                    icon: "error",
-                    title: "Submit Error!!",
+                    icon: "warning",
+                    title: "Submission Failed",
                     text: @json(__('apprasialform.criteria_missing')),
                 });
                 return false;
