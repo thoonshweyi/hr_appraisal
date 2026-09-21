@@ -513,6 +513,8 @@
         $('.submitbtns').click(function(e){
             if (submitting) return; 
 
+            if (!validateAssesseeCompletion()) return;
+
             Swal.fire({
                 title: "{{ __('apprasialform.result_submit')}}",
                 text: "",
@@ -669,6 +671,99 @@
 
     })
     {{-- End Back Btn --}}
+
+    // Asessee တစ်sယောက်လုံး ဘာ Criteria မှ မဖြည့်ရသေးဘူးလား
+    // Assessee အားလုံးမှာ နည်းနည်းစီတော့ ဖြည့်ထားတယ်၊ ဒါပေမယ့် Criteria အကွက်တချို့ လွတ်နေသေးလား
+    function validateAssesseeCompletion(){
+        let completelyEmptyAssessees = [];
+        let incompleteAssessees = [];
+
+        let assessees = {};
+
+        $('input.custom-input').each(function () {
+
+            let assesseeId = $(this).data('assessee');
+            let assesseeName = $(this).data('assessee-name');
+
+            if (!assessees[assesseeId]) {
+                assessees[assesseeId] = {
+                    name: assesseeName,
+                    id: assesseeId,
+                    total: 0,
+                    filled: 0
+                };
+            }
+
+            let criteriaName = $(this).attr('name');
+
+            if (!assessees[assesseeId].criteria) {
+                assessees[assesseeId].criteria = {};
+            }
+
+            if (!assessees[assesseeId].criteria[criteriaName]) {
+                assessees[assesseeId].criteria[criteriaName] = {
+                    filled: false
+                };
+
+                assessees[assesseeId].total++;
+            }
+
+            let $input = $(this);
+            let inputType = $input.attr('type');
+            let isFilled = false;
+            if (inputType === 'radio') {
+                isFilled = $input.is(':checked');
+            } else if (inputType === 'number') {
+                isFilled = $input.val().trim() !== '';
+            }
+
+            if (isFilled) {
+                assessees[assesseeId].criteria[criteriaName].filled = true;
+            }
+        });
+        // console.log(assessees); return false;
+
+
+        $.each(assessees, function (id, assessee) {
+
+            $.each(assessee.criteria, function (criteriaName, criteria) {
+
+                if (criteria.filled) {
+                    assessee.filled++;
+                }
+
+            });
+
+            // Criteria တစ်ခုမှ မရွေးရသေး
+            if (assessee.filled === 0) {
+                completelyEmptyAssessees.push(assessee.name || assessee.id);
+            } else if (assessee.filled < assessee.total) {
+                incompleteAssessees.push(assessee.name || assessee.id);
+            }
+        });
+
+
+        console.log('Completely Empty:', completelyEmptyAssessees);
+        console.log('Incomplete:', incompleteAssessees);
+        if (completelyEmptyAssessees.length > 0){
+            Swal.fire({
+                icon: "error",
+                title: "Submit Error!!",
+                text: @json(__('apprasialform.emloyee_remaining')),
+            });
+            return false;
+        }
+        if(incompleteAssessees.length > 0){
+            Swal.fire({
+                icon: "error",
+                title: "Submit Error!!",
+                text: @json(__('apprasialform.criteria_missing')),
+            });
+            return false;
+        }
+
+        return true;
+    }
 
 
  

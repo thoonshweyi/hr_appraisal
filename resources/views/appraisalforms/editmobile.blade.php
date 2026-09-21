@@ -1046,82 +1046,94 @@
         // Asessee တစ်sယောက်လုံး ဘာ Criteria မှ မဖြည့်ရသေးဘူးလား
         // Assessee အားလုံးမှာ နည်းနည်းစီတော့ ဖြည့်ထားတယ်၊ ဒါပေမယ့် Criteria အကွက်တချို့ လွတ်နေသေးလား
         function validateAssesseeCompletion(){
-            let completelyEmptyAssessees = [];
+           let completelyEmptyAssessees = [];
             let incompleteAssessees = [];
 
             let assessees = {};
 
-            console.log($('input.custom-input').length);
-            return false;
-
-            $('.custom-input').each(function () {
+            $('input.custom-input').each(function () {
 
                 let assesseeId = $(this).data('assessee');
                 let assesseeName = $(this).data('assessee-name');
-                let value = $(this).val();
 
                 if (!assessees[assesseeId]) {
-                        assessees[assesseeId] = {
-                            name: assesseeName,
-                            total: 0,
-                            filled: 0
-                        };
-                    }
+                    assessees[assesseeId] = {
+                        name: assesseeName,
+                        id: assesseeId,
+                        total: 0,
+                        filled: 0
+                    };
+                }
 
-                assessees[assesseeId].total++;
+                let criteriaName = $(this).attr('name');
 
-                if (value !== '') {
-                    assessees[assesseeId].filled++;
+                if (!assessees[assesseeId].criteria) {
+                    assessees[assesseeId].criteria = {};
+                }
+
+                if (!assessees[assesseeId].criteria[criteriaName]) {
+                    assessees[assesseeId].criteria[criteriaName] = {
+                        filled: false
+                    };
+
+                    assessees[assesseeId].total++;
+                }
+
+                let $input = $(this);
+                let inputType = $input.attr('type');
+                let isFilled = false;
+                if (inputType === 'radio') {
+                    isFilled = $input.is(':checked');
+                } else if (inputType === 'number') {
+                    isFilled = $input.val().trim() !== '';
+                }
+
+                if (isFilled) {
+                    assessees[assesseeId].criteria[criteriaName].filled = true;
                 }
             });
+            // console.log(assessees); return false;
 
 
-            /*
-            * 1. Criteria တစ်ခုမှ မဖြည့်ရသေးတဲ့ Assessee
-            */
             $.each(assessees, function (id, assessee) {
 
-                if (assessee.filled === 0) {
-                    completelyEmptyAssessees.push(assessee.name);
-                }
+                $.each(assessee.criteria, function (criteriaName, criteria) {
 
-                /*
-                * 2. တချို့ဖြည့်ထားပြီး တချို့ Criteria လွတ်နေတဲ့ Assessee
-                */
-                else if (assessee.filled < assessee.total) {
-                    incompleteAssessees.push(assessee.name);
+                    if (criteria.filled) {
+                        assessee.filled++;
+                    }
+
+                });
+
+                // Criteria တစ်ခုမှ မရွေးရသေး
+                if (assessee.filled === 0) {
+                    completelyEmptyAssessees.push(assessee.name || assessee.id);
+                } else if (assessee.filled < assessee.total) {
+                    incompleteAssessees.push(assessee.name || assessee.id);
                 }
             });
 
 
-            /*
-            * Validation result
-            */
-            // if (
-            //     completelyEmptyAssessees.length > 0 ||
-            //     incompleteAssessees.length > 0
-            // ) {
-            //     e.preventDefault();
+            console.log('Completely Empty:', completelyEmptyAssessees);
+            console.log('Incomplete:', incompleteAssessees);
+            if (completelyEmptyAssessees.length > 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Submit Error!!",
+                    text: @json(__('apprasialform.emloyee_remaining')),
+                });
+                return false;
+            }
+            if(incompleteAssessees.length > 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Submit Error!!",
+                    text: @json(__('apprasialform.criteria_missing')),
+                });
+                return false;
+            }
 
-            //     let message = '';
-
-            //     if (completelyEmptyAssessees.length > 0) {
-            //         message +=
-            //             'Criteria တစ်ခုမှ မဖြည့်ရသေးသော Assessee:\n' +
-            //             completelyEmptyAssessees.join('\n') +
-            //             '\n\n';
-            //     }
-
-            //     if (incompleteAssessees.length > 0) {
-            //         message +=
-            //             'Criteria တချို့ လွတ်နေသေးသော Assessee:\n' +
-            //             incompleteAssessees.join('\n');
-            //     }
-
-            //     alert(message);
-
-            //     return false;
-            // }
+            return true;
         }
     });
 
