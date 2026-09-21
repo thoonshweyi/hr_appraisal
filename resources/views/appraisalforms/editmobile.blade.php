@@ -772,6 +772,8 @@
         $('.submitbtns').click(function(e){
             if (submitting) return; 
 
+            if (!validateAssesseeCompletion()) return;
+
             Swal.fire({
                 title: "{{ __('apprasialform.result_submit')}}",
                 text: "",
@@ -791,50 +793,52 @@
                     $('#appraisalformf').attr('action','{{ route('appraisalforms.update',$appraisalform->id) }}');
                     // $('#appraisalformf').submit();
 
-                    $.ajax({
-                        url:  $('#appraisalformf').attr('action'),
-                        type:"POST",
-                        dataType: "json",
-                        data:$("#appraisalformf").serialize(),
-                        success:function(response){
-                            console.log(response);
+                  
+                        $.ajax({
+                            url:  $('#appraisalformf').attr('action'),
+                            type:"POST",
+                            dataType: "json",
+                            data:$("#appraisalformf").serialize(),
+                            success:function(response){
+                                console.log(response);
 
-                            const data = response;
-                            const appraisalform = data.data;
+                                const data = response;
+                                const appraisalform = data.data;
 
-                            if(data.success){
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Finished!",
-                                    text: data.message,
-                                });
-                                setTimeout(() => {                                            
-                                    window.location.replace(draftRedirectUrl);
-                                }, 3000);
-                            }else{
+                                if(data.success){
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Finished!",
+                                        text: data.message,
+                                    });
+                                    setTimeout(() => {                                            
+                                        window.location.replace(draftRedirectUrl);
+                                    }, 3000);
+                                }else{
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Submit Error!!",
+                                        text: `${data.message}`,
+                                    });
+                                }
+                            },
+                            error:function(response){
+                                console.log("Error: ",response);
+
                                 Swal.fire({
                                     icon: "error",
                                     title: "Submit Error!!",
-                                    text: `${data.message}`,
+                                    text: "Something went wrong while submiting Appraisal Form.",
                                 });
+                            },
+                            complete:function(resopnse){
+                                confirmClicked = false;
+                                submitting = false;
+
+                                $('#pageLoader').fadeOut();
                             }
-                        },
-                        error:function(response){
-                            console.log("Error: ",response);
-
-                            Swal.fire({
-                                icon: "error",
-                                title: "Submit Error!!",
-                                text: "Something went wrong while submiting Appraisal Form.",
-                            });
-                        },
-                        complete:function(resopnse){
-                            confirmClicked = false;
-                            submitting = false;
-
-                            $('#pageLoader').fadeOut();
-                        }
-                    });
+                        });
+                   
                 }
             });
         });
@@ -1037,6 +1041,88 @@
 
         })
         {{-- End Back Btn --}}
+
+
+        // Asessee တစ်sယောက်လုံး ဘာ Criteria မှ မဖြည့်ရသေးဘူးလား
+        // Assessee အားလုံးမှာ နည်းနည်းစီတော့ ဖြည့်ထားတယ်၊ ဒါပေမယ့် Criteria အကွက်တချို့ လွတ်နေသေးလား
+        function validateAssesseeCompletion(){
+            let completelyEmptyAssessees = [];
+            let incompleteAssessees = [];
+
+            let assessees = {};
+
+            console.log($('input.custom-input').length);
+            return false;
+
+            $('.custom-input').each(function () {
+
+                let assesseeId = $(this).data('assessee');
+                let assesseeName = $(this).data('assessee-name');
+                let value = $(this).val();
+
+                if (!assessees[assesseeId]) {
+                        assessees[assesseeId] = {
+                            name: assesseeName,
+                            total: 0,
+                            filled: 0
+                        };
+                    }
+
+                assessees[assesseeId].total++;
+
+                if (value !== '') {
+                    assessees[assesseeId].filled++;
+                }
+            });
+
+
+            /*
+            * 1. Criteria တစ်ခုမှ မဖြည့်ရသေးတဲ့ Assessee
+            */
+            $.each(assessees, function (id, assessee) {
+
+                if (assessee.filled === 0) {
+                    completelyEmptyAssessees.push(assessee.name);
+                }
+
+                /*
+                * 2. တချို့ဖြည့်ထားပြီး တချို့ Criteria လွတ်နေတဲ့ Assessee
+                */
+                else if (assessee.filled < assessee.total) {
+                    incompleteAssessees.push(assessee.name);
+                }
+            });
+
+
+            /*
+            * Validation result
+            */
+            // if (
+            //     completelyEmptyAssessees.length > 0 ||
+            //     incompleteAssessees.length > 0
+            // ) {
+            //     e.preventDefault();
+
+            //     let message = '';
+
+            //     if (completelyEmptyAssessees.length > 0) {
+            //         message +=
+            //             'Criteria တစ်ခုမှ မဖြည့်ရသေးသော Assessee:\n' +
+            //             completelyEmptyAssessees.join('\n') +
+            //             '\n\n';
+            //     }
+
+            //     if (incompleteAssessees.length > 0) {
+            //         message +=
+            //             'Criteria တချို့ လွတ်နေသေးသော Assessee:\n' +
+            //             incompleteAssessees.join('\n');
+            //     }
+
+            //     alert(message);
+
+            //     return false;
+            // }
+        }
     });
 
 
