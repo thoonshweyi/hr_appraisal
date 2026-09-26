@@ -392,7 +392,9 @@ class AppraisalCyclesController extends Controller
    public function participantusers(Request $request, string $id){
 
         // dd("hay");
-        $participant_user_ids = PeerToPeer::where('appraisal_cycle_id',$id)->groupBy('assessor_user_id')->pluck("assessor_user_id");
+        $participant_user_ids = PeerToPeer::where('appraisal_cycle_id',$id)
+                                ->groupBy('assessor_user_id')
+                                ->pluck("assessor_user_id");
         // dd($participant_user_ids);
 
         $participantusers = User::whereIn("id",$participant_user_ids);
@@ -528,7 +530,7 @@ class AppraisalCyclesController extends Controller
 
 
         $participantusers = $results
-        ->orderBy("id", "desc")
+        ->orderBy('name','asc')
         ->with(['employee.branch',"employee.department","employee.position","employee.positionlevel",
         'printhistory'])
         ->paginate(10, ['*'], 'page', $page);

@@ -31,6 +31,7 @@ use App\Models\Status;
 use App\Models\SubDepartment;
 use App\Models\SubSection;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +117,8 @@ class PeerToPeersController extends Controller
             // Checking Existing peer to peer
             $user = Auth::user();
             $user_id = $user->id;
+
+            $peertopeers = [];
             foreach($assessee_user_ids as $idx=>$asssessee_user_id){
                 $peertopeer = PeerToPeer::firstOrCreate([
                     "assessor_user_id" => $assessor_user_id,
@@ -127,10 +130,17 @@ class PeerToPeersController extends Controller
                 ]);
 
                 $this->peer_to_peer_repository->sendAppraisalForm($peertopeer,$request->all());
+
+                $peertopeers[] = $peertopeer;
             }
        
+            // throw new Exception("Save Error");
             \DB::commit();
-            return redirect(route("appraisalcycles.edit",$appraisal_cycle_id))->with('success',"Peer To Peer created successfully");;
+            return response()->json([
+                'success' => true,
+                'message' => "Peer To Peer created successfully",
+                'data' => $peertopeers,
+            ]);    
         } catch (\Exception $e) {
             \DB::rollback();
             // Handle the exception and notify the user

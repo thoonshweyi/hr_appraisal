@@ -446,7 +446,7 @@ class AppraisalFormsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => "Appraisal Form Saved successfully",
+                'message' => "Appraisal Form Submitted successfully",
                 'data' => $appraisalform,
             ]);    
         }catch(Exception $e){
@@ -455,7 +455,7 @@ class AppraisalFormsController extends Controller
 
             return response()->json([
                 'success'=>false,
-                'message'=> 'There is an error in submitting Appraisal Form.'.$e->getMessage()
+                'message'=> 'There is an error in saving Peer To Peer.'.$e->getMessage()
             ]);
         }
     }

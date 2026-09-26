@@ -14,7 +14,7 @@
                             <i class="fas fa-clipboard-check me-2"></i>
                             Assessment Portal
                         </h1>
-                        <h3 class="mb-0 opacity-90">Welcome back, <b>{{Auth::user()->name}}</b>.Let's make this appraisal cycle impactful!</h3>
+                        <h3 class="mb-0 opacity-90">Welcome back, <b>{{Auth::user()->name}}</b>.Please complete the peer reviews for your assigned team members.</h3>
                     </div>
                     <!-- HAS TASKS STATE -->
                     <div id="activecycleinfo">

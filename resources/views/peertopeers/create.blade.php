@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
+<!-- Loader Overlay -->
+<div id="pageLoader">
+  <div class="loader"></div>
+</div>
+
 <div class="content-page">
     <div class="container-fluid">
         <div class="card shadow">
@@ -232,6 +238,8 @@
 
 <!-- End MODAL AREA -->
 @endsection
+
+
 @section('js')
 <script>
     $(document).ready(function() {
@@ -473,6 +481,12 @@
 
         {{-- Start Save Btn --}}
         $('.save-btns').click(function(e){
+            console.log('saved');
+
+            e.preventDefault();
+            let $btn = $(this);
+            if ($btn.prop('disabled')) return
+
             Swal.fire({
                 title: "Are you sure you want to save Peer To Peer",
                 text: "",
@@ -483,13 +497,57 @@
                 confirmButtonText: "Yes, save it!"
             }).then((result) => {
                 if (result.isConfirmed) {
+                    $btn.prop('disabled', true);      
+                    $('#pageLoader').fadeIn();
 
-                    $('#peer_to_peer_form').submit();
+                    $.ajax({
+                        url:  $('#peer_to_peer_form').attr('action'),
+                        type:"POST",
+                        dataType: "json",
+                        data:$("#peer_to_peer_form").serialize(),
+                        success:async function(response){
+                            console.log(response);
+
+                            const data = response;
+                            const peertopeers = data.data;
+
+                            if(data.success){
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Saved!",
+                                    text: data.message,
+                                });
+
+                                // await setTimeout(() => {                                            
+                                    window.history.back();
+                                // }, 3000);
+                            }else{
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Save Error!!",
+                                    text: `${data.message}`,
+                                });
+                            }
+                        },
+                        error:function(response){
+                            console.log("Error: ",response);
+
+                            Swal.fire({
+                                icon: "error",
+                                title: "Save Error!!",
+                                text: "Something went wrong while saving Peer To Peer.",
+                            });
+                        },
+                        complete:function(resopnse){
+                            $('#pageLoader').fadeOut();
+                            $btn.prop('disabled', false); 
+                        }
+                    });
+                    
                 }
             });
         });
         {{-- End Save Btn --}}
     });
 </script>
-
 @stop

@@ -40,7 +40,8 @@
       <link rel="stylesheet" href="{{ asset('vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
       <link rel="stylesheet" href="{{ asset('vendor/remixicon/fonts/remixicon.css') }}">
 
-
+        <!-- Page Loader css1 -->
+        <link href="{{ asset('assets/dist/css/pageloader.css') }}" rel="stylesheet" />            
 
       @include('sweetalert::alert')
       @yield('css')
@@ -86,6 +87,13 @@
           </div>
     </div> --}}
     <!-- loader END -->
+
+
+    <!-- Loader Overlay -->
+    <div id="pageLoader">
+    <div class="loader"></div>
+    </div>
+
 
 
     {{-- <div class="cusloading-container">

@@ -2135,5 +2135,22 @@
         });
     });
     // End Input Method
+
+
+    // Start Return From Peer Saved
+    function clickActiveUser()
+    {
+        const $activeUser = $('.user-info li.active');
+
+        if ($activeUser.length) {
+            console.log('Click active user:', $activeUser.data('user_id'));
+
+            $activeUser.trigger('click');
+        }
+    }
+    $(window).on('pageshow', function () {
+        clickActiveUser();
+    });
+    // End Return From Peer Saved
 </script>
 @stop
