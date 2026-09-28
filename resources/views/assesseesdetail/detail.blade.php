@@ -33,7 +33,6 @@
 
             {{-- {{ dd($assesseeusers) }} --}}
             @foreach($report as $assesseeIdx=>$assesseeArr)
-
                 @foreach($assesseeArr as $catId => $assessorsInCat)
                     @php
                         $catName   = $categories[$catId]->name ?? 'Unknown';
