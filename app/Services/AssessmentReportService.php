@@ -15,7 +15,7 @@ class AssessmentReportService{
         ->join('appraisal_form_assessee_users', function($q) use($assessee_ids){
             $q->on('appraisal_form_assessee_users.appraisal_form_id', '=', 'appraisal_forms.id')
                 ->whereNull('appraisal_form_assessee_users.deleted_at')
-                ->whereIn('assessee_user_id',$assessee_ids);
+                ->whereIn('appraisal_form_assessee_users.assessee_user_id',$assessee_ids);
         })
         ->leftjoin('form_results', function($q) {
             $q->on('form_results.appraisal_form_id', '=', 'appraisal_forms.id')
