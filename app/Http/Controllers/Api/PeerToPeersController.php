@@ -102,6 +102,10 @@ class PeerToPeersController extends Controller
 
         $peertopeers = PeerToPeer::where('assessor_user_id',$assessor_user_id)
                         ->where('appraisal_cycle_id',$appraisal_cycle_id)
+                        ->join('users', 'users.id', '=', 'peer_to_peers.assessee_user_id')
+                        ->join('employees', 'employees.employee_code', '=', 'users.employee_id')
+                        ->orderBy('employees.employee_name', 'asc')
+                        ->select('peer_to_peers.*')
                         ->with(["assessoruser.employee"])
                         ->with(["assesseeuser.employee.branch","assesseeuser.employee.department","assesseeuser.employee.position","assesseeuser.employee.positionlevel"])
                         ->with(["assformcat"])
@@ -117,9 +121,12 @@ class PeerToPeersController extends Controller
 
         $peertopeers = PeerToPeer::where('assessee_user_id',$assessor_user_id)
                         ->where('appraisal_cycle_id',$appraisal_cycle_id)
+                        ->join('users', 'users.id', '=', 'peer_to_peers.assessor_user_id')
+                        ->join('employees', 'employees.employee_code', '=', 'users.employee_id')
+                        ->orderBy('employees.employee_name', 'asc')
+                        ->select('peer_to_peers.*')
                         ->with(["assessoruser.employee.position"])
                         ->get();
-
         return response()->json($peertopeers);
     }
 
