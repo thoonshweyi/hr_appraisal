@@ -233,12 +233,105 @@
 </div>
 
 <!-- START MODAL AREA -->
+<!-- start create modal -->
+<div id="appraisalmodal" class="modal fade"      
+    data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-top">
+        <div class="modal-content rounded-0">
+            <div class="modal-header">
+                <h6 class="modal-title">Appraisal</h6>
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button> -->
+            </div>
 
+            <div class="modal-body">
+                <!-- Assessor Information -->
+                <div class="appraisal-info border-bottoms pb-2 mb-2">
+                    <div class="d-flex justify-content-between flex-wrap align-items-center smalls">
+
+                        <div class="mr-4">
+                            <span class="text-muted">Appraisal Cycle:</span>
+                            <strong id="appraisalCycle">-</strong>
+                        </div>
+
+                        <div class="mr-4">
+                            <span class="text-muted">Assessor:</span>
+                            <strong id="assessorName">{{ $users?->first()?->name }}</strong>
+                        </div>
+
+                        <div>
+                            <span class="text-muted">Employee ID:</span>
+                            <strong id="employeeId">{{ $users?->first()?->employee->employee_code }}</strong>
+                        </div>
+
+                        <div class="mr-4">
+                            <span class="text-muted">Position:</span>
+                            <strong id="positionName">{{ $users?->first()?->employee->position->name }}</strong>
+                        </div>
+
+                        <div class="mr-4">
+                            <span class="text-muted">Department:</span>
+                            <strong id="departmentName">{{ $users?->first()?->employee->department->name }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Appraisal Forms -->
+                <div class="table-responsive appraisal-table-wrapper">
+                <table id="userforms" class="table table-sm userforms">
+                    <thead>
+                        <tr>
+                            <th>
+                                No
+                            </th>
+                            <th>Form ID</th>
+                            <th>Title</th>
+                            <th>Assessees Count</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="">
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- End MODAL AREA -->
 @endsection
 
+@section('css')
+<style type="text/css">
+
+.appraisal-table-wrapper {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+#userforms {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#userforms thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #fff;
+    box-shadow: 0 1px 0 #dee2e6;
+}
+</style>
+@endsection
 
 @section('js')
 <script>
@@ -481,8 +574,6 @@
 
         {{-- Start Save Btn --}}
         $('.save-btns').click(function(e){
-            console.log('saved');
-
             e.preventDefault();
             let $btn = $(this);
             if ($btn.prop('disabled')) return
@@ -507,19 +598,53 @@
                         data:$("#peer_to_peer_form").serialize(),
                         success:async function(response){
                             console.log(response);
+                            console.log(response.data);
 
+                            $("#userforms tbody").empty();
                             const data = response;
-                            const peertopeers = data.data;
 
                             if(data.success){
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Saved!",
-                                    text: data.message,
+
+                                const results = response.data;
+                                const peertopeers = results.peertopeers;
+                                const appraisalforms = results.appraisalforms;
+                                const assessor = results.assessor;
+                                // console.log(peertopeers);
+                                console.log(appraisalforms);
+
+                                // Swal.fire({
+                                //     icon: "success",
+                                //     title: "Saved!",
+                                //     text: data.message,
+                                // });
+
+                                let html;
+                                appraisalforms.forEach((form,idx) => {
+                                    let statusClass = '';
+                                    if (form.status_id === 19) {
+                                        statusClass = 'bg-success';
+                                    } else if (form.status_id === 21) {
+                                        statusClass = 'bg-primary';
+                                    } else if (form.status_id === 20) {
+                                        statusClass = 'bg-warning';
+                                    }
+
+                                    const url =  `/appraisalforms/${form.id}/${form.status_id == 19 ? 'archive' : ''}`;
+                                    html += `
+                                    <tr>
+                                        <td>${++idx}</td>
+                                        <td>#${form.id}</td>
+                                        <td><a class="" href="${url}">${form.assformcat.name}</a></td>
+                                        <td>${form.assesseeusers.length}</td>
+                                        <td><span class="badge ${statusClass}">${form.status.name}</span></td>
+                                    </tr>`;
                                 });
 
+
+                                $("#userforms tbody").prepend(html);
+                                $('#appraisalmodal').modal('show');
                                 // await setTimeout(() => {                                            
-                                    window.history.back();
+                                    // window.history.back();
                                 // }, 3000);
                             }else{
                                 Swal.fire({

@@ -50,6 +50,13 @@ class PeerToPeerRepository implements PeerToPeerRepositoryInterface
             $title = "You received new Appraisal Form \"$assformcat?->name\"";
             sendNotification($assessor,$appraisalform,$title);
         }
+
+        $appraisalform->refresh();
+        return $appraisalform->load([
+            'status',
+            'assformcat',
+            'assesseeusers'
+        ]);
     }
 
 }

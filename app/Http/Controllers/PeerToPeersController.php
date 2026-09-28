@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
@@ -87,15 +88,13 @@ class PeerToPeersController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
-        $this->validate($request,[
+        $validator = Validator::make($request->all(),[
              "assessor_user_id" => "required",
              "appraisal_cycle_id" => "required",
              "assessee_user_ids" => "required|array",
              "assessee_user_ids.*"=>"required|string",
              "ass_form_cat_ids" => "required|array",
              "ass_form_cat_ids.*"=>"required|string",
-
         ],[
             "assessor_user_id.required" =>  __('appraisalcycle.assessor_user_id'),
             "appraisal_cycle_id.required" =>  __('appraisalcycle.appraisal_cycle_id'),
@@ -104,10 +103,18 @@ class PeerToPeersController extends Controller
             'ass_form_cat_ids.required' => __('appraisalcycle.ass_form_cat_ids'),
             "ass_form_cat_ids.*.required"=> __('appraisalcycle.ass_form_cat_ids'),
         ]);
+        
+
+        if($validator->fails()){
+            // return response()->json($validator->errors(),422);
+            return response()->json([
+                'success' => false,
+                'message' => __('appraisalcycle.assessee_user_ids'),
+            ]);   
+        }
 
 
         \DB::beginTransaction();
-
         try {
             $assessor_user_id = $request->assessor_user_id;
             $assessee_user_ids = $request->assessee_user_ids;
@@ -119,6 +126,8 @@ class PeerToPeersController extends Controller
             $user_id = $user->id;
 
             $peertopeers = [];
+            $appraisalforms = [];
+            $appraisalform_ids = [];
             foreach($assessee_user_ids as $idx=>$asssessee_user_id){
                 $peertopeer = PeerToPeer::firstOrCreate([
                     "assessor_user_id" => $assessor_user_id,
@@ -129,17 +138,29 @@ class PeerToPeersController extends Controller
                     "user_id"=> $user_id
                 ]);
 
-                $this->peer_to_peer_repository->sendAppraisalForm($peertopeer,$request->all());
+                $appraisalform = $this->peer_to_peer_repository->sendAppraisalForm($peertopeer,$request->all());
 
                 $peertopeers[] = $peertopeer;
+
+                $existingIndex = array_search($appraisalform->id, $appraisalform_ids);
+                if ($existingIndex === false) {
+
+                    $appraisalform_ids[] = $appraisalform->id;
+                    $appraisalforms[] = $appraisalform;
+                } else {
+                    $appraisalforms[$existingIndex] = $appraisalform;
+                }
             }
-       
+
             // throw new Exception("Save Error");
             \DB::commit();
             return response()->json([
                 'success' => true,
                 'message' => "Peer To Peer created successfully",
-                'data' => $peertopeers,
+                'data' => [
+                    "peertopeers"=> $peertopeers,
+                    "appraisalforms"=> $appraisalforms,
+                ],
             ]);    
         } catch (\Exception $e) {
             \DB::rollback();
