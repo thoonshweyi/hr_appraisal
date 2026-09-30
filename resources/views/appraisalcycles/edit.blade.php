@@ -1051,11 +1051,17 @@
                 $('#assesseestable').DataTable().draw(true);
                 $('#assessorstable').DataTable().draw(true);
 
+
+                let data = $('#peer_to_peer_form').serializeArray();
+                data.push({
+                    name: 'recent',
+                    value: true
+                });
                 {{-- Start Assessees List --}}
                 $.ajax({
-                    url: '/api/getrecentassessees',
+                    url: '/getEmployeeAssessees',
                     method: 'GET',
-                    data: $('#peer_to_peer_form').serialize(),
+                    data: data,
                     success:function(data){
                         {{-- console.log(data); --}}
 
@@ -1077,9 +1083,9 @@
 
                 {{-- Start Assessors List --}}
                 $.ajax({
-                    url: '/api/getrecentassessors',
+                    url: '/getEmployeeAssessors',
                     method: 'GET',
-                    data: $('#peer_to_peer_form').serialize(),
+                    data: data,
                     success:function(data){
                         {{-- console.log(data); --}}
 

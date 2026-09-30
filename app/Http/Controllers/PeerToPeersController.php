@@ -178,7 +178,7 @@ class PeerToPeersController extends Controller
         // dd($assessor_user_id,$appraisal_cycle_id);
 
 
-        $peertopeers = PeerToPeer::where('assessor_user_id',$assessor_user_id)
+        $results = PeerToPeer::where('assessor_user_id',$assessor_user_id)
                         ->where('appraisal_cycle_id',$appraisal_cycle_id)
                         ->join('users', 'users.id', '=', 'peer_to_peers.assessee_user_id')
                         ->join('employees', 'employees.employee_code', '=', 'users.employee_id')
@@ -186,9 +186,18 @@ class PeerToPeersController extends Controller
                         ->select('peer_to_peers.*')
                         ->with(["assessoruser.employee"])
                         ->with(["assesseeuser.employee.branch","assesseeuser.employee.department","assesseeuser.employee.position","assesseeuser.employee.positionlevel"])
-                        ->with(["assformcat"])
-                        ->get();
+                        ->with(["assformcat"]);
 
+        $recent = $request->recent ?? false;
+        if ($recent) {
+            $results = $results->limit(10);
+        }
+
+        $peertopeers = $results->get();
+        if($recent) {
+            return response()->json($peertopeers);
+        }
+        
         return DataTables::of($peertopeers)
                 ->addColumn('action', function ($peertopeer) use($appraisalcycle){
                     return $action = $appraisalcycle->isBeforeActionStart() ? "
@@ -209,7 +218,7 @@ class PeerToPeersController extends Controller
 
         $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
 
-        $peertopeers = PeerToPeer::where('assessee_user_id',$assessor_user_id)
+        $results = PeerToPeer::where('assessee_user_id',$assessor_user_id)
         ->where('appraisal_cycle_id',$appraisal_cycle_id)
         ->join('users', 'users.id', '=', 'peer_to_peers.assessor_user_id')
         ->join('employees', 'employees.employee_code', '=', 'users.employee_id')
@@ -217,8 +226,19 @@ class PeerToPeersController extends Controller
         ->select('peer_to_peers.*')
         ->with(["assesseeuser.employee"])
         ->with(["assessoruser.employee.branch","assessoruser.employee.department","assessoruser.employee.position","assessoruser.employee.positionlevel"])
-        ->with(["assformcat"])
-        ->get();
+        ->with(["assformcat"]);
+
+
+        $recent = $request->recent ?? false;
+        if ($recent) {
+            $results = $results->limit(10);
+        }
+
+        $peertopeers = $results->get();
+        if($recent) {
+            return response()->json($peertopeers);
+        }
+
         return DataTables::of($peertopeers)
         ->addColumn('action', function ($peertopeer) use($appraisalcycle){
             return $action = $appraisalcycle->isBeforeActionStart() ? "

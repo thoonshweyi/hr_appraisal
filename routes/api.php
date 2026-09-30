@@ -22,8 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/getrecentassessees', [PeerToPeersController::class, 'employeesRecentAssessees'])->name('peertopeers.employeesRecentAssessees');
-Route::get('/getrecentassessors', [PeerToPeersController::class, 'employeesRecentAssessors'])->name('peertopeers.employeesRecentAssessors');
 
 Route::get("/assessmentnetwork/{assessor_user_id}/{appraisal_cycle_id}/",[PeerToPeersController::class,"assessmentnetwork"])->name('assessmentnetwork');
 

@@ -90,47 +90,4 @@ class PeerToPeersController extends Controller
 
     }
 
-    public function employeesRecentAssessees(Request $request){
-        $assessor_user_id = $request->assessor_user_id;
-
-        $appraisal_cycle_id = $request->appraisal_cycle_id;
-
-        $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
-
-        // dd($assessor_user_id,$appraisal_cycle_id);
-
-
-        $peertopeers = PeerToPeer::where('assessor_user_id',$assessor_user_id)
-                        ->where('appraisal_cycle_id',$appraisal_cycle_id)
-                        ->join('users', 'users.id', '=', 'peer_to_peers.assessee_user_id')
-                        ->join('employees', 'employees.employee_code', '=', 'users.employee_id')
-                        ->orderBy('employees.employee_name', 'asc')
-                        ->select('peer_to_peers.*')
-                        ->with(["assessoruser.employee"])
-                        ->with(["assesseeuser.employee.branch","assesseeuser.employee.department","assesseeuser.employee.position","assesseeuser.employee.positionlevel"])
-                        ->with(["assformcat"])
-                        ->get();
-        return response()->json($peertopeers);
-
-    }
-
-    public function employeesRecentAssessors(Request $request){
-        $assessor_user_id = $request->assessor_user_id;
-        $appraisal_cycle_id = $request->appraisal_cycle_id;
-        $appraisalcycle = AppraisalCycle::findOrFail($appraisal_cycle_id);
-
-        $peertopeers = PeerToPeer::where('assessee_user_id',$assessor_user_id)
-                        ->where('appraisal_cycle_id',$appraisal_cycle_id)
-                        ->join('users', 'users.id', '=', 'peer_to_peers.assessor_user_id')
-                        ->join('employees', 'employees.employee_code', '=', 'users.employee_id')
-                        ->orderBy('employees.employee_name', 'asc')
-                        ->select('peer_to_peers.*')
-                        ->with(["assessoruser.employee.position"])
-                        ->get();
-        return response()->json($peertopeers);
-    }
-
-
-
-
 }
