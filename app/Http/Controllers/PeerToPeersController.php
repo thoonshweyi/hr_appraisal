@@ -79,7 +79,10 @@ class PeerToPeersController extends Controller
         $attachformtypes = AttachFormType::where('status_id',1)->orderBy('id')->get();
         $subdepartments = SubDepartment::where('status_id',1)->orderBy('id')->get();
 
-
+        $userList_scrollTop = $request->userList_scrollTop ?? 0;
+        $assessor_user_id = $request->assessor_user_id ?? null;
+        $request->session()->put('userList_scrollTop', $userList_scrollTop);
+        $request->session()->put('assessor_user_id', $assessor_user_id);
 
 
         return view("peertopeers.create",compact("statuses","divisions","departments","subdepartments","sections", "subsections" ,"positions","branches","genders","positionlevels","users","appraisalcycles",'attachformtypes',"assformcats","subdepartments"));

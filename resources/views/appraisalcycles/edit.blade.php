@@ -329,12 +329,11 @@
                                           
                                             @foreach($manpowerusers as $manpoweruser)
                                             <div class="user-info">
-                                                <li data-user_id = "{{ $manpoweruser->id }}" data-user_name = '{{ $manpoweruser->employee->employee_name}}'>
+                                                <li data-user_id = "{{ $manpoweruser->id }}" data-user_name = '{{ $manpoweruser->employee->employee_name}}' class="{{ $manpoweruser->id == session('assessor_user_id') ? 'active' : ''}}">
                                                     <i class="ri-folder-4-line"></i>
                                                         <h4>{{ $manpoweruser->name}} ( {{ $manpoweruser->employee_id}} )</h4>
                                                         <input type="hidden" class="empuser_ids" name="empuser_ids[]" value="{{ $manpoweruser->id}}">
                                                 </li>
-
                                             </div>
                                             @endforeach
 
@@ -350,6 +349,8 @@
                                             {{-- @if($appraisalcycle->isBeforeActionStart() || Auth::user()->id == 1) --}}
                                                 <button type="button" class="btn new_btn mr-2">New</button>
                                             {{-- @endif --}}
+
+                                            <input type="hidden" id="userList_scrollTop" name="userList_scrollTop" value="" />
                                         </form>
                                             {{-- <input type="hidden" id="empuser_ids" name="empuser_ids[]" value={{ $appraisalcycle->id }}> --}}
                                             <!-- <button type="button" class="btn compare_btn">Compare</button> -->
@@ -1105,6 +1106,12 @@
 
 
                 getEmployeeInfo(getuser_id);
+
+                // Start Store Current Assessor
+                // console.log($('#result').scrollTop());
+                // $('#result').scrollTop(77266);
+                $('#userList_scrollTop').val($('#result').scrollTop());
+                // End Store Current Assessor
             });
             function getEmployeeInfo(userid){
                 console.log(userid);
@@ -2150,10 +2157,12 @@
 
         if ($activeUser.length) {
             console.log('Click active user:', $activeUser.data('user_id'));
-
             $activeUser.trigger('click');
         }
     }
+
+    console.log({{ session('userList_scrollTop', 0) }});
+    $('#result').scrollTop({{ session('userList_scrollTop', 0) }});
     $(window).on('pageshow', function () {
         clickActiveUser();
     });

@@ -7,6 +7,10 @@
   <div class="loader"></div>
 </div>
 
+@php
+    $backRedirectUrl = url()->previous();
+@endphp
+
 <div class="content-page">
     <div class="container-fluid">
         <div class="card shadow">
@@ -212,7 +216,7 @@
 
                                 <div class="col-md-12 mt-2">
 
-                                    <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
+                                    <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.location.href='{{ $backRedirectUrl }}'">Back</button>
 
                                     <button type="button" class="btn btn-success btn-sm rounded-0 save-btns">Save Selection</button>
                                 </div>
@@ -300,7 +304,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.history.back();">Back</button>
+                <button type="button" id="back-btn" class="btn btn-light btn-sm rounded-0" onclick="window.location.href='{{ $backRedirectUrl }}'">Back</button>
             </div>
         </div>
     </div>
