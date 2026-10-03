@@ -1,0 +1,57 @@
+SELECT
+    cri.list_no AS "List No",
+    cri.name AS "Name",
+    cs.name AS "Criteria Set",
+    cri.excellent AS "Excellent",
+    cri.good AS "Good",
+    cri.meet_standard AS "Meet Standard",
+    cri.below_standard AS "Below Standard",
+    cri.weak AS "Weak",
+    form_groups.name AS "Attach Form Type",
+    cs.lang AS "Lang",
+
+    CASE
+        WHEN cs.location_id = 7 THEN 'HO'
+        WHEN cs.location_id = 0 THEN 'Branch'
+        WHEN cs.location_id = 70 THEN 'HO-Branch'
+        ELSE 'Unknown'
+    END AS "Location",
+
+    STRING_AGG(
+        r.position_level_id::text,
+        ', ' ORDER BY r.position_level_id
+    ) AS "Position Levels"
+
+FROM public.criterias AS cri
+
+INNER JOIN ass_form_cats AS cs
+    ON cri.ass_form_cat_id = cs.id
+    AND cs.deleted_at IS NULL
+    AND cs.status_id = 1
+
+INNER JOIN attach_form_types AS form_groups
+    ON cs.attach_form_type_id = form_groups.id
+
+LEFT JOIN rankables AS r
+    ON r.rankable_id = cs.id
+    AND r.rankable_type = 'App\Models\AssFormCat'
+
+WHERE
+    cri.deleted_at IS NULL
+    AND cri.status_id = 1
+
+GROUP BY
+    cri.id,
+    cri.list_no,
+    cri.name,
+    cs.name,
+    cri.excellent,
+    cri.good,
+    cri.meet_standard,
+    cri.below_standard,
+    cri.weak,
+    form_groups.name,
+    cs.lang,
+    cs.location_id
+
+ORDER BY cri.id ASC;

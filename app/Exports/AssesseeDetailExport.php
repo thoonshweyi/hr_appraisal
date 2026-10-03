@@ -27,7 +27,7 @@ class AssesseeDetailExport implements FromView, WithTitle, ShouldAutoSize, WithE
         $this->assesseeusers = $assesseeusers;
         $this->appraisal_cycle_id = $appraisal_cycle_id;
         $this->totalRows = count($assesseeusers) + 1;
-        $this->shareReport = app(AssessmentReportService::class)->generate($assesseeusers,$appraisal_cycle_id);
+        $this->shareReport = $shareReport;
     }
 
     public function title(): string

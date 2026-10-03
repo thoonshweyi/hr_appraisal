@@ -16,11 +16,11 @@ class AssessmentReportService{
             $q->on('appraisal_form_assessee_users.appraisal_form_id', '=', 'appraisal_forms.id')
                 ->whereNull('appraisal_form_assessee_users.deleted_at')
                 ->whereIn('appraisal_form_assessee_users.assessee_user_id',$assessee_ids);
-        })
+        }) // Assessee မရှိတဲ့ Form တွေမပါလားဘူး။ // Select Assessee Form တွေပဲပါလာမယ်။ 
         ->leftjoin('form_results', function($q) {
             $q->on('form_results.appraisal_form_id', '=', 'appraisal_forms.id')
             ->whereColumn('form_results.assessee_user_id', '=', 'appraisal_form_assessee_users.assessee_user_id');
-        })
+        }) // သက်ဆိုင်ရာ Assessee ရဲ့  Form Result တွေပဲခွဲထုတ်ပြီပါလာမယ်။ // Form တစ်ခုတည်းရဲ့ Result တွေ ထပ်ခါထပ်ခါမပါလာတော့ဘူး
         ->join('ass_form_cats', 'ass_form_cats.id', '=', 'appraisal_forms.ass_form_cat_id')
         ->leftjoin('criterias', 'criterias.id', '=', 'form_results.criteria_id')
         ->join('users as assessor', 'assessor.id', '=', 'appraisal_forms.assessor_user_id')
