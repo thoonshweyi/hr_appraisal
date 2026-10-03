@@ -17,12 +17,32 @@ class AssessmentReportService{
                 ->whereNull('appraisal_form_assessee_users.deleted_at')
                 ->whereIn('appraisal_form_assessee_users.assessee_user_id',$assessee_ids);
         }) // Assessee မရှိတဲ့ Form တွေမပါလားဘူး။ // Select Assessee Form တွေပဲပါလာမယ်။ 
-        ->leftjoin('form_results', function($q) {
-            $q->on('form_results.appraisal_form_id', '=', 'appraisal_forms.id')
-            ->whereColumn('form_results.assessee_user_id', '=', 'appraisal_form_assessee_users.assessee_user_id');
-        }) // သက်ဆိုင်ရာ Assessee ရဲ့  Form Result တွေပဲခွဲထုတ်ပြီပါလာမယ်။ // Form တစ်ခုတည်းရဲ့ Result တွေ ထပ်ခါထပ်ခါမပါလာတော့ဘူး
         ->join('ass_form_cats', 'ass_form_cats.id', '=', 'appraisal_forms.ass_form_cat_id')
-        ->leftjoin('criterias', 'criterias.id', '=', 'form_results.criteria_id')
+        ->join('criterias', function ($join) {
+            $join->on(
+                'criterias.ass_form_cat_id',
+                '=',
+                'appraisal_forms.ass_form_cat_id'
+            )
+            ->whereNull('criterias.deleted_at');
+        })
+        ->leftJoin('form_results', function ($join) {
+            $join->on(
+                'form_results.appraisal_form_id',
+                '=',
+                'appraisal_forms.id'
+            )
+            ->on(
+                'form_results.criteria_id',
+                '=',
+                'criterias.id'
+            )
+            ->whereColumn(
+                'form_results.assessee_user_id',
+                '=',
+                'appraisal_form_assessee_users.assessee_user_id'
+            );
+        })
         ->join('users as assessor', 'assessor.id', '=', 'appraisal_forms.assessor_user_id')
         ->leftJoin('employees as assessoremp', 'assessoremp.employee_code', '=', 'assessor.employee_id')
         ->leftjoin('users as assessee', 'assessee.id', '=', 'appraisal_form_assessee_users.assessee_user_id')
@@ -47,6 +67,7 @@ class AssessmentReportService{
 
             'criterias.id as criteria_id',
             'criterias.name as criteria_question',
+            'criterias.list_no as criteria_list_no',
 
             DB::raw('COALESCE(form_results.result, 0) as result')
         )
@@ -104,6 +125,7 @@ class AssessmentReportService{
             if($r->criteria_id){
             $criteriaList[$r->category_id][$r->criteria_id] = (object)[
                 'id' => $r->criteria_id,
+                'list_no'  => $r->criteria_list_no,
                 'question' => $r->criteria_question
             ];}
 

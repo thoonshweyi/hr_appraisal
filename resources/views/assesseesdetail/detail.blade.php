@@ -87,7 +87,7 @@
                             @endphp
 
                             <td style="width:60px;text-align:center;vertical-align: middle;">
-                                {{ $result }}
+                                {{ $result == 0 ? '' : $result }}
                             </td>
                         @endforeach
                         {{-- Fill remaining with empty cells to reach 13 --}}
