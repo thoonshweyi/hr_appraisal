@@ -551,12 +551,71 @@
         })
 
 
-        {{-- Start Export Btn --}}
+
+        // Start export btn
         $('#export-btn').click(function(){
-            $('#searchnfilterform').attr('action',"{{ route('assesseesummary.export',$appraisalcycle->id) }}")
-            $('#searchnfilterform').submit();
+            Swal.fire({
+                title: "Processing...",
+                text: "Please wait while we generate the Appraisal Report file.",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            $.ajax({
+                url: "{{ route('assesseesummary.export',$appraisalcycle->id) }}",
+                type: "GET",
+                // dataType:"json",
+                data: $('#searchnfilterform').serialize(),
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function (blob, status, xhr) {
+                   
+                    let filename = "appraisal_report.xlsx";
+                    const disposition = xhr.getResponseHeader('Content-Disposition');
+                    if (disposition && disposition.includes('filename=')) {
+                        filename = disposition.split('filename=')[1].replace(/"/g, '');
+                    }
+
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+
+                    Swal.close(); // Close the modal
+                },
+                error:function(response){
+                    console.log("Error:",response);
+                    Swal.close(); // Close the modal
+
+                    console.log(response.responseJSON.message);
+                    if(response.responseJSON.message == "Maximum execution time of 60 seconds exceeded"){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops.... The Excel export took too long and was stopped.",
+                            text: "Please Try Again",
+                            {{-- footer: '<a href="#">Why do I have this issue?</a>' --}}
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong!",
+                            footer: '<a href="#">Why do I have this issue?</a>'
+                          });
+                    }
+                },
+                complete: function(){
+                }
+            });
         });
-        {{-- End Export Btn --}}
+        // End export btn
 
 
 

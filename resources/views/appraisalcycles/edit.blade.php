@@ -1041,12 +1041,13 @@
         // Start Peer to Peer
             {{-- Start User List Filter --}}
             let tableBody = document.querySelector("#assesseestable tbody");
-            $(document).on('click',".user-info li",function(){
-                let getuser_id = $(this).data('user_id');
+            function selectUser($user) {
+                console.log('Select user:', $user.data('user_id'));
+                let getuser_id = $user.data('user_id');
                 {{-- let getassformcat_id =  --}}
                 {{-- console.log(getuser_id); --}}
                 $(".user-info li").removeClass('active');
-                $(this).toggleClass('active');
+                $user.addClass('active');
                 $('#assessor_user_id').val(getuser_id);
 
                 $('#assesseestable').DataTable().draw(true);
@@ -1112,6 +1113,10 @@
                 // $('#result').scrollTop(77266);
                 $('#userList_scrollTop').val($('#result').scrollTop());
                 // End Store Current Assessor
+            }
+
+            $(document).on('click', ".user-info li", function(){
+                selectUser($(this));
             });
             function getEmployeeInfo(userid){
                 console.log(userid);
@@ -1783,6 +1788,13 @@
         // });
         {{-- End Compare Form --}}
 
+        // Restore the user selected before navigating away.
+        $('#result').scrollTop({{ session('userList_scrollTop', 0) }});
+        const $activeUser = $('.user-info li.active');
+        if ($activeUser.length) {
+            selectUser($activeUser.first());
+        }
+
     });
 
     // Start Tag Box
@@ -2149,23 +2161,5 @@
     });
     // End Input Method
 
-
-    // Start Return From Peer Saved
-    function clickActiveUser()
-    {
-        const $activeUser = $('.user-info li.active');
-
-        if ($activeUser.length) {
-            console.log('Click active user:', $activeUser.data('user_id'));
-            $activeUser.trigger('click');
-        }
-    }
-
-    console.log({{ session('userList_scrollTop', 0) }});
-    $('#result').scrollTop({{ session('userList_scrollTop', 0) }});
-    $(window).on('pageshow', function () {
-        clickActiveUser();
-    });
-    // End Return From Peer Saved
 </script>
 @stop
