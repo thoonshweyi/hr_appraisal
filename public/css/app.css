@@ -882,6 +882,8 @@ height: auto !important;
     bottom: -20px;
     left: 50%;
     z-index: 4;
+
+    display: block;
   }
   .criteria-circles{
     width: 40px;
@@ -902,6 +904,8 @@ height: auto !important;
     visibility: hidden;
     opacity: 0;
     /* transition: all 2s ease-in-out; */
+
+    display: none;
 }
 /* End Tooltip */
 

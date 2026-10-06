@@ -129,7 +129,7 @@
 
                                 <div class="printableArea page" style="{{ 0 > 0 ? 'page-break-before: always;' : '' }}">
 
-                                    <div class="table-responsive">
+                                    <div id="criteria-table" class="table-responsive">
                                         <table class="assessmentformtable" style="width:100% !important;">
                                             <tr class="header-row">
                                                 <td colspan="{{ 6+$assesseeusers->flatten()->count() }}">
@@ -202,7 +202,7 @@
                                                         @foreach($assesseeuserbybranch as $assesseeuser)
                                                         <td class="position-relative">
                                                             @if(isset($assesseeuser))
-                                                                <div class="position-relative">
+                                                                <div id="tooltip-container" class="position-relative">
 
                                                                     <input type="number" name="appraisalformresults[{{$assesseeuser->id}}][{{ $criteria->id }}]" class="custom-input" max="{{ $criteria->excellent }}" min="{{ $criteria->weak }}"
                                                                     value="{{ old('appraisalformresults') ? old('appraisalformresults')[$assesseeuser->id][$criteria->id] :  $preloadresults[$assesseeuser->id][$criteria->id]->result ?? '' }}"  data-valids="{{ implode(',', $criteria->getRatingScaleAttribute()) }}"
@@ -484,6 +484,41 @@
 
                 autofocusNextInput(input);
             });
+
+            // Start Move Tooltip
+            const container = document.querySelector('#criteria-table');
+                const item = $(this).next(".critooltips")[0];
+                const icon = item.querySelector('.critriicons');
+
+                item.style.marginLeft = '0px'; // Reset margin before checking
+                icon.style.marginLeft = '0px'; // Reset margin before checking
+
+                const c = container.getBoundingClientRect();
+                const i = item.getBoundingClientRect();
+
+                if (i.left < c.left) {
+                    console.log('Left side ကျော်နေတယ်');
+                    console.log('Container Left:', c.left, 'Item Left:', i.left);
+                    // tooltip ကို ညာဘက်ရွှေ့
+                   
+                    let moveRight = Math.ceil(c.left - i.left);
+                    item.style.marginLeft = `${moveRight}px`;
+                    icon.style.marginLeft = `${moveRight * (-1)}px`;
+                }
+
+                if (i.right > c.right) {
+                    console.log('Right side ကျော်နေတယ်');
+                    console.log('Container Right:', c.right, 'Item Right:', i.right);
+
+                    // tooltip ကို ဘယ်ဘက်ရွှေ့
+                    let moveLeft = Math.ceil(c.right - i.right);
+                    console.log(moveLeft);
+                    item.style.marginLeft = `${moveLeft}px`;
+                    icon.style.marginLeft = `${moveLeft * (-1)}px`;
+                }
+            // End Move Tooltip
+
+
         });
 
 
