@@ -672,9 +672,10 @@
 @endsection
 
 @section('js')
+<script  src="{{ asset('/js/select2.min.js') }}" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
-
+        $('#current_assessees').select2();
 
         $('.custom-input').on('click', function () {
             const $input = $(this);

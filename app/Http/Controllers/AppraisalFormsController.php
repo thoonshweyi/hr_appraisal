@@ -463,12 +463,22 @@ class AppraisalFormsController extends Controller
     public function switchView(Request $request, AppraisalForm $appraisalform)
     {
         $this->authorize('edit', $appraisalform);
+        // dd($request->all());
 
         $viewMode = $request->input('view');
 
         abort_unless(in_array($viewMode, ['desktop', 'mobile'], true), 422);
 
         session(['view_mode' => $viewMode]);
+
+        // Start Remember Current Assessee
+        $assessee_user_id = $request['assessee_user_id'] ?? null;
+        if($assessee_user_id) {
+            $appraisalform->update([
+                'assessee_user_id' => $assessee_user_id
+            ]);
+        }
+        // End Remember Current Assessee
 
         return redirect()
             ->route('appraisalforms.edit', $appraisalform->id)
