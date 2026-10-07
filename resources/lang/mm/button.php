@@ -32,5 +32,6 @@ return [
     'acknowledge_document' => 'Acknowledge Document',
     'logistic_approve' => 'Logistics Approve',
     'savedraft'                     => 'ယာယီသိမ်းပါ',
+    'send_to_hr'                     => 'HR သို့အပ်မည်',
 ];
 ?>

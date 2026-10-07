@@ -148,9 +148,10 @@
                         </div>
                     </div>
                     @php
-                        \Log::info('Old appraisalformresults', [
-                            'data' => old('appraisalformresults')
-                        ]);
+                            \Log::info('Old appraisalformresults', [
+                                'data' => old('appraisalformresults'),
+                                'preloadresults' => $preloadresults
+                            ]);
                     @endphp
                     @foreach($assesseeusers as $branch=>$assesseeuserbybranch)
                     @foreach($assesseeuserbybranch as $assesseeuser)
@@ -172,6 +173,13 @@
                                     "appraisalformresults.{$assesseeuser->id}.{$criteria->id}",
                                     $preloadResult
                                 );
+
+                                /*
+                                \Log::info('Selected Result for Assessee ' . $assesseeuser->id . ', Criteria ' . $criteria->id, [
+                                    'selectedResult' => $selectedResult,
+                                ]);
+                                */
+
 
                             @endphp
                             <div class="form-card">
@@ -256,7 +264,7 @@
                 <input type="button" name="savedraft" class="btn btn-warning savedraftbtns appraisal-action-button" value="{{ __('button.savedraft')}}" />
 
 
-                <button type="button" class="btn btn-success submitbtns appraisal-action-button">{{ __('button.submit')}}</button>
+                <button type="button" class="btn btn-success submitbtns appraisal-action-button">{{ __('button.send_to_hr')}}</button>
             </div>
             @endif
 
@@ -674,7 +682,136 @@
 @section('js')
 <script  src="{{ asset('/js/select2.min.js') }}" type="text/javascript"></script>
 <script>
+
     $(document).ready(function() {
+
+        // Start Storing User Ratings in Local Storage
+        const ratingStorageKey = 'appraisal_ratings_{{ $appraisalform->id }}';
+        getRatingsFromLocalStorage();
+        function storeRatingInLocalStorage(input) {
+
+            let ratings;
+
+            if (localStorage.getItem(ratingStorageKey) === null) {
+                ratings = {};
+            } else {
+                ratings = JSON.parse(
+                    localStorage.getItem(ratingStorageKey) || '{}'
+                );
+            }
+
+            const matches = input.name.match(
+                /^appraisalformresults\[(\d+)\]\[(\d+)\]$/
+            );
+
+            if (!matches) {
+                return;
+            }
+
+            const assesseeId = matches[1];
+            const criteriaId = matches[2];
+            const ratingValue = input.value;
+
+            if (!ratings[assesseeId]) {
+                ratings[assesseeId] = {};
+            }
+
+            // ရှိပြီးသား criteria ကို overwrite လုပ်မယ်
+            ratings[assesseeId][criteriaId] = ratingValue;
+
+            localStorage.setItem(
+                ratingStorageKey,
+                JSON.stringify(ratings)
+            );
+        }
+        function getRatingsFromLocalStorage() {
+            let ratings;
+
+            if (localStorage.getItem(ratingStorageKey) === null) {
+                ratings = {};
+            } else {
+                ratings = JSON.parse(
+                    localStorage.getItem(ratingStorageKey) || '{}'
+                );
+            }
+
+            // console.log('Retrieved Ratings from Local Storage:', ratings);
+            // console.log('Current Inputs:', $('.custom-input').length);
+            $('.custom-input').each(function () {
+                const currentInput = this;
+
+                if (!currentInput.name) {
+                    return;
+                }
+
+                const matches = currentInput.name.match(
+                    /^appraisalformresults\[(\d+)\]\[(\d+)\]$/
+                );
+
+                if (!matches) {
+                    console.warn('Input name does not match expected pattern:', currentInput.name);
+                    return;
+                }
+
+                const assesseeId = matches[1];
+                const criteriaId = matches[2];
+
+                const savedRating =
+                    ratings[assesseeId]?.[criteriaId];
+
+                if (savedRating === undefined) {
+                    return;
+                }
+
+                if (currentInput.type === 'radio') {
+                    // console.log('Checkbox Input Found:', currentInput.name, 'Saved Rating:', savedRating);
+                    currentInput.checked =
+                        String(currentInput.value) ===
+                        String(savedRating);
+                }
+
+                if (currentInput.type === 'number') {
+                    currentInput.value = savedRating;
+                }
+            });
+        }
+        // End Storing User Ratings in Local Storage
+
+        // Start Storing Current Assessee in Local Storage
+        const assesseeStorageKey = 'appraisal_assessee_id_{{ $appraisalform->id }}';
+        getCurrentAssesseeFromLocalStorage();
+        function storeCurrentAssesseeInLocalStorage(assesseeId) {
+            localStorage.setItem(
+                assesseeStorageKey,
+                String(assesseeId)
+            );
+        }
+        function getCurrentAssesseeFromLocalStorage() {
+            const savedAssesseeId =
+                localStorage.getItem(assesseeStorageKey);
+
+            if (
+                savedAssesseeId === null ||
+                !$(`#current_assessees option[value="${savedAssesseeId}"]`).length
+            ) {
+                return false;
+            }
+
+            $('#current_assessees')
+                .val(savedAssesseeId)
+                .trigger('change');
+
+            return true;
+        }
+        // End Storing Current Assessee in Local Storage
+
+        // Start Clear Local Storage on Form Submission
+        function clearAppraisalLocalStorage() {
+            localStorage.removeItem(ratingStorageKey);
+            localStorage.removeItem(assesseeStorageKey);
+        }
+        // End Clear Local Storage on Form Submission
+
         $('#current_assessees').select2();
 
         $('.custom-input').on('click', function () {
@@ -807,6 +944,8 @@
                                 const appraisalform = data.data;
 
                                 if(data.success){
+                                    clearAppraisalLocalStorage();
+
                                     Swal.fire({
                                         icon: "success",
                                         title: "Finished!",
@@ -868,7 +1007,8 @@
                     const appraisalform = data.data;
 
                     if(data.success){
-                         
+                        clearAppraisalLocalStorage();
+
                         Swal.fire({
                             icon: "success",
                             title: "Saved!",
@@ -877,6 +1017,7 @@
                         setTimeout(() => {                                            
                             window.location.replace(draftRedirectUrl);
                         }, 3000);
+
                     }else{
                         Swal.fire({
                             icon: "error",
@@ -909,6 +1050,8 @@
             let val = this.value;
             console.log(val);
 
+            storeCurrentAssesseeInLocalStorage(val);
+
             $('.assessee_criterias').css('display', 'none');
 
             $(`#assessee_${val}_criterias`).css('display', 'block');
@@ -921,9 +1064,12 @@
         $('#current_assessees').trigger('change')
 
         $('.form-check-input').change(function(){
-               if ($(this).is(':checked')) {
+                const currentInput = this;
+                if ($(this).is(':checked')) {
                     var name = $(this).attr('name');
                     $('input[type="hidden"][name="' + name + '"]').remove();
+
+                    storeRatingInLocalStorage(currentInput);
                 }
         });
         $('.form-check-input').trigger('change')
@@ -1136,6 +1282,9 @@
 
             return true;
         }
+
+        
+
     });
 
 

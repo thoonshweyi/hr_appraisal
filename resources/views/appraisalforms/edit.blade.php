@@ -289,7 +289,7 @@
                                 <input type="button" name="savedraft" class="btn btn-warning savedraftbtns appraisal-action-button" value="{{ __('button.savedraft')}}" />
 
 
-                                <button type="button" class="btn btn-success submitbtns appraisal-action-button">{{ __('button.submit')}}</button>
+                                <button type="button" class="btn btn-success submitbtns appraisal-action-button">{{ __('button.send_to_hr')}}</button>
                             </div>
                             @endif
                         </form>

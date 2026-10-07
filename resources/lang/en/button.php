@@ -38,5 +38,6 @@ return [
     'logistics_issue'               => 'Issue',
     'send_to_bm_manager'            => 'send to BM manager',
     'savedraft'                     => 'Save Draft',
+    'send_to_hr'                     => 'Send to HR',
 ];
 ?>
