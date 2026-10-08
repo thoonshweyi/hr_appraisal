@@ -653,6 +653,11 @@ height: auto !important;
     border-radius: 8px !important;
     font-size: 14px;
 }
+.appraisal-action-button:disabled,
+.appraisal-action-button.disabled {
+    pointer-events: auto;
+    cursor: not-allowed !important;
+}
 
 .appraisal-mobile-note ul {
     margin: 0;

@@ -717,7 +717,7 @@
                                     text: data.message,
                                 });
                                 setTimeout(() => {                                            
-                                    window.location.replace(draftRedirectUrl);
+                                    window.location.href = draftRedirectUrl;
                                 }, 3000);
                             }else{
                                 Swal.fire({
@@ -780,7 +780,7 @@
                             text: data.message,
                         });
                         setTimeout(() => {                                            
-                            window.location.replace(draftRedirectUrl);
+                            window.location.href = draftRedirectUrl;
                         }, 3000);
                     }else{
                         Swal.fire({
@@ -831,7 +831,7 @@
             if (result.isConfirmed) {
                 $('.savedraftbtns').click();
             }else{
-                window.location.replace(draftRedirectUrl);
+                window.location.href = draftRedirectUrl;
             }
         });
 

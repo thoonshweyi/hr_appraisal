@@ -261,7 +261,7 @@
             <div class="col-md-12 mt-3 d-flex flex-wrap align-items-center appraisal-action-buttons">
 
                 <button type="button" id="back-btn" class="btn btn-light back-btn appraisal-action-button">{{ __('button.back')}}</button>
-                <input type="button" name="savedraft" class="btn btn-warning savedraftbtns appraisal-action-button" value="{{ __('button.savedraft')}}" />
+                <input type="button" name="savedraft" class="btn btn-warning savedraftbtns appraisal-action-button" value="{{ __('button.savedraft')}}"/>
 
 
                 <button type="button" class="btn btn-success submitbtns appraisal-action-button">{{ __('button.send_to_hr')}}</button>
@@ -952,7 +952,7 @@
                                         text: data.message,
                                     });
                                     setTimeout(() => {                                            
-                                        window.location.replace(draftRedirectUrl);
+                                        window.location.href = draftRedirectUrl;
                                     }, 3000);
                                 }else{
                                     Swal.fire({
@@ -1015,7 +1015,7 @@
                             text: data.message,
                         });
                         setTimeout(() => {                                            
-                            window.location.replace(draftRedirectUrl);
+                            window.location.href = draftRedirectUrl;
                         }, 3000);
 
                     }else{
@@ -1037,7 +1037,7 @@
                 },
                 complete:function(resopnse){
                     $('#pageLoader').fadeOut();
-                    $btn.prop('disabled', false);      
+                    $btn.prop('disabled', false);
                 }
             });
         });
@@ -1182,7 +1182,7 @@
                 if (result.isConfirmed) {
                     $('.savedraftbtns').click();
                 }else{
-                    window.location.replace(draftRedirectUrl);
+                    window.location.href = draftRedirectUrl;
                 }
             });
 

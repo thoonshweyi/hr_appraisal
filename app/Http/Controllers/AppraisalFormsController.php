@@ -393,6 +393,13 @@ class AppraisalFormsController extends Controller
 
             $appraisalform = AppraisalForm::find($id);
                 $this->authorize('edit', $appraisalform);
+            if($appraisalform->status_id == 19){
+                return response()->json([
+                    'success'=>false,
+                    'message'=> "This appraisal form is already submitted and cannot be edited."
+                ]);
+            }
+
             $appraisalform->update([
                 "assessed" => true,
                 "modify_user_id" => $user_id,
@@ -500,6 +507,12 @@ class AppraisalFormsController extends Controller
 
             $appraisalform = AppraisalForm::find($id);
                 $this->authorize('edit', $appraisalform);
+            if($appraisalform->status_id == 19){
+                return response()->json([
+                    'success'=>false,
+                    'message'=> "This appraisal form is already submitted and cannot be edited."
+                ]);
+            }
 
 
             $appraisalformresults = $request->appraisalformresults;
