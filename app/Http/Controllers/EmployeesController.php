@@ -334,18 +334,18 @@ class EmployeesController extends Controller
             $employee->attach_form_type_id = $request["attach_form_type_id"];
             $employee->save();
 
-            $users  = User::where('employee_id',$old_employee_code)->get();
-            foreach($users as $user){
-                $user->update([
-                    "employee_id" => $request["employee_code"]
-                ]);
 
-                BranchUser::where('user_id',$user->id)->delete();
-
-                $userBranch['user_id'] = $user->id;
-                $userBranch['branch_id'] = $request["branch_id"];
-                BranchUser::firstOrCreate($userBranch);
-            }
+            // Start Update Employee User
+            $empuser = User::where('employee_id',$old_employee_code)->doesntHave('roles')->first();
+            $empuser->update([
+                "employee_id" => $request["employee_code"],
+                "name"=> $request["employee_name"],
+            ]);
+            BranchUser::where('user_id',$empuser->id)->delete();
+            $userBranch['user_id'] = $empuser->id;
+            $userBranch['branch_id'] = $request["branch_id"];
+            BranchUser::firstOrCreate($userBranch);
+            // End Update Employee User
 
 
             // Delete old attach form type links

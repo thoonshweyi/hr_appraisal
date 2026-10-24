@@ -49,6 +49,19 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
         // Validate data
         // $row['department'] = Str::lower($row['department']);
 
+        // Start Correct Excel Branch Name 
+        $inputBranch = trim($row['branch'] ?? '');
+        $branch = Branch::where(
+            'branch_name',
+            'ilike',
+            $inputBranch
+        )->first();
+        if ($branch) {
+            $row['branch'] = $branch->branch_name;
+        }
+        // End Correct Excel Branch Name
+
+        
         $validator = Validator::make($row, [
             'employee_name'      => 'required|string|max:255',
             'division' => 'required',
@@ -94,14 +107,14 @@ class EmployeeImport implements ToModel,WithHeadingRow, OnEachRow, WithEvents{
         // $userBranch['user_id'] = $empuser->id;
         // $userBranch['branch_id'] = Branch::where('branch_name',$row['branch'])->first()->branch_id;
         // BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>Branch::where('branch_code',$row['branch_code'])->first()->branch_id]);
-        BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>Branch::where('branch_name',$row['branch'])->first()->branch_id]);
+        BranchUser::firstOrCreate(["user_id"=>$empuser->id],["branch_id"=>$branch->branch_id]);
 
         $updateData =   [
             'employee_name'      => $row['employee_name'],
             'nickname'           => $row['nickname'],
             'status_id'          => 1, // Default status_id (change as needed)
             'user_id'            => $user_id,
-            "branch_id"          => Branch::where('branch_name', $row['branch'])->first()?->branch_id,
+            "branch_id"          => $branch->branch_id,
             "age"                => $row['age'],
             "gender_id"          => Gender::where('name', $row['gender'])->first()?->id,
             // "phone"                => $row['phone'] ? $row['phone'] : null,
