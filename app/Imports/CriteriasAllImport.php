@@ -66,7 +66,7 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
                 "below_standard" => 'required|numeric',
                 "weak" => 'required|numeric',
                 "assessment_form_category" => "required",
-                "attach_form_type" => "required|exists:attach_form_types,name",
+                "attach_form_type" => "required",
                 "location" => "required",
                 "lang" => "required",
                 "ranks" => "required",
@@ -145,10 +145,20 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
             $this->rowNumber += 1;
 
 
-            $attach_form_type_id = AttachFormType::where('name',$row['attach_form_type'])->first()->id;
-            $name = $row["assessment_form_category"];
+            $formGroup = trim($row['attach_form_type']);
+            $attach_form_type = AttachFormType::firstOrCreate(
+                ['slug' => Str::slug($formGroup)],
+                [
+                    'name' => $formGroup,
+                    'slug' => Str::slug($formGroup),
+                    'status_id' => 1,
+                    'user_id' => $user_id,
+                ]
+            );
+            $attach_form_type_id = $attach_form_type->id;
 
-            $rowlocation = $row['location'];
+            $name = trim($row["assessment_form_category"]);
+            $rowlocation = trim($row['location']);
             $location_id = $rowlocation == "HO" ? 7 : ($rowlocation == "HO-Branch" ? 70 : 0);
             // dd($location_id);
 
@@ -158,14 +168,14 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
                     'name' => $name,
                     'slug' => Str::slug($name),
                     "attach_form_type_id" => $attach_form_type_id,
-                    "lang" => $row['lang'],
+                    "lang" => trim($row['lang']),
                     "location_id" => $location_id,
                     'status_id' => 1,
                     'user_id' => $user_id,
                 ]
             );
 
-            $ranksstr = $row['ranks'];
+            $ranksstr = trim($row['ranks']);
             if (str_contains($ranksstr, 'Above') || str_contains($ranksstr, 'above')) {
                 // dd('hay');
                 $aboverank = substr($ranksstr, 0, 1);
@@ -184,7 +194,7 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
             }
 
             $criteria =  Criteria::create([
-                'name'      =>   $row['name'],
+                'name'      =>   trim($row['name']),
                 "ass_form_cat_id" => $assformcat->id,
                 'status_id' => 1,
 
