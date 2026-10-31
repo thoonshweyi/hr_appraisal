@@ -459,13 +459,13 @@
                                                     </td>
                                                     <td>
                                                         @php 
-                                                                $printbtn = ($participantuser->employee->positionlevel->id < 5 && !$participantuser->printhistory);
+                                                            $printbtn = ($participantuser->employee->positionlevel->id < 2 && !$participantuser->printhistory);
                                                         @endphp
                                                         <div class='d-flex justify-content-end align-items-center'>
                                                             @if($printbtn)
                                                                 <a href='javascript:void(0);' data-user='{{$participantuser->id}}' class='text-warning mx-2 print_btn' title='Print'><i class='fas fa-print'></i></a>
                                                             @endif
-                                                            <a href='javascript:void(0);' class='show-forms' data-user='{{$participantuser->id}}' title='Open'><i class='fas fa-chevron-down'></i></a>
+                                                            <a href='javascript:void(0);' class='show-forms' data-user='{{$participantuser->id}}'   data-printbtn="{{ json_encode($printbtn) }}" title='Open'><i class='fas fa-chevron-down'></i></a>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -1636,7 +1636,16 @@
                                     statusClass = 'bg-warning';
                                 }
 
-                                const url =  `/appraisalforms/${form.id}/${form.status_id == 19 ? 'archive' : ''}`;
+                                // archive
+                                let url =  `/appraisalforms/${form.id}/`;
+                                const isFinished = form.status_id == 19;
+                                const printbtn = $btn.data('printbtn');
+                                console.log(printbtn);
+                                if(isFinished){
+                                    url += "archive/"
+                                }else if(printbtn){
+                                    url += "edit/"
+                                }
                                 html += `
                                 <tr>
                                     <td><input type="checkbox" name="singlechecks" class="form-check-input m-0 singlechecks" value="${form.id}" /></td>
