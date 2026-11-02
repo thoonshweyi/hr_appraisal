@@ -2,45 +2,46 @@
 
 // use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\AgileDepartmentsController;
+use App\Http\Controllers\AppraisalCyclesController;
+use App\Http\Controllers\AppraisalFormsController;
+use App\Http\Controllers\AssesseeDetailController;
+use App\Http\Controllers\AssesseeSummaryController;
+use App\Http\Controllers\AssFormCatsController;
+use App\Http\Controllers\AttachFormTypesController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BranchTypesController;
+use App\Http\Controllers\CriteriasController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DepartmentsController;
+use App\Http\Controllers\DeptGroupsController;
+use App\Http\Controllers\DivisionsController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EmployeesController;
+use App\Http\Controllers\FAQController;
+use App\Http\Controllers\FirebaseNotificationController;
+use App\Http\Controllers\GendersController;
+use App\Http\Controllers\GradesController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocalizationController;
+use App\Http\Controllers\OtpsController;
+use App\Http\Controllers\PasswordEncodesController;
+use App\Http\Controllers\PeerToPeersController;
+use App\Http\Controllers\PositionLevelsController;
+use App\Http\Controllers\PositionsController;
+use App\Http\Controllers\PushNotificationController;
+use App\Http\Controllers\RatingScalesController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SectionsController;
+use App\Http\Controllers\StatusesController;
+use App\Http\Controllers\SubDepartmentsController;
+use App\Http\Controllers\SubSectionsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FAQController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\OtpsController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\BranchController;
-use App\Http\Controllers\GradesController;
-use App\Http\Controllers\GendersController;
-use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\SectionsController;
-use App\Http\Controllers\StatusesController;
-use App\Http\Controllers\CriteriasController;
-use App\Http\Controllers\DivisionsController;
-use App\Http\Controllers\EmployeesController;
-use App\Http\Controllers\PositionsController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\DeptGroupsController;
-use App\Http\Controllers\AssFormCatsController;
-use App\Http\Controllers\DepartmentsController;
-use App\Http\Controllers\PeerToPeersController;
-use App\Http\Controllers\SubSectionsController;
 use Pusher\PushNotifications\PushNotifications;
-use App\Http\Controllers\LocalizationController;
-use App\Http\Controllers\RatingScalesController;
-use App\Http\Controllers\AppraisalFormsController;
-use App\Http\Controllers\AssesseeDetailController;
-use App\Http\Controllers\PositionLevelsController;
-use App\Http\Controllers\SubDepartmentsController;
-use App\Http\Controllers\AppraisalCyclesController;
-use App\Http\Controllers\AssesseeSummaryController;
-use App\Http\Controllers\AttachFormTypesController;
-use App\Http\Controllers\PasswordEncodesController;
-use App\Http\Controllers\AgileDepartmentsController;
-use App\Http\Controllers\PushNotificationController;
-use App\Http\Controllers\FirebaseNotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -177,6 +178,13 @@ Route::middleware('auth')->group(function () {
     Route::delete("/genders/{id}",[GendersController::class,"destroy"])->name("genders.destroy");
     Route::post("/gendersstatus",[GendersController::class,"changestatus"])->name("genders.changestatus");
     // Route::post("/genders_excel_import",[GendersController::class,"excel_import"])->name("genders.excel_import");
+
+
+    Route::get("/branchtypes",[BranchTypesController::class,"index"])->name("branchtypes.index");
+    Route::post("/branchtypes",[BranchTypesController::class,"store"])->name("branchtypes.store");
+    Route::put("/branchtypes/{id}",[BranchTypesController::class,"update"])->name("branchtypes.update");
+    Route::delete("/branchtypes/{id}",[BranchTypesController::class,"destroy"])->name("branchtypes.destroy");
+    Route::post("/branchtypesstatus",[BranchTypesController::class,"changestatus"])->name("branchtypes.changestatus");
 
     Route::get("/positionlevels",[PositionLevelsController::class,"index"])->name("positionlevels.index");
     Route::post("/positionlevels",[PositionLevelsController::class,"store"])->name("positionlevels.store");

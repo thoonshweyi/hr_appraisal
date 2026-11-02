@@ -97,6 +97,12 @@
                         </a>
                     </li>
                     @endcan
+
+                    <li class="{{ (request()->routeIs('branchtypes.index')) ? 'active' : '' }}">
+                        <a href="{{route('branchtypes.index')}}">
+                            <i class="las la-minus"></i><span>Branch Types</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endcan
