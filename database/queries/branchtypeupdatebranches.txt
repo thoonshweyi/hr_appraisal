@@ -7,5 +7,5 @@ SET branch_type_id = 1
 WHERE branch_id in (7)
 
 UPDATE branches
-SET branch_type_id = 1
+SET branch_type_id = 3
 WHERE branch_id in (13,17)
