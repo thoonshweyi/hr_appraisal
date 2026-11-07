@@ -152,3 +152,34 @@ FROM (
 LEFT JOIN public.ass_form_cats db 
        ON list.name = db.name
 WHERE db.name IS NULL;
+
+=>Chunk 200 ခွဲလိုက်သောကြောင့် တစ်ဝက်စီပါ issue 
+SELECT * FROM public.criterias
+where ass_form_cat_id in (
+303,
+61,
+45,
+35,
+96,
+269,
+114
+)
+and created_at::date >= '2026-11-05'
+ORDER BY id DESC LIMIT 100
+
+
+
+UPDATE public.criterias
+SET status_id = 1,
+    delete_by = NULL,
+    deleted_at = NULL
+where ass_form_cat_id in (
+303,
+61,
+45,
+35,
+96,
+269,
+114
+)
+and created_at::date >= '2026-11-05'

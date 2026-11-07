@@ -19,8 +19,9 @@ use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
+class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow, WithChunkReading{
     protected $rowNumber = 1;  // Initialize row number
  
 
@@ -242,6 +243,10 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow{
         // End Move to trash old criterias 
     }
 
+    public function chunkSize(): int
+    {
+        return 200;
+    }
 }
 
 // Criteria Set Exceptions
