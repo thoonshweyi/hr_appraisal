@@ -183,3 +183,20 @@ where ass_form_cat_id in (
 114
 )
 and created_at::date >= '2026-11-05'
+
+
+
+=> Twos Attach Form Type
+SELECT
+    regexp_replace(
+        lower(name),
+        '[^a-z0-9]',
+        '',
+        'g'
+    ) AS normalized_name,
+    COUNT(*) AS total,
+    ARRAY_AGG(id) AS ids,
+    ARRAY_AGG(name) AS names
+FROM public.attach_form_types
+GROUP BY normalized_name
+HAVING COUNT(*) > 1;

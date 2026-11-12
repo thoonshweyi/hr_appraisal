@@ -30,3 +30,31 @@ WHERE table_name = 'notifications'
   AND column_name = 'data';
 
 If it returns text, use the cast (data::jsonb) or convert the column to jsonb.
+
+
+
+SELECT *
+FROM public.notifications
+WHERE data::jsonb ->> 'appraisal_cycle_id' <> '5'
+  AND read_at IS NULL
+ORDER BY id DESC;
+
+
+SELECT
+    af.*,
+    u.employee_id,
+    e.employee_code,
+    e.position_level_id
+FROM public.appraisal_forms af
+JOIN public.users u
+    ON af.assessor_user_id = u.id
+JOIN public.employees e
+    ON u.employee_id = e.employee_code
+WHERE af.appraisal_cycle_id = 4
+  AND af.deleted_at IS NULL
+  AND af.delete_by IS NULL
+  --AND e.position_level_id::int < 5
+    AND (
+      af.modify_user_id = 79
+      OR af.modify_user_id = 1
+  );
