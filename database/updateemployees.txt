@@ -1,0 +1,29 @@
+SELECT * FROM public.employees
+where position_level_id::int >= 2 
+and status_id=1
+and deleted_at is null
+ORDER BY id DESC 
+
+=>Rand2 Above Man Poser to answer appraisal
+SELECT 
+    e.employee_code AS "Employee Code",
+    e.employee_name AS "Name",
+    b.branch_name AS "Branch",
+    pl.name AS "Position Level"
+FROM public.employees e
+INNER JOIN public.branches b 
+    ON e.branch_id = b.branch_id
+INNER JOIN public.position_levels pl
+    ON e.position_level_id::int = pl.id
+WHERE e.status_id = 1
+AND e.position_level_id NOT IN ('1', '12')
+ORDER BY e.id DESC;
+
+
+SELECT
+    employee_code AS "Employee Code",
+    employee_name AS "Name"
+FROM public.employees
+WHERE status_id = 1
+AND position_level_id NOT IN ('1', '12')
+ORDER BY id DESC;
