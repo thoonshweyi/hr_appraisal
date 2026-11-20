@@ -245,7 +245,7 @@ class CriteriasAllImport implements ToCollection,WithHeadingRow, OnEachRow, With
 
     public function chunkSize(): int
     {
-        return 200;
+        return 240;
     }
 }
 
